@@ -1,0 +1,22 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+dist/
+build/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.uv/
+
+# Research artifacts / caches
+artifacts/
+results/raw/
+*.tar.gz
+tmp_recover/
+_recover_diag.py
+
+# IDE
+.idea/
+.vscode/

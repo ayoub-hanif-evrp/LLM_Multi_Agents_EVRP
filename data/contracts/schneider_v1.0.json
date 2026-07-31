@@ -1,0 +1,68 @@
+{
+  "battery_capacity_source": "instance_param_Q",
+  "charging_model": "linear_provisional_g",
+  "charging_policy": "provisional_full_recharge_at_stations",
+  "contract_hash": "c69f67cb62d380099dee4d660562ad8d348c3c8fc594f354a53052b7d6c445c2",
+  "dataset_name": "Schneider_E-VRPTW",
+  "dataset_version": "v1.0",
+  "demand_unit": "unspecified",
+  "directed_arcs": false,
+  "distance_representation": "euclidean_coordinates",
+  "distance_unit": "unspecified_coordinate_units",
+  "energy_consumption_model": "linear_distance_times_r",
+  "energy_unit": "unspecified_fuel_units",
+  "evidence_files": [
+    "dataset\\schneider\\raw_instances",
+    "dataset\\schneider\\raw_instances\\c101_21.txt",
+    "dataset\\schneider\\raw_instances\\c101C10.txt",
+    "dataset\\schneider\\raw_instances\\c101C5.txt",
+    "dataset\\schneider\\raw_instances\\c102_21.txt",
+    "dataset\\schneider\\raw_instances\\c103_21.txt"
+  ],
+  "extras": {
+    "converted_placement": "dataset/schneider/converted_instances/evrptw_instances/",
+    "filename_pattern": "{c|r|rc}{id}(_21|C{5|10|15}).txt",
+    "node_type_codes": {
+      "c": "customer",
+      "d": "depot",
+      "f": "station"
+    },
+    "placement": "dataset/schneider/raw_instances/",
+    "primary_parser": "schneider_solomon_text",
+    "scales_observed": [
+      "Cus_5",
+      "Cus_10",
+      "Cus_15",
+      "Cus_100"
+    ],
+    "split_protocol": "family_stratified_C_R_RC",
+    "status": "active",
+    "vehicle_params": [
+      "Q",
+      "C",
+      "r",
+      "g",
+      "v"
+    ]
+  },
+  "fleet_policy": "homogeneous_unlimited_copies_of_instance_vehicle",
+  "instance_scale": 93,
+  "missing_or_ambiguous_fields": [
+    "Official Schneider paper charging policy assumed linear full recharge via g (inverse refuel rate).",
+    "Filename tags (_21 vs C5/C10/C15) encode station/customer subsets; family is C/R/RC from Solomon id."
+  ],
+  "node_types": [
+    "depot",
+    "customer",
+    "station"
+  ],
+  "objective_definition": "project_declared: lexicographic (infeasibility, unserved, vehicles, distance as primary_cost, travel_time, charging_time)",
+  "rounding_rules": {
+    "comparisons": "abs_tol_1e-6",
+    "parser": "python_float"
+  },
+  "source_doi": null,
+  "station_revisit_policy": "unspecified_allow_multiple_pending_docs",
+  "time_unit": "minutes_solomon_style",
+  "travel_time_representation": "distance_over_velocity"
+}

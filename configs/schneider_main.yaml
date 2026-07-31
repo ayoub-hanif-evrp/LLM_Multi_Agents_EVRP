@@ -1,0 +1,38 @@
+paths:
+  raw_schneider: dataset/schneider/raw_instances
+  contracts: data/contracts
+  artifacts: artifacts
+seed: 2027
+log_level: INFO
+alns:
+  seed: 2027
+  max_iterations: 50
+  time_limit_seconds: 120
+  destroy_fraction: 0.15
+  initial_temperature: 10.0
+  cooling_rate: 0.97
+  reaction_factor: 0.25
+  local_search_every: 0
+  local_search_max_moves: 10
+  checkpoint_every: 10
+  memory_limit_mb: 4096
+  max_workers: 2
+  resume: false
+  repair_max_stations_between: 1
+  repair_max_station_candidates: 6
+  repair_max_attempts: 250
+  repair_timeout_seconds: 1.5
+  repair_enable_two_station: false
+  cache_max_entries: 8000
+population:
+  population_size: 8
+  generations: 4
+  offspring_per_generation: 4
+  archive_size: 12
+  seed_candidates:
+    - m9b_main_20260728_seed_h1
+    - m9b_main_20260728_seed_h2
+    - m9b_main_20260728_seed_h3
+extras:
+  instance_glob: dataset/schneider/raw_instances/*C5.txt
+  note: Schneider Solomon E-VRPTW (primary dataset)

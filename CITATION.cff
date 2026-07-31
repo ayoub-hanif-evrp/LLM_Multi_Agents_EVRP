@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: If you use this software, please cite it as below.
+title: "EvoCharge-Agent"
+version: 0.1.0
+authors:
+  - family-names: Contributors
+    given-names: EvoCharge-Agent
+abstract: >
+  Verifier-grounded agentic discovery of transferable coupled routing-and-charging
+  neighborhoods for the Electric Vehicle Routing Problem with Time Windows.
+license: MIT

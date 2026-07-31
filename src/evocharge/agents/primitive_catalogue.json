@@ -1,0 +1,558 @@
+{
+  "api_version": "1.0.0",
+  "catalogue_hash": "8b2b68e34b5c010918bc274a08624acd5dc67e0d0b4558ae168e9449a346b321",
+  "catalogue_version": "1.0.0",
+  "primitives": [
+    {
+      "api_version": "1.0.0",
+      "category": "query",
+      "contract_requirements": [
+        "schneider_v1.0"
+      ],
+      "deterministic": true,
+      "input_types": [
+        "OperatorContext",
+        "ReadOnlySearchState"
+      ],
+      "invariants": [
+        "deterministic_on_fixed_seed"
+      ],
+      "mutates_solution": false,
+      "output_type": "float",
+      "primitive_id": "query_time_slack",
+      "worst_case_complexity": "O(n)"
+    },
+    {
+      "api_version": "1.0.0",
+      "category": "query",
+      "contract_requirements": [
+        "schneider_v1.0"
+      ],
+      "deterministic": true,
+      "input_types": [
+        "OperatorContext",
+        "ReadOnlySearchState"
+      ],
+      "invariants": [
+        "deterministic_on_fixed_seed"
+      ],
+      "mutates_solution": false,
+      "output_type": "float",
+      "primitive_id": "query_energy_slack",
+      "worst_case_complexity": "O(n)"
+    },
+    {
+      "api_version": "1.0.0",
+      "category": "query",
+      "contract_requirements": [
+        "schneider_v1.0"
+      ],
+      "deterministic": true,
+      "input_types": [
+        "OperatorContext",
+        "ReadOnlySearchState"
+      ],
+      "invariants": [
+        "deterministic_on_fixed_seed"
+      ],
+      "mutates_solution": false,
+      "output_type": "float",
+      "primitive_id": "query_load_slack",
+      "worst_case_complexity": "O(n)"
+    },
+    {
+      "api_version": "1.0.0",
+      "category": "query",
+      "contract_requirements": [
+        "schneider_v1.0"
+      ],
+      "deterministic": true,
+      "input_types": [
+        "OperatorContext",
+        "ReadOnlySearchState"
+      ],
+      "invariants": [
+        "deterministic_on_fixed_seed"
+      ],
+      "mutates_solution": false,
+      "output_type": "float",
+      "primitive_id": "query_charging_detour",
+      "worst_case_complexity": "O(n)"
+    },
+    {
+      "api_version": "1.0.0",
+      "category": "query",
+      "contract_requirements": [
+        "schneider_v1.0"
+      ],
+      "deterministic": true,
+      "input_types": [
+        "OperatorContext",
+        "ReadOnlySearchState"
+      ],
+      "invariants": [
+        "deterministic_on_fixed_seed"
+      ],
+      "mutates_solution": false,
+      "output_type": "float",
+      "primitive_id": "query_station_dependency",
+      "worst_case_complexity": "O(n)"
+    },
+    {
+      "api_version": "1.0.0",
+      "category": "query",
+      "contract_requirements": [
+        "schneider_v1.0"
+      ],
+      "deterministic": true,
+      "input_types": [
+        "OperatorContext",
+        "ReadOnlySearchState"
+      ],
+      "invariants": [
+        "deterministic_on_fixed_seed"
+      ],
+      "mutates_solution": false,
+      "output_type": "float",
+      "primitive_id": "query_route_distance",
+      "worst_case_complexity": "O(n)"
+    },
+    {
+      "api_version": "1.0.0",
+      "category": "query",
+      "contract_requirements": [
+        "schneider_v1.0"
+      ],
+      "deterministic": true,
+      "input_types": [
+        "OperatorContext",
+        "ReadOnlySearchState"
+      ],
+      "invariants": [
+        "deterministic_on_fixed_seed"
+      ],
+      "mutates_solution": false,
+      "output_type": "float",
+      "primitive_id": "query_route_duration",
+      "worst_case_complexity": "O(n)"
+    },
+    {
+      "api_version": "1.0.0",
+      "category": "query",
+      "contract_requirements": [
+        "schneider_v1.0"
+      ],
+      "deterministic": true,
+      "input_types": [
+        "OperatorContext",
+        "ReadOnlySearchState"
+      ],
+      "invariants": [
+        "deterministic_on_fixed_seed"
+      ],
+      "mutates_solution": false,
+      "output_type": "float",
+      "primitive_id": "query_customer_relatedness",
+      "worst_case_complexity": "O(n)"
+    },
+    {
+      "api_version": "1.0.0",
+      "category": "query",
+      "contract_requirements": [
+        "schneider_v1.0"
+      ],
+      "deterministic": true,
+      "input_types": [
+        "OperatorContext",
+        "ReadOnlySearchState"
+      ],
+      "invariants": [
+        "deterministic_on_fixed_seed"
+      ],
+      "mutates_solution": false,
+      "output_type": "dict",
+      "primitive_id": "query_insertion_delta",
+      "worst_case_complexity": "O(n)"
+    },
+    {
+      "api_version": "1.0.0",
+      "category": "query",
+      "contract_requirements": [
+        "schneider_v1.0"
+      ],
+      "deterministic": true,
+      "input_types": [
+        "OperatorContext",
+        "ReadOnlySearchState"
+      ],
+      "invariants": [
+        "deterministic_on_fixed_seed"
+      ],
+      "mutates_solution": false,
+      "output_type": "tuple",
+      "primitive_id": "identify_energy_critical_arc",
+      "worst_case_complexity": "O(n)"
+    },
+    {
+      "api_version": "1.0.0",
+      "category": "query",
+      "contract_requirements": [
+        "schneider_v1.0"
+      ],
+      "deterministic": true,
+      "input_types": [
+        "OperatorContext",
+        "ReadOnlySearchState"
+      ],
+      "invariants": [
+        "deterministic_on_fixed_seed"
+      ],
+      "mutates_solution": false,
+      "output_type": "list",
+      "primitive_id": "identify_charging_time_cascade",
+      "worst_case_complexity": "O(n)"
+    },
+    {
+      "api_version": "1.0.0",
+      "category": "select",
+      "contract_requirements": [
+        "schneider_v1.0"
+      ],
+      "deterministic": true,
+      "input_types": [
+        "OperatorContext",
+        "ReadOnlySearchState"
+      ],
+      "invariants": [
+        "deterministic_on_fixed_seed"
+      ],
+      "mutates_solution": false,
+      "output_type": "tuple",
+      "primitive_id": "select_customers_by_score",
+      "worst_case_complexity": "O(n)"
+    },
+    {
+      "api_version": "1.0.0",
+      "category": "select",
+      "contract_requirements": [
+        "schneider_v1.0"
+      ],
+      "deterministic": true,
+      "input_types": [
+        "OperatorContext",
+        "ReadOnlySearchState"
+      ],
+      "invariants": [
+        "deterministic_on_fixed_seed"
+      ],
+      "mutates_solution": false,
+      "output_type": "tuple",
+      "primitive_id": "select_routes_by_score",
+      "worst_case_complexity": "O(n)"
+    },
+    {
+      "api_version": "1.0.0",
+      "category": "select",
+      "contract_requirements": [
+        "schneider_v1.0"
+      ],
+      "deterministic": true,
+      "input_types": [
+        "OperatorContext",
+        "ReadOnlySearchState"
+      ],
+      "invariants": [
+        "deterministic_on_fixed_seed"
+      ],
+      "mutates_solution": false,
+      "output_type": "tuple",
+      "primitive_id": "select_segments_by_score",
+      "worst_case_complexity": "O(n)"
+    },
+    {
+      "api_version": "1.0.0",
+      "category": "select",
+      "contract_requirements": [
+        "schneider_v1.0"
+      ],
+      "deterministic": true,
+      "input_types": [
+        "OperatorContext",
+        "ReadOnlySearchState"
+      ],
+      "invariants": [
+        "deterministic_on_fixed_seed"
+      ],
+      "mutates_solution": false,
+      "output_type": "tuple",
+      "primitive_id": "select_stations_by_score",
+      "worst_case_complexity": "O(n)"
+    },
+    {
+      "api_version": "1.0.0",
+      "category": "plan",
+      "contract_requirements": [
+        "schneider_v1.0"
+      ],
+      "deterministic": true,
+      "input_types": [
+        "OperatorContext",
+        "ReadOnlySearchState"
+      ],
+      "invariants": [
+        "deterministic_on_fixed_seed"
+      ],
+      "mutates_solution": false,
+      "output_type": "PlanAction",
+      "primitive_id": "plan_customer_removal",
+      "worst_case_complexity": "O(n)"
+    },
+    {
+      "api_version": "1.0.0",
+      "category": "plan",
+      "contract_requirements": [
+        "schneider_v1.0"
+      ],
+      "deterministic": true,
+      "input_types": [
+        "OperatorContext",
+        "ReadOnlySearchState"
+      ],
+      "invariants": [
+        "deterministic_on_fixed_seed"
+      ],
+      "mutates_solution": false,
+      "output_type": "PlanAction",
+      "primitive_id": "plan_segment_removal",
+      "worst_case_complexity": "O(n)"
+    },
+    {
+      "api_version": "1.0.0",
+      "category": "plan",
+      "contract_requirements": [
+        "schneider_v1.0"
+      ],
+      "deterministic": true,
+      "input_types": [
+        "OperatorContext",
+        "ReadOnlySearchState"
+      ],
+      "invariants": [
+        "deterministic_on_fixed_seed"
+      ],
+      "mutates_solution": false,
+      "output_type": "PlanAction",
+      "primitive_id": "plan_route_removal",
+      "worst_case_complexity": "O(n)"
+    },
+    {
+      "api_version": "1.0.0",
+      "category": "plan",
+      "contract_requirements": [
+        "schneider_v1.0"
+      ],
+      "deterministic": true,
+      "input_types": [
+        "OperatorContext",
+        "ReadOnlySearchState"
+      ],
+      "invariants": [
+        "deterministic_on_fixed_seed"
+      ],
+      "mutates_solution": false,
+      "output_type": "PlanAction",
+      "primitive_id": "plan_station_removal",
+      "worst_case_complexity": "O(n)"
+    },
+    {
+      "api_version": "1.0.0",
+      "category": "plan",
+      "contract_requirements": [
+        "schneider_v1.0"
+      ],
+      "deterministic": true,
+      "input_types": [
+        "OperatorContext",
+        "ReadOnlySearchState"
+      ],
+      "invariants": [
+        "deterministic_on_fixed_seed"
+      ],
+      "mutates_solution": false,
+      "output_type": "PlanAction",
+      "primitive_id": "plan_station_replacement",
+      "worst_case_complexity": "O(n)"
+    },
+    {
+      "api_version": "1.0.0",
+      "category": "plan",
+      "contract_requirements": [
+        "schneider_v1.0"
+      ],
+      "deterministic": true,
+      "input_types": [
+        "OperatorContext",
+        "ReadOnlySearchState"
+      ],
+      "invariants": [
+        "deterministic_on_fixed_seed"
+      ],
+      "mutates_solution": false,
+      "output_type": "PlanAction",
+      "primitive_id": "plan_segment_relocation",
+      "worst_case_complexity": "O(n)"
+    },
+    {
+      "api_version": "1.0.0",
+      "category": "plan",
+      "contract_requirements": [
+        "schneider_v1.0"
+      ],
+      "deterministic": true,
+      "input_types": [
+        "OperatorContext",
+        "ReadOnlySearchState"
+      ],
+      "invariants": [
+        "deterministic_on_fixed_seed"
+      ],
+      "mutates_solution": false,
+      "output_type": "PlanAction",
+      "primitive_id": "plan_customer_swap",
+      "worst_case_complexity": "O(n)"
+    },
+    {
+      "api_version": "1.0.0",
+      "category": "plan",
+      "contract_requirements": [
+        "schneider_v1.0"
+      ],
+      "deterministic": true,
+      "input_types": [
+        "OperatorContext",
+        "ReadOnlySearchState"
+      ],
+      "invariants": [
+        "deterministic_on_fixed_seed"
+      ],
+      "mutates_solution": false,
+      "output_type": "PlanAction",
+      "primitive_id": "plan_charging_reconstruction",
+      "worst_case_complexity": "O(n)"
+    },
+    {
+      "api_version": "1.0.0",
+      "category": "plan",
+      "contract_requirements": [
+        "schneider_v1.0"
+      ],
+      "deterministic": true,
+      "input_types": [
+        "OperatorContext",
+        "ReadOnlySearchState"
+      ],
+      "invariants": [
+        "deterministic_on_fixed_seed"
+      ],
+      "mutates_solution": false,
+      "output_type": "PlanAction",
+      "primitive_id": "plan_greedy_reinsertion",
+      "worst_case_complexity": "O(n)"
+    },
+    {
+      "api_version": "1.0.0",
+      "category": "plan",
+      "contract_requirements": [
+        "schneider_v1.0"
+      ],
+      "deterministic": true,
+      "input_types": [
+        "OperatorContext",
+        "ReadOnlySearchState"
+      ],
+      "invariants": [
+        "deterministic_on_fixed_seed"
+      ],
+      "mutates_solution": false,
+      "output_type": "PlanAction",
+      "primitive_id": "plan_regret_reinsertion",
+      "worst_case_complexity": "O(n)"
+    },
+    {
+      "api_version": "1.0.0",
+      "category": "service",
+      "contract_requirements": [
+        "schneider_v1.0"
+      ],
+      "deterministic": true,
+      "input_types": [
+        "OperatorContext",
+        "ReadOnlySearchState"
+      ],
+      "invariants": [
+        "deterministic_on_fixed_seed"
+      ],
+      "mutates_solution": false,
+      "output_type": "list",
+      "primitive_id": "enumerate_feasible_insertions",
+      "worst_case_complexity": "O(n)"
+    },
+    {
+      "api_version": "1.0.0",
+      "category": "service",
+      "contract_requirements": [
+        "schneider_v1.0"
+      ],
+      "deterministic": true,
+      "input_types": [
+        "OperatorContext",
+        "ReadOnlySearchState"
+      ],
+      "invariants": [
+        "deterministic_on_fixed_seed"
+      ],
+      "mutates_solution": false,
+      "output_type": "tuple",
+      "primitive_id": "reconstruct_charging_pattern",
+      "worst_case_complexity": "O(n)"
+    },
+    {
+      "api_version": "1.0.0",
+      "category": "service",
+      "contract_requirements": [
+        "schneider_v1.0"
+      ],
+      "deterministic": true,
+      "input_types": [
+        "OperatorContext",
+        "ReadOnlySearchState"
+      ],
+      "invariants": [
+        "deterministic_on_fixed_seed"
+      ],
+      "mutates_solution": false,
+      "output_type": "dict",
+      "primitive_id": "validate_operator_plan",
+      "worst_case_complexity": "O(n)"
+    },
+    {
+      "api_version": "1.0.0",
+      "category": "service",
+      "contract_requirements": [
+        "schneider_v1.0"
+      ],
+      "deterministic": true,
+      "input_types": [
+        "OperatorContext",
+        "ReadOnlySearchState"
+      ],
+      "invariants": [
+        "deterministic_on_fixed_seed"
+      ],
+      "mutates_solution": false,
+      "output_type": "dict",
+      "primitive_id": "evaluate_candidate_delta",
+      "worst_case_complexity": "O(n)"
+    }
+  ]
+}

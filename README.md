@@ -1,43 +1,30 @@
-# EvoCharge — lean Schneider EVRPTW optimization
+# ChargeCEGIS
 
-Verifier-grounded multi-agent discovery of EVRPTW search operators on the
-**Schneider Solomon E-VRPTW** dataset.
+Counterexample-guided small-LLM discovery of coupled route-and-charging policies for EVRPTW.
 
 ## Architecture
 
 ```
-dataset/schneider  →  parse  →  construct / ALNS
-                                 ↑
-agents + prompts → candidates → operators (handcrafted + generated)
+Schneider instances → construction / ALNS
+                         ↑
+five LLM roles → typed JSON policy DSL → ranks fixed coupled moves
 ```
 
-| Layer | Role |
-|-------|------|
-| `dataset/schneider/` | Instances (depot, customers, stations, EV params Q/C/r/g/v) |
-| `domain/` | Instance, Vehicle, Solution, objective, charging model |
-| `solver/` | Construction, feasibility, charging repair, ALNS |
-| `operators/` | Handcrafted destroy/repair + generated-operator API |
-| `agents/` + `prompts/` | Analyst / Scientist / Coder via local Ollama |
-| `candidates/` + `verification/` | Bounded codegen + sandbox gates |
-| `evolution/` | Optional population loop over verified operators |
+Exactly five roles: Analyst, Scientist, Synthesizer, Counterexample Agent, Critic.
+
+The LLM never builds routes or executes moves. It only emits a compact priority policy AST.
 
 ## Setup
 
 ```bash
 uv sync
-uv run evocharge build-contract
-uv run evocharge baseline construct --instance dataset/schneider/raw_instances/c101C5.txt
-uv run evocharge baseline run --config configs/schneider_main.yaml --instance dataset/schneider/raw_instances/c101C5.txt
-uv run evocharge full-stack-run --candidate m9b_main_20260728_seed_h1
+uv run pytest -q
+uv run ruff check src/chargecegis tests
+uv run mypy src/chargecegis
 ```
 
-Configs (only three): `configs/base.yaml`, `configs/schneider_main.yaml`, `configs/agents.yaml`.
+Primary model config: `configs/models.yaml` (`qwen2.5-coder:3b`).
 
-## EV model (per instance)
+## Package
 
-Homogeneous fleet with battery `Q`, load `C`, consumption `r`, velocity `v`,
-linear full recharge via inverse rate `g`.
-
-## License
-
-MIT — see [LICENSE](LICENSE).
+`src/chargecegis/` — focused research package (~15–17 modules).

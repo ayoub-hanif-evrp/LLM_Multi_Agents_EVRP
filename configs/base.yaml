@@ -1,7 +1,0 @@
-paths:
-  project_root: .
-  raw_schneider: dataset/schneider/raw_instances
-  contracts: data/contracts
-  artifacts: artifacts
-seed: 2027
-log_level: INFO

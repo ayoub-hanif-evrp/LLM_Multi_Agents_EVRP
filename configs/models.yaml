@@ -1,0 +1,16 @@
+ollama:
+  model: qwen2.5-coder:3b
+  comparison_models:
+    - qwen2.5-coder:1.5b
+    - qwen2.5-coder:3b
+    - qwen2.5-coder:7b
+  num_ctx: 4096
+  keep_alive: "20m"
+  stream: false
+  sequential_requests: true
+temperatures:
+  analyst: 0.10
+  scientist: 0.45
+  synthesizer: 0.20
+  counterexample: 0.40
+  critic: 0.10

@@ -1,0 +1,49 @@
+{
+  "command": "run-full-dataset",
+  "configured_max_iterations": 2,
+  "decision": "as_configured",
+  "dev_instance_ids": [
+    "c101C10",
+    "c202C10",
+    "r102C10",
+    "r201C10",
+    "rc102C10",
+    "rc201C10"
+  ],
+  "effective_max_iterations": 2,
+  "estimated_total_hours": 2.5258462587784742,
+  "full_run_count": 1656,
+  "methods": [
+    "RANDOM_RANKING",
+    "HANDCRAFTED_CHARGING_RANKING",
+    "HANDCRAFTED_TIME_RANKING",
+    "HANDCRAFTED_COMBINED_RANKING",
+    "REFERENCE_DSL_RANKING",
+    "CLASSIC_ALNS_REFERENCE"
+  ],
+  "normalizer_families": [
+    "C1",
+    "C2",
+    "R1",
+    "R2",
+    "RC1",
+    "RC2"
+  ],
+  "representative_instance_ids": [
+    "c101C5",
+    "r104C5",
+    "rc105C5",
+    "c101_21"
+  ],
+  "representative_runs": 72,
+  "representative_seconds": 395.349849200109,
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "source_hash": "5821bd36c0ecaf44e349dfda8e4c6675b46804633b0057cb7fab496308721309",
+  "status": "PRELIMINARY_TWO_ITERATION_PILOT",
+  "paper_evidence": false,
+  "notes": "Frozen two-iteration equal-budget preliminary ranking pilot. Not final paper evidence."
+}

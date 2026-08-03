@@ -1,11 +1,11 @@
 [project]
-name = "evocharge-agent"
+name = "chargecegis"
 version = "0.1.0"
-description = "Verifier-grounded agentic discovery of transferable EVRPTW search programs"
+description = "ChargeCEGIS: counterexample-guided small-LLM discovery of EVRPTW policies"
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
-authors = [{ name = "EvoCharge-Agent contributors" }]
+authors = [{ name = "ChargeCEGIS contributors" }]
 dependencies = [
   "numpy>=1.26",
   "pandas>=2.1",
@@ -17,15 +17,39 @@ dependencies = [
   "pyyaml>=6.0",
 ]
 
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "ruff>=0.4",
+  "mypy>=1.8",
+  "types-PyYAML>=6.0",
+  "types-requests>=2.31",
+  "pandas-stubs>=2.1",
+]
+
 [project.scripts]
-evocharge = "evocharge.cli:app"
+chargecegis = "chargecegis.experiment:main"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/evocharge"]
+packages = ["src/chargecegis"]
+
+[dependency-groups]
+dev = [
+  "pytest>=8.0",
+  "ruff>=0.4",
+  "mypy>=1.8",
+  "types-PyYAML>=6.0",
+  "types-requests>=2.31",
+  "pandas-stubs>=2.1",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
 
 [tool.ruff]
 line-length = 100
@@ -34,16 +58,16 @@ src = ["src"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
-ignore = ["B008"]
+ignore = ["B008", "B905", "E501", "E701", "E702"]
 
 [tool.mypy]
-python_version = "3.11"
+python_version = "3.12"
 strict = false
 warn_return_any = true
 warn_unused_ignores = true
-packages = ["evocharge"]
+packages = ["chargecegis"]
 mypy_path = "src"
 
 [[tool.mypy.overrides]]
-module = ["psutil"]
+module = ["psutil", "requests", "pandas", "matplotlib.*"]
 ignore_missing_imports = true

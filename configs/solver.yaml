@@ -1,0 +1,35 @@
+# ChargeCEGIS solver host (deterministic ALNS)
+seed: 2027
+alns:
+  max_iterations: 50
+  destroy_fraction: 0.25
+  initial_temperature: 5.0
+  cooling_rate: 0.995
+moves:
+  max_per_type: 20
+move_selection:
+  default_mode: random
+  handcrafted_default: combined
+# Equal-budget removal-unit search (see chargecegis.alns EQUAL_BUDGET_METHODS / destroy_mode
+# "equal_budget"). experiments.yaml's validation block may override these per campaign.
+policy_search:
+  destroy_mode: equal_budget
+  ranking_mode: random
+  removal_units_per_iteration: 5
+  max_segment_length: 3
+  candidate_pool:
+    max_per_route: 5
+    max_total: 100
+  use_merged_initial: true
+charging_reconstruction:
+  max_station_candidates_per_gap: 5
+  max_inserted_stations_per_route: 3
+  max_repair_attempts_per_move: 30
+  beam_width: 8
+  max_expansions: 80
+policy:
+  max_nodes: 45
+  max_depth: 6
+  max_conditionals: 4
+  max_constant_abs: 5.0
+  require_feature_use: true

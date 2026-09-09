@@ -1,0 +1,154 @@
+{
+  "model_id": "qwen25_coder_7b",
+  "model": "qwen2.5-coder:7b",
+  "team_mode": "five_agent",
+  "status": "ran",
+  "cycles": 6,
+  "wall_s": 344.5,
+  "elite_id": "S001",
+  "f0_ok": true,
+  "f1_feasible_rate": 1.0,
+  "f1_crashes": 0,
+  "f2_feasible_rate": 1.0,
+  "c101C5_feasible": true,
+  "c101C5_vehicles": 5,
+  "c101C5_distance": 296.09,
+  "r105C5_feasible": true,
+  "error": "",
+  "cycle": 6,
+  "f0_errors": [],
+  "f1": {
+    "level": "F1",
+    "passed": true,
+    "errors": [],
+    "summary": {
+      "n": 8,
+      "feasible_rate": 1.0,
+      "mean_vehicles": 5,
+      "mean_distance": 278.88296537113905,
+      "median_runtime_s": 0.06248884997330606,
+      "crashes": 0,
+      "timeouts": 0,
+      "battery_violations": 0,
+      "time_window_violations": 0,
+      "unserved": 0
+    },
+    "n_instances": 8
+  },
+  "f2": {
+    "level": "F2",
+    "passed": true,
+    "errors": [],
+    "summary": {
+      "n": 20,
+      "feasible_rate": 1.0,
+      "mean_vehicles": 10.25,
+      "mean_distance": 550.0543644016375,
+      "median_runtime_s": 0.061930649913847446,
+      "crashes": 0,
+      "timeouts": 0,
+      "battery_violations": 0,
+      "time_window_violations": 0,
+      "unserved": 0
+    },
+    "n_instances": 20
+  },
+  "c101C5_first_fault": {
+    "family": "OK",
+    "node_id": "",
+    "route_index": -1,
+    "detail": ""
+  },
+  "r105C5_vehicles": 5,
+  "r105C5_first_fault": {
+    "family": "OK",
+    "node_id": "",
+    "route_index": -1,
+    "detail": ""
+  },
+  "activated_history": [
+    {
+      "cycle": 0,
+      "activated": [],
+      "why": "RESUME_S000"
+    },
+    {
+      "cycle": 1,
+      "activated": [
+        "architect",
+        "charging",
+        "critic",
+        "search"
+      ],
+      "why": "CHARGING"
+    },
+    {
+      "cycle": 2,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 3,
+      "activated": [
+        "architect",
+        "charging",
+        "critic",
+        "search"
+      ],
+      "why": "CHARGING"
+    },
+    {
+      "cycle": 4,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 5,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 6,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 6,
+      "f1": {
+        "level": "F1",
+        "passed": true,
+        "errors": [],
+        "summary": {
+          "n": 8,
+          "feasible_rate": 1.0,
+          "mean_vehicles": 5,
+          "mean_distance": 278.88296537113905,
+          "median_runtime_s": 0.06297309999354184,
+          "crashes": 0,
+          "timeouts": 0,
+          "battery_violations": 0,
+          "time_window_violations": 0,
+          "unserved": 0
+        },
+        "n_instances": 8
+      },
+      "why": "F1_ELITE"
+    }
+  ]
+}

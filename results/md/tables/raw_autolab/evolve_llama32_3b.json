@@ -1,0 +1,124 @@
+{
+  "model_id": "llama32_3b",
+  "model": "llama3.2:3b",
+  "team_mode": "five_agent",
+  "status": "ran",
+  "cycles": 5,
+  "wall_s": 435.1,
+  "elite_id": "S000",
+  "f0_ok": true,
+  "f1_feasible_rate": 0.0,
+  "f1_crashes": 8,
+  "f2_feasible_rate": "",
+  "error": "",
+  "cycle": 5,
+  "f0_errors": [],
+  "f1": {
+    "level": "F1",
+    "passed": false,
+    "errors": [],
+    "summary": {
+      "n": 8,
+      "feasible_rate": 0.0,
+      "mean_vehicles": 0,
+      "mean_distance": 0.0,
+      "median_runtime_s": 0.07265714998356998,
+      "crashes": 8,
+      "timeouts": 0,
+      "battery_violations": 0,
+      "time_window_violations": 0,
+      "unserved": 0
+    },
+    "n_instances": 8
+  },
+  "activated_history": [
+    {
+      "cycle": 0,
+      "activated": [
+        "architect",
+        "routing",
+        "charging",
+        "search",
+        "critic"
+      ],
+      "why": "BOOTSTRAP"
+    },
+    {
+      "cycle": 1,
+      "activated": [
+        "architect",
+        "routing",
+        "charging",
+        "search",
+        "critic"
+      ],
+      "why": "BOOTSTRAP"
+    },
+    {
+      "cycle": 2,
+      "activated": [
+        "architect",
+        "routing",
+        "charging",
+        "search",
+        "critic"
+      ],
+      "why": "BOOTSTRAP"
+    },
+    {
+      "cycle": 3,
+      "activated": [
+        "architect",
+        "routing",
+        "charging",
+        "search",
+        "critic"
+      ],
+      "why": "BOOTSTRAP"
+    },
+    {
+      "cycle": 4,
+      "activated": [
+        "architect",
+        "routing",
+        "charging",
+        "search",
+        "critic"
+      ],
+      "why": "BOOTSTRAP"
+    },
+    {
+      "cycle": 5,
+      "activated": [
+        "architect",
+        "routing",
+        "charging",
+        "search",
+        "critic"
+      ],
+      "why": "BOOTSTRAP"
+    },
+    {
+      "cycle": 5,
+      "f1": {
+        "level": "F1",
+        "passed": false,
+        "errors": [],
+        "summary": {
+          "n": 8,
+          "feasible_rate": 0.0,
+          "mean_vehicles": 0,
+          "mean_distance": 0.0,
+          "median_runtime_s": 0.07278930011671036,
+          "crashes": 8,
+          "timeouts": 0,
+          "battery_violations": 0,
+          "time_window_violations": 0,
+          "unserved": 0
+        },
+        "n_instances": 8
+      },
+      "why": "F1_ELITE"
+    }
+  ]
+}

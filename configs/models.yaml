@@ -1,16 +1,91 @@
-ollama:
-  model: qwen2.5-coder:3b
-  comparison_models:
-    - qwen2.5-coder:1.5b
-    - qwen2.5-coder:3b
-    - qwen2.5-coder:7b
-  num_ctx: 4096
-  keep_alive: "20m"
-  stream: false
-  sequential_requests: true
-temperatures:
-  analyst: 0.10
-  scientist: 0.45
-  synthesizer: 0.20
-  counterexample: 0.40
-  critic: 0.10
+provider_defaults:
+  ollama:
+    host: http://127.0.0.1:11434
+    timeout_s: 300
+    keep_alive: 20m
+
+models:
+  qwen25_coder_7b:
+    enabled: true
+    provider: ollama
+    model: qwen2.5-coder:7b
+    num_ctx: 8192
+    note: Alibaba Qwen2.5-Coder ~7B — historically strongest local code emitter
+  deepseek_coder_67b:
+    enabled: true
+    provider: ollama
+    model: deepseek-coder:6.7b
+    num_ctx: 8192
+    note: DeepSeek Coder ~6.7B — different family, same size band
+  codellama_7b:
+    enabled: true
+    provider: ollama
+    model: codellama:7b
+    num_ctx: 8192
+    note: Meta CodeLlama 7B — third family at ~7B
+
+  # Stronger coding-model anchor under frozen MCB V1 (same seeds 11..55).
+  # Preferred Qwen3-Coder-30B-A3B (~19GB Q4) is not reliable on RTX A2000 12GB + ~16GB RAM.
+  # DeepSeek-Coder-V2-Lite-Instruct: 16B total / ~2.4B active, ~8.9GB Ollama tag.
+  deepseek_coder_v2_lite:
+    enabled: true
+    provider: ollama
+    model: deepseek-coder-v2:16b
+    num_ctx: 8192
+    timeout_s: 300
+    note: Strong-model MCB V1 anchor (MoE Lite); not part of the ~7B package
+
+  # Same-family capacity anchor (preferred over V2-Lite for scaling claims).
+  # qwen2.5-coder:14b ~9GB Q4 — fits RTX A2000 12GB; frozen MCB V1 identical.
+  qwen25_coder_14b:
+    enabled: true
+    provider: ollama
+    model: qwen2.5-coder:14b
+    num_ctx: 8192
+    timeout_s: 300
+    note: Same-family capacity anchor vs qwen2.5-coder:7b under frozen MCB V1
+
+  # Kept for availability checks / ablations; not in the default 3-model package.
+  qwen25_coder_15b:
+    enabled: false
+    provider: ollama
+    model: qwen2.5-coder:1.5b
+    num_ctx: 8192
+  qwen25_coder_3b:
+    enabled: false
+    provider: ollama
+    model: qwen2.5-coder:3b
+    num_ctx: 8192
+  llama32_3b:
+    enabled: false
+    provider: ollama
+    model: llama3.2:3b
+    num_ctx: 8192
+  phi4_mini:
+    enabled: false
+    provider: ollama
+    model: phi4-mini:3.8b
+    num_ctx: 8192
+  qwen3_4b:
+    enabled: false
+    provider: ollama
+    model: qwen3:4b
+    num_ctx: 4096
+    note: extra installed model; not in default package
+
+optional_models:
+  qwen3_coder:
+    enabled: false
+    provider: ollama
+    model: qwen3-coder:30b
+    note: Preferred strong anchor (~19GB Q4 / 30B-A3B MoE). Deferred on this machine (12GB VRAM + ~16GB RAM); use deepseek_coder_v2_lite instead.
+  stable_code_3b:
+    enabled: false
+    provider: ollama
+    model: stable-code:3b-instruct
+    note: Stability AI 3B coding alternative
+  granite_code_3b:
+    enabled: false
+    provider: ollama
+    model: granite-code:3b
+    note: IBM Granite Code 3B

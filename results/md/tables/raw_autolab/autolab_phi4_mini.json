@@ -1,0 +1,15 @@
+{
+  "model_id": "phi4_mini",
+  "model": "phi4-mini:3.8b",
+  "team_mode": "five_agent",
+  "status": "SKIPPED_NOT_INSTALLED",
+  "error": "",
+  "wall_s": 0.0,
+  "f0_ok": false,
+  "bootstrap_feasible": false,
+  "bootstrap_vehicles": "",
+  "bootstrap_distance": "",
+  "f1_feasible_rate": "",
+  "f1_mean_vehicles": "",
+  "solver_path": ""
+}

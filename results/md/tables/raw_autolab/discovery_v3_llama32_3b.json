@@ -1,0 +1,438 @@
+{
+  "model_id": "llama32_3b",
+  "model": "llama3.2:3b",
+  "team_mode": "five_agent",
+  "status": "ran",
+  "cycles": 5,
+  "wall_s": 251.7,
+  "elite_id": "S000",
+  "f0_ok": false,
+  "f1_feasible_rate": 0.0,
+  "f1_crashes": 0,
+  "f2_feasible_rate": "",
+  "c101C5_feasible": false,
+  "c101C5_vehicles": 0,
+  "c101C5_distance": 0.0,
+  "c101C5_first_fault": {
+    "family": "CRASH",
+    "node_id": "",
+    "route_index": -1,
+    "detail": "lab_kbvgfepm\\driver.py\", line 10, in <module>\n    result = solve(instance, seed=0, time_limit_s=8.0)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v3\\llama32_3b\\candidates\\S000\\solver.py\", line 5, in solve\n    vehicles = instance.vehicle_map\n               ^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'EVRPTWInstance' object has no attribute 'vehicle_map'\n"
+  },
+  "small_feasible": 0,
+  "small_exact_fleet": 0,
+  "large_feasible": 0,
+  "n_calls": 37,
+  "prompt_tokens": 0,
+  "error": "",
+  "cycle": 5,
+  "f0_errors": [
+    "smoke:crash:CONTRACT: depot_id and customer_ids are str; node=instance.node_map[id]; distance(n1,n2); travel_time(n1,n2,instance.vehicle); energy_required(n1,n2,instance.vehicle); routes=list[list[str]] start/end depot_id; do not index instance.customers with a Node.\nTraceback (most recent call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_32h0u2zy\\driver.py\", line 10, in <module>\n    result"
+  ],
+  "f1": {
+    "level": "F0",
+    "passed": false,
+    "errors": [
+      "smoke:crash:CONTRACT: depot_id and customer_ids are str; node=instance.node_map[id]; distance(n1,n2); travel_time(n1,n2,instance.vehicle); energy_required(n1,n2,instance.vehicle); routes=list[list[str]] start/end depot_id; do not index instance.customers with a Node.\nTraceback (most recent call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_zvq9vltx\\driver.py\", line 10, in <module>\n    result"
+    ],
+    "summary": {
+      "n": 0,
+      "feasible_rate": 0.0,
+      "crashes": 0,
+      "timeouts": 0
+    }
+  },
+  "f2": null,
+  "small_n": 0,
+  "large_n": 0,
+  "completion_tokens": 0,
+  "llm_latency_s": 235.0,
+  "activated_history": [
+    {
+      "cycle": 0,
+      "activated": [
+        "architect",
+        "routing",
+        "charging",
+        "search",
+        "critic"
+      ],
+      "why": "BOOTSTRAP"
+    },
+    {
+      "cycle": 1,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 2,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 3,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 4,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 5,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 5,
+      "f1": {
+        "level": "F0",
+        "passed": false,
+        "errors": [
+          "smoke:crash:CONTRACT: depot_id and customer_ids are str; node=instance.node_map[id]; distance(n1,n2); travel_time(n1,n2,instance.vehicle); energy_required(n1,n2,instance.vehicle); routes=list[list[str]] start/end depot_id; do not index instance.customers with a Node.\nTraceback (most recent call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_mwi2lp5s\\driver.py\", line 10, in <module>\n    result"
+        ],
+        "summary": {
+          "n": 0,
+          "feasible_rate": 0.0,
+          "crashes": 0,
+          "timeouts": 0
+        }
+      },
+      "why": "F1_ELITE"
+    }
+  ],
+  "trajectories": [
+    {
+      "timestamp": "2026-09-04T12:38:46.275114+00:00",
+      "cycle": 0,
+      "solver_id": "S000",
+      "elite_id": "S000",
+      "parent_id": null,
+      "instance_id": "smoke_c1",
+      "activated": [
+        "architect",
+        "routing",
+        "charging",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "Continue from elite solver evidence.",
+      "architect_target": "SEARCH",
+      "decision": "REVERT",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": "oftp4b\\driver.py\", line 10, in <module>\n    result = solve(instance, seed=0, time_limit_s=8.0)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v3\\llama32_3b\\candidates\\S000\\solver.py\", line 9, in solve\n    instance.customers.sort(key=lambda x: x.demand, reverse=True)\n    ^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'tuple' object has no attribute 'sort'\n"
+      },
+      "f0_errors": [
+        "smoke:crash:CONTRACT: depot_id and customer_ids are str; node=instance.node_map[id]; distance(n1,n2); travel_time(n1,n2,instance.vehicle); energy_required(n1,n2,instance.vehicle); routes=list[list[str]] start/end depot_id; do not index instance.customers with a Node.\nTraceback (most recent call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_qkzsg5s5\\driver.py\", line 10, in <module>\n    result"
+      ],
+      "code_hash": "1463610a2ca0e16c825f88e3a033d683a90af2d3363dc3c5f5b10274522e2230"
+    },
+    {
+      "timestamp": "2026-09-04T12:39:10.330511+00:00",
+      "cycle": 1,
+      "solver_id": "S001",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "smoke_c1",
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "The solver should handle tuple inputs by converting them to a list before sorting.",
+      "architect_target": "SEARCH",
+      "phase": "DEBUG",
+      "decision": "REVERT",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 0,
+      "parent_distance": 0.0,
+      "parent_fault": "CRASH",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": "_mxb38e1z\\driver.py\", line 10, in <module>\n    result = solve(instance, seed=0, time_limit_s=8.0)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v3\\llama32_3b\\candidates\\S000\\solver.py\", line 10, in solve\n    instance.customers.sort(key=lambda x: x[1], reverse=True)\n    ^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'tuple' object has no attribute 'sort'\n"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 0,
+      "attempted_distance": 0.0,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [
+        "smoke:crash:CONTRACT: depot_id and customer_ids are str; node=instance.node_map[id]; distance(n1,n2); travel_time(n1,n2,instance.vehicle); energy_required(n1,n2,instance.vehicle); routes=list[list[str]] start/end depot_id; do not index instance.customers with a Node.\nTraceback (most recent call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_zc34qp9a\\driver.py\", line 10, in <module>\n    result"
+      ],
+      "code_hash": "e18d1bd32bee9fbdabe5a336565115d4f4bdb238ff795af74832e3b4cfccf1ed",
+      "critic_lesson": "Ensure the solver handles unexpected keyword arguments",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-04T12:41:03.508252+00:00",
+      "cycle": 2,
+      "solver_id": "S002",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "smoke_c1",
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "Continue from elite solver evidence.",
+      "architect_target": "SEARCH",
+      "phase": "DEBUG",
+      "decision": "REVERT",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 0,
+      "parent_distance": 0.0,
+      "parent_fault": "CRASH",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": "emp\\evrptw_autolab_65hidxvx\\driver.py\", line 10, in <module>\n    result = solve(instance, seed=0, time_limit_s=8.0)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v3\\llama32_3b\\candidates\\S000\\solver.py\", line 26, in solve\n    customers.sort(key=lambda x: x[1], reverse=True)\n    ^^^^^^^^^^^^^^\nAttributeError: 'tuple' object has no attribute 'sort'\n"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 0,
+      "attempted_distance": 0.0,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [
+        "smoke:crash:CONTRACT: depot_id and customer_ids are str; node=instance.node_map[id]; distance(n1,n2); travel_time(n1,n2,instance.vehicle); energy_required(n1,n2,instance.vehicle); routes=list[list[str]] start/end depot_id; do not index instance.customers with a Node.\nTraceback (most recent call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_wsds3ykg\\driver.py\", line 10, in <module>\n    result"
+      ],
+      "code_hash": "be578d1490b453ac25cbb5b1d65576deeabdb430e2d20f5c5acd6b78a5c71ee6",
+      "critic_lesson": "Ensure the solver imports necessary modules",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-04T12:41:28.809794+00:00",
+      "cycle": 3,
+      "solver_id": "S003",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "smoke_c1",
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "Continue from elite solver evidence.",
+      "architect_target": "SEARCH",
+      "phase": "DEBUG",
+      "decision": "REVERT",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 0,
+      "parent_distance": 0.0,
+      "parent_fault": "CRASH",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": "Data\\Local\\Temp\\evrptw_autolab_ekh3pdt_\\driver.py\", line 10, in <module>\n    result = solve(instance, seed=0, time_limit_s=8.0)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v3\\llama32_3b\\candidates\\S000\\solver.py\", line 14, in solve\n    customers.sort(key=lambda x: int(x[1]), reverse=True)\n    ^^^^^^^^^\nNameError: name 'customers' is not defined\n"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 0,
+      "attempted_distance": 0.0,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [
+        "smoke:crash:CONTRACT: depot_id and customer_ids are str; node=instance.node_map[id]; distance(n1,n2); travel_time(n1,n2,instance.vehicle); energy_required(n1,n2,instance.vehicle); routes=list[list[str]] start/end depot_id; do not index instance.customers with a Node.\nTraceback (most recent call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_ywbsxx9n\\driver.py\", line 10, in <module>\n    result"
+      ],
+      "code_hash": "1afd2c48424d6f41bb9dc4b4073813e2c294e86bb50747b519fe14e9771cd389",
+      "critic_lesson": "Ensure the solver imports necessary modules",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-04T12:41:57.535478+00:00",
+      "cycle": 4,
+      "solver_id": "S004",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "smoke_c1",
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "Continue from elite solver evidence.",
+      "architect_target": "SEARCH",
+      "phase": "DEBUG",
+      "decision": "REVERT",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 0,
+      "parent_distance": 0.0,
+      "parent_fault": "CRASH",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": "ult = solve(instance, seed=0, time_limit_s=8.0)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v3\\llama32_3b\\candidates\\S000\\solver.py\", line 15, in solve\n    customers = [(customer_id, route) for customer_id, route in instance.customers]\n                                          ^^^^^^^^^^^^^^^^^^\nTypeError: cannot unpack non-iterable Node object\n"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 0,
+      "attempted_distance": 0.0,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [
+        "smoke:crash:CONTRACT: depot_id and customer_ids are str; node=instance.node_map[id]; distance(n1,n2); travel_time(n1,n2,instance.vehicle); energy_required(n1,n2,instance.vehicle); routes=list[list[str]] start/end depot_id; do not index instance.customers with a Node.\nTraceback (most recent call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_wldojosz\\driver.py\", line 10, in <module>\n    result"
+      ],
+      "code_hash": "241649b2e9c4b1b05993c00ba56e14c3328bb0c1d3713276d92c471188aadec9",
+      "critic_lesson": "A solver must handle exceptions and import errors properly to avoid crashes.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-04T12:42:18.130678+00:00",
+      "cycle": 5,
+      "solver_id": "S005",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "smoke_c1",
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "Continue from elite solver evidence.",
+      "architect_target": "SEARCH",
+      "phase": "DEBUG",
+      "decision": "REVERT",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 0,
+      "parent_distance": 0.0,
+      "parent_fault": "CRASH",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": "lab_j_lyndyh\\driver.py\", line 10, in <module>\n    result = solve(instance, seed=0, time_limit_s=8.0)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v3\\llama32_3b\\candidates\\S000\\solver.py\", line 5, in solve\n    vehicles = instance.vehicle_map\n               ^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'EVRPTWInstance' object has no attribute 'vehicle_map'\n"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 0,
+      "attempted_distance": 0.0,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [
+        "smoke:crash:CONTRACT: depot_id and customer_ids are str; node=instance.node_map[id]; distance(n1,n2); travel_time(n1,n2,instance.vehicle); energy_required(n1,n2,instance.vehicle); routes=list[list[str]] start/end depot_id; do not index instance.customers with a Node.\nTraceback (most recent call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_29budhwi\\driver.py\", line 10, in <module>\n    result"
+      ],
+      "code_hash": "a54790cc55af69ab4ecae583a4341d368bf1381e39ea65ae971c8fd49ee18d7d",
+      "critic_lesson": "A child crashed while the parent did not, indicating a critical failure in the solver.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    }
+  ]
+}

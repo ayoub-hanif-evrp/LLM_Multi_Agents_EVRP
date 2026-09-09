@@ -1,0 +1,604 @@
+{
+  "model_id": "deepseek_coder_67b",
+  "model": "deepseek-coder:6.7b",
+  "team_mode": "five_agent",
+  "status": "ran",
+  "cycles": 8,
+  "wall_s": 791.7,
+  "elite_id": "S000",
+  "f0_ok": true,
+  "f1_feasible_rate": 0.5,
+  "f1_crashes": 0,
+  "f2_feasible_rate": 0.25,
+  "c101C5_feasible": true,
+  "c101C5_vehicles": 5,
+  "c101C5_distance": 296.09,
+  "c101C5_first_fault": {
+    "family": "OK",
+    "node_id": "",
+    "route_index": -1,
+    "detail": ""
+  },
+  "small_feasible": 4,
+  "small_exact_fleet": 0,
+  "large_feasible": 27,
+  "n_calls": 69,
+  "prompt_tokens": 0,
+  "error": "",
+  "cycle": 8,
+  "f0_errors": [],
+  "f1": {
+    "level": "F1",
+    "passed": true,
+    "errors": [],
+    "summary": {
+      "n": 4,
+      "feasible_rate": 0.5,
+      "mean_vehicles": 5,
+      "mean_distance": 251.65814798626684,
+      "median_runtime_s": 0.07695349992718548,
+      "crashes": 0,
+      "timeouts": 0,
+      "battery_violations": 2,
+      "time_window_violations": 0,
+      "unserved": 0
+    },
+    "n_instances": 4
+  },
+  "f2": {
+    "level": "F2",
+    "passed": true,
+    "errors": [],
+    "summary": {
+      "n": 12,
+      "feasible_rate": 0.25,
+      "mean_vehicles": 6.666666666666667,
+      "mean_distance": 296.704219804654,
+      "median_runtime_s": 0.07591190002858639,
+      "crashes": 0,
+      "timeouts": 0,
+      "battery_violations": 17,
+      "time_window_violations": 0,
+      "unserved": 0
+    },
+    "n_instances": 12
+  },
+  "small_n": 36,
+  "large_n": 56,
+  "completion_tokens": 0,
+  "llm_latency_s": 635.8,
+  "activated_history": [
+    {
+      "cycle": 0,
+      "activated": [
+        "architect",
+        "routing",
+        "charging",
+        "search",
+        "critic"
+      ],
+      "why": "BOOTSTRAP"
+    },
+    {
+      "cycle": 1,
+      "activated": [],
+      "why": "CYCLE_FAILED",
+      "error": "architect output invalid: Expecting ',' delimiter: line 17 column 2 (char 3197)"
+    },
+    {
+      "cycle": 2,
+      "activated": [
+        "architect",
+        "search",
+        "critic",
+        "charging"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 3,
+      "activated": [
+        "architect",
+        "search",
+        "critic",
+        "charging"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 4,
+      "activated": [
+        "architect",
+        "search",
+        "critic",
+        "charging"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 5,
+      "activated": [
+        "architect",
+        "search",
+        "critic",
+        "charging"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 6,
+      "activated": [
+        "architect",
+        "search",
+        "critic",
+        "charging"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 7,
+      "activated": [
+        "architect",
+        "search",
+        "critic",
+        "charging"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 8,
+      "activated": [
+        "architect",
+        "search",
+        "critic",
+        "charging"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 8,
+      "f1": {
+        "level": "F1",
+        "passed": true,
+        "errors": [],
+        "summary": {
+          "n": 4,
+          "feasible_rate": 0.5,
+          "mean_vehicles": 5,
+          "mean_distance": 251.65814798626684,
+          "median_runtime_s": 0.0757753998041153,
+          "crashes": 0,
+          "timeouts": 0,
+          "battery_violations": 2,
+          "time_window_violations": 0,
+          "unserved": 0
+        },
+        "n_instances": 4
+      },
+      "why": "F1_ELITE"
+    }
+  ],
+  "trajectories": [
+    {
+      "timestamp": "2026-09-04T16:35:46.750389+00:00",
+      "cycle": 0,
+      "solver_id": "S000",
+      "elite_id": "S000",
+      "parent_id": null,
+      "instance_id": "smoke_c1",
+      "activated": [
+        "architect",
+        "routing",
+        "charging",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "Continue from elite solver evidence.",
+      "architect_target": "SEARCH",
+      "decision": "RETAIN",
+      "feasible": true,
+      "vehicles": 1,
+      "distance": 2.0,
+      "first_fault": {
+        "family": "OK",
+        "node_id": "",
+        "route_index": -1,
+        "detail": ""
+      },
+      "f0_errors": [],
+      "code_hash": "2c3552aab737bcb9453bc56a03c64f27e1f46db7bac6b69c33382dc608088cd6"
+    },
+    {
+      "timestamp": "2026-09-04T16:37:17.467877+00:00",
+      "cycle": 1,
+      "solver_id": "S001",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "r104C5",
+      "activated": [
+        "architect",
+        "search",
+        "critic",
+        "charging"
+      ],
+      "architect_hypothesis": "Continue from elite solver evidence.",
+      "architect_target": "SEARCH",
+      "phase": "CONTRACT",
+      "decision": "RETAIN",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 5,
+      "parent_distance": 222.7715407306123,
+      "parent_fault": "BATTERY",
+      "feasible": false,
+      "vehicles": 5,
+      "distance": 222.7715407306123,
+      "first_fault": {
+        "family": "BATTERY",
+        "node_id": "D0",
+        "route_index": 0,
+        "detail": "battery_arrival=-18.692"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 5,
+      "attempted_distance": 222.7715407306123,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [],
+      "code_hash": "2c3552aab737bcb9453bc56a03c64f27e1f46db7bac6b69c33382dc608088cd6",
+      "critic_lesson": "Comparing child vs parent under identical instances, seeds, and time limits can provide valuable insights into the performance of a solver. This lesson emphasizes the importance of writing reusable comparison logic.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic",
+          "charging"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-04T16:39:06.701149+00:00",
+      "cycle": 2,
+      "solver_id": "S002",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "r104C5",
+      "activated": [
+        "architect",
+        "search",
+        "critic",
+        "charging"
+      ],
+      "architect_hypothesis": "Files retrieved successfully.",
+      "architect_target": "SEARCH",
+      "phase": "CONTRACT",
+      "decision": "RETAIN",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 5,
+      "parent_distance": 222.7715407306123,
+      "parent_fault": "BATTERY",
+      "feasible": false,
+      "vehicles": 5,
+      "distance": 222.7715407306123,
+      "first_fault": {
+        "family": "BATTERY",
+        "node_id": "D0",
+        "route_index": 0,
+        "detail": "battery_arrival=-18.692"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 5,
+      "attempted_distance": 222.7715407306123,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [],
+      "code_hash": "2c3552aab737bcb9453bc56a03c64f27e1f46db7bac6b69c33382dc608088cd6",
+      "critic_lesson": "Understanding and implementing a well-defined ranking criterion is crucial for comparing different solutions in lexicographical order. This will ensure that the best solution (i.e., no crash, feasibility first, fewer vehicles next, smaller distance last) is retained.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic",
+          "charging"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-04T16:40:49.484618+00:00",
+      "cycle": 3,
+      "solver_id": "S003",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "r104C5",
+      "activated": [
+        "architect",
+        "search",
+        "critic",
+        "charging"
+      ],
+      "architect_hypothesis": "Solutions fetched successfully.",
+      "architect_target": "SEARCH",
+      "phase": "CONTRACT",
+      "decision": "RETAIN",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 5,
+      "parent_distance": 222.7715407306123,
+      "parent_fault": "BATTERY",
+      "feasible": false,
+      "vehicles": 5,
+      "distance": 222.7715407306123,
+      "first_fault": {
+        "family": "BATTERY",
+        "node_id": "D0",
+        "route_index": 0,
+        "detail": "battery_arrival=-18.692"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 5,
+      "attempted_distance": 222.7715407306123,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [],
+      "code_hash": "2c3552aab737bcb9453bc56a03c64f27e1f46db7bac6b69c33382dc608088cd6",
+      "critic_lesson": "Both the child and parent are able to solve the problem effectively, indicating that no significant changes were necessary.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic",
+          "charging"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-04T16:41:44.749498+00:00",
+      "cycle": 4,
+      "solver_id": "S004",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "r104C5",
+      "activated": [
+        "architect",
+        "search",
+        "critic",
+        "charging"
+      ],
+      "architect_hypothesis": "Continue from elite solver evidence.",
+      "architect_target": "SEARCH",
+      "phase": "CONTRACT",
+      "decision": "RETAIN",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 5,
+      "parent_distance": 222.7715407306123,
+      "parent_fault": "BATTERY",
+      "feasible": false,
+      "vehicles": 5,
+      "distance": 222.7715407306123,
+      "first_fault": {
+        "family": "BATTERY",
+        "node_id": "D0",
+        "route_index": 0,
+        "detail": "battery_arrival=-18.692"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 5,
+      "attempted_distance": 222.7715407306123,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [],
+      "code_hash": "2c3552aab737bcb9453bc56a03c64f27e1f46db7bac6b69c33382dc608088cd6",
+      "critic_lesson": "It is important to optimize the performance of the solve() function, as it directly affects the overall runtime of the program. This can be achieved by improving the efficiency of the algorithm used in the solve() function.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic",
+          "charging"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-04T16:43:04.326587+00:00",
+      "cycle": 5,
+      "solver_id": "S005",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "r104C5",
+      "activated": [
+        "architect",
+        "search",
+        "critic",
+        "charging"
+      ],
+      "architect_hypothesis": "Continue from elite solver evidence.",
+      "architect_target": "SEARCH",
+      "phase": "CONTRACT",
+      "decision": "RETAIN",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 5,
+      "parent_distance": 222.7715407306123,
+      "parent_fault": "BATTERY",
+      "feasible": false,
+      "vehicles": 5,
+      "distance": 222.7715407306123,
+      "first_fault": {
+        "family": "BATTERY",
+        "node_id": "D0",
+        "route_index": 0,
+        "detail": "battery_arrival=-18.692"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 5,
+      "attempted_distance": 222.7715407306123,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [],
+      "code_hash": "2c3552aab737bcb9453bc56a03c64f27e1f46db7bac6b69c33382dc608088cd6",
+      "critic_lesson": "Lexicographically better solvers are preferred over crashing ones",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic",
+          "charging"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-04T16:45:36.766249+00:00",
+      "cycle": 6,
+      "solver_id": "S006",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "r104C5",
+      "activated": [
+        "architect",
+        "search",
+        "critic",
+        "charging"
+      ],
+      "architect_hypothesis": "{'id': '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'solver_name': 'My Solver Name', 'description': 'This solver uses a greedy algorithm to assign customers to vehicles based on their demand and capacity.', 'language': 'Python', 'code': {'main.py': '# Initialize routes as empty lists for each vehicle\\nroutes = [[] for _ in range(len(instance.vehicles))]\\n# Assign customers to vehicles based on their demand and capacity\\nfor customer in instance.customers:\\n    min_load = float(\\'inf\\')\\n    best_vehicle = None\\n    # Find the vehicle with the least load that can handle the current customer\\n    for i, vehicle in enumerate(instance.vehicles):\\n        if (customer.demand + sum([node.demand for node in routes[i]])) <= vehicle.capacity:\\n            travel_time = travel_time(vehicle.depot, custome",
+      "architect_target": "SEARCH",
+      "phase": "CONTRACT",
+      "decision": "RETAIN",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 5,
+      "parent_distance": 222.7715407306123,
+      "parent_fault": "BATTERY",
+      "feasible": false,
+      "vehicles": 5,
+      "distance": 222.7715407306123,
+      "first_fault": {
+        "family": "BATTERY",
+        "node_id": "D0",
+        "route_index": 0,
+        "detail": "battery_arrival=-18.692"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 5,
+      "attempted_distance": 222.7715407306123,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [],
+      "code_hash": "2c3552aab737bcb9453bc56a03c64f27e1f46db7bac6b69c33382dc608088cd6",
+      "critic_lesson": "Avoiding overfitting to instance ids/families is crucial for maintaining the quality of outputs.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic",
+          "charging"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-04T16:47:06.427260+00:00",
+      "cycle": 7,
+      "solver_id": "S007",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "r104C5",
+      "activated": [
+        "architect",
+        "search",
+        "critic",
+        "charging"
+      ],
+      "architect_hypothesis": "Continue from elite solver evidence.",
+      "architect_target": "SEARCH",
+      "phase": "CONTRACT",
+      "decision": "RETAIN",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 5,
+      "parent_distance": 222.7715407306123,
+      "parent_fault": "BATTERY",
+      "feasible": false,
+      "vehicles": 5,
+      "distance": 222.7715407306123,
+      "first_fault": {
+        "family": "BATTERY",
+        "node_id": "D0",
+        "route_index": 0,
+        "detail": "battery_arrival=-18.692"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 5,
+      "attempted_distance": 222.7715407306123,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [],
+      "code_hash": "2c3552aab737bcb9453bc56a03c64f27e1f46db7bac6b69c33382dc608088cd6",
+      "critic_lesson": "Avoid overfitting to instance ids/families. The solver should focus on improving feasibility, vehicles and distance.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic",
+          "charging"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    }
+  ]
+}

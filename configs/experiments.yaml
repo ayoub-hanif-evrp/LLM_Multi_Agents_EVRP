@@ -1,34 +1,29 @@
-# ChargeCEGIS experiment budgets (do not run full campaigns without validate-core passing first)
-discovery:
-  seeds: 3
-  initial_candidates_per_seed: 20
-  max_revised_per_seed: 5
-  archive_size: 10
-evaluation:
-  alns_seeds_min: 5
-  alns_seeds_preferred: 10
-held_out:
-  protocol: six_fold_family
-  families: [C1, C2, R1, R2, RC1, RC2]
-validation:
-  status: PRELIMINARY_DETERMINISTIC_VALIDATION
-  seeds: [0, 1, 2]
-  max_iterations: 2
-  reduced_max_iterations: 2
-  time_budget_hours: 6
-  removal_units_per_iteration: 5
-  max_segment_length: 3
-  candidate_pool:
-    max_per_route: 4
-    max_total: 40
-  equal_budget_methods:
-    - RANDOM_RANKING
-    - HANDCRAFTED_CHARGING_RANKING
-    - HANDCRAFTED_TIME_RANKING
-    - HANDCRAFTED_COMBINED_RANKING
-    - REFERENCE_DSL_RANKING
-  classic_reference: CLASSIC_ALNS_REFERENCE
-  pilot_instances: [c101C5, c101C10, r102C10, rc102C10, c101_21]
-  # Include one large instance so wall-clock estimates are not dominated by tiny smokes.
-  smoke_instances: [c101C5, r104C5, rc105C5, c101_21]
 data_root: dataset/schneider/raw_instances
+held_out_family: RC2
+discovery_families: [C1, R1]
+confirmation_families: [C2, R2, RC1]
+
+fidelity:
+  F1:
+    customer_sizes: [5]
+    seeds: [0]
+  F2:
+    customer_sizes: [5, 10, 15]
+    seeds: [0, 1]
+  F3:
+    large_representatives_per_family: 1
+    seeds: [0]
+  F4:
+    seeds: [0, 1, 2]
+
+# P0 clean protocol: one model to debug autonomy (not multi-model comparison yet).
+model_comparison:
+  homogeneous_team: true
+  team_mode: five_agent
+  model_ids:
+    - qwen25_coder_7b
+
+discover:
+  cycles: 8
+  equal_budget: true
+  workspace: workspace/discovery_p0_clean

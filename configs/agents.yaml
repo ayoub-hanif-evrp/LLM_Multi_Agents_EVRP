@@ -1,0 +1,25 @@
+# Exactly five logical agents. Team size does not vary; LLM models do.
+team:
+  mode: five_agent
+
+roles:
+  architect:
+    prompt: prompts/solver_architect.md
+    temperature: 0.35
+    max_retries: 1
+  routing:
+    prompt: prompts/routing_engineer.md
+    temperature: 0.25
+    max_retries: 1
+  charging:
+    prompt: prompts/charging_engineer.md
+    temperature: 0.25
+    max_retries: 1
+  search:
+    prompt: prompts/search_integration_engineer.md
+    temperature: 0.25
+    max_retries: 1
+  critic:
+    prompt: prompts/test_evolution_critic.md
+    temperature: 0.10
+    max_retries: 1

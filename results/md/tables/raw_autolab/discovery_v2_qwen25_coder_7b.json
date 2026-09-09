@@ -1,0 +1,1049 @@
+{
+  "model_id": "qwen25_coder_7b",
+  "model": "qwen2.5-coder:7b",
+  "team_mode": "five_agent",
+  "status": "ran",
+  "cycles": 15,
+  "wall_s": 1253.9,
+  "elite_id": "S000",
+  "f0_ok": true,
+  "f1_feasible_rate": 0.0,
+  "f1_crashes": 4,
+  "f2_feasible_rate": "",
+  "c101C5_feasible": false,
+  "c101C5_vehicles": 0,
+  "c101C5_distance": 0.0,
+  "c101C5_first_fault": {
+    "family": "CRASH",
+    "node_id": "",
+    "route_index": -1,
+    "detail": " call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_qwc8oeyi\\driver.py\", line 10, in <module>\n    result = solve(instance, seed=0, time_limit_s=20.0)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v2\\qwen25_coder_7b\\candidates\\S000\\solver.py\", line 98, in solve\n    seed(seed)\n    ~~~~^^^^^^\nTypeError: 'int' object is not callable\n"
+  },
+  "small_feasible": 0,
+  "small_exact_fleet": 0,
+  "large_feasible": 0,
+  "n_calls": 82,
+  "prompt_tokens": 0,
+  "error": "",
+  "cycle": 15,
+  "f0_errors": [],
+  "f1": {
+    "level": "F1",
+    "passed": false,
+    "errors": [],
+    "summary": {
+      "n": 4,
+      "feasible_rate": 0.0,
+      "mean_vehicles": 0,
+      "mean_distance": 0.0,
+      "median_runtime_s": 0.08165265014395118,
+      "crashes": 4,
+      "timeouts": 0,
+      "battery_violations": 0,
+      "time_window_violations": 0,
+      "unserved": 0
+    },
+    "n_instances": 4
+  },
+  "f2": null,
+  "small_n": 36,
+  "large_n": 0,
+  "completion_tokens": 0,
+  "llm_latency_s": 1241.7,
+  "activated_history": [
+    {
+      "cycle": 0,
+      "activated": [
+        "architect",
+        "routing",
+        "charging",
+        "search",
+        "critic"
+      ],
+      "why": "BOOTSTRAP"
+    },
+    {
+      "cycle": 1,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 2,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 3,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 4,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 5,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 6,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 7,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 8,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 9,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 10,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 11,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 12,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 13,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 14,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 15,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 15,
+      "f1": {
+        "level": "F1",
+        "passed": false,
+        "errors": [],
+        "summary": {
+          "n": 4,
+          "feasible_rate": 0.0,
+          "mean_vehicles": 0,
+          "mean_distance": 0.0,
+          "median_runtime_s": 0.0798235998954624,
+          "crashes": 4,
+          "timeouts": 0,
+          "battery_violations": 0,
+          "time_window_violations": 0,
+          "unserved": 0
+        },
+        "n_instances": 4
+      },
+      "why": "F1_ELITE"
+    }
+  ],
+  "trajectories": [
+    {
+      "timestamp": "2026-09-01T15:09:31.400646+00:00",
+      "cycle": 0,
+      "solver_id": "S000",
+      "elite_id": "S000",
+      "parent_id": null,
+      "instance_id": "c101C5",
+      "activated": [
+        "architect",
+        "routing",
+        "charging",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "The next research target should be to improve the battery management policy in order to better handle the energy requirements of the EVRPTW problem. This will help to ensure that vehicles have sufficient battery capacity to complete their routes without running out of power.",
+      "architect_target": "CHARGING",
+      "decision": "REVERT",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": "t call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_celspl60\\driver.py\", line 10, in <module>\n    result = solve(instance, seed=0, time_limit_s=8.0)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v2\\qwen25_coder_7b\\candidates\\S000\\solver.py\", line 98, in solve\n    seed(seed)\n    ~~~~^^^^^^\nTypeError: 'int' object is not callable\n"
+      },
+      "f0_errors": [],
+      "code_hash": "a72f379ef7ec4881c11b120c57fb0585abfec2fbe46ccfbb265df03251ee6aaf"
+    },
+    {
+      "timestamp": "2026-09-01T15:11:18.138872+00:00",
+      "cycle": 1,
+      "solver_id": "S001",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "c101C5",
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "Do not pass parameters directly to functions that are named after built-in Python types or functions.",
+      "architect_target": "SEARCH",
+      "decision": "REVERT",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 0,
+      "parent_distance": 0.0,
+      "parent_fault": "CRASH",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": " call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_j7vof7x8\\driver.py\", line 10, in <module>\n    result = solve(instance, seed=0, time_limit_s=20.0)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v2\\qwen25_coder_7b\\candidates\\S000\\solver.py\", line 98, in solve\n    seed(seed)\n    ~~~~^^^^^^\nTypeError: 'int' object is not callable\n"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 0,
+      "attempted_distance": 0.0,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [],
+      "code_hash": "a72f379ef7ec4881c11b120c57fb0585abfec2fbe46ccfbb265df03251ee6aaf",
+      "critic_lesson": "Do not use 'seed' as a function name, as it conflicts with Python's built-in seed function.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-01T15:11:36.140028+00:00",
+      "cycle": 2,
+      "solver_id": "S002",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "c101C5",
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "Do not use 'seed' as a function name, as it conflicts with Python's built-in seed function.",
+      "architect_target": "SEARCH",
+      "decision": "ABANDON",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 0,
+      "parent_distance": 0.0,
+      "parent_fault": "CRASH",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": " call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_jhljjdwx\\driver.py\", line 10, in <module>\n    result = solve(instance, seed=0, time_limit_s=20.0)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v2\\qwen25_coder_7b\\candidates\\S002\\solver.py\", line 98, in solve\n    seed(seed)\n    ~~~~^^^^^^\nTypeError: 'int' object is not callable\n"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 0,
+      "attempted_distance": 0.0,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [],
+      "code_hash": "a72f379ef7ec4881c11b120c57fb0585abfec2fbe46ccfbb265df03251ee6aaf",
+      "critic_lesson": "Do not use built-in function names as variable or parameter names.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-01T15:12:46.226603+00:00",
+      "cycle": 3,
+      "solver_id": "S003",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "c101C5",
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "Do not use 'seed' as a function name, as it conflicts with Python's built-in seed function.",
+      "architect_target": "SEARCH",
+      "decision": "REVERT",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 0,
+      "parent_distance": 0.0,
+      "parent_fault": "CRASH",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": " call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_7nlp6fwr\\driver.py\", line 10, in <module>\n    result = solve(instance, seed=0, time_limit_s=20.0)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v2\\qwen25_coder_7b\\candidates\\S000\\solver.py\", line 98, in solve\n    seed(seed)\n    ~~~~^^^^^^\nTypeError: 'int' object is not callable\n"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 0,
+      "attempted_distance": 0.0,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [],
+      "code_hash": "a72f379ef7ec4881c11b120c57fb0585abfec2fbe46ccfbb265df03251ee6aaf",
+      "critic_lesson": "Do not use 'seed' as a variable name when importing the random module, as it shadows the built-in function.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-01T15:14:38.907549+00:00",
+      "cycle": 4,
+      "solver_id": "S004",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "c101C5",
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "Continue from elite solver evidence.",
+      "architect_target": "SEARCH",
+      "decision": "REVERT",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 0,
+      "parent_distance": 0.0,
+      "parent_fault": "CRASH",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": " call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_ymhx27ub\\driver.py\", line 10, in <module>\n    result = solve(instance, seed=0, time_limit_s=20.0)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v2\\qwen25_coder_7b\\candidates\\S000\\solver.py\", line 98, in solve\n    seed(seed)\n    ~~~~^^^^^^\nTypeError: 'int' object is not callable\n"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 0,
+      "attempted_distance": 0.0,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [],
+      "code_hash": "a72f379ef7ec4881c11b120c57fb0585abfec2fbe46ccfbb265df03251ee6aaf",
+      "critic_lesson": "Do not use built-in Python functions like 'seed' as variable names or function arguments.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-01T15:14:56.116691+00:00",
+      "cycle": 5,
+      "solver_id": "S005",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "c101C5",
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "Do not pass parameters directly to functions that are named after built-in Python types or functions.",
+      "architect_target": "SEARCH",
+      "decision": "REVERT",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 0,
+      "parent_distance": 0.0,
+      "parent_fault": "CRASH",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": " call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_08pyzed_\\driver.py\", line 10, in <module>\n    result = solve(instance, seed=0, time_limit_s=20.0)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v2\\qwen25_coder_7b\\candidates\\S000\\solver.py\", line 98, in solve\n    seed(seed)\n    ~~~~^^^^^^\nTypeError: 'int' object is not callable\n"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 0,
+      "attempted_distance": 0.0,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [],
+      "code_hash": "a72f379ef7ec4881c11b120c57fb0585abfec2fbe46ccfbb265df03251ee6aaf",
+      "critic_lesson": "Do not use the name 'seed' as a variable or function when importing Python's built-in `seed` function from the `random` module.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-01T15:16:24.676530+00:00",
+      "cycle": 6,
+      "solver_id": "S006",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "c101C5",
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "Continue from elite solver evidence.",
+      "architect_target": "SEARCH",
+      "decision": "REVERT",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 0,
+      "parent_distance": 0.0,
+      "parent_fault": "CRASH",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": " call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_f_q8cy8n\\driver.py\", line 10, in <module>\n    result = solve(instance, seed=0, time_limit_s=20.0)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v2\\qwen25_coder_7b\\candidates\\S000\\solver.py\", line 98, in solve\n    seed(seed)\n    ~~~~^^^^^^\nTypeError: 'int' object is not callable\n"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 0,
+      "attempted_distance": 0.0,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [],
+      "code_hash": "a72f379ef7ec4881c11b120c57fb0585abfec2fbe46ccfbb265df03251ee6aaf",
+      "critic_lesson": "Do not use built-in function names like 'seed' as variable or parameter names.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-01T15:18:13.817023+00:00",
+      "cycle": 7,
+      "solver_id": "S007",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "c101C5",
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "Do not use 'seed' as a variable name when importing the random module, as it shadows the built-in function.",
+      "architect_target": "SEARCH",
+      "decision": "REVERT",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 0,
+      "parent_distance": 0.0,
+      "parent_fault": "CRASH",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": " call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_8srhxsrd\\driver.py\", line 10, in <module>\n    result = solve(instance, seed=0, time_limit_s=20.0)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v2\\qwen25_coder_7b\\candidates\\S000\\solver.py\", line 98, in solve\n    seed(seed)\n    ~~~~^^^^^^\nTypeError: 'int' object is not callable\n"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 0,
+      "attempted_distance": 0.0,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [],
+      "code_hash": "a72f379ef7ec4881c11b120c57fb0585abfec2fbe46ccfbb265df03251ee6aaf",
+      "critic_lesson": "Do not use 'int' objects as callable functions.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-01T15:18:29.483103+00:00",
+      "cycle": 8,
+      "solver_id": "S008",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "c101C5",
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "Do not use built-in Python functions like 'seed' as variable names or function arguments.",
+      "architect_target": "SEARCH",
+      "decision": "REVERT",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 0,
+      "parent_distance": 0.0,
+      "parent_fault": "CRASH",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": " call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_dtxxvbik\\driver.py\", line 10, in <module>\n    result = solve(instance, seed=0, time_limit_s=20.0)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v2\\qwen25_coder_7b\\candidates\\S000\\solver.py\", line 98, in solve\n    seed(seed)\n    ~~~~^^^^^^\nTypeError: 'int' object is not callable\n"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 0,
+      "attempted_distance": 0.0,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [],
+      "code_hash": "a72f379ef7ec4881c11b120c57fb0585abfec2fbe46ccfbb265df03251ee6aaf",
+      "critic_lesson": "Do not use integers directly in function calls; always ensure that functions are properly referenced and called.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-01T15:20:04.743205+00:00",
+      "cycle": 9,
+      "solver_id": "S009",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "c101C5",
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "Do not call built-in functions like 'seed' with parentheses when importing the random module.",
+      "architect_target": "SEARCH",
+      "decision": "REVERT",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 0,
+      "parent_distance": 0.0,
+      "parent_fault": "CRASH",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": " call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab__y44b65f\\driver.py\", line 10, in <module>\n    result = solve(instance, seed=0, time_limit_s=20.0)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v2\\qwen25_coder_7b\\candidates\\S000\\solver.py\", line 98, in solve\n    seed(seed)\n    ~~~~^^^^^^\nTypeError: 'int' object is not callable\n"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 0,
+      "attempted_distance": 0.0,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [],
+      "code_hash": "a72f379ef7ec4881c11b120c57fb0585abfec2fbe46ccfbb265df03251ee6aaf",
+      "critic_lesson": "Do not use 'int' as a function name or variable, as it shadows the built-in Python type.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-01T15:21:54.138334+00:00",
+      "cycle": 10,
+      "solver_id": "S010",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "c101C5",
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "Continue from elite solver evidence.",
+      "architect_target": "SEARCH",
+      "decision": "ABANDON",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 0,
+      "parent_distance": 0.0,
+      "parent_fault": "CRASH",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": " call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_jpm5urg0\\driver.py\", line 10, in <module>\n    result = solve(instance, seed=0, time_limit_s=20.0)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v2\\qwen25_coder_7b\\candidates\\S010\\solver.py\", line 98, in solve\n    seed(seed)\n    ~~~~^^^^^^\nTypeError: 'int' object is not callable\n"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 0,
+      "attempted_distance": 0.0,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [],
+      "code_hash": "a72f379ef7ec4881c11b120c57fb0585abfec2fbe46ccfbb265df03251ee6aaf",
+      "critic_lesson": "Do not use the name 'seed' as a variable or function, as it conflicts with Python's built-in seed function.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-01T15:23:20.866804+00:00",
+      "cycle": 11,
+      "solver_id": "S011",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "c101C5",
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "Continue from elite solver evidence.",
+      "architect_target": "SEARCH",
+      "decision": "REVERT",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 0,
+      "parent_distance": 0.0,
+      "parent_fault": "CRASH",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": " call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_tvqx14yt\\driver.py\", line 10, in <module>\n    result = solve(instance, seed=0, time_limit_s=20.0)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v2\\qwen25_coder_7b\\candidates\\S000\\solver.py\", line 98, in solve\n    seed(seed)\n    ~~~~^^^^^^\nTypeError: 'int' object is not callable\n"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 0,
+      "attempted_distance": 0.0,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [],
+      "code_hash": "a72f379ef7ec4881c11b120c57fb0585abfec2fbe46ccfbb265df03251ee6aaf",
+      "critic_lesson": "Do not use the name 'seed' for variables or functions that conflict with Python's built-in seed function.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-01T15:25:36.444428+00:00",
+      "cycle": 12,
+      "solver_id": "S012",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "c101C5",
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "Continue from elite solver evidence.",
+      "architect_target": "SEARCH",
+      "decision": "REVERT",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 0,
+      "parent_distance": 0.0,
+      "parent_fault": "CRASH",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": " call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_8bx087us\\driver.py\", line 10, in <module>\n    result = solve(instance, seed=0, time_limit_s=20.0)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v2\\qwen25_coder_7b\\candidates\\S000\\solver.py\", line 98, in solve\n    seed(seed)\n    ~~~~^^^^^^\nTypeError: 'int' object is not callable\n"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 0,
+      "attempted_distance": 0.0,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [],
+      "code_hash": "a72f379ef7ec4881c11b120c57fb0585abfec2fbe46ccfbb265df03251ee6aaf",
+      "critic_lesson": "Do not use built-in Python functions like 'seed' as variable names or function arguments.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-01T15:27:03.804047+00:00",
+      "cycle": 13,
+      "solver_id": "S013",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "c101C5",
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "Do not use built-in Python functions like 'seed' as variable names or function arguments.",
+      "architect_target": "SEARCH",
+      "decision": "REVERT",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 0,
+      "parent_distance": 0.0,
+      "parent_fault": "CRASH",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": " call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_gyl4ofyb\\driver.py\", line 10, in <module>\n    result = solve(instance, seed=0, time_limit_s=20.0)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v2\\qwen25_coder_7b\\candidates\\S000\\solver.py\", line 98, in solve\n    seed(seed)\n    ~~~~^^^^^^\nTypeError: 'int' object is not callable\n"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 0,
+      "attempted_distance": 0.0,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [],
+      "code_hash": "a72f379ef7ec4881c11b120c57fb0585abfec2fbe46ccfbb265df03251ee6aaf",
+      "critic_lesson": "Do not use the name 'seed' for variables or functions that conflict with Python's built-in seed function.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-01T15:28:08.337302+00:00",
+      "cycle": 14,
+      "solver_id": "S014",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "c101C5",
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "Do not use built-in Python functions like 'seed' as variable names or function arguments.",
+      "architect_target": "SEARCH",
+      "decision": "REVERT",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 0,
+      "parent_distance": 0.0,
+      "parent_fault": "CRASH",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": " call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_o14ecx7o\\driver.py\", line 10, in <module>\n    result = solve(instance, seed=0, time_limit_s=20.0)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v2\\qwen25_coder_7b\\candidates\\S000\\solver.py\", line 98, in solve\n    seed(seed)\n    ~~~~^^^^^^\nTypeError: 'int' object is not callable\n"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 0,
+      "attempted_distance": 0.0,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [],
+      "code_hash": "a72f379ef7ec4881c11b120c57fb0585abfec2fbe46ccfbb265df03251ee6aaf",
+      "critic_lesson": "Do not use 'seed(seed)' as it is incorrect. The correct usage should be 'seed(seed_value)'.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-01T15:28:50.885950+00:00",
+      "cycle": 15,
+      "solver_id": "S015",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "c101C5",
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "Avoid using built-in Python functions as variable names or function arguments.",
+      "architect_target": "SEARCH",
+      "decision": "REVERT",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 0,
+      "parent_distance": 0.0,
+      "parent_fault": "CRASH",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": " call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_exmv514v\\driver.py\", line 10, in <module>\n    result = solve(instance, seed=0, time_limit_s=20.0)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v2\\qwen25_coder_7b\\candidates\\S000\\solver.py\", line 98, in solve\n    seed(seed)\n    ~~~~^^^^^^\nTypeError: 'int' object is not callable\n"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 0,
+      "attempted_distance": 0.0,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [],
+      "code_hash": "a72f379ef7ec4881c11b120c57fb0585abfec2fbe46ccfbb265df03251ee6aaf",
+      "critic_lesson": "Do not use the name 'seed' as a variable or function when it refers to Python's built-in seed function.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    }
+  ]
+}

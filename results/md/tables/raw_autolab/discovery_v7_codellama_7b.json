@@ -1,0 +1,604 @@
+{
+  "model_id": "codellama_7b",
+  "model": "codellama:7b",
+  "team_mode": "five_agent",
+  "status": "ran",
+  "cycles": 8,
+  "wall_s": 1888.5,
+  "elite_id": "S000",
+  "f0_ok": true,
+  "f1_feasible_rate": 0.5,
+  "f1_crashes": 0,
+  "f2_feasible_rate": 0.25,
+  "c101C5_feasible": true,
+  "c101C5_vehicles": 5,
+  "c101C5_distance": 296.09,
+  "c101C5_first_fault": {
+    "family": "OK",
+    "node_id": "",
+    "route_index": -1,
+    "detail": ""
+  },
+  "small_feasible": 4,
+  "small_exact_fleet": 0,
+  "large_feasible": 27,
+  "n_calls": 68,
+  "prompt_tokens": 0,
+  "error": "",
+  "cycle": 8,
+  "f0_errors": [],
+  "f1": {
+    "level": "F1",
+    "passed": true,
+    "errors": [],
+    "summary": {
+      "n": 4,
+      "feasible_rate": 0.5,
+      "mean_vehicles": 5,
+      "mean_distance": 251.65814798626684,
+      "median_runtime_s": 0.0757488498929888,
+      "crashes": 0,
+      "timeouts": 0,
+      "battery_violations": 2,
+      "time_window_violations": 0,
+      "unserved": 0
+    },
+    "n_instances": 4
+  },
+  "f2": {
+    "level": "F2",
+    "passed": true,
+    "errors": [],
+    "summary": {
+      "n": 12,
+      "feasible_rate": 0.25,
+      "mean_vehicles": 6.666666666666667,
+      "mean_distance": 296.704219804654,
+      "median_runtime_s": 0.07734075002372265,
+      "crashes": 0,
+      "timeouts": 0,
+      "battery_violations": 17,
+      "time_window_violations": 0,
+      "unserved": 0
+    },
+    "n_instances": 12
+  },
+  "small_n": 36,
+  "large_n": 56,
+  "completion_tokens": 0,
+  "llm_latency_s": 1585.6,
+  "activated_history": [
+    {
+      "cycle": 0,
+      "activated": [
+        "architect",
+        "routing",
+        "charging",
+        "search",
+        "critic"
+      ],
+      "why": "BOOTSTRAP"
+    },
+    {
+      "cycle": 1,
+      "activated": [],
+      "why": "CYCLE_FAILED",
+      "error": "Ollama failed for role=charging model=codellama:7b: timed out"
+    },
+    {
+      "cycle": 2,
+      "activated": [
+        "architect",
+        "search",
+        "critic",
+        "charging"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 3,
+      "activated": [
+        "architect",
+        "search",
+        "critic",
+        "charging"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 4,
+      "activated": [
+        "architect",
+        "search",
+        "critic",
+        "charging"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 5,
+      "activated": [
+        "architect",
+        "search",
+        "critic",
+        "charging"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 6,
+      "activated": [
+        "architect",
+        "search",
+        "critic",
+        "charging"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 7,
+      "activated": [
+        "architect",
+        "search",
+        "critic",
+        "charging"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 8,
+      "activated": [
+        "architect",
+        "search",
+        "critic",
+        "charging"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 8,
+      "f1": {
+        "level": "F1",
+        "passed": true,
+        "errors": [],
+        "summary": {
+          "n": 4,
+          "feasible_rate": 0.5,
+          "mean_vehicles": 5,
+          "mean_distance": 251.65814798626684,
+          "median_runtime_s": 0.08129795000422746,
+          "crashes": 0,
+          "timeouts": 0,
+          "battery_violations": 2,
+          "time_window_violations": 0,
+          "unserved": 0
+        },
+        "n_instances": 4
+      },
+      "why": "F1_ELITE"
+    }
+  ],
+  "trajectories": [
+    {
+      "timestamp": "2026-09-04T16:49:27.717908+00:00",
+      "cycle": 0,
+      "solver_id": "S000",
+      "elite_id": "S000",
+      "parent_id": null,
+      "instance_id": "smoke_c1",
+      "activated": [
+        "architect",
+        "routing",
+        "charging",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "Continue from elite solver evidence.",
+      "architect_target": "SEARCH",
+      "decision": "REVISE",
+      "feasible": true,
+      "vehicles": 1,
+      "distance": 2.0,
+      "first_fault": {
+        "family": "OK",
+        "node_id": "",
+        "route_index": -1,
+        "detail": ""
+      },
+      "f0_errors": [],
+      "code_hash": "45db8b082a7e992f9b79cfec96b1c7887a0d8312584e71cd9c52009d650e995c"
+    },
+    {
+      "timestamp": "2026-09-04T16:56:16.222269+00:00",
+      "cycle": 1,
+      "solver_id": "S002",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "r104C5",
+      "activated": [
+        "architect",
+        "search",
+        "critic",
+        "charging"
+      ],
+      "architect_hypothesis": "Continue from elite solver evidence.",
+      "architect_target": "SEARCH",
+      "phase": "CONTRACT",
+      "decision": "RETAIN",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 5,
+      "parent_distance": 222.7715407306123,
+      "parent_fault": "BATTERY",
+      "feasible": false,
+      "vehicles": 5,
+      "distance": 222.7715407306123,
+      "first_fault": {
+        "family": "BATTERY",
+        "node_id": "D0",
+        "route_index": 0,
+        "detail": "battery_arrival=-18.692"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 5,
+      "attempted_distance": 222.7715407306123,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [],
+      "code_hash": "45db8b082a7e992f9b79cfec96b1c7887a0d8312584e71cd9c52009d650e995c",
+      "critic_lesson": "Laboratory ranking is a lexicographic comparison of complete solve() outputs. A non-crashing infeasible solver beats a crashing one.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic",
+          "charging"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-04T16:59:08.356172+00:00",
+      "cycle": 2,
+      "solver_id": "S003",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "r104C5",
+      "activated": [
+        "architect",
+        "search",
+        "critic",
+        "charging"
+      ],
+      "architect_hypothesis": "Continue from elite solver evidence.",
+      "architect_target": "SEARCH",
+      "phase": "CONTRACT",
+      "decision": "RETAIN",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 5,
+      "parent_distance": 222.7715407306123,
+      "parent_fault": "BATTERY",
+      "feasible": false,
+      "vehicles": 5,
+      "distance": 222.7715407306123,
+      "first_fault": {
+        "family": "BATTERY",
+        "node_id": "D0",
+        "route_index": 0,
+        "detail": "battery_arrival=-18.692"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 5,
+      "attempted_distance": 222.7715407306123,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [],
+      "code_hash": "45db8b082a7e992f9b79cfec96b1c7887a0d8312584e71cd9c52009d650e995c",
+      "critic_lesson": "Laboratory ranking is a subjective measure that considers multiple factors, including feasibility, vehicle count, and distance. A non-crashing infeasible solver beats a crashing one.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic",
+          "charging"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-04T17:03:21.273537+00:00",
+      "cycle": 3,
+      "solver_id": "S004",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "r104C5",
+      "activated": [
+        "architect",
+        "search",
+        "critic",
+        "charging"
+      ],
+      "architect_hypothesis": "Continue from elite solver evidence.",
+      "architect_target": "SEARCH",
+      "phase": "CONTRACT",
+      "decision": "RETAIN",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 5,
+      "parent_distance": 222.7715407306123,
+      "parent_fault": "BATTERY",
+      "feasible": false,
+      "vehicles": 5,
+      "distance": 222.7715407306123,
+      "first_fault": {
+        "family": "BATTERY",
+        "node_id": "D0",
+        "route_index": 0,
+        "detail": "battery_arrival=-18.692"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 5,
+      "attempted_distance": 222.7715407306123,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [],
+      "code_hash": "45db8b082a7e992f9b79cfec96b1c7887a0d8312584e71cd9c52009d650e995c",
+      "critic_lesson": "Laboratory ranking is a subjective measure that considers feasibility, vehicles, and distance. A non-crashing infeasible solver beats a crashing one.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic",
+          "charging"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-04T17:09:37.179736+00:00",
+      "cycle": 4,
+      "solver_id": "S005",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "r104C5",
+      "activated": [
+        "architect",
+        "search",
+        "critic",
+        "charging"
+      ],
+      "architect_hypothesis": "Continue from elite solver evidence.",
+      "architect_target": "SEARCH",
+      "phase": "CONTRACT",
+      "decision": "RETAIN",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 5,
+      "parent_distance": 222.7715407306123,
+      "parent_fault": "BATTERY",
+      "feasible": false,
+      "vehicles": 5,
+      "distance": 222.7715407306123,
+      "first_fault": {
+        "family": "BATTERY",
+        "node_id": "D0",
+        "route_index": 0,
+        "detail": "battery_arrival=-18.692"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 5,
+      "attempted_distance": 222.7715407306123,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [],
+      "code_hash": "45db8b082a7e992f9b79cfec96b1c7887a0d8312584e71cd9c52009d650e995c",
+      "critic_lesson": "Laboratory ranking is based on feasibility, vehicles, and distance. A non-crashing infeasible solver beats a crashing one.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic",
+          "charging"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-04T17:12:51.903625+00:00",
+      "cycle": 5,
+      "solver_id": "S006",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "r104C5",
+      "activated": [
+        "architect",
+        "search",
+        "critic",
+        "charging"
+      ],
+      "architect_hypothesis": "Laboratory ranking is a subjective measure that considers multiple factors, including feasibility, vehicle count, and distance. A non-crashing infeasible solver beats a crashing one.",
+      "architect_target": "SEARCH",
+      "phase": "CONTRACT",
+      "decision": "RETAIN",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 5,
+      "parent_distance": 222.7715407306123,
+      "parent_fault": "BATTERY",
+      "feasible": false,
+      "vehicles": 5,
+      "distance": 222.7715407306123,
+      "first_fault": {
+        "family": "BATTERY",
+        "node_id": "D0",
+        "route_index": 0,
+        "detail": "battery_arrival=-18.692"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 5,
+      "attempted_distance": 222.7715407306123,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [],
+      "code_hash": "45db8b082a7e992f9b79cfec96b1c7887a0d8312584e71cd9c52009d650e995c",
+      "critic_lesson": "Laboratory ranking is a subjective measure that considers factors such as no-crash, feasibility, and vehicle count. A non-crashing infeasible solver beats a crashing one.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic",
+          "charging"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-04T17:16:18.759918+00:00",
+      "cycle": 6,
+      "solver_id": "S007",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "r104C5",
+      "activated": [
+        "architect",
+        "search",
+        "critic",
+        "charging"
+      ],
+      "architect_hypothesis": "Laboratory ranking is a subjective measure that considers multiple factors, including feasibility, vehicle count, and distance. A non-crashing infeasible solver beats a crashing one.",
+      "architect_target": "SEARCH",
+      "phase": "CONTRACT",
+      "decision": "RETAIN",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 5,
+      "parent_distance": 222.7715407306123,
+      "parent_fault": "BATTERY",
+      "feasible": false,
+      "vehicles": 5,
+      "distance": 222.7715407306123,
+      "first_fault": {
+        "family": "BATTERY",
+        "node_id": "D0",
+        "route_index": 0,
+        "detail": "battery_arrival=-18.692"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 5,
+      "attempted_distance": 222.7715407306123,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [],
+      "code_hash": "45db8b082a7e992f9b79cfec96b1c7887a0d8312584e71cd9c52009d650e995c",
+      "critic_lesson": "Laboratory ranking is based on feasibility, vehicles, and distance. A non-crashing infeasible solver beats a crashing one.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic",
+          "charging"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-04T17:18:34.963973+00:00",
+      "cycle": 7,
+      "solver_id": "S008",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "r104C5",
+      "activated": [
+        "architect",
+        "search",
+        "critic",
+        "charging"
+      ],
+      "architect_hypothesis": "Continue from elite solver evidence.",
+      "architect_target": "SEARCH",
+      "phase": "CONTRACT",
+      "decision": "RETAIN",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 5,
+      "parent_distance": 222.7715407306123,
+      "parent_fault": "BATTERY",
+      "feasible": false,
+      "vehicles": 5,
+      "distance": 222.7715407306123,
+      "first_fault": {
+        "family": "BATTERY",
+        "node_id": "D0",
+        "route_index": 0,
+        "detail": "battery_arrival=-18.692"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 5,
+      "attempted_distance": 222.7715407306123,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [],
+      "code_hash": "45db8b082a7e992f9b79cfec96b1c7887a0d8312584e71cd9c52009d650e995c",
+      "critic_lesson": "Laboratory ranking is a subjective measure that considers multiple factors, including feasibility, vehicle count, and distance. A non-crashing infeasible solver beats a crashing one.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic",
+          "charging"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    }
+  ]
+}

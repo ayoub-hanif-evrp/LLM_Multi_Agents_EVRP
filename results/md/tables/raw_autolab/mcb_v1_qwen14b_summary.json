@@ -1,0 +1,264 @@
+{
+  "protocol": "MINIMAL_COOPERATIVE_BUILD_V1",
+  "experiment": "same_family_capacity_anchor_qwen14b",
+  "seeds": [
+    11,
+    22,
+    33,
+    44,
+    55
+  ],
+  "missing": [],
+  "summary": [
+    {
+      "model": "qwen2.5-coder:14b",
+      "profile": "qwen25_coder_14b",
+      "n": 5,
+      "G1": "5/5",
+      "G2": "3/5",
+      "G3": "3/5",
+      "reached_g4": "3/5",
+      "G4_4of4": "1/5",
+      "mean_g4": 0.8,
+      "median_calls": 11,
+      "runs": [
+        {
+          "seed": 11,
+          "G0": true,
+          "G1": true,
+          "G2": true,
+          "G3": true,
+          "G4": false,
+          "reached_g4": true,
+          "g4_count": 0,
+          "g4_progress": "0/4",
+          "calls": 19,
+          "stopped": "G4_FAIL",
+          "primary": {
+            "failure_class": "FEASIBILITY",
+            "role": "team",
+            "gate": "G4",
+            "detail": "BATTERY"
+          },
+          "solver_path": "C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_mcb_v1\\qwen25_coder_14b\\seed11\\committed\\solver.py",
+          "all_c5": null
+        },
+        {
+          "seed": 22,
+          "G0": true,
+          "G1": true,
+          "G2": false,
+          "G3": false,
+          "G4": false,
+          "reached_g4": false,
+          "g4_count": 0,
+          "g4_progress": "0/4",
+          "calls": 11,
+          "stopped": "G2_FAIL",
+          "primary": {
+            "failure_class": "FEASIBILITY",
+            "role": "team",
+            "gate": "G2",
+            "detail": "BATTERY"
+          },
+          "solver_path": "C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_mcb_v1\\qwen25_coder_14b\\seed22\\committed\\solver.py",
+          "all_c5": null
+        },
+        {
+          "seed": 33,
+          "G0": true,
+          "G1": true,
+          "G2": true,
+          "G3": true,
+          "G4": true,
+          "reached_g4": true,
+          "g4_count": 4,
+          "g4_progress": "4/4",
+          "calls": 3,
+          "stopped": "SUCCESS",
+          "primary": null,
+          "solver_path": "C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_mcb_v1\\qwen25_coder_14b\\seed33\\committed\\solver.py",
+          "all_c5": {
+            "feasible": 12,
+            "total": 12,
+            "by_instance": {
+              "c101C5": "OK",
+              "c103C5": "OK",
+              "c206C5": "OK",
+              "c208C5": "OK",
+              "r104C5": "OK",
+              "r105C5": "OK",
+              "r202C5": "OK",
+              "r203C5": "OK",
+              "rc105C5": "OK",
+              "rc108C5": "OK",
+              "rc204C5": "OK",
+              "rc208C5": "OK"
+            }
+          }
+        },
+        {
+          "seed": 44,
+          "G0": true,
+          "G1": true,
+          "G2": true,
+          "G3": true,
+          "G4": false,
+          "reached_g4": true,
+          "g4_count": 0,
+          "g4_progress": "0/4",
+          "calls": 18,
+          "stopped": "G4_FAIL",
+          "primary": {
+            "failure_class": "FEASIBILITY",
+            "role": "team",
+            "gate": "G4",
+            "detail": "BATTERY"
+          },
+          "solver_path": "C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_mcb_v1\\qwen25_coder_14b\\seed44\\committed\\solver.py",
+          "all_c5": null
+        },
+        {
+          "seed": 55,
+          "G0": true,
+          "G1": true,
+          "G2": false,
+          "G3": false,
+          "G4": false,
+          "reached_g4": false,
+          "g4_count": 0,
+          "g4_progress": "0/4",
+          "calls": 11,
+          "stopped": "G2_FAIL",
+          "primary": {
+            "failure_class": "FEASIBILITY",
+            "role": "team",
+            "gate": "G2",
+            "detail": "BATTERY"
+          },
+          "solver_path": "C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_mcb_v1\\qwen25_coder_14b\\seed55\\committed\\solver.py",
+          "all_c5": null
+        }
+      ]
+    },
+    {
+      "model": "qwen2.5-coder:7b",
+      "profile": "qwen25_coder_7b",
+      "n": 5,
+      "G1": "4/5",
+      "G2": "3/5",
+      "G3": "3/5",
+      "reached_g4": "3/5",
+      "G4_4of4": "0/5",
+      "mean_g4": 1.6,
+      "median_calls": 11,
+      "runs": [
+        {
+          "seed": 11,
+          "G0": true,
+          "G1": true,
+          "G2": true,
+          "G3": true,
+          "G4": false,
+          "reached_g4": true,
+          "g4_count": 3,
+          "g4_progress": "3/4",
+          "calls": 11,
+          "stopped": "PARTIAL_G4_3",
+          "primary": {
+            "failure_class": "FEASIBILITY",
+            "role": "team",
+            "gate": "G4",
+            "detail": "BATTERY"
+          },
+          "solver_path": "C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_mcb_v1\\qwen25_coder_7b\\seed11\\committed\\solver.py",
+          "all_c5": null
+        },
+        {
+          "seed": 22,
+          "G0": true,
+          "G1": true,
+          "G2": true,
+          "G3": true,
+          "G4": false,
+          "reached_g4": true,
+          "g4_count": 2,
+          "g4_progress": "2/4",
+          "calls": 21,
+          "stopped": "PARTIAL_G4_2",
+          "primary": {
+            "failure_class": "FEASIBILITY",
+            "role": "team",
+            "gate": "G4",
+            "detail": "BATTERY"
+          },
+          "solver_path": "C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_mcb_v1\\qwen25_coder_7b\\seed22\\committed\\solver.py",
+          "all_c5": null
+        },
+        {
+          "seed": 33,
+          "G0": true,
+          "G1": true,
+          "G2": true,
+          "G3": true,
+          "G4": false,
+          "reached_g4": true,
+          "g4_count": 3,
+          "g4_progress": "3/4",
+          "calls": 13,
+          "stopped": "PARTIAL_G4_3",
+          "primary": {
+            "failure_class": "FEASIBILITY",
+            "role": "team",
+            "gate": "G4",
+            "detail": "BATTERY"
+          },
+          "solver_path": "C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_mcb_v1\\qwen25_coder_7b\\seed33\\committed\\solver.py",
+          "all_c5": null
+        },
+        {
+          "seed": 44,
+          "G0": false,
+          "G1": false,
+          "G2": false,
+          "G3": false,
+          "G4": false,
+          "reached_g4": false,
+          "g4_count": 0,
+          "g4_progress": "0/4",
+          "calls": 4,
+          "stopped": "CODING_FAILURE",
+          "primary": {
+            "failure_class": "RUNTIME",
+            "role": "search",
+            "gate": "G0",
+            "detail": "timeout\ntimeout"
+          },
+          "solver_path": "C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_mcb_v1\\qwen25_coder_7b\\seed44\\committed\\solver.py",
+          "all_c5": null
+        },
+        {
+          "seed": 55,
+          "G0": true,
+          "G1": true,
+          "G2": false,
+          "G3": false,
+          "G4": false,
+          "reached_g4": false,
+          "g4_count": 0,
+          "g4_progress": "0/4",
+          "calls": 11,
+          "stopped": "G2_FAIL",
+          "primary": {
+            "failure_class": "FEASIBILITY",
+            "role": "team",
+            "gate": "G2",
+            "detail": "BATTERY"
+          },
+          "solver_path": "C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_mcb_v1\\qwen25_coder_7b\\seed55\\committed\\solver.py",
+          "all_c5": null
+        }
+      ]
+    }
+  ]
+}

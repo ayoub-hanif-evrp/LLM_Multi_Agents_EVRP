@@ -1,0 +1,325 @@
+{
+  "protocol": "SINGLE_AGENT_MATCHED_V1",
+  "model": "qwen2.5-coder:7b",
+  "profile": "qwen25_coder_7b",
+  "run_id": "single_qwen_parity_seed33",
+  "llm_seed": 33,
+  "seed_provided": true,
+  "max_total_tokens": 23579,
+  "total_tokens": 22051,
+  "prompt_tokens": 20498,
+  "completion_tokens": 1553,
+  "token_budget_exhausted": false,
+  "llm_calls": 8,
+  "wall_s": 47.8,
+  "gates": {
+    "G0": {
+      "passed": true,
+      "detail": "contract_ok",
+      "agent": ""
+    },
+    "G1": {
+      "passed": true,
+      "detail": "feasible",
+      "agent": ""
+    },
+    "G2": {
+      "passed": true,
+      "detail": "feasible",
+      "agent": ""
+    },
+    "G3": {
+      "passed": true,
+      "detail": "feasible",
+      "agent": ""
+    },
+    "G4": {
+      "passed": false,
+      "detail": "PARTIAL 3/4 final={'c101C5': 'OK', 'c103C5': 'OK', 'r104C5': 'OK', 'r105C5': 'WINDOW'}",
+      "agent": ""
+    }
+  },
+  "G4_progress": "3/4",
+  "G4_PASS": false,
+  "highest_gate": "G4_partial_3",
+  "stopped_reason": "PARTIAL_G4_3",
+  "primary_failure": {
+    "failure_class": "FEASIBILITY",
+    "role": "single_coder",
+    "gate": "G4",
+    "detail": "WINDOW"
+  },
+  "taxonomy_counts": {
+    "FORMAT": 0,
+    "SYNTAX": 0,
+    "RUNTIME": 0,
+    "GENERALITY": 0,
+    "FEASIBILITY": 5,
+    "OPTIMIZATION": 0,
+    "NO_OP": 8
+  },
+  "family_counts": {
+    "BATTERY": 1,
+    "WINDOW": 4
+  },
+  "noop_count": 4,
+  "distinct_committed_hashes": 3,
+  "final_solver_hash": "1d87d9c8646280f2",
+  "solver_path": "C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_single_agent_v1\\qwen25_coder_7b\\single_qwen_parity_seed33\\committed\\solver.py",
+  "all_c5_unchanged": null,
+  "agent_log": [
+    {
+      "gate": "SA",
+      "kind": "protocol",
+      "name": "SINGLE_AGENT_MATCHED_V1",
+      "max_total_tokens": 23579,
+      "known_id_count": 66,
+      "empty_at_start": true
+    },
+    {
+      "gate": "G0",
+      "kind": "plan",
+      "hypothesis": "The solver should assign customers to vehicles and sequence routes while ensuring feasibility. It should handle charging and energy requirements, respecting time windows, and return routes starting and ending at the depot."
+    },
+    {
+      "gate": "G4",
+      "kind": "pass",
+      "instance": "c101C5"
+    },
+    {
+      "gate": "G4",
+      "kind": "pass",
+      "instance": "c103C5"
+    },
+    {
+      "gate": "G4",
+      "kind": "algo_draft",
+      "agent": "single_coder",
+      "round": 0,
+      "family": "BATTERY"
+    },
+    {
+      "gate": "G4",
+      "kind": "instance_result",
+      "instance": "r104C5",
+      "passed": true,
+      "detail": "feasible"
+    },
+    {
+      "gate": "G4",
+      "kind": "algo_draft",
+      "agent": "single_coder",
+      "round": 0,
+      "family": "WINDOW"
+    },
+    {
+      "gate": "G4",
+      "kind": "algo_draft",
+      "agent": "single_coder",
+      "round": 1,
+      "family": "WINDOW"
+    },
+    {
+      "gate": "G4",
+      "kind": "algo_draft",
+      "agent": "single_coder",
+      "round": 2,
+      "family": "WINDOW"
+    },
+    {
+      "gate": "G4",
+      "kind": "algo_draft",
+      "agent": "single_coder",
+      "round": 3,
+      "family": "WINDOW"
+    },
+    {
+      "gate": "G4",
+      "kind": "instance_result",
+      "instance": "r105C5",
+      "passed": false,
+      "detail": "WINDOW"
+    },
+    {
+      "gate": "SA",
+      "kind": "final_hardcoded_audit",
+      "ids": []
+    },
+    {
+      "gate": "SA",
+      "kind": "campaign_summary",
+      "roles_invoked": [
+        "single_coder"
+      ],
+      "taxonomy": {
+        "FORMAT": 0,
+        "SYNTAX": 0,
+        "RUNTIME": 0,
+        "GENERALITY": 0,
+        "FEASIBILITY": 5,
+        "OPTIMIZATION": 0,
+        "NO_OP": 8
+      },
+      "committed_hashes": [
+        "43a7caef977fa0ff",
+        "34b66e1adb077954",
+        "1d87d9c8646280f2",
+        "1d87d9c8646280f2",
+        "1d87d9c8646280f2",
+        "1d87d9c8646280f2",
+        "1d87d9c8646280f2"
+      ],
+      "family_counts": {
+        "BATTERY": 1,
+        "WINDOW": 4
+      },
+      "noop_count": 4,
+      "token_budget_exhausted": false,
+      "max_total_tokens": 23579,
+      "total_tokens": 22051,
+      "primary_failure": {
+        "failure_class": "FEASIBILITY",
+        "role": "single_coder",
+        "gate": "G4",
+        "detail": "WINDOW"
+      },
+      "integrity_log": [
+        {
+          "gate": "G0",
+          "kind": "draft",
+          "role": "single_coder",
+          "hash": "43a7caef977fa0ff"
+        },
+        {
+          "gate": "G0",
+          "kind": "commit",
+          "hash": "43a7caef977fa0ff",
+          "tag": "single"
+        },
+        {
+          "gate": "G2",
+          "kind": "draft",
+          "role": "single_coder",
+          "hash": "34b66e1adb077954"
+        },
+        {
+          "gate": "G2",
+          "kind": "commit",
+          "hash": "34b66e1adb077954",
+          "tag": "single"
+        },
+        {
+          "gate": "G4",
+          "kind": "feasibility_fail",
+          "failure_class": "FEASIBILITY",
+          "family": "BATTERY"
+        },
+        {
+          "gate": "G4",
+          "kind": "draft",
+          "role": "single_coder",
+          "hash": "1d87d9c8646280f2"
+        },
+        {
+          "gate": "G4",
+          "kind": "commit",
+          "hash": "1d87d9c8646280f2",
+          "tag": "single"
+        },
+        {
+          "gate": "G4",
+          "kind": "feasibility_fail",
+          "failure_class": "FEASIBILITY",
+          "family": "WINDOW"
+        },
+        {
+          "gate": "G4",
+          "kind": "draft",
+          "role": "single_coder",
+          "hash": "1d87d9c8646280f2"
+        },
+        {
+          "gate": "G4",
+          "kind": "commit",
+          "hash": "1d87d9c8646280f2",
+          "tag": "single"
+        },
+        {
+          "gate": "G4",
+          "kind": "NO_OP",
+          "failure_class": "NO_OP"
+        },
+        {
+          "gate": "G4",
+          "kind": "feasibility_fail",
+          "failure_class": "FEASIBILITY",
+          "family": "WINDOW"
+        },
+        {
+          "gate": "G4",
+          "kind": "draft",
+          "role": "single_coder",
+          "hash": "1d87d9c8646280f2"
+        },
+        {
+          "gate": "G4",
+          "kind": "commit",
+          "hash": "1d87d9c8646280f2",
+          "tag": "single"
+        },
+        {
+          "gate": "G4",
+          "kind": "NO_OP",
+          "failure_class": "NO_OP"
+        },
+        {
+          "gate": "G4",
+          "kind": "feasibility_fail",
+          "failure_class": "FEASIBILITY",
+          "family": "WINDOW"
+        },
+        {
+          "gate": "G4",
+          "kind": "draft",
+          "role": "single_coder",
+          "hash": "1d87d9c8646280f2"
+        },
+        {
+          "gate": "G4",
+          "kind": "commit",
+          "hash": "1d87d9c8646280f2",
+          "tag": "single"
+        },
+        {
+          "gate": "G4",
+          "kind": "NO_OP",
+          "failure_class": "NO_OP"
+        },
+        {
+          "gate": "G4",
+          "kind": "feasibility_fail",
+          "failure_class": "FEASIBILITY",
+          "family": "WINDOW"
+        },
+        {
+          "gate": "G4",
+          "kind": "draft",
+          "role": "single_coder",
+          "hash": "1d87d9c8646280f2"
+        },
+        {
+          "gate": "G4",
+          "kind": "commit",
+          "hash": "1d87d9c8646280f2",
+          "tag": "single"
+        },
+        {
+          "gate": "G4",
+          "kind": "NO_OP",
+          "failure_class": "NO_OP"
+        }
+      ]
+    }
+  ],
+  "created_utc": "2026-09-09T11:19:07.032808+00:00"
+}

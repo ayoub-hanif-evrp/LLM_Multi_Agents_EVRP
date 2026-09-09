@@ -1,11 +1,11 @@
 [project]
-name = "chargecegis"
+name = "evrptw-autolab"
 version = "0.1.0"
-description = "ChargeCEGIS: counterexample-guided small-LLM discovery of EVRPTW policies"
+description = "VoltForge: five-agent autonomous synthesis of executable EVRPTW solvers"
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
-authors = [{ name = "ChargeCEGIS contributors" }]
+authors = [{ name = "VoltForge contributors" }]
 dependencies = [
   "numpy>=1.26",
   "pandas>=2.1",
@@ -28,14 +28,15 @@ dev = [
 ]
 
 [project.scripts]
-chargecegis = "chargecegis.experiment:main"
+evrptw-autolab = "evrptw_autolab.cli:main"
+voltforge = "evrptw_autolab.cli:main"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/chargecegis"]
+packages = ["src/evrptw_autolab"]
 
 [dependency-groups]
 dev = [
@@ -49,7 +50,7 @@ dev = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["src"]
+pythonpath = [".", "src"]
 
 [tool.ruff]
 line-length = 100
@@ -65,7 +66,7 @@ python_version = "3.12"
 strict = false
 warn_return_any = true
 warn_unused_ignores = true
-packages = ["chargecegis"]
+packages = ["evrptw_autolab"]
 mypy_path = "src"
 
 [[tool.mypy.overrides]]

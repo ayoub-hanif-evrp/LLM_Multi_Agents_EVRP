@@ -1,0 +1,14 @@
+{
+  "model_id": "phi4_mini",
+  "model": "phi4-mini:3.8b",
+  "team_mode": "five_agent",
+  "status": "SKIPPED_NOT_INSTALLED",
+  "cycles": 5,
+  "wall_s": 0.0,
+  "elite_id": "",
+  "f0_ok": false,
+  "f1_feasible_rate": "",
+  "f1_crashes": "",
+  "f2_feasible_rate": "",
+  "error": ""
+}

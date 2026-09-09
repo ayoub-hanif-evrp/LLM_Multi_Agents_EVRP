@@ -3,8 +3,6 @@
 | Folder | Contents |
 |--------|----------|
 | `raw_instances/` | Original Schneider `.txt` files (Solomon-based EVRPTW) |
-| `converted_instances/evrptw_instances/` | ML-ready JSON, CSV, NPZ per instance |
-| `notebooks/` | Dataset conversion & EDA notebooks |
 
 Example instance paths:
 

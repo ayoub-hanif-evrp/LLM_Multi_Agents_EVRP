@@ -1,0 +1,407 @@
+{
+  "protocol": "MINIMAL_COOPERATIVE_BUILD_V1",
+  "experiment": "empty_workspace_synthesis",
+  "timestamp": "2026-09-09T11:06:53.920789+00:00",
+  "model": "qwen2.5-coder:14b",
+  "profile": "qwen25_coder_14b",
+  "run_id": "seed11",
+  "empty_at_start": true,
+  "seed_provided": true,
+  "llm_seed": 11,
+  "stopped_reason": "G4_FAIL",
+  "gates": {
+    "G0": {
+      "passed": true,
+      "detail": "contract_ok",
+      "agent": ""
+    },
+    "G1": {
+      "passed": true,
+      "detail": "feasible",
+      "agent": ""
+    },
+    "G2": {
+      "passed": true,
+      "detail": "feasible",
+      "agent": ""
+    },
+    "G3": {
+      "passed": true,
+      "detail": "feasible",
+      "agent": ""
+    },
+    "G4": {
+      "passed": false,
+      "detail": "PARTIAL 0/4 final={'c101C5': 'BATTERY', 'c103C5': 'BATTERY', 'r104C5': 'BATTERY', 'r105C5': 'BATTERY'}",
+      "agent": ""
+    }
+  },
+  "G4_progress": "0/4",
+  "G4_PASS": false,
+  "success_levels": {
+    "B0_executable": true,
+    "B1_G1_G3": true,
+    "B2_at_least_1_of_4_G4": false,
+    "B3_G4_4_of_4": false,
+    "B4_all_C5_ge_10_of_12": false,
+    "Strong_B_12_of_12": false
+  },
+  "llm_calls": 19,
+  "prompt_tokens": 33474,
+  "completion_tokens": 4952,
+  "wall_s": 276.5,
+  "solver_hash": "4bd755d0861f0801",
+  "solver_path": "C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_mcb_v1\\qwen25_coder_14b\\seed11\\committed\\solver.py",
+  "roles_invoked": [
+    "architect",
+    "charging",
+    "critic",
+    "routing",
+    "search"
+  ],
+  "team_incomplete_orchestration": false,
+  "primary_failure": {
+    "failure_class": "FEASIBILITY",
+    "role": "team",
+    "gate": "G4",
+    "detail": "BATTERY"
+  },
+  "taxonomy_counts": {
+    "FORMAT": 0,
+    "SYNTAX": 0,
+    "RUNTIME": 1,
+    "GENERALITY": 0,
+    "FEASIBILITY": 8,
+    "OPTIMIZATION": 0,
+    "NO_OP": 0
+  },
+  "committed_hashes": [
+    "1e837706f16dd3d2",
+    "61643b6881db337d",
+    "4bd755d0861f0801",
+    "4bd755d0861f0801",
+    "4bd755d0861f0801",
+    "4bd755d0861f0801",
+    "4bd755d0861f0801",
+    "4bd755d0861f0801",
+    "4bd755d0861f0801"
+  ],
+  "mechanism_diversity": {
+    "algo_drafts": 8,
+    "charging_algo_drafts": 7,
+    "feasibility_families_seen": [
+      "BATTERY",
+      "VISIT"
+    ],
+    "committed_hash_count": 9,
+    "distinct_committed_hashes": 3
+  },
+  "all_c5_unchanged": null,
+  "ast_valid": true,
+  "agent_log": [
+    {
+      "gate": "V1",
+      "kind": "protocol",
+      "name": "MINIMAL_COOPERATIVE_BUILD_V1",
+      "known_id_count": 66,
+      "empty_at_start": true,
+      "seed_provided": false
+    },
+    {
+      "gate": "G0",
+      "kind": "architect",
+      "hypothesis": "A simple solver that assigns one customer per route, ensuring battery feasibility."
+    },
+    {
+      "gate": "G4",
+      "kind": "pass",
+      "instance": "c101C5"
+    },
+    {
+      "gate": "G4",
+      "kind": "pass",
+      "instance": "c103C5"
+    },
+    {
+      "gate": "G4",
+      "kind": "algo_draft",
+      "agent": "routing",
+      "round": 0,
+      "family": "VISIT"
+    },
+    {
+      "gate": "G4",
+      "kind": "algo_draft",
+      "agent": "charging",
+      "round": 1,
+      "family": "BATTERY"
+    },
+    {
+      "gate": "G4",
+      "kind": "algo_draft",
+      "agent": "charging",
+      "round": 2,
+      "family": "BATTERY"
+    },
+    {
+      "gate": "G4",
+      "kind": "algo_draft",
+      "agent": "charging",
+      "round": 3,
+      "family": "BATTERY"
+    },
+    {
+      "gate": "G4",
+      "kind": "instance_result",
+      "instance": "r104C5",
+      "passed": false,
+      "detail": "BATTERY"
+    },
+    {
+      "gate": "G4",
+      "kind": "algo_draft",
+      "agent": "charging",
+      "round": 0,
+      "family": "BATTERY"
+    },
+    {
+      "gate": "G4",
+      "kind": "algo_draft",
+      "agent": "charging",
+      "round": 1,
+      "family": "BATTERY"
+    },
+    {
+      "gate": "G4",
+      "kind": "algo_draft",
+      "agent": "charging",
+      "round": 2,
+      "family": "BATTERY"
+    },
+    {
+      "gate": "G4",
+      "kind": "algo_draft",
+      "agent": "charging",
+      "round": 3,
+      "family": "BATTERY"
+    },
+    {
+      "gate": "G4",
+      "kind": "instance_result",
+      "instance": "r105C5",
+      "passed": false,
+      "detail": "BATTERY"
+    },
+    {
+      "gate": "V1",
+      "kind": "final_hardcoded_audit",
+      "ids": []
+    },
+    {
+      "gate": "V1",
+      "kind": "campaign_summary",
+      "roles_invoked": [
+        "architect",
+        "charging",
+        "critic",
+        "routing",
+        "search"
+      ],
+      "team_incomplete_orchestration": false,
+      "taxonomy": {
+        "FORMAT": 0,
+        "SYNTAX": 0,
+        "RUNTIME": 1,
+        "GENERALITY": 0,
+        "FEASIBILITY": 8,
+        "OPTIMIZATION": 0,
+        "NO_OP": 0
+      },
+      "committed_hashes": [
+        "1e837706f16dd3d2",
+        "61643b6881db337d",
+        "4bd755d0861f0801",
+        "4bd755d0861f0801",
+        "4bd755d0861f0801",
+        "4bd755d0861f0801",
+        "4bd755d0861f0801",
+        "4bd755d0861f0801",
+        "4bd755d0861f0801"
+      ],
+      "primary_failure": {
+        "failure_class": "FEASIBILITY",
+        "role": "team",
+        "gate": "G4",
+        "detail": "BATTERY"
+      },
+      "integrity_log": [
+        {
+          "gate": "G0",
+          "kind": "draft",
+          "role": "routing",
+          "hash": "1e837706f16dd3d2"
+        },
+        {
+          "gate": "G0",
+          "kind": "commit",
+          "hash": "1e837706f16dd3d2",
+          "tag": "after_routing"
+        },
+        {
+          "gate": "G4",
+          "kind": "feasibility_fail",
+          "failure_class": "FEASIBILITY",
+          "family": "VISIT"
+        },
+        {
+          "gate": "G4",
+          "kind": "draft",
+          "role": "routing",
+          "hash": "61643b6881db337d"
+        },
+        {
+          "gate": "G4",
+          "kind": "commit",
+          "hash": "61643b6881db337d",
+          "tag": "after_routing"
+        },
+        {
+          "gate": "G4",
+          "kind": "feasibility_fail",
+          "failure_class": "FEASIBILITY",
+          "family": "BATTERY"
+        },
+        {
+          "gate": "G4",
+          "kind": "draft",
+          "role": "charging",
+          "hash": "1b26e956a8e82ac6"
+        },
+        {
+          "gate": "G4",
+          "kind": "integration_needed",
+          "failure_class": "RUNTIME",
+          "author": "charging",
+          "attempt": 0,
+          "reason": "Traceback (most recent call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_05615iih\\driver.py\", line 61, in <module>\n    result = _call_solve()\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_05615iih\\driver.py\", line 26, in _call_solve\n    return solve(instance, **kwargs)\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_p15_yq8u1dbz\\solver.py\", line 43, in solve\n    inse"
+        },
+        {
+          "gate": "G4",
+          "kind": "commit",
+          "hash": "4bd755d0861f0801",
+          "tag": "after_charging"
+        },
+        {
+          "gate": "G4",
+          "kind": "feasibility_fail",
+          "failure_class": "FEASIBILITY",
+          "family": "BATTERY"
+        },
+        {
+          "gate": "G4",
+          "kind": "draft",
+          "role": "charging",
+          "hash": "4bd755d0861f0801"
+        },
+        {
+          "gate": "G4",
+          "kind": "commit",
+          "hash": "4bd755d0861f0801",
+          "tag": "after_charging"
+        },
+        {
+          "gate": "G4",
+          "kind": "feasibility_fail",
+          "failure_class": "FEASIBILITY",
+          "family": "BATTERY"
+        },
+        {
+          "gate": "G4",
+          "kind": "draft",
+          "role": "charging",
+          "hash": "4bd755d0861f0801"
+        },
+        {
+          "gate": "G4",
+          "kind": "commit",
+          "hash": "4bd755d0861f0801",
+          "tag": "after_charging"
+        },
+        {
+          "gate": "G4",
+          "kind": "feasibility_fail",
+          "failure_class": "FEASIBILITY",
+          "family": "BATTERY"
+        },
+        {
+          "gate": "G4",
+          "kind": "draft",
+          "role": "charging",
+          "hash": "4bd755d0861f0801"
+        },
+        {
+          "gate": "G4",
+          "kind": "commit",
+          "hash": "4bd755d0861f0801",
+          "tag": "after_charging"
+        },
+        {
+          "gate": "G4",
+          "kind": "feasibility_fail",
+          "failure_class": "FEASIBILITY",
+          "family": "BATTERY"
+        },
+        {
+          "gate": "G4",
+          "kind": "draft",
+          "role": "charging",
+          "hash": "4bd755d0861f0801"
+        },
+        {
+          "gate": "G4",
+          "kind": "commit",
+          "hash": "4bd755d0861f0801",
+          "tag": "after_charging"
+        },
+        {
+          "gate": "G4",
+          "kind": "feasibility_fail",
+          "failure_class": "FEASIBILITY",
+          "family": "BATTERY"
+        },
+        {
+          "gate": "G4",
+          "kind": "draft",
+          "role": "charging",
+          "hash": "4bd755d0861f0801"
+        },
+        {
+          "gate": "G4",
+          "kind": "commit",
+          "hash": "4bd755d0861f0801",
+          "tag": "after_charging"
+        },
+        {
+          "gate": "G4",
+          "kind": "feasibility_fail",
+          "failure_class": "FEASIBILITY",
+          "family": "BATTERY"
+        },
+        {
+          "gate": "G4",
+          "kind": "draft",
+          "role": "charging",
+          "hash": "4bd755d0861f0801"
+        },
+        {
+          "gate": "G4",
+          "kind": "commit",
+          "hash": "4bd755d0861f0801",
+          "tag": "after_charging"
+        }
+      ]
+    }
+  ],
+  "checkpoints": "C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_mcb_v1\\qwen25_coder_14b\\seed11\\checkpoints",
+  "protocol_freeze": "results/md/MCB_V1_PROTOCOL_FREEZE.md"
+}

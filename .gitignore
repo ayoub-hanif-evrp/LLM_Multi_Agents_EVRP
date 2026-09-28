@@ -10,8 +10,8 @@ build/
 .ruff_cache/
 .uv/
 
-# Research artifacts / caches
-artifacts/
+# Research artifacts / caches (root only; keep results/md/artifacts tracked)
+/artifacts/
 results/raw/
 results/runs/**
 !results/runs/.gitkeep
@@ -58,6 +58,7 @@ workspace/discovery_p1_5/
 workspace/discovery_mcb_v1/
 workspace/discovery_single_agent_v1/
 workspace/discovery_opt_pilot/
+workspace/slm_evo/
 
 
 workspace/spark/

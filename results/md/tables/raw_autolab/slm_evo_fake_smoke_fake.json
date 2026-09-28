@@ -1,0 +1,389 @@
+{
+  "protocol": "SLM_EVO_V0",
+  "model": "fake",
+  "parent": "C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\results\\md\\artifacts\\mcb_v1\\FEASIBLE_SYNTHESIZED_SOLVER_V0_qwen14b_seed33\\solver.py",
+  "parent_hash": "3f427deb2d9bf534",
+  "best_hash": "3f427deb2d9bf534",
+  "best_panel": {
+    "feasible": 4,
+    "total": 4,
+    "vehicles_sum": 20,
+    "distance_sum": 951.2528,
+    "by_instance": {
+      "c101C5": {
+        "ok": true,
+        "vehicles": 5,
+        "distance": 296.0921118198048
+      },
+      "c103C5": {
+        "ok": true,
+        "vehicles": 5,
+        "distance": 207.22418415272884
+      },
+      "r104C5": {
+        "ok": true,
+        "vehicles": 5,
+        "distance": 223.3300768865114
+      },
+      "r105C5": {
+        "ok": true,
+        "vehicles": 5,
+        "distance": 224.6064093748663
+      }
+    },
+    "primary_fault": ""
+  },
+  "all_c5": {
+    "feasible": 12,
+    "total": 12,
+    "vehicles_sum": 60,
+    "distance_sum": 3617.0556,
+    "by_instance": {
+      "c101C5": {
+        "ok": true,
+        "vehicles": 5,
+        "distance": 296.0921118198048
+      },
+      "c103C5": {
+        "ok": true,
+        "vehicles": 5,
+        "distance": 207.22418415272884
+      },
+      "c206C5": {
+        "ok": true,
+        "vehicles": 5,
+        "distance": 325.43903084432714
+      },
+      "c208C5": {
+        "ok": true,
+        "vehicles": 5,
+        "distance": 443.75783266666383
+      },
+      "r104C5": {
+        "ok": true,
+        "vehicles": 5,
+        "distance": 223.3300768865114
+      },
+      "r105C5": {
+        "ok": true,
+        "vehicles": 5,
+        "distance": 224.6064093748663
+      },
+      "r202C5": {
+        "ok": true,
+        "vehicles": 5,
+        "distance": 225.79635443458173
+      },
+      "r203C5": {
+        "ok": true,
+        "vehicles": 5,
+        "distance": 284.8177227896282
+      },
+      "rc105C5": {
+        "ok": true,
+        "vehicles": 5,
+        "distance": 282.65710776940705
+      },
+      "rc108C5": {
+        "ok": true,
+        "vehicles": 5,
+        "distance": 438.85424639339243
+      },
+      "rc204C5": {
+        "ok": true,
+        "vehicles": 5,
+        "distance": 357.76260453761705
+      },
+      "rc208C5": {
+        "ok": true,
+        "vehicles": 5,
+        "distance": 306.7179219349236
+      }
+    },
+    "primary_fault": ""
+  },
+  "milestone_hit": false,
+  "milestone_instance": "",
+  "generations": 1,
+  "generation_reports": [
+    {
+      "generation": 0,
+      "focus": "ROUTING",
+      "parent_hash": "3f427deb2d9bf534",
+      "candidates": [
+        {
+          "candidate_id": "g0_p0_architect_0",
+          "parent_hash": "3f427deb2d9bf534",
+          "role": "architect",
+          "focus": "ROUTING",
+          "hypothesis": "add unused helper (smoke)",
+          "ops": [
+            {
+              "action": "ADD",
+              "symbol": "smoke_helper",
+              "code": "def smoke_helper(x):\n    return x\n"
+            }
+          ],
+          "apply_ok": true,
+          "apply_error": "",
+          "source_hash": "a82e15847947a10d",
+          "metrics": {
+            "feasible": 4,
+            "total": 4,
+            "vehicles_sum": 20,
+            "distance_sum": 951.2528,
+            "by_instance": {
+              "c101C5": {
+                "ok": true,
+                "vehicles": 5,
+                "distance": 296.0921118198048
+              },
+              "c103C5": {
+                "ok": true,
+                "vehicles": 5,
+                "distance": 207.22418415272884
+              },
+              "r104C5": {
+                "ok": true,
+                "vehicles": 5,
+                "distance": 223.3300768865114
+              },
+              "r105C5": {
+                "ok": true,
+                "vehicles": 5,
+                "distance": 224.6064093748663
+              }
+            },
+            "primary_fault": ""
+          },
+          "accepted": false,
+          "reject_reason": "feasible_not_better",
+          "experimental": false,
+          "repaired": false,
+          "path": "C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\slm_evo\\fake\\smoke_fake\\candidates\\g0_p0_architect_0\\solver.py"
+        },
+        {
+          "candidate_id": "g0_p0_routing_1",
+          "parent_hash": "3f427deb2d9bf534",
+          "role": "routing",
+          "focus": "ROUTING",
+          "hypothesis": "add unused helper (smoke)",
+          "ops": [
+            {
+              "action": "ADD",
+              "symbol": "smoke_helper",
+              "code": "def smoke_helper(x):\n    return x\n"
+            }
+          ],
+          "apply_ok": true,
+          "apply_error": "",
+          "source_hash": "a82e15847947a10d",
+          "metrics": {
+            "feasible": 4,
+            "total": 4,
+            "vehicles_sum": 20,
+            "distance_sum": 951.2528,
+            "by_instance": {
+              "c101C5": {
+                "ok": true,
+                "vehicles": 5,
+                "distance": 296.0921118198048
+              },
+              "c103C5": {
+                "ok": true,
+                "vehicles": 5,
+                "distance": 207.22418415272884
+              },
+              "r104C5": {
+                "ok": true,
+                "vehicles": 5,
+                "distance": 223.3300768865114
+              },
+              "r105C5": {
+                "ok": true,
+                "vehicles": 5,
+                "distance": 224.6064093748663
+              }
+            },
+            "primary_fault": ""
+          },
+          "accepted": false,
+          "reject_reason": "feasible_not_better",
+          "experimental": false,
+          "repaired": false,
+          "path": "C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\slm_evo\\fake\\smoke_fake\\candidates\\g0_p0_routing_1\\solver.py"
+        },
+        {
+          "candidate_id": "g0_p0_charging_2",
+          "parent_hash": "3f427deb2d9bf534",
+          "role": "charging",
+          "focus": "ROUTING",
+          "hypothesis": "add unused helper (smoke)",
+          "ops": [
+            {
+              "action": "ADD",
+              "symbol": "smoke_helper",
+              "code": "def smoke_helper(x):\n    return x\n"
+            }
+          ],
+          "apply_ok": true,
+          "apply_error": "",
+          "source_hash": "a82e15847947a10d",
+          "metrics": {
+            "feasible": 4,
+            "total": 4,
+            "vehicles_sum": 20,
+            "distance_sum": 951.2528,
+            "by_instance": {
+              "c101C5": {
+                "ok": true,
+                "vehicles": 5,
+                "distance": 296.0921118198048
+              },
+              "c103C5": {
+                "ok": true,
+                "vehicles": 5,
+                "distance": 207.22418415272884
+              },
+              "r104C5": {
+                "ok": true,
+                "vehicles": 5,
+                "distance": 223.3300768865114
+              },
+              "r105C5": {
+                "ok": true,
+                "vehicles": 5,
+                "distance": 224.6064093748663
+              }
+            },
+            "primary_fault": ""
+          },
+          "accepted": false,
+          "reject_reason": "feasible_not_better",
+          "experimental": false,
+          "repaired": false,
+          "path": "C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\slm_evo\\fake\\smoke_fake\\candidates\\g0_p0_charging_2\\solver.py"
+        },
+        {
+          "candidate_id": "g0_p0_search_3",
+          "parent_hash": "3f427deb2d9bf534",
+          "role": "search",
+          "focus": "ROUTING",
+          "hypothesis": "add unused helper (smoke)",
+          "ops": [
+            {
+              "action": "ADD",
+              "symbol": "smoke_helper",
+              "code": "def smoke_helper(x):\n    return x\n"
+            }
+          ],
+          "apply_ok": true,
+          "apply_error": "",
+          "source_hash": "a82e15847947a10d",
+          "metrics": {
+            "feasible": 4,
+            "total": 4,
+            "vehicles_sum": 20,
+            "distance_sum": 951.2528,
+            "by_instance": {
+              "c101C5": {
+                "ok": true,
+                "vehicles": 5,
+                "distance": 296.0921118198048
+              },
+              "c103C5": {
+                "ok": true,
+                "vehicles": 5,
+                "distance": 207.22418415272884
+              },
+              "r104C5": {
+                "ok": true,
+                "vehicles": 5,
+                "distance": 223.3300768865114
+              },
+              "r105C5": {
+                "ok": true,
+                "vehicles": 5,
+                "distance": 224.6064093748663
+              }
+            },
+            "primary_fault": ""
+          },
+          "accepted": false,
+          "reject_reason": "feasible_not_better",
+          "experimental": false,
+          "repaired": false,
+          "path": "C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\slm_evo\\fake\\smoke_fake\\candidates\\g0_p0_search_3\\solver.py"
+        },
+        {
+          "candidate_id": "g0_p0_critic_inventor_4",
+          "parent_hash": "3f427deb2d9bf534",
+          "role": "critic_inventor",
+          "focus": "ROUTING",
+          "hypothesis": "add unused helper (smoke)",
+          "ops": [
+            {
+              "action": "ADD",
+              "symbol": "smoke_helper",
+              "code": "def smoke_helper(x):\n    return x\n"
+            }
+          ],
+          "apply_ok": true,
+          "apply_error": "",
+          "source_hash": "a82e15847947a10d",
+          "metrics": {
+            "feasible": 4,
+            "total": 4,
+            "vehicles_sum": 20,
+            "distance_sum": 951.2528,
+            "by_instance": {
+              "c101C5": {
+                "ok": true,
+                "vehicles": 5,
+                "distance": 296.0921118198048
+              },
+              "c103C5": {
+                "ok": true,
+                "vehicles": 5,
+                "distance": 207.22418415272884
+              },
+              "r104C5": {
+                "ok": true,
+                "vehicles": 5,
+                "distance": 223.3300768865114
+              },
+              "r105C5": {
+                "ok": true,
+                "vehicles": 5,
+                "distance": 224.6064093748663
+              }
+            },
+            "primary_fault": ""
+          },
+          "accepted": false,
+          "reject_reason": "feasible_not_better",
+          "experimental": false,
+          "repaired": false,
+          "path": "C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\slm_evo\\fake\\smoke_fake\\candidates\\g0_p0_critic_inventor_4\\solver.py"
+        }
+      ],
+      "beam_hashes": [
+        "3f427deb2d9bf534"
+      ],
+      "best_hash": "3f427deb2d9bf534",
+      "best_vehicles_sum": 20,
+      "best_distance_sum": 951.2528,
+      "milestone_hit": false,
+      "milestone_instance": ""
+    }
+  ],
+  "llm_calls": 5,
+  "wall_s": 3.3,
+  "best_path": "C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\slm_evo\\fake\\smoke_fake\\best\\solver.py",
+  "freeze_dir": null,
+  "log_path": "C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\slm_evo\\fake\\smoke_fake\\generations.jsonl",
+  "run_id": "smoke_fake",
+  "profile": "fake",
+  "timestamp": "2026-09-09T12:13:24.727240+00:00",
+  "fake": true
+}

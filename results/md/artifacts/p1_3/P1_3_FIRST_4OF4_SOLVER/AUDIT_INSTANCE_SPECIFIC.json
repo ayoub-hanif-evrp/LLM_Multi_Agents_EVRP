@@ -1,0 +1,8 @@
+{
+  "instance_specific_constants": "NONE",
+  "string_literals_like_node_ids": [],
+  "seed_lines": 28,
+  "repaired_lines": 32,
+  "diff_path": "results\\md\\artifacts\\p1_3\\P1_3_FIRST_4OF4_SOLVER\\SEED_TO_REPAIR.diff",
+  "hardcoded_node_id_literals": []
+}

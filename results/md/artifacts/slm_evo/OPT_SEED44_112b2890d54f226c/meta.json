@@ -1,0 +1,140 @@
+{
+  "parent": "results\\md\\artifacts\\slm_evo\\OPT_V1\\solver.py",
+  "best_hash": "112b2890d54f226c",
+  "panel": {
+    "feasible": 4,
+    "total": 4,
+    "vehicles_sum": 16,
+    "distance_sum": 951.2528,
+    "by_instance": {
+      "c101C5": {
+        "ok": true,
+        "vehicles": 5,
+        "distance": 296.0921118198048
+      },
+      "c103C5": {
+        "ok": true,
+        "vehicles": 3,
+        "distance": 207.22418415272884
+      },
+      "r104C5": {
+        "ok": true,
+        "vehicles": 4,
+        "distance": 223.3300768865114
+      },
+      "r105C5": {
+        "ok": true,
+        "vehicles": 4,
+        "distance": 224.60640937486627
+      }
+    },
+    "primary_fault": ""
+  },
+  "all_c5": {
+    "feasible": 12,
+    "total": 12,
+    "vehicles_sum": 50,
+    "distance_sum": 3617.0556,
+    "by_instance": {
+      "c101C5": {
+        "ok": true,
+        "vehicles": 5,
+        "distance": 296.0921118198048
+      },
+      "c103C5": {
+        "ok": true,
+        "vehicles": 3,
+        "distance": 207.22418415272884
+      },
+      "c206C5": {
+        "ok": true,
+        "vehicles": 4,
+        "distance": 325.43903084432714
+      },
+      "c208C5": {
+        "ok": true,
+        "vehicles": 5,
+        "distance": 443.75783266666394
+      },
+      "r104C5": {
+        "ok": true,
+        "vehicles": 4,
+        "distance": 223.3300768865114
+      },
+      "r105C5": {
+        "ok": true,
+        "vehicles": 4,
+        "distance": 224.60640937486627
+      },
+      "r202C5": {
+        "ok": true,
+        "vehicles": 4,
+        "distance": 225.79635443458173
+      },
+      "r203C5": {
+        "ok": true,
+        "vehicles": 4,
+        "distance": 284.8177227896282
+      },
+      "rc105C5": {
+        "ok": true,
+        "vehicles": 4,
+        "distance": 282.65710776940705
+      },
+      "rc108C5": {
+        "ok": true,
+        "vehicles": 5,
+        "distance": 438.8542463933925
+      },
+      "rc204C5": {
+        "ok": true,
+        "vehicles": 4,
+        "distance": 357.76260453761705
+      },
+      "rc208C5": {
+        "ok": true,
+        "vehicles": 4,
+        "distance": 306.71792193492365
+      }
+    },
+    "primary_fault": ""
+  },
+  "milestone_instance": "c103C5",
+  "generations": 20,
+  "seed_base": 44,
+  "campaign_id": "from53_seed44",
+  "trajectory": [
+    {
+      "gen": -1,
+      "kind": "parent",
+      "panel_veh": 17,
+      "all_c5_veh": 53,
+      "all_c5_dist": 3617.0556,
+      "all_c5_feasible": "12/12",
+      "hash": "a1809c66b508a98b",
+      "ops": [],
+      "hypothesis": "parent",
+      "role": "",
+      "candidate_id": "parent"
+    },
+    {
+      "gen": 0,
+      "kind": "accepted",
+      "panel_veh": 16,
+      "all_c5_veh": 50,
+      "all_c5_dist": 3617.0556,
+      "all_c5_feasible": "12/12",
+      "hash": "112b2890d54f226c",
+      "ops": [
+        {
+          "action": "REPLACE",
+          "symbol": "solve",
+          "code": "def solve(instance, seed: int, time_limit_s: float):\n    depot = instance.depot_id\n    routes = []\n    \n    # Sort customers by demand to try to pack them into fewer vehicles\n    sorted_customers = sorted(instance.customer_ids, key=lambda cid: instance.node_map[cid].demand, reverse=True)\n    \n    for cid in sorted_customers:\n        route = [depot, cid, depot]\n        states = propagate_route(instance, route)\n        \n        # Check if the route is battery-feasible\n        if all(state.battery_arrival >= 0 for state in states):\n            routes.append(route)\n            continue\n        \n        # If not battery-feasible, insert a charging station\n        for station_id in instance.station_ids:\n            for i in range(1, len(route)):\n                new_route = route[:i] + [station_id] + route[i:]\n                new_states = propagate_route(instance, new_route)\n                \n                if all(state.battery_arrival >= 0 for state in new_states):\n                    routes.append(new_route)\n                    break\n            else:\n                continue\n            break\n    \n    # Try to merge routes to minimize the number of vehicles\n    merged_routes = []\n    for route in routes:\n        merged = False\n        for i, merged_route in enumerate(merged_routes):\n            new_route = merged_route + route[1:]  # Try appending the current route to an existing one\n            new_states = propagate_route(instance, new_route)\n            \n            if all(state.battery_arrival >= 0 for state in new_states):\n                merged_routes[i] = new_route\n                merged = True\n                break\n        if not merged:\n            merged_routes.append(route)\n    \n    # Sort merged routes by total distance\n    merged_routes.sort(key=lambda route: calculate_total_distance(instance, [route]))\n    \n    # Further optimization: Try to merge routes again to reduce total distance\n    final_routes = []\n    for route in merged_routes:\n        merged = False\n        for i, final_route in enumerate(final_routes):\n            new_route = final_route + route[1:]  # Try appending the current route to an existing one\n            new_states = propagate_route(instance, new_route)\n            \n            if all(state.battery_arrival >= 0 for state in new_states):\n                final_routes[i] = new_route\n                merged = True\n                break\n        if not merged:\n            final_routes.append(route)\n    \n    return {\"routes\": final_routes, \"metadata\": {\"seed\": seed}}\n"
+        }
+      ],
+      "hypothesis": "Improve the EVRPTW solver to minimize the number of vehicles first, then total distance while preserving feasibility.",
+      "role": "critic_inventor",
+      "candidate_id": "g0_p0_critic_inventor_8"
+    }
+  ]
+}

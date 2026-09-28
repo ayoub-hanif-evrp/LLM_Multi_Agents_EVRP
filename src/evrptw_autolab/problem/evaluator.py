@@ -23,6 +23,13 @@ def first_fault(instance: EVRPTWInstance, solution: CandidateSolution) -> dict[s
             if not route or route[0] != instance.depot_id or route[-1] != instance.depot_id:
                 node_id = route[0] if route else ""
                 return _packet("DEPOT", node_id=str(node_id), route_index=route_index, detail="route must start and end at depot_id")
+            if instance.depot_id in route[1:-1]:
+                return _packet(
+                    "DEPOT",
+                    node_id=instance.depot_id,
+                    route_index=route_index,
+                    detail="depot may appear only at the start and end of a route",
+                )
             stops = propagate_route(instance, route)
             for stop in stops:
                 node = nodes[stop.node_id]
@@ -124,6 +131,8 @@ def evaluate_solution(instance: EVRPTWInstance, solution: CandidateSolution) -> 
     try:
         for route in solution.routes:
             if not route or route[0] != instance.depot_id or route[-1] != instance.depot_id:
+                report.depot_violations += 1
+            elif instance.depot_id in route[1:-1]:
                 report.depot_violations += 1
             stops = propagate_route(instance, route)
             report.total_distance += stops[-1].distance_so_far if stops else 0.0

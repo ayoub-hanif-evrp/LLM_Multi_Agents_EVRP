@@ -19,12 +19,12 @@ from evrptw_autolab.orchestration.handshake import (
     owner_for_report,
     report_brief,
 )
+from evrptw_autolab.orchestration.trajectory import append_trajectory
 from evrptw_autolab.problem.types import EVRPTWInstance
 from evrptw_autolab.sandbox.limits import RunLimits, limits_from_synthesis
 from evrptw_autolab.sandbox.runner import run_solver
 from evrptw_autolab.synthesis.code_graph import CodeGraph, SolverNode
 from evrptw_autolab.synthesis.compile_repair import compile_repair, evidence_repair, runtime_repair
-from evrptw_autolab.orchestration.trajectory import append_trajectory
 from evrptw_autolab.synthesis.contract import FAULT_ATLAS, INSTANCE_API, PROBLEM_BRIEF
 from evrptw_autolab.synthesis.patching import (
     code_hash,

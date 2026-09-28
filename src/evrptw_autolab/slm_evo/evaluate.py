@@ -1,22 +1,103 @@
 """Panel evaluation, lex accept, experimental charging repair branch."""
 from __future__ import annotations
 
+import ast
+import hashlib
+import re
+import tempfile
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from evrptw_autolab.build.code_integrity import code_hash
-from evrptw_autolab.build.minimal_cooperative_build_v1 import _all_c5, _panel_instances
-from evrptw_autolab.build.runtime_integrity import (
-    collect_union_node_ids,
-    find_hardcoded_node_ids,
-    validate_candidate,
+from evrptw_autolab.evaluation.fidelity import (
+    by_customer_count,
+    load_all,
+    partition_of,
+    split_instances,
 )
-from evrptw_autolab.evaluation.fidelity import by_customer_count, load_all, split_instances
-from evrptw_autolab.evaluation.ranking import panel_is_better, panel_rank_key
 from evrptw_autolab.problem.types import EVRPTWInstance
 from evrptw_autolab.sandbox.limits import RunLimits
 from evrptw_autolab.sandbox.runner import run_solver
+from evrptw_autolab.sandbox.static_scan import scan_source
 from evrptw_autolab.slm_evo.types import PANEL_IDS, PanelMetrics
+
+
+@dataclass
+class CandidateValidation:
+    ok: bool
+    failure_class: str = ""
+    reason: str = ""
+
+
+def code_hash(source: str) -> str:
+    return hashlib.sha256(source.encode("utf-8")).hexdigest()
+
+
+def collect_union_node_ids(instances: list[EVRPTWInstance]) -> set[str]:
+    found: set[str] = set()
+    for instance in instances:
+        found.add(instance.depot_id)
+        found.update(instance.customer_ids)
+        found.update(instance.station_ids)
+    return found
+
+
+def find_hardcoded_node_ids(
+    source: str,
+    probe: EVRPTWInstance | None = None,
+    known_ids: set[str] | None = None,
+) -> list[str]:
+    ids = set(known_ids or [])
+    if probe is not None:
+        ids.update(collect_union_node_ids([probe]))
+    if not ids:
+        return []
+    found: list[str] = []
+
+    def _keep(token: str) -> None:
+        if token in ids and token not in found:
+            found.append(token)
+
+    try:
+        tree = ast.parse(source)
+    except SyntaxError:
+        for token in re.findall(r"""['\"]([^'\"]+)['\"]""", source):
+            _keep(token)
+        return found
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Constant) and isinstance(node.value, str):
+            _keep(node.value)
+    return found
+
+
+def validate_candidate(
+    source: str,
+    *,
+    probe: EVRPTWInstance,
+    limits: RunLimits | None = None,
+    known_ids: set[str] | None = None,
+) -> CandidateValidation:
+    limits = limits or RunLimits(wall_clock_s=20.0)
+    try:
+        ast.parse(source)
+    except SyntaxError as error:
+        return CandidateValidation(False, "SYNTAX", str(error))
+    hard = find_hardcoded_node_ids(source, probe, known_ids=known_ids)
+    if hard:
+        return CandidateValidation(False, "HARDCODED_INSTANCE_IDENTIFIER", ",".join(hard))
+    scan_errors = scan_source(source)
+    if scan_errors:
+        return CandidateValidation(False, "STATIC", scan_errors[0])
+    if "def solve" not in source:
+        return CandidateValidation(False, "CONTRACT", "missing solve")
+    with tempfile.TemporaryDirectory() as tmp:
+        solver_dir = Path(tmp)
+        (solver_dir / "solver.py").write_text(source, encoding="utf-8")
+        report = run_solver(solver_dir, probe, seed=0, limits=limits)
+    if report.crashed or not report.parse_ok:
+        detail = str(report.error or (report.first_fault or {}).get("detail") or "runtime failure")
+        return CandidateValidation(False, "RUNTIME", detail[:300])
+    return CandidateValidation(True, "", "ok")
 
 
 def panel_instances(data_root: Path | None = None) -> list[EVRPTWInstance]:
@@ -27,7 +108,14 @@ def panel_instances(data_root: Path | None = None) -> list[EVRPTWInstance]:
 
 
 def all_c5_instances(data_root: Path | None = None) -> list[EVRPTWInstance]:
-    return _all_c5(data_root)
+    """Every 5-customer instance except the held-out RC2 family."""
+    selected = [
+        instance
+        for instance in load_all(data_root)
+        if len(instance.customer_ids) == 5 and partition_of(instance) != "heldout"
+    ]
+    selected.sort(key=lambda instance: instance.instance_id)
+    return selected
 
 
 def instances_by_customer_count(

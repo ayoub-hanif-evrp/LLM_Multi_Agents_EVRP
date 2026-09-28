@@ -23,7 +23,7 @@ from evrptw_autolab.slm_evo.evaluate import (
     vehicle_reduction_on_any,
     write_solver,
 )
-from evrptw_autolab.slm_evo.freeze import assert_not_opt_v1, freeze_dir_for
+from evrptw_autolab.slm_evo.freeze import assert_not_immutable, freeze_dir_for
 from evrptw_autolab.slm_evo.patch_apply import apply_proposal
 from evrptw_autolab.slm_evo.propose import (
     build_patch_agents,
@@ -195,7 +195,7 @@ def _write_freeze(
     campaign_id: str,
     trajectory: list[dict[str, Any]],
 ) -> Path:
-    assert_not_opt_v1(dest)
+    assert_not_immutable(dest)
     dest.mkdir(parents=True, exist_ok=True)
     (dest / "solver.py").write_text(source, encoding="utf-8")
     (dest / "meta.json").write_text(
@@ -404,7 +404,7 @@ def run_slm_evo(
         _append_jsonl(log_path, {"kind": "generation_summary", **report.as_dict()})
         all_c5_veh = state.best_all_c5.vehicles_sum if state.best_all_c5 else None
         print(
-            f"SLM_EVO gen={gen} focus={focus} accepted="
+            f"evolution gen={gen} focus={focus} accepted="
             f"{sum(1 for c in gen_candidates if c.accepted)}/"
             f"{len(gen_candidates)} best_panel_veh={state.best_metrics.vehicles_sum} "
             f"best_c5_veh={all_c5_veh} milestone={state.milestone_hit} "
@@ -451,7 +451,7 @@ def run_slm_evo(
     )
 
     return {
-        "protocol": "SLM_EVO_OPT_CAMPAIGN",
+        "protocol": "solver_evolution",
         "model": model,
         "parent": str(parent_solver),
         "parent_hash": source_hash(parent_source),

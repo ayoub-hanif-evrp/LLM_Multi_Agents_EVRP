@@ -9,15 +9,7 @@ from evrptw_autolab.slm_evo.patch_apply import apply_ops, parse_proposal_json
 from evrptw_autolab.slm_evo.types import PatchOp
 
 ROOT = Path(__file__).resolve().parents[1]
-FROZEN = (
-    ROOT
-    / "results"
-    / "md"
-    / "artifacts"
-    / "mcb_v1"
-    / "FEASIBLE_SYNTHESIZED_SOLVER_V0_qwen14b_seed33"
-    / "solver.py"
-)
+FROZEN = ROOT / "tests" / "fixtures" / "feasible_parent" / "solver.py"
 
 
 @pytest.fixture

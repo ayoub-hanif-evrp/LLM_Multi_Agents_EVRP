@@ -8,7 +8,6 @@ from typing import Any
 from pydantic import BaseModel, Field
 
 from evrptw_autolab.agents.base import Agent, extract_json
-from evrptw_autolab.build.p1_minimal import API_SNIPPET
 from evrptw_autolab.llm.usage import UsageLog
 from evrptw_autolab.slm_evo.patch_apply import parse_proposal_json
 from evrptw_autolab.slm_evo.types import (
@@ -19,6 +18,7 @@ from evrptw_autolab.slm_evo.types import (
     PatchProposal,
     RoleName,
 )
+from evrptw_autolab.synthesis.contract import API_SNIPPET
 
 ROOT = Path(__file__).resolve().parents[3]
 

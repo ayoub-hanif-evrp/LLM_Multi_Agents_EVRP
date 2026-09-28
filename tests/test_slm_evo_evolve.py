@@ -12,15 +12,7 @@ from evrptw_autolab.slm_evo.patch_apply import apply_ops
 from evrptw_autolab.slm_evo.types import PatchOp
 
 ROOT = Path(__file__).resolve().parents[1]
-FROZEN = (
-    ROOT
-    / "results"
-    / "md"
-    / "artifacts"
-    / "mcb_v1"
-    / "FEASIBLE_SYNTHESIZED_SOLVER_V0_qwen14b_seed33"
-    / "solver.py"
-)
+FROZEN = ROOT / "tests" / "fixtures" / "feasible_parent" / "solver.py"
 
 
 def _reply(ops: list[dict], hypothesis: str = "h") -> str:
@@ -204,8 +196,7 @@ def test_freeze_artifact_on_vehicle_milestone(tmp_path: Path, monkeypatch: pytes
     freeze = result.get("freeze_dir")
     assert freeze
     freeze_path = Path(freeze)
-    assert "OPT_V1" not in freeze_path.parts
-    assert freeze_path.name.startswith("OPT_SEED11_")
+    assert freeze_path.name.startswith("seed11_")
     assert freeze_path.exists()
     assert (freeze_path / "solver.py").exists()
     meta = json.loads((freeze_path / "meta.json").read_text(encoding="utf-8"))
@@ -222,12 +213,13 @@ def test_proposal_seed_formula() -> None:
     assert proposal_seed(11, 1, 2, 1) == 110000 + 100 + 20 + 1
 
 
-def test_freeze_refuses_opt_v1() -> None:
-    from evrptw_autolab.slm_evo.freeze import OPT_V1_DIR, assert_not_opt_v1
+def test_freeze_refuses_published_solvers() -> None:
     import pytest as _pytest
 
+    from evrptw_autolab.slm_evo.freeze import IMMUTABLE_DIR, assert_not_immutable
+
     with _pytest.raises(RuntimeError):
-        assert_not_opt_v1(OPT_V1_DIR)
+        assert_not_immutable(IMMUTABLE_DIR)
 
 
 def test_stop_on_milestone_false_continues(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

@@ -1,6 +1,0 @@
-seed,token_budget,five_highest,single_highest,five_tokens,single_tokens,single_overshoot,five_g4,single_g4,five_calls,single_calls
-11,18179,G3,G4,18179,6264,0,3,4,11,3
-22,39157,G3,G4_partial_2,39157,30686,0,2,2,21,11
-33,23579,G3,G4_partial_3,23579,22051,0,3,3,13,8
-44,6205,none,G1,6205,6432,227,0,0,4,3
-55,18207,G1,G4_partial_1,18207,19383,1176,0,1,11,7

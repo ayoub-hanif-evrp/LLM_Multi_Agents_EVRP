@@ -24,26 +24,21 @@ models:
     num_ctx: 8192
     note: Meta CodeLlama 7B — third family at ~7B
 
-  # Stronger coding-model anchor under frozen MCB V1 (same seeds 11..55).
-  # Preferred Qwen3-Coder-30B-A3B (~19GB Q4) is not reliable on RTX A2000 12GB + ~16GB RAM.
-  # DeepSeek-Coder-V2-Lite-Instruct: 16B total / ~2.4B active, ~8.9GB Ollama tag.
   deepseek_coder_v2_lite:
-    enabled: true
+    enabled: false
     provider: ollama
     model: deepseek-coder-v2:16b
     num_ctx: 8192
     timeout_s: 300
-    note: Strong-model MCB V1 anchor (MoE Lite); not part of the ~7B package
+    note: Optional larger model. Not part of the main experiment.
 
-  # Same-family capacity anchor (preferred over V2-Lite for scaling claims).
-  # qwen2.5-coder:14b ~9GB Q4 — fits RTX A2000 12GB; frozen MCB V1 identical.
   qwen25_coder_14b:
     enabled: true
     provider: ollama
     model: qwen2.5-coder:14b
     num_ctx: 8192
     timeout_s: 300
-    note: Same-family capacity anchor vs qwen2.5-coder:7b under frozen MCB V1
+    note: Larger Qwen2.5-Coder used for the capacity comparison and solver evolution.
 
   # Kept for availability checks / ablations; not in the default 3-model package.
   qwen25_coder_15b:

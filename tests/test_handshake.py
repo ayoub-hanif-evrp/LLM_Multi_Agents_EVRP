@@ -88,9 +88,10 @@ def test_pick_cycle_instance_uses_smoke_when_crashed(tmp_path: Path) -> None:
 
 
 def test_recover_python_stub_replaces_placeholder(tmp_path: Path) -> None:
+    from tests.helpers import CHARGING_PY
+
     from evrptw_autolab.agents.charging_engineer import ChargingEngineer
     from evrptw_autolab.orchestration.handshake import recover_python_stub
-    from tests.helpers import CHARGING_PY
 
     (tmp_path / "charging.py").write_text("# python source of charging helpers\n", encoding="utf-8")
     backend = FakeBackend({"charging": [CHARGING_PY]})

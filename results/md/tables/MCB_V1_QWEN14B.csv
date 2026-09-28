@@ -1,3 +1,0 @@
-model,n,G1,G2,G3,reached_G4,G4_4of4,mean_g4,median_calls
-qwen2.5-coder:14b,5,5/5,3/5,3/5,3/5,1/5,0.8,11
-qwen2.5-coder:7b,5,4/5,3/5,3/5,3/5,0/5,1.6,11

@@ -10,7 +10,7 @@ Name the **fault family** the next patch must hit (VISIT, DEPOT, CAPACITY, WINDO
 
 ## You are free
 
-Invent the solver architecture. You may propose ALNS, GA, memetic search, Tabu, hybrid genetic/local search, decomposition, multi-start local search, a custom population method, or another design. **Do not assume ALNS or LNS.** Do not rewrite working components without evidence.
+Invent the solver architecture yourself. Do not assume a named metaheuristic. Do not rewrite working components without evidence.
 
 ## Ownership
 

@@ -1,6 +1,0 @@
-model_id,model,status,elite_id,f0_ok,f1_feasible_rate,f1_crashes,c101C5_feasible,c101C5_vehicles,c101C5_distance,c101C5_fault,small_feasible,n_calls,wall_s,n_traj,n_retain,n_cycle_failed,why,first_cycle_fail
-qwen25_coder_7b,qwen2.5-coder:7b,ran,S000,True,0.0,4,False,0,0.0,CRASH,0,82,1253.9,16,0,0,"{'BOOTSTRAP': 1, 'SEARCH': 15, 'F1_ELITE': 1}",
-qwen25_coder_3b,qwen2.5-coder:3b,ran,S000,False,0.0,0,False,0,0.0,CRASH,0,197,946.2,16,0,0,"{'BOOTSTRAP': 1, 'SEARCH': 15, 'F1_ELITE': 1}",
-qwen25_coder_15b,qwen2.5-coder:1.5b,ran,S010,True,0.0,0,False,10,1574.42,DEPOT,0,109,358.7,11,2,5,"{'BOOTSTRAP': 1, 'CYCLE_FAILED': 5, 'ROUTING': 6, 'SEARCH': 4, 'F1_ELITE': 1}","architect output invalid: 1 validation error for ArchitectPlan target   Input should be 'BOOTSTRAP', 'ROUTING', 'CHARGIN"
-llama32_3b,llama3.2:3b,ran,S000,True,0.0,4,False,0,0.0,CRASH,0,82,875.3,16,0,0,"{'BOOTSTRAP': 1, 'SEARCH': 15, 'F1_ELITE': 1}",
-phi4_mini,phi4-mini:3.8b,SKIPPED_NOT_INSTALLED,,False,,,,,,,,,0.0,0,0,0,{},

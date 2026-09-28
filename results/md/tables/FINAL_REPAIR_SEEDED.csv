@@ -1,4 +1,0 @@
-model,n,4of4_successes,success_rate,median_calls_to_success,regressions_total,noop_rate
-Qwen 7B,5,0,0/5,,0,4/5
-DeepSeek 6.7B,5,0,0/5,,0,0/5
-CodeLlama 7B,5,0,0/5,,0,4/5

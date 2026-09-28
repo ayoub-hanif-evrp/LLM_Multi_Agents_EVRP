@@ -10,7 +10,12 @@ from evrptw_autolab.evaluation.fidelity import (
 )
 from evrptw_autolab.evaluation.metrics import summarize
 from evrptw_autolab.evaluation.ranking import child_is_better, panel_is_better, rank_key
-from evrptw_autolab.evaluation.runner import check_f0, check_component_f0, evaluate_fidelity, instances_for_fidelity
+from evrptw_autolab.evaluation.runner import (
+    check_component_f0,
+    check_f0,
+    evaluate_fidelity,
+    instances_for_fidelity,
+)
 
 __all__ = [
     "by_customer_count",

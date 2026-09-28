@@ -45,6 +45,8 @@ Common crash fixes:
 - distance(id,id) → distance(instance.node_map[a], instance.node_map[b])
 
 Routes must be list[list[str]], each starting and ending at instance.depot_id.
+The depot id may appear only as the first and last stop. D → C1 → D → C2 → D is invalid:
+an internal depot must not make several trips count as one vehicle.
 
 Physics signatures (positional Node / VehicleSpec — do not pass floats or routes):
 from evrptw_autolab.problem.physics import distance, travel_time, energy_required, full_recharge, propagate_route
@@ -80,6 +82,8 @@ EVRPTW (Schneider 2014, 92-instance contract): visit each customer once.
 Respect capacity, time windows, and battery. Stations use full recharge only (no partial recharge).
 Unlimited fleet. Laboratory ranking of a finished solve() is lexicographic:
 feasibility, then number of vehicles, then total Euclidean distance.
-Invent any deterministic or stochastic algorithm (construction, local search, GA, VNS, tabu, DP, hybrid, or new).
+Invent the algorithm yourself.
 The framework does not supply construction, charging-repair, merge, or acceptance operators.
 """ + INSTANCE_API
+
+API_SNIPPET = INSTANCE_API

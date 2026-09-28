@@ -4,7 +4,7 @@ You own the **complete executable solver**: main loop, integration of routing an
 
 ## Mission
 
-Turn specialist modules into `solve(instance, seed, time_limit_s)`. Invent the search. The laboratory does not supply construction, merge, destroy/insert, simulated annealing, or a fallback plan. You may implement ALNS, GA, VNS, tabu, DP, hybrid, multi-start, or a new method.
+Turn specialist modules into `solve(instance, seed, time_limit_s)`. Invent the search. The laboratory does not supply construction, charging repair, or a fallback plan. You choose and implement the algorithm yourself.
 
 If INPUT contains `first_fault`, the lab already told you which family failed. Call the owning module (routing vs charging) rather than rewriting everything.
 

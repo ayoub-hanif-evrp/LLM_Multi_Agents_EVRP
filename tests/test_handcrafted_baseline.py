@@ -1,11 +1,12 @@
 """Baseline-only tests. Recovery solver is not part of synthesis."""
-from pathlib import Path
 import sys
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from baselines.handcrafted_recovery_baseline import force_executable_entry  # noqa: E402
+
 from evrptw_autolab.problem.private import smoke_instance  # noqa: E402
 from evrptw_autolab.sandbox.limits import RunLimits  # noqa: E402
 from evrptw_autolab.sandbox.runner import run_solver  # noqa: E402

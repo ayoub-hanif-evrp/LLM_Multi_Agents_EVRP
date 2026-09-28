@@ -1,44 +1,35 @@
 # VoltForge
 
-**VoltForge** is a five-agent autonomous algorithm-development laboratory for the Electric Vehicle Routing Problem with Time Windows (EVRPTW). Five specialized LLM agents design, implement, test, and evolve a reusable solver. After synthesis, the solver executes with **zero LLM calls**.
+Local coding models act as agents, write an EVRPTW solver, execute it, receive evaluator feedback, and improve the code. After synthesis or evolution, the solver runs with **zero LLM calls**.
 
-The name is not AutoLab. [AutoLab (arXiv:2606.05080)](https://arxiv.org/abs/2606.05080) is a separate 2026 benchmark for long-horizon autonomous research agents. This project is VoltForge.
+The problem is Schneider’s Electric Vehicle Routing Problem with Time Windows (full recharge). The laboratory provides the instances, the physics API, a sandbox, and an exact evaluator. It does not provide a route-construction method or a hidden fallback solver.
 
-The paper claim is solver *synthesis*, not “best EVRPTW metaheuristic.” The generated solver must show real optimization (fleet/distance reduction), not only feasibility. The Python package remains `evrptw_autolab` for now; the user-facing name is VoltForge.
+## Experiments
 
-## Five agents, many models
-
-The logical team is always the same five roles:
-
-1. Solver Architect & Theorist
-2. Routing Algorithm Engineer
-3. Charging & Constraint Algorithm Engineer
-4. Search Strategy & Integration Engineer
-5. Adversarial Test & Evolution Critic
-
-What varies in the main experiment is the **LLM model** that instantiates this five-agent team. Each compared model runs the full architecture with that same model assigned to all five roles, under identical prompts, solver-evaluation budgets, token/call limits, datasets, seeds, and stopping criteria.
-
-The laboratory provides the EVRPTW specification, numerical APIs, sandbox, compiler/runtime errors, experiment runner, and evaluator. It does **not** supply construction, charging-repair, merge, acceptance, or a hidden fallback solution.
-
-## Setup
+| Name | What it does |
+| --- | --- |
+| `five_agent_synthesis` | Five roles (architect, routing, charging, search, critic) share one local model and create a solver from scratch. |
+| `single_agent_synthesis` | One coding agent receives the same problem and API information and creates a solver alone. |
+| `solver_evolution` | Starting from a valid generated solver, the model proposes small code patches. Only feasible improvements are kept. |
+| `evaluation` | Run a frozen solver with no language model. |
 
 ```bash
 uv sync
 uv run pytest -q
-uv run ruff check src/evrptw_autolab tests
-uv run mypy src/evrptw_autolab
+uv run ruff check src tests
 uv run voltforge validate-data
 uv run voltforge models list
+
+uv run python scripts/run_five_agent.py --all
+uv run python scripts/run_single_agent.py --all
+uv run python scripts/run_evolution.py --all
+uv run python scripts/generate_paper_results.py
 ```
 
-The frozen 92-instance contract is `docs/BENCHMARK_CONTRACT.md`.
+Models, seeds, and the shared call budget live in `configs/models.yaml` and `configs/experiments.yaml`. A missing local model is recorded as `SKIPPED_NOT_INSTALLED` and is not replaced.
 
-Configured comparison models live in `configs/models.yaml`. A missing local model is recorded as `SKIPPED_NOT_INSTALLED`; it is never silently replaced.
+Paper tables are written to `results/paper/`.
 
-## Package
+## Dataset
 
-`src/evrptw_autolab/` — problem contract, sandbox, five-agent orchestration, and homogeneous-team model comparison. Generated solvers live under `workspace/discovery/` and can be exported with `voltforge export`.
-
-## Continue after switching PCs
-
-Read **[`NEXT.md`](NEXT.md)** and `results/md/SLM_EVO_STATUS.md` (SLM-Evo state, OPT_V1/OPT_V2 freezes, next scale-aware experiment). Do not rely on chat history.
+92 Schneider instances in `dataset/schneider/`. Discovery uses families C1 and R1. Confirmation uses C2, R2, and RC1. RC2 stays held out. See `docs/BENCHMARK_CONTRACT.md`.

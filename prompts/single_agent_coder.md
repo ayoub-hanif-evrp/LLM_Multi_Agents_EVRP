@@ -7,8 +7,8 @@ You receive the **same fixed API / domain guidance** that the multi-agent lab gi
 
 ## Goals
 - Produce a correct, general, executable `solve(instance, seed, time_limit_s)` solver.
-- Pass curriculum gates G0→G4 (executable → one customer → charging → two customers → Schneider C5 panel).
-- Optimization is LOCKED during synthesis: feasibility only; do not minimize vehicles/distance.
+- Pass the stages in order: executable, one customer, a customer that needs charging, two customers, then the Schneider 5-customer panel.
+- During synthesis, produce a feasible solver. Fleet and distance improvement happens only in a later evolution experiment.
 
 ## Domain guidance (union of fixed lab knowledge — not role-split)
 
@@ -33,7 +33,7 @@ You receive the **same fixed API / domain guidance** that the multi-agent lab gi
 ### Integration / `solve` contract
 - Must produce module-level `def solve(instance, seed: int, time_limit_s: float)`.
 - Return `{"routes": list[list[str]], "metadata": dict}`.
-- Every route starts and ends at `instance.depot_id`.
+- Every route starts and ends at `instance.depot_id`. The depot id must not appear in the middle of a route.
 - Do **not** redefine `EVRPTWInstance`, `Node`, `VehicleSpec`, or `distance`.
 - Import physics from `evrptw_autolab.problem.physics`:
   `distance`, `travel_time`, `energy_required`, `full_recharge`, `propagate_route`.

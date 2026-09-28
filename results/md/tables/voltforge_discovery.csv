@@ -1,2 +1,0 @@
-model_id,model,status,cycles,wall_s,elite_id,f0_ok,f1_feasible_rate,f1_crashes,c101C5_feasible,c101C5_vehicles,c101C5_distance,small_feasible,small_exact_fleet,large_feasible,n_calls,prompt_tokens
-qwen25_coder_7b,qwen2.5-coder:7b,ran,8,1243.5,S000,False,0.0,0,False,0,0.0,0,0,0,102,241135

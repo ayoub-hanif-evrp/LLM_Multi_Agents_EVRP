@@ -1,29 +1,19 @@
-data_root: dataset/schneider/raw_instances
-held_out_family: RC2
-discovery_families: [C1, R1]
-confirmation_families: [C2, R2, RC1]
+# Equal budget for every synthesis and evolution run.
+seeds: [11, 22, 33, 44, 55]
+max_llm_calls: 80
 
-fidelity:
-  F1:
-    customer_sizes: [5]
-    seeds: [0]
-  F2:
-    customer_sizes: [5, 10, 15]
-    seeds: [0, 1]
-  F3:
-    large_representatives_per_family: 1
-    seeds: [0]
-  F4:
-    seeds: [0, 1, 2]
-
-# P0 clean protocol: one model to debug autonomy (not multi-model comparison yet).
-model_comparison:
-  homogeneous_team: true
-  team_mode: five_agent
-  model_ids:
+five_agent_synthesis:
+  profiles:
     - qwen25_coder_7b
+    - deepseek_coder_67b
+    - codellama_7b
+    - qwen25_coder_14b
 
-discover:
-  cycles: 8
-  equal_budget: true
-  workspace: workspace/discovery_p0_clean
+single_agent_synthesis:
+  profile: qwen25_coder_7b
+
+solver_evolution:
+  profile: qwen25_coder_14b
+  max_generations: 8
+  candidates_per_role: 1
+  beam_size: 2

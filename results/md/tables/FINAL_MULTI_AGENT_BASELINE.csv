@@ -1,0 +1,13 @@
+metric,five_agent_qwen_mcb_v1,single_agent_qwen
+n,5,5
+G1 success,4/5,5/5
+G2 success,3/5,4/5
+G3 success,3/5,4/5
+reached G4,3/5,4/5
+G4 4/4,0/5,1/5
+mean G4 feasible count,1.6,2
+median calls,11,7
+median tokens,18207,19383
+runtime-failure rate,1/5,0/5
+feasibility-failure rate,4/5,4/5
+NO_OP rate,0/5,3/5

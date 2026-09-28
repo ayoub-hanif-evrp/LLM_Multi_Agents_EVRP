@@ -1,0 +1,135 @@
+{
+  "model_id": "qwen25_coder_7b",
+  "model": "qwen2.5-coder:7b",
+  "team_mode": "five_agent",
+  "status": "ran",
+  "error": "",
+  "wall_s": 25.1,
+  "f0_ok": true,
+  "bootstrap_feasible": false,
+  "bootstrap_vehicles": 0,
+  "bootstrap_distance": 0.0,
+  "f1_feasible_rate": 0.0,
+  "f1_mean_vehicles": 0,
+  "solver_path": "C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\model_benchmark\\qwen25_coder_7b\\candidates\\S000",
+  "activated": [
+    "architect",
+    "routing",
+    "critic"
+  ],
+  "critic": {
+    "decision": "REVERT",
+    "primary_cause": "Incorrect attribute access in solver code",
+    "evidence": [
+      "AttributeError: 'EVRPTWInstance' object has no attribute 'customers'. Did you mean: 'customer_ids'?"
+    ],
+    "credited_components": [
+      "solver.py"
+    ],
+    "blamed_components": [
+      "solver.py"
+    ],
+    "next_target": "ARCHITECTURE",
+    "lesson": "Always verify the correctness of attribute access in code to avoid runtime errors."
+  },
+  "f1": {
+    "level": "F1",
+    "passed": false,
+    "errors": [],
+    "summary": {
+      "n": 8,
+      "feasible_rate": 0.0,
+      "mean_vehicles": 0,
+      "mean_distance": 0.0,
+      "median_runtime_s": 0.09962125006131828,
+      "crashes": 8,
+      "timeouts": 0,
+      "battery_violations": 0,
+      "time_window_violations": 0,
+      "unserved": 0
+    },
+    "n_instances": 8
+  },
+  "per_instance_f1": [
+    {
+      "instance_id": "c101C5",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "crashed": true,
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_sthrdzt3\\driver.py\", line 9, in <module>\n    result = solve(instance, seed=0, time_limit_s=12.0)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_W",
+      "literature_m": 2,
+      "literature_f": 257.75
+    },
+    {
+      "instance_id": "c103C5",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "crashed": true,
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_l_45v6s9\\driver.py\", line 9, in <module>\n    result = solve(instance, seed=0, time_limit_s=12.0)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_W",
+      "literature_m": 1,
+      "literature_f": 176.05
+    },
+    {
+      "instance_id": "c206C5",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "crashed": true,
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_vvfo7noa\\driver.py\", line 9, in <module>\n    result = solve(instance, seed=0, time_limit_s=12.0)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_W",
+      "literature_m": 1,
+      "literature_f": 242.56
+    },
+    {
+      "instance_id": "c208C5",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "crashed": true,
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_2q9mekus\\driver.py\", line 9, in <module>\n    result = solve(instance, seed=0, time_limit_s=12.0)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_W",
+      "literature_m": 1,
+      "literature_f": 158.48
+    },
+    {
+      "instance_id": "r104C5",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "crashed": true,
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_61lbbw1d\\driver.py\", line 9, in <module>\n    result = solve(instance, seed=0, time_limit_s=12.0)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_W",
+      "literature_m": 2,
+      "literature_f": 136.69
+    },
+    {
+      "instance_id": "r105C5",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "crashed": true,
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_f5xklu04\\driver.py\", line 9, in <module>\n    result = solve(instance, seed=0, time_limit_s=12.0)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_W",
+      "literature_m": 2,
+      "literature_f": 156.08
+    },
+    {
+      "instance_id": "r202C5",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "crashed": true,
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_dxzff471\\driver.py\", line 9, in <module>\n    result = solve(instance, seed=0, time_limit_s=12.0)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_W",
+      "literature_m": 1,
+      "literature_f": 128.78
+    },
+    {
+      "instance_id": "r203C5",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "crashed": true,
+      "error": "Traceback (most recent call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_3zgjxldj\\driver.py\", line 9, in <module>\n    result = solve(instance, seed=0, time_limit_s=12.0)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_W",
+      "literature_m": 1,
+      "literature_f": 179.06
+    }
+  ]
+}

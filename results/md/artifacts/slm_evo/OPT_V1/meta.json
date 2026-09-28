@@ -1,0 +1,104 @@
+{
+  "parent": "C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\results\\md\\artifacts\\mcb_v1\\FEASIBLE_SYNTHESIZED_SOLVER_V0_qwen14b_seed33\\solver.py",
+  "best_hash": "a1809c66b508a98b",
+  "panel": {
+    "feasible": 4,
+    "total": 4,
+    "vehicles_sum": 17,
+    "distance_sum": 951.2528,
+    "by_instance": {
+      "c101C5": {
+        "ok": true,
+        "vehicles": 5,
+        "distance": 296.0921118198048
+      },
+      "c103C5": {
+        "ok": true,
+        "vehicles": 3,
+        "distance": 207.22418415272884
+      },
+      "r104C5": {
+        "ok": true,
+        "vehicles": 5,
+        "distance": 223.33007688651142
+      },
+      "r105C5": {
+        "ok": true,
+        "vehicles": 4,
+        "distance": 224.60640937486627
+      }
+    },
+    "primary_fault": ""
+  },
+  "all_c5": {
+    "feasible": 12,
+    "total": 12,
+    "vehicles_sum": 53,
+    "distance_sum": 3617.0556,
+    "by_instance": {
+      "c101C5": {
+        "ok": true,
+        "vehicles": 5,
+        "distance": 296.0921118198048
+      },
+      "c103C5": {
+        "ok": true,
+        "vehicles": 3,
+        "distance": 207.22418415272884
+      },
+      "c206C5": {
+        "ok": true,
+        "vehicles": 5,
+        "distance": 325.43903084432714
+      },
+      "c208C5": {
+        "ok": true,
+        "vehicles": 5,
+        "distance": 443.75783266666394
+      },
+      "r104C5": {
+        "ok": true,
+        "vehicles": 5,
+        "distance": 223.33007688651142
+      },
+      "r105C5": {
+        "ok": true,
+        "vehicles": 4,
+        "distance": 224.60640937486627
+      },
+      "r202C5": {
+        "ok": true,
+        "vehicles": 4,
+        "distance": 225.79635443458173
+      },
+      "r203C5": {
+        "ok": true,
+        "vehicles": 4,
+        "distance": 284.8177227896282
+      },
+      "rc105C5": {
+        "ok": true,
+        "vehicles": 4,
+        "distance": 282.65710776940705
+      },
+      "rc108C5": {
+        "ok": true,
+        "vehicles": 5,
+        "distance": 438.8542463933925
+      },
+      "rc204C5": {
+        "ok": true,
+        "vehicles": 5,
+        "distance": 357.76260453761705
+      },
+      "rc208C5": {
+        "ok": true,
+        "vehicles": 4,
+        "distance": 306.71792193492365
+      }
+    },
+    "primary_fault": ""
+  },
+  "milestone_instance": "c103C5",
+  "generations": 8
+}

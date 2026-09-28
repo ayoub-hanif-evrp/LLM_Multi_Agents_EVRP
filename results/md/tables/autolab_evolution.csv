@@ -1,0 +1,6 @@
+model_id,model,team_mode,status,cycles,cycles_applied,wall_s,elite_id,f0_ok,f1_feasible_rate,f1_crashes,f2_feasible_rate
+qwen25_coder_15b,qwen2.5-coder:1.5b,five_agent,ran,5,0,36.1,S000,True,0.0,8,
+qwen25_coder_3b,qwen2.5-coder:3b,five_agent,ran,5,1,266.2,S000,False,0.0,0,
+qwen25_coder_7b,qwen2.5-coder:7b,five_agent,ran,5,5,211.9,S000,True,0.0,8,
+llama32_3b,llama3.2:3b,five_agent,ran,5,5,435.1,S000,True,0.0,8,
+phi4_mini,phi4-mini:3.8b,five_agent,SKIPPED_NOT_INSTALLED,5,0,0.0,,,

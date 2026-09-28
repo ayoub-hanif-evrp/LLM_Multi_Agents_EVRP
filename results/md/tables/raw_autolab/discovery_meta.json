@@ -1,0 +1,32 @@
+{
+  "elapsed_s": 1243.8,
+  "cycles": 8,
+  "campaign": "discovery_p0_clean",
+  "wall_clock_s": 30.0,
+  "hardware": {
+    "python": "3.14.4 (tags/v3.14.4:23116f9, Apr  7 2026, 14:10:54) [MSC v.1944 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "machine": "AMD64",
+    "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+    "ollama": "ollama version is 0.32.3",
+    "timestamp": "2026-09-05T18:04:14.527217+00:00"
+  },
+  "dataset": {
+    "n_files": 92,
+    "n_discovery": 33,
+    "n_confirmation": 45,
+    "n_heldout": 14,
+    "n_small": 36,
+    "n_small_discovery": 12,
+    "n_small_confirmation": 18,
+    "n_small_heldout": 6,
+    "manifest": "C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\results\\manifests\\split.json",
+    "hashes": "C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\results\\manifests\\instance_hashes.json"
+  },
+  "timestamp": "2026-09-05T18:24:58.173078+00:00",
+  "held_out_opened": false,
+  "models": [
+    "qwen25_coder_7b"
+  ],
+  "note": "P0 clean autonomous lab; Qwen 7B only; no recovery injection"
+}

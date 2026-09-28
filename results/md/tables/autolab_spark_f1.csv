@@ -1,0 +1,9 @@
+instance,feasible,vehicles,distance,first_fault
+c101C5,1,5,296.09,OK
+c103C5,1,5,207.22,OK
+c206C5,1,5,325.44,OK
+c208C5,1,5,443.76,OK
+r104C5,1,5,223.33,OK
+r105C5,1,5,224.61,OK
+r202C5,1,5,225.80,OK
+r203C5,1,5,284.82,OK

@@ -1,0 +1,6 @@
+model_id,model,team_mode,status,wall_s,f0_ok,bootstrap_feasible,bootstrap_vehicles,bootstrap_distance,f1_feasible_rate,f1_mean_vehicles
+qwen25_coder_15b,qwen2.5-coder:1.5b,five_agent,failed,10.5,False,False,,,,
+qwen25_coder_3b,qwen2.5-coder:3b,five_agent,failed,17.3,False,False,,,,
+qwen25_coder_7b,qwen2.5-coder:7b,five_agent,failed,30.9,False,False,,,,
+llama32_3b,llama3.2:3b,five_agent,failed,12.9,False,False,,,,
+phi4_mini,phi4-mini:3.8b,five_agent,SKIPPED_NOT_INSTALLED,0.0,False,False,,,,

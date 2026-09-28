@@ -1,0 +1,132 @@
+{
+  "model_id": "llama32_3b",
+  "model": "llama3.2:3b",
+  "team_mode": "five_agent",
+  "status": "ran",
+  "error": "",
+  "wall_s": 33.2,
+  "f0_ok": false,
+  "bootstrap_feasible": false,
+  "bootstrap_vehicles": 0,
+  "bootstrap_distance": 0.0,
+  "f1_feasible_rate": 0.0,
+  "f1_mean_vehicles": null,
+  "solver_path": "C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\model_benchmark\\llama32_3b\\candidates\\S000",
+  "activated": [
+    "architect",
+    "routing",
+    "charging",
+    "search",
+    "critic"
+  ],
+  "critic": {
+    "decision": "ABANDON",
+    "primary_cause": "syntax error in charging.py",
+    "evidence": [
+      "executed facts",
+      "syntax error on line 48 of charging.py"
+    ],
+    "credited_components": [],
+    "blamed_components": [
+      "charging.py"
+    ],
+    "next_target": "NONE",
+    "lesson": "Syntax errors can lead to catastrophic failures, and should be thoroughly debugged before proceeding."
+  },
+  "f1": {
+    "level": "F0",
+    "passed": false,
+    "errors": [
+      "charging.py:syntax_error: invalid syntax (<unknown>, line 48)",
+      "missing:solve"
+    ],
+    "summary": {
+      "n": 0,
+      "feasible_rate": 0.0,
+      "crashes": 0,
+      "timeouts": 0
+    }
+  },
+  "per_instance_f1": [
+    {
+      "instance_id": "c101C5",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "crashed": true,
+      "error": "charging.py:syntax_error: invalid syntax (<unknown>, line 48)",
+      "literature_m": 2,
+      "literature_f": 257.75
+    },
+    {
+      "instance_id": "c103C5",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "crashed": true,
+      "error": "charging.py:syntax_error: invalid syntax (<unknown>, line 48)",
+      "literature_m": 1,
+      "literature_f": 176.05
+    },
+    {
+      "instance_id": "c206C5",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "crashed": true,
+      "error": "charging.py:syntax_error: invalid syntax (<unknown>, line 48)",
+      "literature_m": 1,
+      "literature_f": 242.56
+    },
+    {
+      "instance_id": "c208C5",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "crashed": true,
+      "error": "charging.py:syntax_error: invalid syntax (<unknown>, line 48)",
+      "literature_m": 1,
+      "literature_f": 158.48
+    },
+    {
+      "instance_id": "r104C5",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "crashed": true,
+      "error": "charging.py:syntax_error: invalid syntax (<unknown>, line 48)",
+      "literature_m": 2,
+      "literature_f": 136.69
+    },
+    {
+      "instance_id": "r105C5",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "crashed": true,
+      "error": "charging.py:syntax_error: invalid syntax (<unknown>, line 48)",
+      "literature_m": 2,
+      "literature_f": 156.08
+    },
+    {
+      "instance_id": "r202C5",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "crashed": true,
+      "error": "charging.py:syntax_error: invalid syntax (<unknown>, line 48)",
+      "literature_m": 1,
+      "literature_f": 128.78
+    },
+    {
+      "instance_id": "r203C5",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "crashed": true,
+      "error": "charging.py:syntax_error: invalid syntax (<unknown>, line 48)",
+      "literature_m": 1,
+      "literature_f": 179.06
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "solver": "results\\md\\artifacts\\slm_evo\\OPT_SEED11_afb7fe377add7ebb",
+  "hash": "afb7fe377add7ebb",
+  "timestamp": "2026-09-10T03:07:31.703605+00:00",
+  "sizes": {
+    "10": {
+      "feasible": 3,
+      "total": 4,
+      "vehicles_sum": 25,
+      "distance_sum": 1417.821,
+      "by_instance": [
+        {
+          "instance": "c101C10",
+          "ok": false,
+          "vehicles": 9,
+          "distance": null,
+          "fault": "WINDOW",
+          "lit_vehicles": 3,
+          "lit_distance": 393.76
+        },
+        {
+          "instance": "c104C10",
+          "ok": true,
+          "vehicles": 8,
+          "distance": 544.3661396078014,
+          "fault": null,
+          "lit_vehicles": 2,
+          "lit_distance": 273.93
+        },
+        {
+          "instance": "r102C10",
+          "ok": true,
+          "vehicles": 10,
+          "distance": 491.6831896588508,
+          "fault": null,
+          "lit_vehicles": 3,
+          "lit_distance": 249.19
+        },
+        {
+          "instance": "r103C10",
+          "ok": true,
+          "vehicles": 7,
+          "distance": 381.7716587089806,
+          "fault": null,
+          "lit_vehicles": 2,
+          "lit_distance": 207.05
+        }
+      ]
+    },
+    "15": {
+      "feasible": 2,
+      "total": 4,
+      "vehicles_sum": 27,
+      "distance_sum": 1580.8904,
+      "by_instance": [
+        {
+          "instance": "c103C15",
+          "ok": true,
+          "vehicles": 14,
+          "distance": 855.5854976409422,
+          "fault": null,
+          "lit_vehicles": 3,
+          "lit_distance": 384.29
+        },
+        {
+          "instance": "c106C15",
+          "ok": false,
+          "vehicles": 11,
+          "distance": null,
+          "fault": "WINDOW",
+          "lit_vehicles": 3,
+          "lit_distance": 275.13
+        },
+        {
+          "instance": "r102C15",
+          "ok": true,
+          "vehicles": 13,
+          "distance": 725.3048949069204,
+          "fault": null,
+          "lit_vehicles": 5,
+          "lit_distance": 413.93
+        },
+        {
+          "instance": "r105C15",
+          "ok": false,
+          "vehicles": 12,
+          "distance": null,
+          "fault": "WINDOW",
+          "lit_vehicles": 4,
+          "lit_distance": 336.15
+        }
+      ]
+    }
+  }
+}

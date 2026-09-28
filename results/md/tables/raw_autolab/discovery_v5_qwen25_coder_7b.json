@@ -1,0 +1,637 @@
+{
+  "model_id": "qwen25_coder_7b",
+  "model": "qwen2.5-coder:7b",
+  "team_mode": "five_agent",
+  "status": "ran",
+  "cycles": 8,
+  "wall_s": 664.3,
+  "elite_id": "S003",
+  "f0_ok": false,
+  "f1_feasible_rate": 0.0,
+  "f1_crashes": 0,
+  "f2_feasible_rate": "",
+  "c101C5_feasible": false,
+  "c101C5_vehicles": 0,
+  "c101C5_distance": 0.0,
+  "c101C5_first_fault": {
+    "family": "CRASH",
+    "node_id": "",
+    "route_index": -1,
+    "detail": "\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_0rin0xe7\\driver.py\", line 7, in <module>\n    from solver import solve\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v5\\qwen25_coder_7b\\candidates\\S003\\solver.py\", line 2, in <module>\n    from EVRPTWInstance import EVRPTWInstance, VehicleSpec, Node\nModuleNotFoundError: No module named 'EVRPTWInstance'\n"
+  },
+  "small_feasible": 0,
+  "small_exact_fleet": 0,
+  "large_feasible": 0,
+  "n_calls": 132,
+  "prompt_tokens": 0,
+  "error": "",
+  "cycle": 8,
+  "f0_errors": [
+    "bad_solve_signature:instance,time_limit_s"
+  ],
+  "f1": {
+    "level": "F0",
+    "passed": false,
+    "errors": [
+      "bad_solve_signature:instance,time_limit_s"
+    ],
+    "summary": {
+      "n": 0,
+      "feasible_rate": 0.0,
+      "crashes": 0,
+      "timeouts": 0
+    }
+  },
+  "f2": null,
+  "small_n": 0,
+  "large_n": 0,
+  "completion_tokens": 0,
+  "llm_latency_s": 657.6,
+  "activated_history": [
+    {
+      "cycle": 0,
+      "activated": [
+        "architect",
+        "routing",
+        "charging",
+        "search",
+        "critic"
+      ],
+      "why": "BOOTSTRAP"
+    },
+    {
+      "cycle": 1,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 2,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 3,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 4,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 5,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 6,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 7,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 8,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 8,
+      "f1": {
+        "level": "F0",
+        "passed": false,
+        "errors": [
+          "bad_solve_signature:instance,time_limit_s"
+        ],
+        "summary": {
+          "n": 0,
+          "feasible_rate": 0.0,
+          "crashes": 0,
+          "timeouts": 0
+        }
+      },
+      "why": "F1_ELITE"
+    }
+  ],
+  "trajectories": [
+    {
+      "timestamp": "2026-09-04T13:26:25.616247+00:00",
+      "cycle": 0,
+      "solver_id": "S000",
+      "elite_id": "S000",
+      "parent_id": null,
+      "instance_id": "smoke_c1",
+      "activated": [
+        "architect",
+        "routing",
+        "charging",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "Continue from elite solver evidence.",
+      "architect_target": "SEARCH",
+      "decision": "REVERT",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": "ode\n    return _iterencode(o, 0)\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\encoder.py\", line 182, in default\n    raise TypeError(f'Object of type {o.__class__.__name__} '\n                    f'is not JSON serializable')\nTypeError: Object of type Node is not JSON serializable\nwhen serializing list item 0\nwhen serializing list item 0\nwhen serializing dict item 'routes'\n"
+      },
+      "f0_errors": [
+        "smoke:crash:Traceback (most recent call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_knotjt97\\driver.py\", line 16, in <module>\n    print(json.dumps({\"routes\": routes, \"metadata\": meta}))\n          ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\json\\__init__.py\", line 235, in dumps\n    return _default_encoder.encode(obj)\n  "
+      ],
+      "code_hash": "1952c0eff69f8f75433a474157d1ba9d87f618f379b65ef888630989d6ae11b1"
+    },
+    {
+      "timestamp": "2026-09-04T13:27:35.113909+00:00",
+      "cycle": 1,
+      "solver_id": "S001",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "smoke_c1",
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "Avoid passing unexpected keyword arguments to functions and ensure that all parameters are correctly defined in the function signature.",
+      "architect_target": "SEARCH",
+      "phase": "DEBUG",
+      "decision": "REVISE",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 0,
+      "parent_distance": 0.0,
+      "parent_fault": "CRASH",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": "ack (most recent call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_8w82re8g\\driver.py\", line 7, in <module>\n    from solver import solve\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v5\\qwen25_coder_7b\\candidates\\S001\\solver.py\", line 2, in <module>\n    from physics import distance\nModuleNotFoundError: No module named 'physics'\n"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 0,
+      "attempted_distance": 0.0,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [
+        "forbidden:redefine_Node",
+        "forbidden:redefine_VehicleSpec",
+        "bad_solve_signature:instance,time_limit_s"
+      ],
+      "code_hash": "59254e1c4fd0b47f8add0ff62e70b43cf4ad1f9a6c39368635f09406aa40c8e9",
+      "critic_lesson": "Ensure all required modules are imported and function signatures match the expected interface.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-04T13:28:45.655827+00:00",
+      "cycle": 2,
+      "solver_id": "S002",
+      "elite_id": "S000",
+      "parent_id": "S000",
+      "instance_id": "smoke_c1",
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "Ensure all required modules are imported and function signatures match the expected interface.",
+      "architect_target": "SEARCH",
+      "phase": "DEBUG",
+      "decision": "REVISE",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 0,
+      "parent_distance": 0.0,
+      "parent_fault": "CRASH",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": "hicleSpec (no vehicle_map). node=instance.node_map[id]; from physics import distance(a,b) with Node args; routes=list[list[str]] start/end depot_id.\nTraceback (most recent call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_in_m6kwn\\driver.py\", line 10, in <module>\n    result = solve(instance, seed=0, time_limit_s=15.0)\nTypeError: solve() got an unexpected keyword argument 'seed'\n"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 0,
+      "attempted_distance": 0.0,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [
+        "forbidden:redefine_Node",
+        "forbidden:redefine_VehicleSpec",
+        "bad_solve_signature:instance,time_limit_s"
+      ],
+      "code_hash": "036fadff01032fdc2dcea2a49b87bfcf7e9e81b4e625b971efd765ad34fad44f",
+      "critic_lesson": "Do not redefine built-in classes like Node and VehicleSpec, and ensure that solver functions accept only expected parameters.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-04T13:29:55.810506+00:00",
+      "cycle": 3,
+      "solver_id": "S003",
+      "elite_id": "S003",
+      "parent_id": "S000",
+      "instance_id": "smoke_c1",
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "Continue from elite solver evidence.",
+      "architect_target": "SEARCH",
+      "phase": "DEBUG",
+      "decision": "RETAIN",
+      "better": true,
+      "parent_feasible": false,
+      "parent_vehicles": 0,
+      "parent_distance": 0.0,
+      "parent_fault": "CRASH",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": "l last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_g05dk2ja\\driver.py\", line 7, in <module>\n    from solver import solve\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v5\\qwen25_coder_7b\\candidates\\S003\\solver.py\", line 1, in <module>\n    from EVRPTWInstance import EVRPTWInstance\nModuleNotFoundError: No module named 'EVRPTWInstance'\n"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 0,
+      "attempted_distance": 0.0,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [
+        "bad_solve_signature:instance,time_limit_s"
+      ],
+      "code_hash": "0daae1610f4b8f50f14b022604e465487dc3f8dff35a4431c661e20f61ba87dd",
+      "critic_lesson": "Ensure all required modules are imported and function signatures match the expected interface.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-04T13:31:05.141318+00:00",
+      "cycle": 4,
+      "solver_id": "S004",
+      "elite_id": "S003",
+      "parent_id": "S003",
+      "instance_id": "smoke_c1",
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "Continue from elite solver evidence.",
+      "architect_target": "SEARCH",
+      "phase": "DEBUG",
+      "decision": "REVISE",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 0,
+      "parent_distance": 0.0,
+      "parent_fault": "CRASH",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": "l last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_vprvheem\\driver.py\", line 7, in <module>\n    from solver import solve\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v5\\qwen25_coder_7b\\candidates\\S004\\solver.py\", line 1, in <module>\n    from EVRPTWInstance import EVRPTWInstance\nModuleNotFoundError: No module named 'EVRPTWInstance'\n"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 0,
+      "attempted_distance": 0.0,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [
+        "bad_solve_signature:instance,time_limit_s"
+      ],
+      "code_hash": "d89e58fe4613c1157c09abc571c4f7775d1b4b3ef169b57678226e9a61bc684a",
+      "critic_lesson": "Avoid using relative imports for modules that are not in the same directory.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-04T13:32:15.575277+00:00",
+      "cycle": 5,
+      "solver_id": "S005",
+      "elite_id": "S003",
+      "parent_id": "S003",
+      "instance_id": "smoke_c1",
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "The solver implementation is incomplete and contains errors that prevent it from running correctly. The error message indicates that the 'EVRPTWInstance' module cannot be found, which suggests that the required dependencies are not properly imported or set up.",
+      "architect_target": "SEARCH",
+      "phase": "DEBUG",
+      "decision": "REVISE",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 0,
+      "parent_distance": 0.0,
+      "parent_fault": "CRASH",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": "\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_g2dxwa0y\\driver.py\", line 7, in <module>\n    from solver import solve\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v5\\qwen25_coder_7b\\candidates\\S005\\solver.py\", line 1, in <module>\n    from EVRPTWInstance import EVRPTWInstance, VehicleSpec, Node\nModuleNotFoundError: No module named 'EVRPTWInstance'\n"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 0,
+      "attempted_distance": 0.0,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [
+        "bad_solve_signature:instance,time_limit_s"
+      ],
+      "code_hash": "38a1b78dbcd079c1d38c8861513f3b49d1941eb3422fd6f93123f8159ed3dd05",
+      "critic_lesson": "Avoid using held-out labels as optimization targets.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-04T13:33:52.176003+00:00",
+      "cycle": 6,
+      "solver_id": "S006",
+      "elite_id": "S003",
+      "parent_id": "S003",
+      "instance_id": "smoke_c1",
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "Continue from elite solver evidence.",
+      "architect_target": "SEARCH",
+      "phase": "DEBUG",
+      "decision": "REVISE",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 0,
+      "parent_distance": 0.0,
+      "parent_fault": "CRASH",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": "\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_big7944i\\driver.py\", line 7, in <module>\n    from solver import solve\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v5\\qwen25_coder_7b\\candidates\\S006\\solver.py\", line 1, in <module>\n    from EVRPTWInstance import EVRPTWInstance, VehicleSpec, Node\nModuleNotFoundError: No module named 'EVRPTWInstance'\n"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 0,
+      "attempted_distance": 0.0,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [
+        "bad_solve_signature:instance,time_limit_s"
+      ],
+      "code_hash": "1d3979b59e3aa96b0f89e91809bafda6f772863fe3109ba6f6eec78e5aa8ca12",
+      "critic_lesson": "Avoid circular dependencies and ensure all required modules are correctly imported.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-04T13:35:30.858284+00:00",
+      "cycle": 7,
+      "solver_id": "S007",
+      "elite_id": "S003",
+      "parent_id": "S003",
+      "instance_id": "smoke_c1",
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "The current implementation is crashing due to a `ModuleNotFoundError` for 'EVRPTWInstance'. Ensure that all required modules are correctly imported and available in your environment.",
+      "architect_target": "SEARCH",
+      "phase": "DEBUG",
+      "decision": "REVISE",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 0,
+      "parent_distance": 0.0,
+      "parent_fault": "CRASH",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": "\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_vze83sqr\\driver.py\", line 7, in <module>\n    from solver import solve\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v5\\qwen25_coder_7b\\candidates\\S007\\solver.py\", line 1, in <module>\n    from EVRPTWInstance import EVRPTWInstance, VehicleSpec, Node\nModuleNotFoundError: No module named 'EVRPTWInstance'\n"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 0,
+      "attempted_distance": 0.0,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [
+        "bad_solve_signature:instance,time_limit_s"
+      ],
+      "code_hash": "38a1b78dbcd079c1d38c8861513f3b49d1941eb3422fd6f93123f8159ed3dd05",
+      "critic_lesson": "Avoid using held-out labels as optimization targets.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-04T13:36:33.750437+00:00",
+      "cycle": 8,
+      "solver_id": "S008",
+      "elite_id": "S003",
+      "parent_id": "S003",
+      "instance_id": "smoke_c1",
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "The solver did not import necessary modules and had a bad function signature, leading to a crash. Ensure all required imports are included and that the function signature matches the expected interface.",
+      "architect_target": "SEARCH",
+      "phase": "DEBUG",
+      "decision": "REVISE",
+      "better": false,
+      "parent_feasible": false,
+      "parent_vehicles": 0,
+      "parent_distance": 0.0,
+      "parent_fault": "CRASH",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": "\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_waanh7en\\driver.py\", line 7, in <module>\n    from solver import solve\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v5\\qwen25_coder_7b\\candidates\\S008\\solver.py\", line 1, in <module>\n    from EVRPTWInstance import EVRPTWInstance, VehicleSpec, Node\nModuleNotFoundError: No module named 'EVRPTWInstance'\n"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 0,
+      "attempted_distance": 0.0,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [
+        "bad_solve_signature:instance,time_limit_s"
+      ],
+      "code_hash": "5d6d72dc46ba63aa28528777d35d60a967d69df5b7db977cab95de5fb473ad15",
+      "critic_lesson": "Ensure all required modules are correctly imported before running the solver.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+data_root: dataset/schneider/raw_instances
+families: [C1, C2, R1, R2, RC1, RC2]
+primary_set: schneider_92
+held_out_family: RC2
+discovery_families: [C1, R1]
+confirmation_families: [C2, R2, RC1]
+objective:
+  - feasibility
+  - vehicles
+  - distance
+charging_policy: schneider_full_recharge
+distance: euclidean_hypot
+travel_time: distance_over_velocity
+energy: distance_times_consumption
+start_soc: battery_capacity
+private_set:
+  seed: 20260901
+  n: 8
+  shown_to_agents: false

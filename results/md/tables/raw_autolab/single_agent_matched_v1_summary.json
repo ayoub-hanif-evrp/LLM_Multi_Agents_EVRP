@@ -1,0 +1,138 @@
+{
+  "protocol_compare": [
+    "MINIMAL_COOPERATIVE_BUILD_V1",
+    "SINGLE_AGENT_MATCHED_V1"
+  ],
+  "budget_semantics": "paired_token_ceiling_with_call_boundary_overshoot",
+  "prompt_parity": "union_domain_guidance_no_role_decomposition",
+  "sa_run_prefix": "single_qwen_parity_seed",
+  "model": "qwen2.5-coder:7b",
+  "seeds": [
+    11,
+    22,
+    33,
+    44,
+    55
+  ],
+  "token_budgets": {
+    "11": 18179,
+    "22": 39157,
+    "33": 23579,
+    "44": 6205,
+    "55": 18207
+  },
+  "missing": [],
+  "comparison": {
+    "metric": [
+      "n",
+      "G1 success",
+      "G2 success",
+      "G3 success",
+      "reached G4",
+      "G4 4/4",
+      "mean G4 feasible count",
+      "median calls",
+      "median tokens",
+      "runtime-failure rate",
+      "feasibility-failure rate",
+      "NO_OP rate"
+    ],
+    "five_agent": [
+      5,
+      "4/5",
+      "3/5",
+      "3/5",
+      "3/5",
+      "0/5",
+      1.6,
+      11,
+      18207,
+      "1/5",
+      "4/5",
+      "0/5"
+    ],
+    "single_agent": [
+      5,
+      "5/5",
+      "4/5",
+      "4/5",
+      "4/5",
+      "1/5",
+      2,
+      7,
+      19383,
+      "0/5",
+      "4/5",
+      "3/5"
+    ]
+  },
+  "paired": [
+    {
+      "seed": 11,
+      "token_budget": 18179,
+      "five_highest": "G3",
+      "single_highest": "G4",
+      "five_tokens": 18179,
+      "single_tokens": 6264,
+      "single_overshoot": 0,
+      "five_g4": 3,
+      "single_g4": 4,
+      "five_calls": 11,
+      "single_calls": 3
+    },
+    {
+      "seed": 22,
+      "token_budget": 39157,
+      "five_highest": "G3",
+      "single_highest": "G4_partial_2",
+      "five_tokens": 39157,
+      "single_tokens": 30686,
+      "single_overshoot": 0,
+      "five_g4": 2,
+      "single_g4": 2,
+      "five_calls": 21,
+      "single_calls": 11
+    },
+    {
+      "seed": 33,
+      "token_budget": 23579,
+      "five_highest": "G3",
+      "single_highest": "G4_partial_3",
+      "five_tokens": 23579,
+      "single_tokens": 22051,
+      "single_overshoot": 0,
+      "five_g4": 3,
+      "single_g4": 3,
+      "five_calls": 13,
+      "single_calls": 8
+    },
+    {
+      "seed": 44,
+      "token_budget": 6205,
+      "five_highest": "none",
+      "single_highest": "G1",
+      "five_tokens": 6205,
+      "single_tokens": 6432,
+      "single_overshoot": 227,
+      "five_g4": 0,
+      "single_g4": 0,
+      "five_calls": 4,
+      "single_calls": 3
+    },
+    {
+      "seed": 55,
+      "token_budget": 18207,
+      "five_highest": "G1",
+      "single_highest": "G4_partial_1",
+      "five_tokens": 18207,
+      "single_tokens": 19383,
+      "single_overshoot": 1176,
+      "five_g4": 0,
+      "single_g4": 1,
+      "five_calls": 11,
+      "single_calls": 7
+    }
+  ],
+  "outcome": "B",
+  "outcome_text": "The specialized five-agent architecture introduced communication/coordination overhead and did not outperform simpler self-refinement under matched inference."
+}

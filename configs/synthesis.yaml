@@ -1,0 +1,19 @@
+bootstrap:
+  islands: 1
+  max_compile_repair_rounds: 1
+cycle:
+  max_role_proposals: 1
+  gated_activation: true
+  max_cycles: 30
+  handshake: true
+  max_handshake_returns: 1
+  evidence_repair_rounds: 2
+  runtime_repair_rounds: 2
+  # Per-solve sandbox limit (seconds). Not campaign wall budget.
+  wall_clock_s: 30
+lineage:
+  max_elites_per_island: 3
+  archive_all_valid_candidates: true
+memory:
+  max_lessons_in_prompt: 5
+  max_lessons_total: 100

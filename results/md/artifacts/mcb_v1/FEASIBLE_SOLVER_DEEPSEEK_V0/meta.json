@@ -1,0 +1,25 @@
+{
+  "protocol": "MINIMAL_COOPERATIVE_BUILD_V1",
+  "model": "qwen2.5-coder:14b",
+  "run_id": "seed33",
+  "hash": "3f427deb2d9bf534",
+  "G4": "4/4",
+  "all_c5": {
+    "feasible": 12,
+    "total": 12,
+    "by_instance": {
+      "c101C5": "OK",
+      "c103C5": "OK",
+      "c206C5": "OK",
+      "c208C5": "OK",
+      "r104C5": "OK",
+      "r105C5": "OK",
+      "r202C5": "OK",
+      "r203C5": "OK",
+      "rc105C5": "OK",
+      "rc108C5": "OK",
+      "rc204C5": "OK",
+      "rc208C5": "OK"
+    }
+  }
+}

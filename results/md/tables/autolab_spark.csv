@@ -1,0 +1,2 @@
+model_id,model,status,cycles,wall_s,elite_id,f0_ok,f1_feasible_rate,f1_crashes,f2_feasible_rate,c101C5_feasible,c101C5_vehicles,c101C5_distance,r105C5_feasible
+qwen25_coder_7b,qwen2.5-coder:7b,ran,6,344.5,S001,True,1.0,0,1.0,True,5,296.09,True

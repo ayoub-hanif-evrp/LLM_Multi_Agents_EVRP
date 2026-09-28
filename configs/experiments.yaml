@@ -1,0 +1,29 @@
+data_root: dataset/schneider/raw_instances
+held_out_family: RC2
+discovery_families: [C1, R1]
+confirmation_families: [C2, R2, RC1]
+
+fidelity:
+  F1:
+    customer_sizes: [5]
+    seeds: [0]
+  F2:
+    customer_sizes: [5, 10, 15]
+    seeds: [0, 1]
+  F3:
+    large_representatives_per_family: 1
+    seeds: [0]
+  F4:
+    seeds: [0, 1, 2]
+
+# P0 clean protocol: one model to debug autonomy (not multi-model comparison yet).
+model_comparison:
+  homogeneous_team: true
+  team_mode: five_agent
+  model_ids:
+    - qwen25_coder_7b
+
+discover:
+  cycles: 8
+  equal_budget: true
+  workspace: workspace/discovery_p0_clean

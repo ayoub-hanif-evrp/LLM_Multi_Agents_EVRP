@@ -1,0 +1,253 @@
+{
+  "protocol": "SINGLE_AGENT_MATCHED_V1",
+  "model": "qwen2.5-coder:7b",
+  "profile": "qwen25_coder_7b",
+  "run_id": "single_qwen_seed22",
+  "llm_seed": 22,
+  "seed_provided": true,
+  "max_total_tokens": 39157,
+  "total_tokens": 15204,
+  "prompt_tokens": 13409,
+  "completion_tokens": 1795,
+  "token_budget_exhausted": false,
+  "llm_calls": 7,
+  "wall_s": 50.4,
+  "gates": {
+    "G0": {
+      "passed": true,
+      "detail": "contract_ok",
+      "agent": ""
+    },
+    "G1": {
+      "passed": true,
+      "detail": "feasible",
+      "agent": ""
+    },
+    "G2": {
+      "passed": false,
+      "detail": "BATTERY",
+      "agent": ""
+    }
+  },
+  "G4_progress": "0/4",
+  "G4_PASS": false,
+  "highest_gate": "G1",
+  "stopped_reason": "G2_FAIL",
+  "primary_failure": {
+    "failure_class": "FEASIBILITY",
+    "role": "single_coder",
+    "gate": "G2",
+    "detail": "BATTERY"
+  },
+  "taxonomy_counts": {
+    "FORMAT": 0,
+    "SYNTAX": 0,
+    "RUNTIME": 0,
+    "GENERALITY": 0,
+    "FEASIBILITY": 4,
+    "OPTIMIZATION": 0,
+    "NO_OP": 6
+  },
+  "family_counts": {
+    "BATTERY": 4
+  },
+  "noop_count": 3,
+  "distinct_committed_hashes": 3,
+  "final_solver_hash": "c10dc259239db095",
+  "solver_path": "C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_single_agent_v1\\qwen25_coder_7b\\single_qwen_seed22\\committed\\solver.py",
+  "all_c5_unchanged": null,
+  "agent_log": [
+    {
+      "gate": "SA",
+      "kind": "protocol",
+      "name": "SINGLE_AGENT_MATCHED_V1",
+      "max_total_tokens": 39157,
+      "known_id_count": 66,
+      "empty_at_start": true
+    },
+    {
+      "gate": "G0",
+      "kind": "plan",
+      "hypothesis": "A basic heuristic approach to solve the EVRPTW problem is to use a greedy algorithm that tries to visit customers in order of their due time, ensuring that each route starts and ends at the depot."
+    },
+    {
+      "gate": "G2",
+      "kind": "algo_draft",
+      "agent": "single_coder",
+      "round": 0,
+      "family": "BATTERY"
+    },
+    {
+      "gate": "G2",
+      "kind": "algo_draft",
+      "agent": "single_coder",
+      "round": 1,
+      "family": "BATTERY"
+    },
+    {
+      "gate": "G2",
+      "kind": "algo_draft",
+      "agent": "single_coder",
+      "round": 2,
+      "family": "BATTERY"
+    },
+    {
+      "gate": "G2",
+      "kind": "algo_draft",
+      "agent": "single_coder",
+      "round": 3,
+      "family": "BATTERY"
+    },
+    {
+      "gate": "SA",
+      "kind": "campaign_summary",
+      "roles_invoked": [
+        "single_coder"
+      ],
+      "taxonomy": {
+        "FORMAT": 0,
+        "SYNTAX": 0,
+        "RUNTIME": 0,
+        "GENERALITY": 0,
+        "FEASIBILITY": 4,
+        "OPTIMIZATION": 0,
+        "NO_OP": 6
+      },
+      "committed_hashes": [
+        "a17b133d77a3e8ad",
+        "7fd76bdac0094b9c",
+        "c10dc259239db095",
+        "c10dc259239db095",
+        "c10dc259239db095",
+        "c10dc259239db095"
+      ],
+      "family_counts": {
+        "BATTERY": 4
+      },
+      "noop_count": 3,
+      "token_budget_exhausted": false,
+      "max_total_tokens": 39157,
+      "total_tokens": 15204,
+      "primary_failure": {
+        "failure_class": "FEASIBILITY",
+        "role": "single_coder",
+        "gate": "G2",
+        "detail": "BATTERY"
+      },
+      "integrity_log": [
+        {
+          "gate": "G0",
+          "kind": "draft",
+          "role": "single_coder",
+          "hash": "a17b133d77a3e8ad"
+        },
+        {
+          "gate": "G0",
+          "kind": "commit",
+          "hash": "a17b133d77a3e8ad",
+          "tag": "single"
+        },
+        {
+          "gate": "G2",
+          "kind": "draft",
+          "role": "single_coder",
+          "hash": "7fd76bdac0094b9c"
+        },
+        {
+          "gate": "G2",
+          "kind": "commit",
+          "hash": "7fd76bdac0094b9c",
+          "tag": "single"
+        },
+        {
+          "gate": "G2",
+          "kind": "feasibility_fail",
+          "failure_class": "FEASIBILITY",
+          "family": "BATTERY"
+        },
+        {
+          "gate": "G2",
+          "kind": "draft",
+          "role": "single_coder",
+          "hash": "c10dc259239db095"
+        },
+        {
+          "gate": "G2",
+          "kind": "commit",
+          "hash": "c10dc259239db095",
+          "tag": "single"
+        },
+        {
+          "gate": "G2",
+          "kind": "feasibility_fail",
+          "failure_class": "FEASIBILITY",
+          "family": "BATTERY"
+        },
+        {
+          "gate": "G2",
+          "kind": "draft",
+          "role": "single_coder",
+          "hash": "c10dc259239db095"
+        },
+        {
+          "gate": "G2",
+          "kind": "commit",
+          "hash": "c10dc259239db095",
+          "tag": "single"
+        },
+        {
+          "gate": "G2",
+          "kind": "NO_OP",
+          "failure_class": "NO_OP"
+        },
+        {
+          "gate": "G2",
+          "kind": "feasibility_fail",
+          "failure_class": "FEASIBILITY",
+          "family": "BATTERY"
+        },
+        {
+          "gate": "G2",
+          "kind": "draft",
+          "role": "single_coder",
+          "hash": "c10dc259239db095"
+        },
+        {
+          "gate": "G2",
+          "kind": "commit",
+          "hash": "c10dc259239db095",
+          "tag": "single"
+        },
+        {
+          "gate": "G2",
+          "kind": "NO_OP",
+          "failure_class": "NO_OP"
+        },
+        {
+          "gate": "G2",
+          "kind": "feasibility_fail",
+          "failure_class": "FEASIBILITY",
+          "family": "BATTERY"
+        },
+        {
+          "gate": "G2",
+          "kind": "draft",
+          "role": "single_coder",
+          "hash": "c10dc259239db095"
+        },
+        {
+          "gate": "G2",
+          "kind": "commit",
+          "hash": "c10dc259239db095",
+          "tag": "single"
+        },
+        {
+          "gate": "G2",
+          "kind": "NO_OP",
+          "failure_class": "NO_OP"
+        }
+      ]
+    }
+  ],
+  "created_utc": "2026-09-08T13:43:34.379838+00:00"
+}

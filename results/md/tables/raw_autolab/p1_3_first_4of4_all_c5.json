@@ -1,0 +1,21 @@
+{
+  "solver": "results\\md\\artifacts\\p1_3\\P1_3_FIRST_4OF4_SOLVER\\solver.py",
+  "hash": "50fd471ee248c9c1",
+  "source": "deepseek_coder_67b/repair01",
+  "feasible": 12,
+  "total": 12,
+  "by_instance": {
+    "c101C5": "OK",
+    "c103C5": "OK",
+    "c206C5": "OK",
+    "c208C5": "OK",
+    "r104C5": "OK",
+    "r105C5": "OK",
+    "r202C5": "OK",
+    "r203C5": "OK",
+    "rc105C5": "OK",
+    "rc108C5": "OK",
+    "rc204C5": "OK",
+    "rc208C5": "OK"
+  }
+}

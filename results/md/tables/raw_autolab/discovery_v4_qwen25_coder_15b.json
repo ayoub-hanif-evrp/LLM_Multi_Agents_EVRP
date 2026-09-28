@@ -1,0 +1,438 @@
+{
+  "model_id": "qwen25_coder_15b",
+  "model": "qwen2.5-coder:1.5b",
+  "team_mode": "five_agent",
+  "status": "ran",
+  "cycles": 5,
+  "wall_s": 193.5,
+  "elite_id": "S005",
+  "f0_ok": false,
+  "f1_feasible_rate": 0.0,
+  "f1_crashes": 0,
+  "f2_feasible_rate": "",
+  "c101C5_feasible": false,
+  "c101C5_vehicles": 0,
+  "c101C5_distance": 0.0,
+  "c101C5_first_fault": {
+    "family": "CRASH",
+    "node_id": "",
+    "route_index": -1,
+    "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_si55mzlk\\driver.py\", line 14, in <module>\n    routes = result.routes if hasattr(result, \"routes\") else result[\"routes\"]\n                                                             ~~~~~~^^^^^^^^^^\nTypeError: string indices must be integers, not 'str'\n"
+  },
+  "small_feasible": 0,
+  "small_exact_fleet": 0,
+  "large_feasible": 0,
+  "n_calls": 39,
+  "prompt_tokens": 0,
+  "error": "",
+  "cycle": 5,
+  "f0_errors": [
+    "smoke:crash:Traceback (most recent call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_ls4utbfz\\driver.py\", line 14, in <module>\n    routes = result.routes if hasattr(result, \"routes\") else result[\"routes\"]\n                                                             ~~~~~~^^^^^^^^^^\nTypeError: string indices must be integers, not 'str'\n"
+  ],
+  "f1": {
+    "level": "F0",
+    "passed": false,
+    "errors": [
+      "smoke:crash:Traceback (most recent call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_xq7rlzw9\\driver.py\", line 14, in <module>\n    routes = result.routes if hasattr(result, \"routes\") else result[\"routes\"]\n                                                             ~~~~~~^^^^^^^^^^\nTypeError: string indices must be integers, not 'str'\n"
+    ],
+    "summary": {
+      "n": 0,
+      "feasible_rate": 0.0,
+      "crashes": 0,
+      "timeouts": 0
+    }
+  },
+  "f2": null,
+  "small_n": 0,
+  "large_n": 0,
+  "completion_tokens": 0,
+  "llm_latency_s": 187.6,
+  "activated_history": [
+    {
+      "cycle": 0,
+      "activated": [
+        "architect",
+        "routing",
+        "charging",
+        "search",
+        "critic"
+      ],
+      "why": "BOOTSTRAP"
+    },
+    {
+      "cycle": 1,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 2,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 3,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 4,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 5,
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "why": "SEARCH"
+    },
+    {
+      "cycle": 5,
+      "f1": {
+        "level": "F0",
+        "passed": false,
+        "errors": [
+          "smoke:crash:Traceback (most recent call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_kmr_x_1d\\driver.py\", line 14, in <module>\n    routes = result.routes if hasattr(result, \"routes\") else result[\"routes\"]\n                                                             ~~~~~~^^^^^^^^^^\nTypeError: string indices must be integers, not 'str'\n"
+        ],
+        "summary": {
+          "n": 0,
+          "feasible_rate": 0.0,
+          "crashes": 0,
+          "timeouts": 0
+        }
+      },
+      "why": "F1_ELITE"
+    }
+  ],
+  "trajectories": [
+    {
+      "timestamp": "2026-09-04T12:52:12.409683+00:00",
+      "cycle": 0,
+      "solver_id": "S000",
+      "elite_id": "S000",
+      "parent_id": null,
+      "instance_id": "smoke_c1",
+      "activated": [
+        "architect",
+        "routing",
+        "charging",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "Continue from elite solver evidence.",
+      "architect_target": "SEARCH",
+      "decision": "REVERT",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": "cc28iu\\driver.py\", line 10, in <module>\n    result = solve(instance, seed=0, time_limit_s=8.0)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v4\\qwen25_coder_15b\\candidates\\S000\\solver.py\", line 41, in solve\n    for route in explore_search_space(instance):\n                 ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^\nTypeError: 'NoneType' object is not iterable\n"
+      },
+      "f0_errors": [
+        "smoke:crash:CONTRACT: use the lab EVRPTWInstance (do not redefine it). customer_ids is tuple[str]; n_customers = len(customer_ids). customers is tuple[Node] (not a dict \u2014 use node.id, not .keys()). vehicle is one VehicleSpec (no vehicle_map). node=instance.node_map[id]; from physics import distance(a,b) with Node args; routes=list[list[str]] start/end depot_id.\nTraceback (most recent call last):\n  File \"C:\\Us"
+      ],
+      "code_hash": "202338daaead93c803a01d3041228760065be925bc55f7a813af5da980bdb468"
+    },
+    {
+      "timestamp": "2026-09-04T12:52:19.527335+00:00",
+      "cycle": 1,
+      "solver_id": "S001",
+      "elite_id": "S001",
+      "parent_id": "S000",
+      "instance_id": "smoke_c1",
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "The `solve` function should return a feasible solution when called with an instance. If no solution is found, the child will crash, and you should revert to the parent's solution.",
+      "architect_target": "SEARCH",
+      "phase": "DEBUG",
+      "decision": "RETAIN",
+      "better": true,
+      "parent_feasible": false,
+      "parent_vehicles": 0,
+      "parent_distance": 0.0,
+      "parent_fault": "CRASH",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": "ehicleSpec (no vehicle_map). node=instance.node_map[id]; from physics import distance(a,b) with Node args; routes=list[list[str]] start/end depot_id.\nTraceback (most recent call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_mrs3q7gs\\driver.py\", line 10, in <module>\n    result = solve(instance, seed=0, time_limit_s=8.0)\nTypeError: solve() got an unexpected keyword argument 'seed'\n"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 0,
+      "attempted_distance": 0.0,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [
+        "smoke:crash:CONTRACT: use the lab EVRPTWInstance (do not redefine it). customer_ids is tuple[str]; n_customers = len(customer_ids). customers is tuple[Node] (not a dict \u2014 use node.id, not .keys()). vehicle is one VehicleSpec (no vehicle_map). node=instance.node_map[id]; from physics import distance(a,b) with Node args; routes=list[list[str]] start/end depot_id.\nTraceback (most recent call last):\n  File \"C:\\Us"
+      ],
+      "code_hash": "751c0376a567fb9ef42156aa46c00c6c892093de18c040a0c976f927a598d066",
+      "critic_lesson": "When implementing a solver, ensure that it accepts all necessary arguments and does not accept unexpected ones.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-04T12:52:33.858299+00:00",
+      "cycle": 2,
+      "solver_id": "S002",
+      "elite_id": "S002",
+      "parent_id": "S001",
+      "instance_id": "smoke_c1",
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "Continue from elite solver evidence.",
+      "architect_target": "SEARCH",
+      "phase": "DEBUG",
+      "decision": "RETAIN",
+      "better": true,
+      "parent_feasible": false,
+      "parent_vehicles": 0,
+      "parent_distance": 0.0,
+      "parent_fault": "CRASH",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": "ehicleSpec (no vehicle_map). node=instance.node_map[id]; from physics import distance(a,b) with Node args; routes=list[list[str]] start/end depot_id.\nTraceback (most recent call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_5143jr4b\\driver.py\", line 10, in <module>\n    result = solve(instance, seed=0, time_limit_s=8.0)\nTypeError: solve() got an unexpected keyword argument 'seed'\n"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 0,
+      "attempted_distance": 0.0,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [
+        "smoke:crash:CONTRACT: use the lab EVRPTWInstance (do not redefine it). customer_ids is tuple[str]; n_customers = len(customer_ids). customers is tuple[Node] (not a dict \u2014 use node.id, not .keys()). vehicle is one VehicleSpec (no vehicle_map). node=instance.node_map[id]; from physics import distance(a,b) with Node args; routes=list[list[str]] start/end depot_id.\nTraceback (most recent call last):\n  File \"C:\\Us"
+      ],
+      "code_hash": "da2c7736f038d8108d55e0798863ecc2b8c846bbcc668783424de2c073f72b4b",
+      "critic_lesson": "When using the `solve()` function, make sure to pass the correct arguments. In this case, you should pass `seed=0` as an argument to the `solve()` function.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-04T12:52:41.522765+00:00",
+      "cycle": 3,
+      "solver_id": "S003",
+      "elite_id": "S003",
+      "parent_id": "S002",
+      "instance_id": "smoke_c1",
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "The `solve` function should return a feasible solution if called with an instance. If no solution is found, the child will crash, and you should revert to the parent's solution.",
+      "architect_target": "SEARCH",
+      "phase": "DEBUG",
+      "decision": "RETAIN",
+      "better": true,
+      "parent_feasible": false,
+      "parent_vehicles": 0,
+      "parent_distance": 0.0,
+      "parent_fault": "CRASH",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": "ehicleSpec (no vehicle_map). node=instance.node_map[id]; from physics import distance(a,b) with Node args; routes=list[list[str]] start/end depot_id.\nTraceback (most recent call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_q9pjo7b7\\driver.py\", line 10, in <module>\n    result = solve(instance, seed=0, time_limit_s=8.0)\nTypeError: solve() got an unexpected keyword argument 'seed'\n"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 0,
+      "attempted_distance": 0.0,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [
+        "smoke:crash:CONTRACT: use the lab EVRPTWInstance (do not redefine it). customer_ids is tuple[str]; n_customers = len(customer_ids). customers is tuple[Node] (not a dict \u2014 use node.id, not .keys()). vehicle is one VehicleSpec (no vehicle_map). node=instance.node_map[id]; from physics import distance(a,b) with Node args; routes=list[list[str]] start/end depot_id.\nTraceback (most recent call last):\n  File \"C:\\Us"
+      ],
+      "code_hash": "55238bc3bd637fc20fb2d152a10ce046064fed8daa898cfc0a1f93629e6370bb",
+      "critic_lesson": "When using the `solve()` function, ensure that it does not accept any unexpected keyword arguments. In this case, the child's `solve()` function did not accept the `seed` argument, while the parent's `solve()` function did.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-04T12:52:50.738819+00:00",
+      "cycle": 4,
+      "solver_id": "S004",
+      "elite_id": "S004",
+      "parent_id": "S003",
+      "instance_id": "smoke_c1",
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "Ensure that the `solve` function returns a feasible solution when called with an instance. If no solution is found, the child will crash, and you should revert to the parent's solution.",
+      "architect_target": "SEARCH",
+      "phase": "DEBUG",
+      "decision": "RETAIN",
+      "better": true,
+      "parent_feasible": false,
+      "parent_vehicles": 0,
+      "parent_distance": 0.0,
+      "parent_fault": "CRASH",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": "en25_coder_15b\\candidates\\S004\\solver.py\", line 33, in <module>\n    solution = solve(instance)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v4\\qwen25_coder_15b\\candidates\\S004\\solver.py\", line 16, in solve\n    for route in explore_search_space(instance):\n                 ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^\nTypeError: 'NoneType' object is not iterable\n"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 0,
+      "attempted_distance": 0.0,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [
+        "smoke:crash:Traceback (most recent call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_recgph_i\\driver.py\", line 7, in <module>\n    from solver import solve\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_v4\\qwen25_coder_15b\\candidates\\S004\\solver.py\", line 33, in <module>\n    solution = solve(instance)\n  File \"C:\\Users\\AYOUB\\OneDrive - EMSI\\Bu"
+      ],
+      "code_hash": "06a475d3cc1eeba5c6bc1df347b98047f4cb52a502df8a2d3a76055ea5000d93",
+      "critic_lesson": "Always check for `NoneType` errors and handle them appropriately in your code. This error can occur due to various reasons, such as incorrect data input or missing dependencies.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    },
+    {
+      "timestamp": "2026-09-04T12:53:05.590113+00:00",
+      "cycle": 5,
+      "solver_id": "S005",
+      "elite_id": "S005",
+      "parent_id": "S004",
+      "instance_id": "smoke_c1",
+      "activated": [
+        "architect",
+        "search",
+        "critic"
+      ],
+      "architect_hypothesis": "Continue from elite solver evidence.",
+      "architect_target": "SEARCH",
+      "phase": "DEBUG",
+      "decision": "RETAIN",
+      "better": true,
+      "parent_feasible": false,
+      "parent_vehicles": 0,
+      "parent_distance": 0.0,
+      "parent_fault": "CRASH",
+      "feasible": false,
+      "vehicles": 0,
+      "distance": 0.0,
+      "first_fault": {
+        "family": "CRASH",
+        "node_id": "",
+        "route_index": -1,
+        "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_f82eo3dv\\driver.py\", line 14, in <module>\n    routes = result.routes if hasattr(result, \"routes\") else result[\"routes\"]\n                                                             ~~~~~~^^^^^^^^^^\nTypeError: string indices must be integers, not 'str'\n"
+      },
+      "attempted_feasible": false,
+      "attempted_vehicles": 0,
+      "attempted_distance": 0.0,
+      "vehicles_delta": 0,
+      "distance_delta": 0.0,
+      "fault_repaired": false,
+      "f0_errors": [
+        "smoke:crash:Traceback (most recent call last):\n  File \"C:\\Users\\AYOUB\\AppData\\Local\\Temp\\evrptw_autolab_9wp162mh\\driver.py\", line 14, in <module>\n    routes = result.routes if hasattr(result, \"routes\") else result[\"routes\"]\n                                                             ~~~~~~^^^^^^^^^^\nTypeError: string indices must be integers, not 'str'\n"
+      ],
+      "code_hash": "3bf910308413a9b7a816bf407260cc9b1983093f676785870d2e2959208569de",
+      "critic_lesson": "When using the `solve()` function, ensure that it does not accept any unexpected keyword arguments. In this case, the child's `solve()` function did not accept the `seed` argument, while the parent's `solve()` function did.",
+      "role_outcomes": {
+        "activated": [
+          "architect",
+          "search",
+          "critic"
+        ],
+        "architect_target": "SEARCH",
+        "routing_fleet_reduction": false,
+        "charging_battery_invalid_reduced": false,
+        "search_improved": false,
+        "critic_fault_repaired_next": false,
+        "vehicles_delta": 0,
+        "child_better": false
+      }
+    }
+  ]
+}

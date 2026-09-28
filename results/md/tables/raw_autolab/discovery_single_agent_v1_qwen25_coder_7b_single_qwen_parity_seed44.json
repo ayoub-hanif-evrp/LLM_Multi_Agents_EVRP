@@ -1,0 +1,130 @@
+{
+  "protocol": "SINGLE_AGENT_MATCHED_V1",
+  "model": "qwen2.5-coder:7b",
+  "profile": "qwen25_coder_7b",
+  "run_id": "single_qwen_parity_seed44",
+  "llm_seed": 44,
+  "seed_provided": true,
+  "max_total_tokens": 6205,
+  "total_tokens": 6432,
+  "prompt_tokens": 5939,
+  "completion_tokens": 493,
+  "token_budget_exhausted": true,
+  "llm_calls": 3,
+  "wall_s": 15.0,
+  "gates": {
+    "G0": {
+      "passed": true,
+      "detail": "contract_ok",
+      "agent": ""
+    },
+    "G1": {
+      "passed": true,
+      "detail": "feasible",
+      "agent": ""
+    },
+    "G2": {
+      "passed": false,
+      "detail": "BATTERY",
+      "agent": ""
+    }
+  },
+  "G4_progress": "0/4",
+  "G4_PASS": false,
+  "highest_gate": "G1",
+  "stopped_reason": "TOKEN_BUDGET",
+  "primary_failure": {
+    "failure_class": "FEASIBILITY",
+    "role": "single_coder",
+    "gate": "G2",
+    "detail": "BATTERY"
+  },
+  "taxonomy_counts": {
+    "FORMAT": 0,
+    "SYNTAX": 0,
+    "RUNTIME": 0,
+    "GENERALITY": 0,
+    "FEASIBILITY": 0,
+    "OPTIMIZATION": 0,
+    "NO_OP": 0
+  },
+  "family_counts": {},
+  "noop_count": 0,
+  "distinct_committed_hashes": 2,
+  "final_solver_hash": "467cedbe9075999b",
+  "solver_path": "C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_single_agent_v1\\qwen25_coder_7b\\single_qwen_parity_seed44\\committed\\solver.py",
+  "all_c5_unchanged": null,
+  "agent_log": [
+    {
+      "gate": "SA",
+      "kind": "protocol",
+      "name": "SINGLE_AGENT_MATCHED_V1",
+      "max_total_tokens": 6205,
+      "known_id_count": 66,
+      "empty_at_start": true
+    },
+    {
+      "gate": "G0",
+      "kind": "plan",
+      "hypothesis": "The solver will assign customers to vehicles and sequence routes, ensuring feasibility without optimization. It will handle charging and energy requirements, and return a list of routes starting and ending at the depot."
+    },
+    {
+      "gate": "SA",
+      "kind": "campaign_summary",
+      "roles_invoked": [
+        "single_coder"
+      ],
+      "taxonomy": {
+        "FORMAT": 0,
+        "SYNTAX": 0,
+        "RUNTIME": 0,
+        "GENERALITY": 0,
+        "FEASIBILITY": 0,
+        "OPTIMIZATION": 0,
+        "NO_OP": 0
+      },
+      "committed_hashes": [
+        "43a7caef977fa0ff",
+        "467cedbe9075999b"
+      ],
+      "family_counts": {},
+      "noop_count": 0,
+      "token_budget_exhausted": true,
+      "max_total_tokens": 6205,
+      "total_tokens": 6432,
+      "primary_failure": {
+        "failure_class": "FEASIBILITY",
+        "role": "single_coder",
+        "gate": "G2",
+        "detail": "BATTERY"
+      },
+      "integrity_log": [
+        {
+          "gate": "G0",
+          "kind": "draft",
+          "role": "single_coder",
+          "hash": "43a7caef977fa0ff"
+        },
+        {
+          "gate": "G0",
+          "kind": "commit",
+          "hash": "43a7caef977fa0ff",
+          "tag": "single"
+        },
+        {
+          "gate": "G2",
+          "kind": "draft",
+          "role": "single_coder",
+          "hash": "467cedbe9075999b"
+        },
+        {
+          "gate": "G2",
+          "kind": "commit",
+          "hash": "467cedbe9075999b",
+          "tag": "single"
+        }
+      ]
+    }
+  ],
+  "created_utc": "2026-09-09T11:19:22.221867+00:00"
+}

@@ -1,0 +1,421 @@
+{
+  "protocol": "SINGLE_AGENT_MATCHED_V1",
+  "model": "qwen2.5-coder:7b",
+  "profile": "qwen25_coder_7b",
+  "run_id": "single_qwen_parity_seed22",
+  "llm_seed": 22,
+  "seed_provided": true,
+  "max_total_tokens": 39157,
+  "total_tokens": 30686,
+  "prompt_tokens": 28385,
+  "completion_tokens": 2301,
+  "token_budget_exhausted": false,
+  "llm_calls": 11,
+  "wall_s": 68.0,
+  "gates": {
+    "G0": {
+      "passed": true,
+      "detail": "contract_ok",
+      "agent": ""
+    },
+    "G1": {
+      "passed": true,
+      "detail": "feasible",
+      "agent": ""
+    },
+    "G2": {
+      "passed": true,
+      "detail": "feasible",
+      "agent": ""
+    },
+    "G3": {
+      "passed": true,
+      "detail": "feasible",
+      "agent": ""
+    },
+    "G4": {
+      "passed": false,
+      "detail": "PARTIAL 2/4 final={'c101C5': 'OK', 'c103C5': 'OK', 'r104C5': 'BATTERY', 'r105C5': 'BATTERY'}",
+      "agent": ""
+    }
+  },
+  "G4_progress": "2/4",
+  "G4_PASS": false,
+  "highest_gate": "G4_partial_2",
+  "stopped_reason": "PARTIAL_G4_2",
+  "primary_failure": {
+    "failure_class": "FEASIBILITY",
+    "role": "single_coder",
+    "gate": "G4",
+    "detail": "BATTERY"
+  },
+  "taxonomy_counts": {
+    "FORMAT": 0,
+    "SYNTAX": 0,
+    "RUNTIME": 0,
+    "GENERALITY": 0,
+    "FEASIBILITY": 8,
+    "OPTIMIZATION": 0,
+    "NO_OP": 16
+  },
+  "family_counts": {
+    "BATTERY": 8
+  },
+  "noop_count": 8,
+  "distinct_committed_hashes": 2,
+  "final_solver_hash": "4470726f59edf942",
+  "solver_path": "C:\\Users\\AYOUB\\OneDrive - EMSI\\Bureau\\PHD_WORK\\LLM_Multi_Agents_EVRP\\workspace\\discovery_single_agent_v1\\qwen25_coder_7b\\single_qwen_parity_seed22\\committed\\solver.py",
+  "all_c5_unchanged": null,
+  "agent_log": [
+    {
+      "gate": "SA",
+      "kind": "protocol",
+      "name": "SINGLE_AGENT_MATCHED_V1",
+      "max_total_tokens": 39157,
+      "known_id_count": 66,
+      "empty_at_start": true
+    },
+    {
+      "gate": "G0",
+      "kind": "plan",
+      "hypothesis": "The solver will use a greedy approach to assign customers to vehicles and sequence routes, ensuring capacity and time window constraints are met. It will prioritize battery feasibility by checking route states with propagate_route and making necessary adjustments."
+    },
+    {
+      "gate": "G4",
+      "kind": "pass",
+      "instance": "c101C5"
+    },
+    {
+      "gate": "G4",
+      "kind": "pass",
+      "instance": "c103C5"
+    },
+    {
+      "gate": "G4",
+      "kind": "algo_draft",
+      "agent": "single_coder",
+      "round": 0,
+      "family": "BATTERY"
+    },
+    {
+      "gate": "G4",
+      "kind": "algo_draft",
+      "agent": "single_coder",
+      "round": 1,
+      "family": "BATTERY"
+    },
+    {
+      "gate": "G4",
+      "kind": "algo_draft",
+      "agent": "single_coder",
+      "round": 2,
+      "family": "BATTERY"
+    },
+    {
+      "gate": "G4",
+      "kind": "algo_draft",
+      "agent": "single_coder",
+      "round": 3,
+      "family": "BATTERY"
+    },
+    {
+      "gate": "G4",
+      "kind": "instance_result",
+      "instance": "r104C5",
+      "passed": false,
+      "detail": "BATTERY"
+    },
+    {
+      "gate": "G4",
+      "kind": "algo_draft",
+      "agent": "single_coder",
+      "round": 0,
+      "family": "BATTERY"
+    },
+    {
+      "gate": "G4",
+      "kind": "algo_draft",
+      "agent": "single_coder",
+      "round": 1,
+      "family": "BATTERY"
+    },
+    {
+      "gate": "G4",
+      "kind": "algo_draft",
+      "agent": "single_coder",
+      "round": 2,
+      "family": "BATTERY"
+    },
+    {
+      "gate": "G4",
+      "kind": "algo_draft",
+      "agent": "single_coder",
+      "round": 3,
+      "family": "BATTERY"
+    },
+    {
+      "gate": "G4",
+      "kind": "instance_result",
+      "instance": "r105C5",
+      "passed": false,
+      "detail": "BATTERY"
+    },
+    {
+      "gate": "SA",
+      "kind": "final_hardcoded_audit",
+      "ids": []
+    },
+    {
+      "gate": "SA",
+      "kind": "campaign_summary",
+      "roles_invoked": [
+        "single_coder"
+      ],
+      "taxonomy": {
+        "FORMAT": 0,
+        "SYNTAX": 0,
+        "RUNTIME": 0,
+        "GENERALITY": 0,
+        "FEASIBILITY": 8,
+        "OPTIMIZATION": 0,
+        "NO_OP": 16
+      },
+      "committed_hashes": [
+        "b394cf4ebe9672d9",
+        "4470726f59edf942",
+        "4470726f59edf942",
+        "4470726f59edf942",
+        "4470726f59edf942",
+        "4470726f59edf942",
+        "4470726f59edf942",
+        "4470726f59edf942",
+        "4470726f59edf942",
+        "4470726f59edf942"
+      ],
+      "family_counts": {
+        "BATTERY": 8
+      },
+      "noop_count": 8,
+      "token_budget_exhausted": false,
+      "max_total_tokens": 39157,
+      "total_tokens": 30686,
+      "primary_failure": {
+        "failure_class": "FEASIBILITY",
+        "role": "single_coder",
+        "gate": "G4",
+        "detail": "BATTERY"
+      },
+      "integrity_log": [
+        {
+          "gate": "G0",
+          "kind": "draft",
+          "role": "single_coder",
+          "hash": "b394cf4ebe9672d9"
+        },
+        {
+          "gate": "G0",
+          "kind": "commit",
+          "hash": "b394cf4ebe9672d9",
+          "tag": "single"
+        },
+        {
+          "gate": "G2",
+          "kind": "draft",
+          "role": "single_coder",
+          "hash": "4470726f59edf942"
+        },
+        {
+          "gate": "G2",
+          "kind": "commit",
+          "hash": "4470726f59edf942",
+          "tag": "single"
+        },
+        {
+          "gate": "G4",
+          "kind": "feasibility_fail",
+          "failure_class": "FEASIBILITY",
+          "family": "BATTERY"
+        },
+        {
+          "gate": "G4",
+          "kind": "draft",
+          "role": "single_coder",
+          "hash": "4470726f59edf942"
+        },
+        {
+          "gate": "G4",
+          "kind": "commit",
+          "hash": "4470726f59edf942",
+          "tag": "single"
+        },
+        {
+          "gate": "G4",
+          "kind": "NO_OP",
+          "failure_class": "NO_OP"
+        },
+        {
+          "gate": "G4",
+          "kind": "feasibility_fail",
+          "failure_class": "FEASIBILITY",
+          "family": "BATTERY"
+        },
+        {
+          "gate": "G4",
+          "kind": "draft",
+          "role": "single_coder",
+          "hash": "4470726f59edf942"
+        },
+        {
+          "gate": "G4",
+          "kind": "commit",
+          "hash": "4470726f59edf942",
+          "tag": "single"
+        },
+        {
+          "gate": "G4",
+          "kind": "NO_OP",
+          "failure_class": "NO_OP"
+        },
+        {
+          "gate": "G4",
+          "kind": "feasibility_fail",
+          "failure_class": "FEASIBILITY",
+          "family": "BATTERY"
+        },
+        {
+          "gate": "G4",
+          "kind": "draft",
+          "role": "single_coder",
+          "hash": "4470726f59edf942"
+        },
+        {
+          "gate": "G4",
+          "kind": "commit",
+          "hash": "4470726f59edf942",
+          "tag": "single"
+        },
+        {
+          "gate": "G4",
+          "kind": "NO_OP",
+          "failure_class": "NO_OP"
+        },
+        {
+          "gate": "G4",
+          "kind": "feasibility_fail",
+          "failure_class": "FEASIBILITY",
+          "family": "BATTERY"
+        },
+        {
+          "gate": "G4",
+          "kind": "draft",
+          "role": "single_coder",
+          "hash": "4470726f59edf942"
+        },
+        {
+          "gate": "G4",
+          "kind": "commit",
+          "hash": "4470726f59edf942",
+          "tag": "single"
+        },
+        {
+          "gate": "G4",
+          "kind": "NO_OP",
+          "failure_class": "NO_OP"
+        },
+        {
+          "gate": "G4",
+          "kind": "feasibility_fail",
+          "failure_class": "FEASIBILITY",
+          "family": "BATTERY"
+        },
+        {
+          "gate": "G4",
+          "kind": "draft",
+          "role": "single_coder",
+          "hash": "4470726f59edf942"
+        },
+        {
+          "gate": "G4",
+          "kind": "commit",
+          "hash": "4470726f59edf942",
+          "tag": "single"
+        },
+        {
+          "gate": "G4",
+          "kind": "NO_OP",
+          "failure_class": "NO_OP"
+        },
+        {
+          "gate": "G4",
+          "kind": "feasibility_fail",
+          "failure_class": "FEASIBILITY",
+          "family": "BATTERY"
+        },
+        {
+          "gate": "G4",
+          "kind": "draft",
+          "role": "single_coder",
+          "hash": "4470726f59edf942"
+        },
+        {
+          "gate": "G4",
+          "kind": "commit",
+          "hash": "4470726f59edf942",
+          "tag": "single"
+        },
+        {
+          "gate": "G4",
+          "kind": "NO_OP",
+          "failure_class": "NO_OP"
+        },
+        {
+          "gate": "G4",
+          "kind": "feasibility_fail",
+          "failure_class": "FEASIBILITY",
+          "family": "BATTERY"
+        },
+        {
+          "gate": "G4",
+          "kind": "draft",
+          "role": "single_coder",
+          "hash": "4470726f59edf942"
+        },
+        {
+          "gate": "G4",
+          "kind": "commit",
+          "hash": "4470726f59edf942",
+          "tag": "single"
+        },
+        {
+          "gate": "G4",
+          "kind": "NO_OP",
+          "failure_class": "NO_OP"
+        },
+        {
+          "gate": "G4",
+          "kind": "feasibility_fail",
+          "failure_class": "FEASIBILITY",
+          "family": "BATTERY"
+        },
+        {
+          "gate": "G4",
+          "kind": "draft",
+          "role": "single_coder",
+          "hash": "4470726f59edf942"
+        },
+        {
+          "gate": "G4",
+          "kind": "commit",
+          "hash": "4470726f59edf942",
+          "tag": "single"
+        },
+        {
+          "gate": "G4",
+          "kind": "NO_OP",
+          "failure_class": "NO_OP"
+        }
+      ]
+    }
+  ],
+  "created_utc": "2026-09-09T11:18:19.020944+00:00"
+}

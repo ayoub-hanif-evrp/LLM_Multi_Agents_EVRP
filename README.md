@@ -38,3 +38,7 @@ Configured comparison models live in `configs/models.yaml`. A missing local mode
 ## Package
 
 `src/evrptw_autolab/` — problem contract, sandbox, five-agent orchestration, and homogeneous-team model comparison. Generated solvers live under `workspace/discovery/` and can be exported with `voltforge export`.
+
+## Continue after switching PCs
+
+Read **[`NEXT.md`](NEXT.md)** and `results/md/SLM_EVO_STATUS.md` (SLM-Evo state, OPT_V1/OPT_V2 freezes, next scale-aware experiment). Do not rely on chat history.

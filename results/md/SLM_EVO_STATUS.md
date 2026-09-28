@@ -1,5 +1,7 @@
 # SLM-Evo optimization campaign status
 
+**PC handoff:** see repo-root [`NEXT.md`](../../NEXT.md).
+
 ## Frozen artifacts (immutable unless noted)
 | Tag | Vehicles | Notes |
 | --- | ---: | --- |
@@ -20,4 +22,4 @@ Parent OPT_V1 (53). Gate: all-12 C5 feasible. **5/5** seeds improved with 12/12.
 Report: `SLM_EVO_OPT_V1_5SEED_REPORT.md`
 
 ## Next (not started)
-Scale-aware evolution: fixed C10/C15 development subset in selection pressure, then held-out larger Schneider eval.
+Scale-aware evolution from **OPT_V2**: fixed C10/C15 development subset in selection pressure, then held-out larger Schneider eval. Details in `NEXT.md`.

@@ -1,80 +1,70 @@
-{"round": 1, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 1}
-{"round": 2, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 2}
-{"round": 3, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 3}
-{"round": 4, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 4}
-{"round": 5, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 5}
-{"round": 6, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 6}
-{"round": 7, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 7}
-{"round": 8, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 8}
-{"round": 9, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 9}
-{"round": 10, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 10}
-{"round": 11, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 11}
-{"round": 12, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 12}
-{"round": 13, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 13}
-{"round": 14, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 14}
-{"round": 15, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 15}
-{"round": 16, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 16}
-{"round": 17, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 17}
-{"round": 18, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 18}
-{"round": 19, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 19}
-{"round": 20, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 20}
-{"round": 21, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 21}
-{"round": 22, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 22}
-{"round": 23, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 23}
-{"round": 24, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 24}
-{"round": 25, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 25}
-{"round": 26, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 26}
-{"round": 27, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 27}
-{"round": 28, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 28}
-{"round": 29, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 29}
-{"round": 30, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 30}
-{"round": 31, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 31}
-{"round": 32, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 32}
-{"round": 33, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 33}
-{"round": 34, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 34}
-{"round": 35, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 35}
-{"round": 36, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 36}
-{"round": 37, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 37}
-{"round": 38, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 38}
-{"round": 39, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 39}
-{"round": 40, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 40}
-{"round": 41, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 41}
-{"round": 42, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 42}
-{"round": 43, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 43}
-{"round": 44, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 44}
-{"round": 45, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 45}
-{"round": 46, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 46}
-{"round": 47, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 47}
-{"round": 48, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 48}
-{"round": 49, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 49}
-{"round": 50, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 50}
-{"round": 51, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 51}
-{"round": 52, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 52}
-{"round": 53, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 53}
-{"round": 54, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 54}
-{"round": 55, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 55}
-{"round": 56, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 56}
-{"round": 57, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 57}
-{"round": 58, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 58}
-{"round": 59, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 59}
-{"round": 60, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 60}
-{"round": 61, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 61}
-{"round": 62, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 62}
-{"round": 63, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 63}
-{"round": 64, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 64}
-{"round": 65, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 65}
-{"round": 66, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 66}
-{"round": 67, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 67}
-{"round": 68, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 68}
-{"round": 69, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 69}
-{"round": 70, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 70}
-{"round": 71, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 71}
-{"round": 72, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 72}
-{"round": 73, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 73}
-{"round": 74, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 74}
-{"round": 75, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 75}
-{"round": 76, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 76}
-{"round": 77, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 77}
-{"round": 78, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 78}
-{"round": 79, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 79}
-{"round": 80, "stage": "executable", "passed": false, "failure_reason": "timeout", "calls": 80}
+{"round": 1, "stage": "executable", "passed": true, "repair": false, "roles": ["single"], "failure_category": "", "failure_reason": "", "critic": {}, "calls": 1, "tokens": 2188}
+{"round": 2, "stage": "routing", "passed": true, "repair": false, "roles": ["single"], "failure_category": "", "failure_reason": "", "critic": {}, "calls": 2, "tokens": 4616}
+{"round": 3, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 3, "tokens": 7047}
+{"round": 4, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 4, "tokens": 9768}
+{"round": 5, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 5, "tokens": 12489}
+{"round": 6, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 6, "tokens": 15210}
+{"round": 7, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 7, "tokens": 17931}
+{"round": 8, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 8, "tokens": 20652}
+{"round": 9, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 9, "tokens": 23373}
+{"round": 10, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 10, "tokens": 26094}
+{"round": 11, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 11, "tokens": 28815}
+{"round": 12, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 12, "tokens": 31536}
+{"round": 13, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 13, "tokens": 34257}
+{"round": 14, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 14, "tokens": 36978}
+{"round": 15, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 15, "tokens": 39699}
+{"round": 16, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 16, "tokens": 42420}
+{"round": 17, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 17, "tokens": 45141}
+{"round": 18, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 18, "tokens": 47862}
+{"round": 19, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 19, "tokens": 50583}
+{"round": 20, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 20, "tokens": 53304}
+{"round": 21, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 21, "tokens": 56025}
+{"round": 22, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 22, "tokens": 58746}
+{"round": 23, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 23, "tokens": 61467}
+{"round": 24, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 24, "tokens": 64188}
+{"round": 25, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 25, "tokens": 66909}
+{"round": 26, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 26, "tokens": 69630}
+{"round": 27, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 27, "tokens": 72351}
+{"round": 28, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 28, "tokens": 75072}
+{"round": 29, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 29, "tokens": 77793}
+{"round": 30, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 30, "tokens": 80514}
+{"round": 31, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 31, "tokens": 83235}
+{"round": 32, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 32, "tokens": 85956}
+{"round": 33, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 33, "tokens": 88677}
+{"round": 34, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 34, "tokens": 91398}
+{"round": 35, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 35, "tokens": 94119}
+{"round": 36, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 36, "tokens": 96840}
+{"round": 37, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 37, "tokens": 99561}
+{"round": 38, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 38, "tokens": 102282}
+{"round": 39, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 39, "tokens": 105003}
+{"round": 40, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 40, "tokens": 107724}
+{"round": 41, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 41, "tokens": 110445}
+{"round": 42, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 42, "tokens": 113166}
+{"round": 43, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 43, "tokens": 115887}
+{"round": 44, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 44, "tokens": 118608}
+{"round": 45, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 45, "tokens": 121329}
+{"round": 46, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 46, "tokens": 124050}
+{"round": 47, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 47, "tokens": 126771}
+{"round": 48, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 48, "tokens": 129492}
+{"round": 49, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 49, "tokens": 132213}
+{"round": 50, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 50, "tokens": 134934}
+{"round": 51, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 51, "tokens": 137655}
+{"round": 52, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 52, "tokens": 140376}
+{"round": 53, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 53, "tokens": 143097}
+{"round": 54, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 54, "tokens": 145818}
+{"round": 55, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 55, "tokens": 148539}
+{"round": 56, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 56, "tokens": 151260}
+{"round": 57, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 57, "tokens": 153981}
+{"round": 58, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 58, "tokens": 156702}
+{"round": 59, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 59, "tokens": 159423}
+{"round": 60, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 60, "tokens": 162144}
+{"round": 61, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 61, "tokens": 164865}
+{"round": 62, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 62, "tokens": 167586}
+{"round": 63, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 63, "tokens": 170307}
+{"round": 64, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 64, "tokens": 173028}
+{"round": 65, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 65, "tokens": 175749}
+{"round": 66, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 66, "tokens": 178470}
+{"round": 67, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 67, "tokens": 181191}
+{"round": 68, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 68, "tokens": 183912}
+{"round": 69, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 69, "tokens": 186633}
+{"round": 70, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 70, "tokens": 189354}

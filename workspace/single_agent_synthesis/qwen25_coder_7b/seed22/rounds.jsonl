@@ -1,80 +1,55 @@
-{"round": 1, "stage": "executable", "passed": false, "failure_reason": "Traceback (most recent call last):\n  File \"C:\\Users\\ayoub\\AppData\\Local\\Temp\\evrptw_autolab_p5juyajv\\driver.py\", line 61, in <module>\n    result = _call_solve()\n  File \"C:\\Users\\ayoub\\AppData\\Local\\Temp\\evrptw_autolab_p5juyajv\\driver.py\", line 26, in _call_solve\n    return solve(instance, **kwargs)\n", "calls": 1}
-{"round": 2, "stage": "executable", "passed": true, "failure_reason": "", "calls": 2}
-{"round": 3, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 3}
-{"round": 4, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 4}
-{"round": 5, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 5}
-{"round": 6, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 6}
-{"round": 7, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 7}
-{"round": 8, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 8}
-{"round": 9, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 9}
-{"round": 10, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 10}
-{"round": 11, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 11}
-{"round": 12, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 12}
-{"round": 13, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 13}
-{"round": 14, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 14}
-{"round": 15, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 15}
-{"round": 16, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 16}
-{"round": 17, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 17}
-{"round": 18, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 18}
-{"round": 19, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 19}
-{"round": 20, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 20}
-{"round": 21, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 21}
-{"round": 22, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 22}
-{"round": 23, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 23}
-{"round": 24, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 24}
-{"round": 25, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 25}
-{"round": 26, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 26}
-{"round": 27, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 27}
-{"round": 28, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 28}
-{"round": 29, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 29}
-{"round": 30, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 30}
-{"round": 31, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 31}
-{"round": 32, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 32}
-{"round": 33, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 33}
-{"round": 34, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 34}
-{"round": 35, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 35}
-{"round": 36, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 36}
-{"round": 37, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 37}
-{"round": 38, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 38}
-{"round": 39, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 39}
-{"round": 40, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 40}
-{"round": 41, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 41}
-{"round": 42, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 42}
-{"round": 43, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 43}
-{"round": 44, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 44}
-{"round": 45, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 45}
-{"round": 46, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 46}
-{"round": 47, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 47}
-{"round": 48, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 48}
-{"round": 49, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 49}
-{"round": 50, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 50}
-{"round": 51, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 51}
-{"round": 52, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 52}
-{"round": 53, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 53}
-{"round": 54, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 54}
-{"round": 55, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 55}
-{"round": 56, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 56}
-{"round": 57, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 57}
-{"round": 58, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 58}
-{"round": 59, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 59}
-{"round": 60, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 60}
-{"round": 61, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 61}
-{"round": 62, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 62}
-{"round": 63, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 63}
-{"round": 64, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 64}
-{"round": 65, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 65}
-{"round": 66, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 66}
-{"round": 67, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 67}
-{"round": 68, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 68}
-{"round": 69, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 69}
-{"round": 70, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 70}
-{"round": 71, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 71}
-{"round": 72, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 72}
-{"round": 73, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 73}
-{"round": 74, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 74}
-{"round": 75, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 75}
-{"round": 76, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 76}
-{"round": 77, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 77}
-{"round": 78, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 78}
-{"round": 79, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 79}
-{"round": 80, "stage": "routing", "passed": false, "failure_reason": "DEPOT: route must start and end at depot_id", "calls": 80}
+{"round": 1, "stage": "executable", "passed": false, "repair": false, "roles": ["single"], "failure_category": "RUNTIME", "failure_reason": "NameError: name 'random' is not defined. Did you forget to import 'random'?", "critic": {}, "calls": 1, "tokens": 2324}
+{"round": 2, "stage": "executable", "passed": true, "repair": true, "roles": ["single"], "failure_category": "", "failure_reason": "", "critic": {}, "calls": 2, "tokens": 5456}
+{"round": 3, "stage": "routing", "passed": true, "repair": false, "roles": ["single"], "failure_category": "", "failure_reason": "", "critic": {}, "calls": 3, "tokens": 8160}
+{"round": 4, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 4, "tokens": 11055}
+{"round": 5, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 5, "tokens": 14583}
+{"round": 6, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 6, "tokens": 18111}
+{"round": 7, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 7, "tokens": 21639}
+{"round": 8, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 8, "tokens": 25167}
+{"round": 9, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 9, "tokens": 28695}
+{"round": 10, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 10, "tokens": 32223}
+{"round": 11, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 11, "tokens": 35751}
+{"round": 12, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 12, "tokens": 39279}
+{"round": 13, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 13, "tokens": 42807}
+{"round": 14, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 14, "tokens": 46335}
+{"round": 15, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 15, "tokens": 49863}
+{"round": 16, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 16, "tokens": 53391}
+{"round": 17, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 17, "tokens": 56919}
+{"round": 18, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 18, "tokens": 60447}
+{"round": 19, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 19, "tokens": 63975}
+{"round": 20, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 20, "tokens": 67503}
+{"round": 21, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 21, "tokens": 71031}
+{"round": 22, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 22, "tokens": 74559}
+{"round": 23, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 23, "tokens": 78087}
+{"round": 24, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 24, "tokens": 81615}
+{"round": 25, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 25, "tokens": 85143}
+{"round": 26, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 26, "tokens": 88671}
+{"round": 27, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 27, "tokens": 92199}
+{"round": 28, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 28, "tokens": 95727}
+{"round": 29, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 29, "tokens": 99255}
+{"round": 30, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 30, "tokens": 102783}
+{"round": 31, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 31, "tokens": 106311}
+{"round": 32, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 32, "tokens": 109839}
+{"round": 33, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 33, "tokens": 113367}
+{"round": 34, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 34, "tokens": 116895}
+{"round": 35, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 35, "tokens": 120423}
+{"round": 36, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 36, "tokens": 123951}
+{"round": 37, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 37, "tokens": 127479}
+{"round": 38, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 38, "tokens": 131007}
+{"round": 39, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 39, "tokens": 134535}
+{"round": 40, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 40, "tokens": 138063}
+{"round": 41, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 41, "tokens": 141591}
+{"round": 42, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 42, "tokens": 145119}
+{"round": 43, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 43, "tokens": 148647}
+{"round": 44, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 44, "tokens": 152175}
+{"round": 45, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 45, "tokens": 155703}
+{"round": 46, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 46, "tokens": 159231}
+{"round": 47, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 47, "tokens": 162759}
+{"round": 48, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 48, "tokens": 166287}
+{"round": 49, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 49, "tokens": 169815}
+{"round": 50, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 50, "tokens": 173343}
+{"round": 51, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 51, "tokens": 176871}
+{"round": 52, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 52, "tokens": 180399}
+{"round": 53, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 53, "tokens": 183927}
+{"round": 54, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 54, "tokens": 187455}
+{"round": 55, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 55, "tokens": 190983}

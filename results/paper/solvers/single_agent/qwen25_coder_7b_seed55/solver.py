@@ -1,36 +1,26 @@
-import random
 from evrptw_autolab.problem.physics import distance, travel_time, energy_required, full_recharge, propagate_route
+from evrptw_autolab.problem.evaluator import first_fault
+from evrptw_autolab.problem.types import CandidateSolution
+import random
 
 def solve(instance, seed: int, time_limit_s: float):
     random.seed(seed)
     
-    # Initialize routes with the depot
-    routes = [[instance.depot_id]]
+    depot_id = instance.depot_id
+    customer_ids = instance.customer_ids
+    customers = instance.customers
+    depot = instance.depot
+    vehicle = instance.vehicle
     
-    # Add each customer to a route
-    for customer_id in instance.customer_ids:
-        customer = instance.node_map[customer_id]
-        for i, route in enumerate(routes):
-            if len(route) == 1:
-                # Start a new route with the depot
-                routes.append([instance.depot_id])
-                i += 1
-            route = routes[i]
-            if len(route) > 1:
-                prev_node = instance.node_map[route[-2]]
-                next_node = instance.node_map[route[-1]]
-                if distance(prev_node, customer) + distance(customer, next_node) <= instance.vehicle.capacity:
-                    route.append(customer_id)
-                    break
-        else:
-            # If no route can accommodate the customer, start a new one
-            routes.append([instance.depot_id, customer_id, instance.depot_id])
+    routes = [[depot_id]]
+    for customer_id in customer_ids:
+        routes[0].append(customer_id)
+    routes[0].append(depot_id)
     
-    # Remove empty routes
-    routes = [route for route in routes if len(route) > 1]
+    solution = {"routes": routes, "metadata": {}}
+    packet = first_fault(instance, CandidateSolution(routes=solution["routes"]))
     
-    # Return the solution
-    return {
-        "routes": routes,
-        "metadata": {}
-    }
+    if packet["family"] != "OK":
+        print(f"First fault: {packet}")
+    
+    return solution

@@ -4,16 +4,17 @@ import random
 def solve(instance, seed: int, time_limit_s: float):
     random.seed(seed)
     
-    # Initialize routes
-    routes = []
+    depot_id = instance.depot_id
+    customer_ids = instance.customer_ids
+    customers = instance.customers
+    vehicle = instance.vehicle
+    capacity = vehicle.capacity
+    battery_capacity = vehicle.battery_capacity
+    consumption_rate = vehicle.consumption_rate
     
-    # Add depot to each route
-    for customer_id in instance.customer_ids:
-        route = [instance.depot_id, customer_id, instance.depot_id]
-        routes.append(route)
+    routes = [[depot_id]]
+    for customer_id in customer_ids:
+        routes[0].append(customer_id)
+    routes[0].append(depot_id)
     
-    # Return the initial solution
-    return {
-        "routes": routes,
-        "metadata": {}
-    }
+    return {"routes": routes, "metadata": {}}

@@ -2,27 +2,43 @@ from evrptw_autolab.problem.physics import distance, travel_time, energy_require
 import random
 
 def solve(instance, seed: int, time_limit_s: float):
-    # Initialize the random seed
+    # Set the seed for the random number generator
     random.seed(seed)
 
-    # Initialize the solution
-    routes = [[] for _ in range(instance.vehicle.capacity)]
-    current_vehicle = 0
-    current_capacity = [0] * instance.vehicle.capacity
+    # Initialize variables
+    population = []
+    for _ in range(100):  # Create 100 random routes
+        individual = [instance.depot_id] + random.sample(instance.customer_ids, len(instance.customer_ids)) + [instance.depot_id]
+        population.append(individual)
 
-    # Sort customers by their demand
-    customers = sorted(instance.customers, key=lambda c: c.demand)
+    # Evaluate the initial population
+    def fitness(individual):
+        return sum(distance(instance.node_map[individual[i]], instance.node_map[individual[i+1]]) for i in range(len(individual) - 1))
+    scores = [fitness(individual) for individual in population]
 
-    # Assign customers to vehicles
-    for customer in customers:
-        if (current_capacity[current_vehicle] + customer.demand <= instance.vehicle.capacity and
-            customer.time_window[0] <= instance.current_time <= customer.time_window[1]):
-            routes[current_vehicle].append(customer.id)
-            current_capacity[current_vehicle] += customer.demand
-            current_vehicle = (current_vehicle + 1) % instance.vehicle.capacity
+    # Main loop
+    for _ in range(100):  # Perform 100 generations of evolution
+        # Select two parents
+        parent1, parent2 = random.sample(population, 2)
 
-    # Add depot to the end of each route
-    for route in routes:
-        route.append(instance.depot_id)
+        # Perform crossover
+        split_point = random.randint(1, len(parent1) - 2)
+        child = parent1[:split_point] + parent2[split_point:]
 
-    return {"routes": routes, "metadata": {}}
+        # Perform mutation
+        mutation_point = random.randint(1, len(child) - 2)
+        child[mutation_point] = random.choice(instance.customer_ids)
+
+        # Replace the worst individual in the population with the new child
+        worst_individual = max(range(len(scores)), key=lambda i: scores[i])
+        if fitness(child) < scores[worst_individual]:
+            population[worst_individual] = child
+            scores[worst_individual] = fitness(child)
+
+        # Check if time limit is reached
+        if time_limit_s <= time_limit_s:
+            break
+
+    # Return the best route
+    best_individual = max(range(len(scores)), key=lambda i: scores[i])
+    return {"routes": [population[best_individual]], "metadata": {}}

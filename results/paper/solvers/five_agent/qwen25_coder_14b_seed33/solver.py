@@ -1,132 +1,98 @@
+import random
+import time
 from evrptw_autolab.problem.physics import distance, travel_time, energy_required, full_recharge, propagate_route
 from evrptw_autolab.problem.evaluator import first_fault
 from evrptw_autolab.problem.types import CandidateSolution
-import random
-import time
 
 def solve(instance, seed: int, time_limit_s: float):
     random.seed(seed)
-    start_time = time.time()
-
-    def initial_route():
-        route = [instance.depot_id]
-        remaining_customers = list(instance.customer_ids)
-        random.shuffle(remaining_customers)
-        for customer in remaining_customers:
-            route.append(customer)
-        route.append(instance.depot_id)
-        return route
-
-    def is_feasible(route):
-        stop_states = propagate_route(instance, route)
-        for stop in stop_states:
-            if stop.load > instance.vehicle.capacity:
-                return False
-            if stop.arrival_time > stop.node.service_end:
-                return False
-            if stop.battery_arrival < 0:
-                return False
-        return True
-
-    def repair_route(route):
-        stop_states = propagate_route(instance, route)
-        for i, stop in enumerate(stop_states):
-            if stop.load > instance.vehicle.capacity:
-                # Remove customers until capacity is respected
-                while stop.load > instance.vehicle.capacity:
-                    route.pop(i)
-                    stop_states = propagate_route(instance, route)
-                    stop = stop_states[i]
-            if stop.arrival_time > stop.node.service_end:
-                # Remove customers until time window is respected
-                while stop.arrival_time > stop.node.service_end:
-                    route.pop(i)
-                    stop_states = propagate_route(instance, route)
-                    stop = stop_states[i]
-            if stop.battery_arrival < 0:
-                # Remove customers until battery is respected
-                while stop.battery_arrival < 0:
-                    route.pop(i)
-                    stop_states = propagate_route(instance, route)
-                    stop = stop_states[i]
-        return route
-
-    def construct_initial_solution():
+    
+    def is_feasible(routes):
+        candidate = CandidateSolution(routes=routes)
+        fault = first_fault(instance, candidate)
+        return fault["family"] == "OK"
+    
+    def initial_solution():
         routes = []
-        remaining_customers = list(instance.customer_ids)
-        while remaining_customers:
-            route = initial_route()
-            feasible_route = repair_route(route)
-            routes.append(feasible_route)
-            remaining_customers = [c for c in remaining_customers if c not in feasible_route[1:-1]]
+        current_route = [instance.depot_id]
+        current_load = 0
+        current_battery = instance.vehicle.start_soc
+        
+        for customer_id in instance.customer_ids:
+            customer = instance.node_map[customer_id]
+            if current_load + customer.demand > instance.vehicle.capacity:
+                current_route.append(instance.depot_id)
+                routes.append(current_route)
+                current_route = [instance.depot_id]
+                current_load = 0
+                current_battery = full_recharge(instance.vehicle, current_battery)
+            
+            if current_battery - energy_required(instance.node_map[current_route[-1]], customer, instance.vehicle) < 0:
+                current_route.append(instance.depot_id)
+                routes.append(current_route)
+                current_route = [instance.depot_id]
+                current_load = 0
+                current_battery = full_recharge(instance.vehicle, current_battery)
+            
+            current_route.append(customer_id)
+            current_load += customer.demand
+            current_battery -= energy_required(instance.node_map[current_route[-2]], customer, instance.vehicle)
+        
+        if current_route:
+            current_route.append(instance.depot_id)
+            routes.append(current_route)
+        
         return routes
-
-    def calculate_energy_cost(route, instance):
-        total_energy = 0
-        current_node = instance.depot
-        for next_node_id in route:
-            next_node = instance.node_map[next_node_id]
-            total_energy += energy_required(current_node, next_node, instance.vehicle)
-            current_node = next_node
-        return total_energy
-
-    def is_feasible_route(route, instance):
-        stop_states = propagate_route(instance, route)
-        for stop in stop_states:
-            if stop.battery_arrival < 0:
-                return False
-        return True
-
-    def insert_station(route, instance):
-        max_distance = 0
-        best_insertion_index = -1
-        best_station = None
-        current_node = instance.depot
-
-        for i, next_node_id in enumerate(route):
-            next_node = instance.node_map[next_node_id]
-            dist = distance(current_node, next_node)
-            if dist > max_distance:
-                max_distance = dist
-                best_insertion_index = i
-                best_station = instance.station_ids[0]  # Assuming the first station is the best for simplicity
-            current_node = next_node
-
-        if best_insertion_index == -1:
-            return route
-
-        return route[:best_insertion_index] + [best_station] + route[best_insertion_index:]
-
-    def ensure_feasibility(routes, instance):
-        for i, route in enumerate(routes):
-            if not is_feasible_route(route, instance):
-                routes[i] = insert_station(route, instance)
-        return routes
-
-    def local_search(routes, instance):
+    
+    def local_search(routes):
+        # Simple local search: 2-opt
         improved = True
         while improved:
             improved = False
             for i in range(len(routes)):
-                route = routes[i]
-                for j in range(1, len(route) - 1):
-                    for k in range(j + 1, len(route) - 1):
-                        new_route = route[:j] + route[k:k+1] + route[j+1:k] + route[j:j+1] + route[k+1:]
-                        if is_feasible(new_route):
-                            routes[i] = new_route
-                            improved = True
+                for j in range(i + 1, len(routes)):
+                    for k in range(1, len(routes[i]) - 1):
+                        for l in range(1, len(routes[j]) - 1):
+                            new_routes = routes[:]
+                            new_routes[i] = new_routes[i][:k] + new_routes[j][l:k+1] + new_routes[i][k+1:]
+                            new_routes[j] = new_routes[j][:l] + new_routes[i][k:l+1] + new_routes[j][l+1:]
+                            if is_feasible(new_routes):
+                                routes = new_routes
+                                improved = True
+                                break
+                        if improved:
                             break
                     if improved:
                         break
                 if improved:
                     break
         return routes
-
-    routes = construct_initial_solution()
-    routes = ensure_feasibility(routes, instance)
-    routes = local_search(routes, instance)
-
-    return {
-        "routes": routes,
-        "metadata": {}
+    
+    def construct_solution():
+        routes = initial_solution()
+        routes = local_search(routes)
+        return routes
+    
+    start_time = time.time()
+    best_routes = construct_solution()
+    best_metadata = {
+        "feasibility": is_feasible(best_routes),
+        "vehicles": len(best_routes),
+        "distance": sum(distance(instance.node_map[best_routes[i][j]], instance.node_map[best_routes[i][j+1]]) for i in range(len(best_routes)) for j in range(len(best_routes[i]) - 1))
     }
+    
+    while time.time() - start_time < time_limit_s:
+        new_routes = construct_solution()
+        new_metadata = {
+            "feasibility": is_feasible(new_routes),
+            "vehicles": len(new_routes),
+            "distance": sum(distance(instance.node_map[new_routes[i][j]], instance.node_map[new_routes[i][j+1]]) for i in range(len(new_routes)) for j in range(len(new_routes[i]) - 1))
+        }
+        
+        if (new_metadata["feasibility"] and not best_metadata["feasibility"]) or \
+           (new_metadata["feasibility"] == best_metadata["feasibility"] and new_metadata["vehicles"] < best_metadata["vehicles"]) or \
+           (new_metadata["feasibility"] == best_metadata["feasibility"] and new_metadata["vehicles"] == best_metadata["vehicles"] and new_metadata["distance"] < best_metadata["distance"]):
+            best_routes = new_routes
+            best_metadata = new_metadata
+    
+    return {"routes": best_routes, "metadata": best_metadata}

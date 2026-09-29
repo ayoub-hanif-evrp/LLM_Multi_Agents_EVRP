@@ -1,21 +1,11 @@
 experiment,model,profile,seed,executable,routing,charging,multi_customer,schneider_c5,fully_feasible,feasible,c5_total,vehicles,distance,llm_calls,tokens,prompt_tokens,completion_tokens,solver_hash,wall_s,failure_reason,published_solver,improved
-single_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,11,False,False,False,False,False,False,0,10,,,80,296526,253566,42960,e64ec92406eef0a1,468.5,"Traceback (most recent call last):
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_dwr_ctrh\driver.py"", line 61, in <module>
-    result = _call_solve()
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_dwr_ctrh\driver.py"", line 26, in _call_solve
-    return solve(instance, **kwargs)
-",results/paper/solvers/single_agent/qwen25_coder_7b_seed11,
-single_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,22,True,False,False,False,False,False,0,10,,,80,234020,208023,25997,1eb5bef6951b601a,288.5,DEPOT: route must start and end at depot_id,results/paper/solvers/single_agent/qwen25_coder_7b_seed22,
-single_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,33,True,True,False,False,False,False,2,10,,,80,201604,186288,15316,a6ef2b17de7d995a,185.4,"Traceback (most recent call last):
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_2k7cg_xt\driver.py"", line 61, in <module>
-    result = _call_solve()
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_2k7cg_xt\driver.py"", line 26, in _call_solve
-    return solve(instance, **kwargs)
-",results/paper/solvers/single_agent/qwen25_coder_7b_seed33,
-single_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,44,False,False,False,False,False,False,0,10,,,80,238276,213076,25200,09d0899a33c57a4d,283.3,"Traceback (most recent call last):
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_6hz93j41\driver.py"", line 61, in <module>
-    result = _call_solve()
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_6hz93j41\driver.py"", line 26, in _call_solve
-    return solve(instance, **kwargs)
-",results/paper/solvers/single_agent/qwen25_coder_7b_seed44,
-single_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,55,False,False,False,False,False,False,0,10,,,80,224553,201113,23440,74f507a4cab293a8,2235.6,timeout,results/paper/solvers/single_agent/qwen25_coder_7b_seed55,
+single_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,11,True,True,False,False,False,False,0,4,,,58,187478,162845,24633,b6d3de9d2187e7fc,299.4,BATTERY: battery_arrival=-20.000,results/paper/solvers/single_agent/qwen25_coder_7b_seed11,
+single_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,111,True,True,False,False,False,False,1,4,,,78,302284,258974,43310,e4031f1158065fb6,507.8,dataclasses.FrozenInstanceError: cannot assign to field 'service_start',results/paper/solvers/single_agent/qwen25_coder_7b_seed111,
+single_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,22,True,True,False,False,False,False,0,4,,,55,190983,162069,28914,5ad401a35025d45a,334.4,BATTERY: battery_arrival=-20.000,results/paper/solvers/single_agent/qwen25_coder_7b_seed22,
+single_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,33,True,True,False,False,False,False,0,4,,,80,264373,236100,28273,74f43e41451953ed,360.0,dataclasses.FrozenInstanceError: cannot assign to field 'battery_arrival',results/paper/solvers/single_agent/qwen25_coder_7b_seed33,
+single_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,44,True,True,False,False,False,False,0,4,,,62,215626,178067,37559,fdff50640947ee4c,428.3,DEPOT: depot may appear only at the start and end of a route,results/paper/solvers/single_agent/qwen25_coder_7b_seed44,
+single_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,55,True,True,False,False,False,False,0,4,,,70,189354,174654,14700,1450804ef5b32e47,202.6,BATTERY: battery_arrival=-20.000,results/paper/solvers/single_agent/qwen25_coder_7b_seed55,
+single_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,66,True,True,False,False,False,False,0,4,,,59,186983,163881,23102,6f891af426e7ff2f,279.1,BATTERY: battery_arrival=-20.000,results/paper/solvers/single_agent/qwen25_coder_7b_seed66,
+single_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,77,False,False,False,False,False,False,0,4,,,47,191890,154008,37882,,397.0,AttributeError: 'StopState' object has no attribute 'route_index',,
+single_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,88,True,True,False,False,False,False,2,4,,,63,181829,162335,19494,b4e88efcbcb00554,246.5,BATTERY: battery_arrival=-20.000,results/paper/solvers/single_agent/qwen25_coder_7b_seed88,
+single_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,99,True,False,False,False,False,False,0,4,,,64,187968,168802,19166,981ea5c7ac5bec51,228.4,DEPOT: depot may appear only at the start and end of a route,results/paper/solvers/single_agent/qwen25_coder_7b_seed99,

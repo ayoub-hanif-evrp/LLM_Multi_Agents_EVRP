@@ -1,59 +1,32 @@
+import random
 from evrptw_autolab.problem.physics import distance, travel_time, energy_required, full_recharge, propagate_route
 from evrptw_autolab.problem.evaluator import first_fault
 from evrptw_autolab.problem.types import CandidateSolution
-import random
 
 def solve(instance, seed: int, time_limit_s: float):
     random.seed(seed)
     
-    # Initialize routes with each customer visited exactly once
-    routes = [[instance.depot_id, customer_id, instance.depot_id] for customer_id in instance.customer_ids]
+    # Initialize routes with a single route containing only the depot
+    routes = [[instance.depot_id]]
     
-    # Check for feasibility
-    def is_feasible(routes):
-        packet = first_fault(instance, CandidateSolution(routes=routes))
-        return packet["family"] == "OK"
+    # List of all customer IDs
+    unvisited_customers = list(instance.customer_ids)
     
-    # If the initial routes are not feasible, try to fix them
-    if not is_feasible(routes):
-        # Simple repair mechanism: try to swap customers within routes
-        for route in routes:
-            for i in range(1, len(route) - 1):
-                for j in range(i + 1, len(route) - 1):
-                    # Swap customers
-                    route[i], route[j] = route[j], route[i]
-                    if is_feasible(routes):
-                        break
-                else:
-                    continue
-                break
+    # Add each customer to the first route
+    for customer_id in unvisited_customers:
+        routes[0].append(customer_id)
     
-    # Ensure all customers are visited exactly once
-    all_customers = set(instance.customer_ids)
-    visited_customers = set()
-    for route in routes:
-        visited_customers.update(route[1:-1])
+    # Close the route by returning to the depot
+    routes[0].append(instance.depot_id)
     
-    if visited_customers != all_customers:
-        # If not, add missing customers to routes
-        for customer_id in all_customers - visited_customers:
-            routes[0].insert(-1, customer_id)
+    # Check feasibility
+    candidate_solution = CandidateSolution(routes=routes)
+    fault = first_fault(instance, candidate_solution)
     
-    # Further optimization: try to reduce the number of vehicles
-    def reduce_vehicles(routes):
-        # Implement a simple heuristic to merge routes if possible
-        new_routes = []
-        for route in routes:
-            if not new_routes:
-                new_routes.append(route)
-                continue
-            last_route = new_routes[-1]
-            if distance(instance.node_map[last_route[-2]], instance.node_map[route[1]], instance.vehicle) <= instance.vehicle.battery_capacity:
-                last_route.extend(route[1:])
-            else:
-                new_routes.append(route)
-        return new_routes
-    
-    routes = reduce_vehicles(routes)
+    # If there is a fault, try to fix it
+    if fault["family"] != "OK":
+        # Placeholder for fault fixing logic
+        # This is a simple example where we just return the initial routes
+        pass
     
     return {"routes": routes, "metadata": {}}

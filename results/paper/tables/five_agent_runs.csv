@@ -1,105 +1,31 @@
 experiment,model,profile,seed,executable,routing,charging,multi_customer,schneider_c5,fully_feasible,feasible,c5_total,vehicles,distance,llm_calls,tokens,prompt_tokens,completion_tokens,solver_hash,wall_s,failure_reason,published_solver,improved
-five_agent_synthesis,codellama:7b,codellama_7b,11,False,False,False,False,False,False,0,10,,,80,338914,292603,46311,ec8cfa035037803c,712.0,"Traceback (most recent call last):
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_y99u4xq1\driver.py"", line 61, in <module>
-    result = _call_solve()
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_y99u4xq1\driver.py"", line 26, in _call_solve
-    return solve(instance, **kwargs)
-",results/paper/solvers/five_agent/codellama_7b_seed11,
-five_agent_synthesis,codellama:7b,codellama_7b,22,False,False,False,False,False,False,0,10,,,80,201594,187062,14532,edd40ef3d4f724aa,235.4,"Traceback (most recent call last):
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_8s9c36p7\driver.py"", line 61, in <module>
-    result = _call_solve()
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_8s9c36p7\driver.py"", line 26, in _call_solve
-    return solve(instance, **kwargs)
-",results/paper/solvers/five_agent/codellama_7b_seed22,
-five_agent_synthesis,codellama:7b,codellama_7b,33,False,False,False,False,False,False,0,10,,,80,285534,251046,34488,1c3af36996d5bca8,518.9,"Traceback (most recent call last):
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_2jr5ycvn\driver.py"", line 61, in <module>
-    result = _call_solve()
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_2jr5ycvn\driver.py"", line 26, in _call_solve
-    return solve(instance, **kwargs)
-",results/paper/solvers/five_agent/codellama_7b_seed33,
-five_agent_synthesis,codellama:7b,codellama_7b,44,False,False,False,False,False,False,0,10,,,80,229794,202827,26967,afe9c32792fe9e51,368.7,"Traceback (most recent call last):
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_pf6mcpv5\driver.py"", line 69, in <module>
-    print(json.dumps({""routes"": routes, ""metadata"": meta}))
-          ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File ""C:\Users\ayoub\AppData\Local\Programs\P",results/paper/solvers/five_agent/codellama_7b_seed44,
-five_agent_synthesis,codellama:7b,codellama_7b,55,False,False,False,False,False,False,0,10,,,80,219824,199936,19888,2d25e17397bd1fb0,281.5,"Traceback (most recent call last):
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_mklca9et\driver.py"", line 61, in <module>
-    result = _call_solve()
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_mklca9et\driver.py"", line 26, in _call_solve
-    return solve(instance, **kwargs)
-",results/paper/solvers/five_agent/codellama_7b_seed55,
-five_agent_synthesis,deepseek-coder:6.7b,deepseek_coder_67b,11,False,False,False,False,False,False,0,10,,,80,341536,297006,44530,5bbc4009ba0d6b6c,684.5,0,results/paper/solvers/five_agent/deepseek_coder_67b_seed11,
-five_agent_synthesis,deepseek-coder:6.7b,deepseek_coder_67b,22,False,False,False,False,False,False,0,10,,,80,297399,263143,34256,709f52a6443445e4,514.0,"Traceback (most recent call last):
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_fb62ih6u\driver.py"", line 61, in <module>
-    result = _call_solve()
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_fb62ih6u\driver.py"", line 26, in _call_solve
-    return solve(instance, **kwargs)
-",results/paper/solvers/five_agent/deepseek_coder_67b_seed22,
-five_agent_synthesis,deepseek-coder:6.7b,deepseek_coder_67b,33,False,False,False,False,False,False,0,10,,,80,290766,257417,33349,4bb8b521d69eb94e,520.8,"Traceback (most recent call last):
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_jz5ggek9\driver.py"", line 61, in <module>
-    result = _call_solve()
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_jz5ggek9\driver.py"", line 26, in _call_solve
-    return solve(instance, **kwargs)
-",results/paper/solvers/five_agent/deepseek_coder_67b_seed33,
-five_agent_synthesis,deepseek-coder:6.7b,deepseek_coder_67b,44,False,False,False,False,False,False,0,10,,,80,287072,250285,36787,65e37b1791193c80,735.4,'D',results/paper/solvers/five_agent/deepseek_coder_67b_seed44,
-five_agent_synthesis,deepseek-coder:6.7b,deepseek_coder_67b,55,False,False,False,False,False,False,0,10,,,80,281216,249839,31377,ffc1d62601450898,489.2,"Traceback (most recent call last):
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_oz38dy7w\driver.py"", line 61, in <module>
-    result = _call_solve()
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_oz38dy7w\driver.py"", line 26, in _call_solve
-    return solve(instance, **kwargs)
-",results/paper/solvers/five_agent/deepseek_coder_67b_seed55,
-five_agent_synthesis,qwen2.5-coder:14b,qwen25_coder_14b,11,True,True,True,True,False,False,0,10,,,80,255304,225308,29996,c4b84e69ad1a1b70,657.1,"Traceback (most recent call last):
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_ulrz5lpl\driver.py"", line 61, in <module>
-    result = _call_solve()
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_ulrz5lpl\driver.py"", line 26, in _call_solve
-    return solve(instance, **kwargs)
-",results/paper/solvers/five_agent/qwen25_coder_14b_seed11,
-five_agent_synthesis,qwen2.5-coder:14b,qwen25_coder_14b,22,True,True,False,False,False,False,0,10,,,80,260101,227287,32814,c49fa523b9ee279f,707.4,"Traceback (most recent call last):
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_n_v07wsf\driver.py"", line 61, in <module>
-    result = _call_solve()
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_n_v07wsf\driver.py"", line 26, in _call_solve
-    return solve(instance, **kwargs)
-",results/paper/solvers/five_agent/qwen25_coder_14b_seed22,
-five_agent_synthesis,qwen2.5-coder:14b,qwen25_coder_14b,33,False,False,False,False,False,False,0,10,,,80,341522,295828,45694,11593984ad116684,968.1,"Traceback (most recent call last):
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_hod91b_t\driver.py"", line 61, in <module>
-    result = _call_solve()
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_hod91b_t\driver.py"", line 26, in _call_solve
-    return solve(instance, **kwargs)
-",results/paper/solvers/five_agent/qwen25_coder_14b_seed33,
-five_agent_synthesis,qwen2.5-coder:14b,qwen25_coder_14b,44,False,False,False,False,False,False,0,10,,,80,310144,272754,37390,4b5b141f0a62adad,796.8,"Traceback (most recent call last):
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_our5_cbi\driver.py"", line 61, in <module>
-    result = _call_solve()
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_our5_cbi\driver.py"", line 26, in _call_solve
-    return solve(instance, **kwargs)
-",results/paper/solvers/five_agent/qwen25_coder_14b_seed44,
-five_agent_synthesis,qwen2.5-coder:14b,qwen25_coder_14b,55,True,True,False,False,False,False,0,10,,,80,279926,247190,32736,7b4b5bee15a353db,700.6,"Traceback (most recent call last):
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_i4d358ri\driver.py"", line 61, in <module>
-    result = _call_solve()
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_i4d358ri\driver.py"", line 26, in _call_solve
-    return solve(instance, **kwargs)
-",results/paper/solvers/five_agent/qwen25_coder_14b_seed55,
-five_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,11,True,True,False,False,False,False,0,10,,,80,245371,212271,33100,4931cf3376018d0f,385.8,"Traceback (most recent call last):
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_v5st79zk\driver.py"", line 61, in <module>
-    result = _call_solve()
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_v5st79zk\driver.py"", line 26, in _call_solve
-    return solve(instance, **kwargs)
-",results/paper/solvers/five_agent/qwen25_coder_7b_seed11,
-five_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,22,True,True,False,False,False,False,0,10,,,80,188268,170588,17680,4199dafd21201ce0,197.6,BATTERY: battery_arrival=-20.000,results/paper/solvers/five_agent/qwen25_coder_7b_seed22,
-five_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,33,False,False,False,False,False,False,0,10,,,80,305889,264025,41864,539e8942380cfbdb,463.6,"Traceback (most recent call last):
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_6seocv8_\driver.py"", line 61, in <module>
-    result = _call_solve()
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_6seocv8_\driver.py"", line 26, in _call_solve
-    return solve(instance, **kwargs)
-",results/paper/solvers/five_agent/qwen25_coder_7b_seed33,
-five_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,44,True,True,False,False,False,False,2,10,,,80,183799,167411,16388,2651fd38d56e8f9a,192.2,"Traceback (most recent call last):
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_iclfko1y\driver.py"", line 61, in <module>
-    result = _call_solve()
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_iclfko1y\driver.py"", line 26, in _call_solve
-    return solve(instance, **kwargs)
-",results/paper/solvers/five_agent/qwen25_coder_7b_seed44,
-five_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,55,True,True,False,False,False,False,2,10,,,80,240854,212828,28026,ae7099b2b273e3fd,315.9,"Traceback (most recent call last):
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_4hlv9eot\driver.py"", line 61, in <module>
-    result = _call_solve()
-  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_4hlv9eot\driver.py"", line 26, in _call_solve
-    return solve(instance, **kwargs)
-",results/paper/solvers/five_agent/qwen25_coder_7b_seed55,
+five_agent_synthesis,codellama:7b,codellama_7b,11,False,False,False,False,False,False,0,4,,,80,234811,212083,22728,,351.5,ImportError: cannot import name 'StopState' from 'evrptw_autolab.problem.types' (C:\Users\ayoub\Desktop\LLM_Multi_Agents_EVRP-main\src\evrptw_autolab\problem\types.py),,
+five_agent_synthesis,codellama:7b,codellama_7b,22,False,False,False,False,False,False,0,4,,,80,240899,207317,33582,,459.9,AttributeError: 'Node' object has no attribute 'load',,
+five_agent_synthesis,codellama:7b,codellama_7b,33,False,False,False,False,False,False,0,4,,,80,248532,217081,31451,,454.6,ImportError: cannot import name 'StopState' from 'evrptw_autolab.problem.types' (C:\Users\ayoub\Desktop\LLM_Multi_Agents_EVRP-main\src\evrptw_autolab\problem\types.py),,
+five_agent_synthesis,codellama:7b,codellama_7b,44,False,False,False,False,False,False,0,4,,,80,242658,213386,29272,,414.8,ImportError: cannot import name 'StopState' from 'evrptw_autolab.problem.types' (C:\Users\ayoub\Desktop\LLM_Multi_Agents_EVRP-main\src\evrptw_autolab\problem\types.py),,
+five_agent_synthesis,codellama:7b,codellama_7b,55,False,False,False,False,False,False,0,4,,,80,243449,214822,28627,,415.2,ImportError: cannot import name 'StopState' from 'evrptw_autolab.problem.types' (C:\Users\ayoub\Desktop\LLM_Multi_Agents_EVRP-main\src\evrptw_autolab\problem\types.py),,
+five_agent_synthesis,deepseek-coder:6.7b,deepseek_coder_67b,11,False,False,False,False,False,False,0,4,,,80,246744,215022,31722,,463.5,ModuleNotFoundError: No module named 'deap',,
+five_agent_synthesis,deepseek-coder:6.7b,deepseek_coder_67b,22,False,False,False,False,False,False,0,4,,,80,249214,215565,33649,,481.1,"TypeError: string indices must be integers, not 'str'",,
+five_agent_synthesis,deepseek-coder:6.7b,deepseek_coder_67b,33,False,False,False,False,False,False,0,4,,,80,193031,173276,19755,,268.6,SyntaxError: expected an indented block after 'for' statement on line 12,,
+five_agent_synthesis,deepseek-coder:6.7b,deepseek_coder_67b,44,False,False,False,False,False,False,0,4,,,80,200191,176436,23755,,297.9,SyntaxError: expected an indented block after 'while' statement on line 12,,
+five_agent_synthesis,deepseek-coder:6.7b,deepseek_coder_67b,55,True,True,False,False,False,False,0,4,,,80,246086,215922,30164,977057b741b43342,444.3,SyntaxError: closing parenthesis ')' does not match opening parenthesis '[',results/paper/solvers/five_agent/deepseek_coder_67b_seed55,
+five_agent_synthesis,qwen2.5-coder:14b,qwen25_coder_14b,11,False,False,False,False,False,False,0,4,,,80,171636,144174,27462,,1424.3,timeout,,
+five_agent_synthesis,qwen2.5-coder:14b,qwen25_coder_14b,111,False,False,False,False,False,False,0,4,,,80,212431,181665,30766,,647.0,AttributeError: 'Node' object has no attribute 'latest',,
+five_agent_synthesis,qwen2.5-coder:14b,qwen25_coder_14b,22,True,True,False,False,False,False,0,4,,,80,179204,164023,15181,761301c900615290,335.9,BATTERY: battery_arrival=-20.000,results/paper/solvers/five_agent/qwen25_coder_14b_seed22,
+five_agent_synthesis,qwen2.5-coder:14b,qwen25_coder_14b,33,True,True,False,False,False,False,0,4,,,80,276218,241100,35118,6d1fa4bc7fdd5b7c,2168.0,BATTERY: battery_arrival=-20.000,results/paper/solvers/five_agent/qwen25_coder_14b_seed33,
+five_agent_synthesis,qwen2.5-coder:14b,qwen25_coder_14b,44,False,False,False,False,False,False,0,4,,,80,210057,179581,30476,,629.4,AttributeError: 'Node' object has no attribute 'tw_end',,
+five_agent_synthesis,qwen2.5-coder:14b,qwen25_coder_14b,55,False,False,False,False,False,False,0,4,,,80,180698,163524,17174,,381.2,TypeError: 'float' object cannot be interpreted as an integer,,
+five_agent_synthesis,qwen2.5-coder:14b,qwen25_coder_14b,66,True,False,False,False,False,False,0,4,,,80,266954,230317,36637,4a8a1c2958545c2e,856.2,TypeError: unsupported operand type(s) for -=: 'ChargeDecision' and 'float',results/paper/solvers/five_agent/qwen25_coder_14b_seed66,
+five_agent_synthesis,qwen2.5-coder:14b,qwen25_coder_14b,77,True,True,False,False,False,False,0,4,,,80,263834,228702,35132,83b8a81f0f028968,760.1,TypeError: '<' not supported between instances of 'ChargeDecision' and 'float',results/paper/solvers/five_agent/qwen25_coder_14b_seed77,
+five_agent_synthesis,qwen2.5-coder:14b,qwen25_coder_14b,88,True,True,True,True,False,False,0,4,,,80,301048,260851,40197,3ccc0d345f2c044f,857.0,TypeError: '<' not supported between instances of 'ChargeDecision' and 'float',results/paper/solvers/five_agent/qwen25_coder_14b_seed88,
+five_agent_synthesis,qwen2.5-coder:14b,qwen25_coder_14b,99,False,False,False,False,False,False,0,4,,,80,207908,177994,29914,,628.2,AttributeError: 'Node' object has no attribute 'latest',,
+five_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,11,False,False,False,False,False,False,0,4,,,80,184340,150892,33448,,1148.2,RuntimeError:,,
+five_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,111,True,False,False,False,False,False,0,4,,,80,300650,256698,43952,c43186005b3a89fc,475.4,VISIT: customer never served,results/paper/solvers/five_agent/qwen25_coder_7b_seed111,
+five_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,22,False,False,False,False,False,False,0,4,,,80,189573,166519,23054,,258.2,TypeError: 'float' object cannot be interpreted as an integer,,
+five_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,33,True,True,False,False,False,False,0,4,,,80,289390,249000,40390,0154485ae7604413,463.1,KeyError: 60.0,results/paper/solvers/five_agent/qwen25_coder_7b_seed33,
+five_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,44,False,False,False,False,False,False,0,4,,,80,212732,178078,34654,,379.1,TypeError: 'float' object cannot be interpreted as an integer,,
+five_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,55,False,False,False,False,False,False,0,4,,,80,187692,165652,22040,,250.9,TypeError: 'float' object cannot be interpreted as an integer,,
+five_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,66,False,False,False,False,False,False,0,4,,,80,185952,164030,21922,,249.5,TypeError: 'float' object cannot be interpreted as an integer,,
+five_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,77,False,False,False,False,False,False,0,4,,,80,190749,166280,24469,,274.8,TypeError: 'float' object cannot be interpreted as an integer,,
+five_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,88,False,False,False,False,False,False,0,4,,,80,181714,162484,19230,,223.9,TypeError: 'float' object cannot be interpreted as an integer,,
+five_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,99,False,False,False,False,False,False,0,4,,,80,186177,164163,22014,,252.2,TypeError: 'float' object cannot be interpreted as an integer,,

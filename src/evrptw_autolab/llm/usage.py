@@ -24,6 +24,8 @@ class LLMUsage:
     code_valid: bool = False
     digest: str | None = None
     seed: int | None = None
+    base_seed: int | None = None
+    call_index: int | None = None
     repair: bool = False
     model_tag: str | None = None
 

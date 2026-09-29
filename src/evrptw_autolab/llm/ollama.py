@@ -9,6 +9,22 @@ from typing import Any
 
 from evrptw_autolab.llm.usage import LLMUsage
 
+ROLE_CODE = {
+    "architect": 1,
+    "routing": 2,
+    "charging": 3,
+    "search": 4,
+    "critic": 5,
+    "single": 6,
+    "critic_inventor": 7,
+}
+
+
+def derived_call_seed(base_seed: int, call_index: int, role: str) -> int:
+    """Reproducible per-call seed. The run seed stays fixed; each generation differs."""
+    role_code = ROLE_CODE.get(role, 9)
+    return int(base_seed) * 10000 + int(call_index) * 10 + role_code
+
 
 class OllamaBackend:
     def __init__(
@@ -25,6 +41,9 @@ class OllamaBackend:
         self.num_ctx = num_ctx
         self.keep_alive = keep_alive
         self.seed = seed
+        self.diversify_calls = False
+        self._call_index = 0
+        self.last_derived_seed: int | None = None
         self.last_usage: LLMUsage | None = None
         self.pending_usages: list[LLMUsage] = []
 
@@ -49,12 +68,23 @@ class OllamaBackend:
                 names.add(name.split(":")[0])
         return names
 
+    def _seed_for(self, role: str) -> int | None:
+        if self.seed is None:
+            return None
+        if not self.diversify_calls:
+            return int(self.seed)
+        self._call_index += 1
+        derived = derived_call_seed(int(self.seed), self._call_index, role)
+        self.last_derived_seed = derived
+        return derived
+
     def _post_chat(
-        self, prompt: str, model: str, temperature: float, *, json_mode: bool
+        self, prompt: str, model: str, temperature: float, *, json_mode: bool, role: str
     ) -> dict[str, Any]:
         options: dict[str, Any] = {"temperature": temperature, "num_ctx": self.num_ctx}
-        if self.seed is not None:
-            options["seed"] = int(self.seed)
+        call_seed = self._seed_for(role)
+        if call_seed is not None:
+            options["seed"] = int(call_seed)
         body = json.dumps(
             {
                 "model": model,
@@ -88,7 +118,9 @@ class OllamaBackend:
             digest=str(payload.get("digest") or "") or None,
             prompt_tokens=int(payload.get("prompt_eval_count") or 0),
             completion_tokens=int(payload.get("eval_count") or 0),
-            seed=self.seed,
+            seed=self.last_derived_seed if self.diversify_calls else self.seed,
+            base_seed=int(self.seed) if self.seed is not None else None,
+            call_index=self._call_index if self.diversify_calls else None,
             model_tag=tag,
         )
         self.pending_usages.append(usage)
@@ -102,7 +134,7 @@ class OllamaBackend:
 
         def once(text: str, *, repair: bool) -> str:
             started = time.monotonic()
-            payload = self._post_chat(text, model, temperature, json_mode=json_mode)
+            payload = self._post_chat(text, model, temperature, json_mode=json_mode, role=role)
             self._remember(
                 payload, role=role, model=model, latency_s=time.monotonic() - started, repair=repair
             )

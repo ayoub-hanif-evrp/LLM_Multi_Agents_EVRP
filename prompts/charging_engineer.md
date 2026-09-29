@@ -12,8 +12,9 @@ If INPUT contains `first_fault` with family BATTERY, WINDOW, or CHARGE_POLICY, f
 
 - `instance.vehicle.start_soc` is already energy at the depot (equal to battery capacity unless set otherwise). Never multiply `battery_capacity * start_soc`.
 - `energy_required(a, b, vehicle) = distance(a, b) * consumption_rate`
-- A station visit must full-recharge: use `full_recharge(vehicle, battery_on_arrival)` via `propagate_route`.
-- Inspect `propagate_route(instance, route)`: `stop.battery_arrival`, `stop.service_start`, `stop.load`.
+- A station visit must full-recharge. `full_recharge(vehicle, battery_on_arrival) -> ChargeDecision` with fields `energy_charged`, `duration`, `battery_departure`. It does not return a float. `propagate_route` applies that recharge when the stop is a station.
+- Node fields are `id`, `kind`, `x`, `y`, `demand`, `ready_time`, `due_time`, `service_time`.
+- Inspect `propagate_route(instance, route)` StopState fields: `node_id`, `arrival_time`, `service_start`, `departure_time`, `load`, `battery_arrival`, `battery_departure`, `energy_charged`, `distance_so_far`.
 - Station ids are **strings** inside a route. Never insert a nested list. Never use integer `0` as the depot.
 
 ## Code contract

@@ -20,10 +20,11 @@ You receive the **same fixed API / domain guidance** that the multi-agent lab gi
 
 ### Charging / energy / windows (Schneider full recharge)
 - Invent charging and energy-feasibility logic. The laboratory does **not** supply a station-insertion recipe.
-- Schneider policy: **full recharge only** (no partial recharge). Use `full_recharge` via `propagate_route`.
+- Schneider policy: **full recharge only** (no partial recharge). `full_recharge(vehicle, battery_on_arrival) -> ChargeDecision` (`energy_charged`, `duration`, `battery_departure`), not a float. `propagate_route` applies that recharge when a stop is a station.
 - `instance.vehicle.start_soc` / initial energy at depot equals battery capacity unless set otherwise. Never multiply `battery_capacity * start_soc`.
 - `energy_required(a, b, vehicle) = distance(a, b) * consumption_rate` with **Node** objects, not string ids.
-- Inspect `propagate_route(instance, route)` states: `.battery_arrival`, `.battery_departure`, `.service_start`, `.arrival_time`, `.load`.
+- Node fields are only `id`, `kind`, `x`, `y`, `demand`, `ready_time`, `due_time`, `service_time`.
+- Inspect `propagate_route(instance, route)` StopState fields: `node_id`, `arrival_time`, `service_start`, `departure_time`, `load`, `battery_arrival`, `battery_departure`, `energy_charged`, `distance_so_far`. Those objects are frozen.
 - Station ids are **strings** inside a route. Never insert a nested list.
 - If `first_fault.family` is BATTERY, WINDOW, or CHARGE_POLICY, fix that family at the given `node_id`.
 - Negative `battery_arrival` is diagnostic evidence — repair strategy is yours.

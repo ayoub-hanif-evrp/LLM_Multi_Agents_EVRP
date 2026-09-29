@@ -35,9 +35,14 @@ instance.stations            # tuple[Node, ...]
 instance.depot               # Node
 instance.node_map[node_id]   # Node
 instance.vehicle             # ONE VehicleSpec — there is NO vehicle_map
-instance.vehicle.capacity, .battery_capacity, .consumption_rate, .velocity, .inverse_refuel_rate, .start_soc
 
-Do NOT redefine class EVRPTWInstance / Node / StopState. Do NOT invent attributes.
+Node fields, and only these: id: str, kind: "depot"|"customer"|"station", x: float, y: float, demand: float, ready_time: float, due_time: float, service_time: float.
+Node has no tw_end, latest, load, or window attribute.
+
+VehicleSpec fields: capacity: float, battery_capacity: float, consumption_rate: float, velocity: float, inverse_refuel_rate: float, start_soc: float.
+start_soc is already the energy at the depot. Do not multiply battery_capacity * start_soc.
+
+Do NOT redefine class EVRPTWInstance / Node / VehicleSpec / StopState / ChargeDecision. Do NOT invent attributes.
 Common crash fixes:
 - AttributeError n_customers → use instance.n_customers or len(instance.customer_ids)
 - customers.keys() → customers is a tuple of Node; iterate instance.customer_ids
@@ -51,11 +56,14 @@ an internal depot must not make several trips count as one vehicle.
 Physics signatures (positional Node / VehicleSpec — do not pass floats or routes):
 from evrptw_autolab.problem.physics import distance, travel_time, energy_required, full_recharge, propagate_route
 distance(a: Node, b: Node) -> float
-travel_time(a: Node, b: Node, vehicle) -> float
-energy_required(a: Node, b: Node, vehicle) -> float
-full_recharge(vehicle, battery_on_arrival: float)  # function, not a package
+travel_time(a: Node, b: Node, vehicle: VehicleSpec) -> float
+energy_required(a: Node, b: Node, vehicle: VehicleSpec) -> float
+full_recharge(vehicle: VehicleSpec, battery_on_arrival: float) -> ChargeDecision
+ChargeDecision fields: energy_charged: float, duration: float, battery_departure: float.
+full_recharge does not return a float. Do not compare a ChargeDecision to a float.
 propagate_route(instance, node_ids: list[str]) -> list[StopState]
-StopState has battery_arrival, service_start, load, arrival_time.
+StopState fields: node_id: str, arrival_time: float, service_start: float, departure_time: float, load: float, battery_arrival: float, battery_departure: float, energy_charged: float, distance_so_far: float.
+When a stop is a station, propagate_route applies full recharge itself and writes that ChargeDecision onto the StopState. StopState and ChargeDecision are frozen; do not assign to their fields.
 Get a Node with instance.node_map[node_id]. instance.customers is a tuple of Node; do not index it with a Node or dict.
 A route stores STRING ids only.
 Every customer_id must appear exactly once across routes.

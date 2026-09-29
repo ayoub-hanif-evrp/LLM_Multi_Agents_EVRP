@@ -251,14 +251,14 @@ def main() -> None:
         "## 1. Five-agent synthesis by model",
         "",
         _md_table(
-            ["Model", "Seeds", "Executable", "Routing", "Charging", "Multi-customer", "Schneider C5 panel", "All C5", "LLM calls", "Tokens"],
+            ["Model", "Seeds", "Executable", "Routing", "Charging", "Multi-customer", "Schneider C5 panel", "Non-held-out C5", "LLM calls", "Tokens"],
             comparison or [["—", 0, "0/0", "0/0", "0/0", "0/0", "0/0", "0/0", 0, 0]],
         ),
         "",
         "## 2. Five-agent Qwen 7B vs single-agent Qwen 7B",
         "",
         _md_table(
-            ["System", "Seeds", "Executable", "Routing", "Charging", "Multi-customer", "Schneider C5 panel", "All C5", "Tokens"],
+            ["System", "Seeds", "Executable", "Routing", "Charging", "Multi-customer", "Schneider C5 panel", "Non-held-out C5", "Tokens"],
             [
                 ["five-agent Qwen 7B", len(qwen7), _rate(qwen7, "executable"), _rate(qwen7, "routing"), _rate(qwen7, "charging"), _rate(qwen7, "multi_customer"), _rate(qwen7, "schneider_c5"), _rate(qwen7, "fully_feasible"), sum(int(r.get("tokens") or 0) for r in qwen7)],
                 ["single-agent Qwen 7B", len(single7), _rate(single7, "executable"), _rate(single7, "routing"), _rate(single7, "charging"), _rate(single7, "multi_customer"), _rate(single7, "schneider_c5"), _rate(single7, "fully_feasible"), sum(int(r.get("tokens") or 0) for r in single7)],
@@ -274,7 +274,7 @@ def main() -> None:
         "## 3. Qwen 7B vs Qwen 14B (five-agent)",
         "",
         _md_table(
-            ["Model", "Seeds", "Schneider C5 panel", "All C5", "LLM calls", "Tokens"],
+            ["Model", "Seeds", "Schneider C5 panel", "Non-held-out C5", "LLM calls", "Tokens"],
             [
                 ["Qwen 7B", len(qwen7), _rate(qwen7, "schneider_c5"), _rate(qwen7, "fully_feasible"), sum(int(r.get("llm_calls") or 0) for r in qwen7), sum(int(r.get("tokens") or 0) for r in qwen7)],
                 ["Qwen 14B", len(qwen14), _rate(qwen14, "schneider_c5"), _rate(qwen14, "fully_feasible"), sum(int(r.get("llm_calls") or 0) for r in qwen14), sum(int(r.get("tokens") or 0) for r in qwen14)],
@@ -284,7 +284,7 @@ def main() -> None:
         "## 4. Solver evolution",
         "",
         _md_table(
-            ["Seed", "Improved", "All C5", "Vehicles", "Distance", "Calls", "Hash", "Runtime s"],
+            ["Seed", "Improved", "Non-held-out C5", "Vehicles", "Distance", "Calls", "Hash", "Runtime s"],
             [
                 [
                     row.get("seed"),

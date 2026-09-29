@@ -9,7 +9,9 @@ from evrptw_autolab.evolution.evaluate import find_hardcoded_node_ids
 from evrptw_autolab.llm.usage import LLMUsage, UsageLog
 from evrptw_autolab.problem.types import EvaluationReport
 from evrptw_autolab.sandbox.limits import RunLimits
+from evrptw_autolab.synthesis.contract import INSTANCE_API
 from evrptw_autolab.synthesis.from_scratch import (
+    STAGNATION_NOTE,
     evaluate_through,
     format_runtime_error,
     precheck_source,
@@ -215,3 +217,34 @@ def test_physical_calls_and_tokens_both_count(tmp_path: Path) -> None:
     assert sum(int(row["prompt_tokens"]) + int(row["completion_tokens"]) for row in rows) == 25
     assert rows[0]["model_tag"] == "qwen2.5-coder:7b"
     assert rows[0]["seed"] == 11
+
+
+def test_api_contract_lists_real_types() -> None:
+    assert "ready_time" in INSTANCE_API
+    assert "due_time" in INSTANCE_API
+    assert "ChargeDecision" in INSTANCE_API
+    assert "energy_charged" in INSTANCE_API
+    assert "battery_departure" in INSTANCE_API
+    assert "does not return a float" in INSTANCE_API
+    assert "applies full recharge itself" in INSTANCE_API
+    assert "tw_end" not in INSTANCE_API.split("Node has no")[0]
+
+
+def test_identical_trial_stops_after_one_diversified_retry(tmp_path: Path) -> None:
+    def handler(role: str, prompt: str) -> str:
+        return CRASH
+
+    backend = Scripted(handler)
+    report = run_from_scratch(
+        mode="single_agent",
+        model="fake",
+        backend=backend,
+        workspace=tmp_path / "stuck",
+        max_llm_calls=80,
+    )
+    prompts = [prompt for role, prompt in backend.prompts]
+    assert len(prompts) == 3
+    assert STAGNATION_NOTE not in prompts[1]
+    assert STAGNATION_NOTE in prompts[2]
+    assert report["llm_calls"] == 3
+    assert report["failure_category"] == "RUNTIME"

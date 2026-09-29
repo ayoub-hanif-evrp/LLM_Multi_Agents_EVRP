@@ -26,7 +26,7 @@ uv run python scripts/run_final_experiments.py
 
 Models, seeds, and the shared call budget live in `configs/models.yaml` and `configs/experiments.yaml`. A missing local model is recorded as `SKIPPED_NOT_INSTALLED` and is not replaced.
 
-Paper tables are written to `results/paper/`.
+Paper tables are written to `results/paper/`. The earlier engineering-validation campaign is kept in `results/engineering_validation/` and is not the paper table.
 
 ## Dataset
 

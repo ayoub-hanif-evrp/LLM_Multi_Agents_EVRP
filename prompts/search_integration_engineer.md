@@ -23,7 +23,7 @@ The laboratory ranks a finished `solve()` lexicographically: no-crash, then feas
 - Do **not** return `None` or a bare string from `solve`. Return `{"routes": list[list[str]], "metadata": {...}}`.
 - `customers` is a tuple of Node, not a dict (`no .keys()`). There is **no** `vehicle_map` — use `instance.vehicle`.
 - Produce one self-contained `solver.py`. Routing and charging ideas arrive as fragments in INPUT. Inline them. Do not create or import `routing.py` or `charging.py`.
-- Import physics functions from `evrptw_autolab.problem.physics` (`distance`, `travel_time`, `energy_required`, `full_recharge`, `propagate_route`). `full_recharge` is a function, not a submodule. `distance` takes two Node objects.
+- Import physics functions from `evrptw_autolab.problem.physics` (`distance`, `travel_time`, `energy_required`, `full_recharge`, `propagate_route`). `full_recharge(vehicle, battery_on_arrival) -> ChargeDecision` (`energy_charged`, `duration`, `battery_departure`), not a float. `distance` takes two Node objects. Node fields are `id`, `kind`, `x`, `y`, `demand`, `ready_time`, `due_time`, `service_time`.
 - You may check a candidate with the lab oracle:
   `from evrptw_autolab.problem.evaluator import first_fault`
   `from evrptw_autolab.problem.types import CandidateSolution`

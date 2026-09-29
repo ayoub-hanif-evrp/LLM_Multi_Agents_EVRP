@@ -32,6 +32,9 @@ from evrptw_autolab.sandbox.static_scan import scan_source
 from evrptw_autolab.synthesis.contract import PROBLEM_BRIEF
 
 STAGES = ("executable", "routing", "charging", "multi_customer", "schneider_c5")
+STAGNATION_NOTE = (
+    "This exact program already failed with this exact error; produce a materially different repair."
+)
 INTEGRATION = {"SYNTAX", "RUNTIME", "TIMEOUT", "GENERALITY"}
 FAULTS = {"DEPOT", "VISIT", "CAPACITY", "WINDOW", "BATTERY", "CHARGE_POLICY"}
 
@@ -303,6 +306,8 @@ def run_from_scratch(
     if len(panel) != 4:
         raise RuntimeError(f"expected 4 Schneider C5 panel instances, found {len(panel)}")
     known_ids = known_ids_for_panel(data_root)
+    if hasattr(backend, "diversify_calls"):
+        backend.diversify_calls = True
 
     if mode == "five_agent":
         team: dict[str, Any] = build_team(
@@ -328,6 +333,9 @@ def run_from_scratch(
     rounds = 0
     budget_hit = False
     activated: list[str] = []
+    seen_trials: dict[tuple[str, str, str], int] = {}
+    stagnation_note = ""
+    stagnation_stop = False
 
     def calls() -> int:
         return usage_totals(usage)[0]
@@ -353,6 +361,7 @@ def run_from_scratch(
                 "Preserve every earlier gate. "
                 "Return one complete self-contained solver.py. "
                 "The depot id may appear only at the start and end of each route."
+                + (f" {stagnation_note}" if stagnation_note else "")
             ),
             "committed_solver_py": committed,
             "rejected_solver_py": rejected,
@@ -422,8 +431,20 @@ def run_from_scratch(
             failure = {}
             repair_mode = False
             repairs_used = 0
+            stagnation_note = ""
         else:
             failure = info
+            trial_key = (stage, str(info.get("category") or ""), code_hash(source or ""))
+            seen_trials[trial_key] = seen_trials.get(trial_key, 0) + 1
+            if seen_trials[trial_key] >= 3:
+                stagnation_stop = True
+                failure["failure_reason"] = (
+                    str(failure.get("failure_reason") or "") + " | repeated identical trial"
+                )[:500]
+            elif seen_trials[trial_key] == 2:
+                stagnation_note = STAGNATION_NOTE
+            else:
+                stagnation_note = ""
             rejected = source or ""
             if rejected.strip():
                 _write_solver(rejected_dir, rejected)
@@ -436,6 +457,22 @@ def run_from_scratch(
             else:
                 repair_mode = False
                 repairs_used = 0
+        if stagnation_stop:
+            with log_path.open("a", encoding="utf-8") as handle:
+                handle.write(
+                    json.dumps(
+                        {
+                            "round": rounds,
+                            "stage": stage,
+                            "passed": False,
+                            "stagnation": True,
+                            "failure_category": failure.get("category") or "",
+                            "failure_reason": failure.get("failure_reason") or "",
+                        }
+                    )
+                    + "\n"
+                )
+            break
         if mode == "five_agent":
             try:
                 decision = team["critic"].run(

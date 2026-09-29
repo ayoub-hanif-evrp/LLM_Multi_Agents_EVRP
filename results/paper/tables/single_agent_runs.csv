@@ -1,0 +1,21 @@
+experiment,model,profile,seed,executable,routing,charging,multi_customer,schneider_c5,fully_feasible,feasible,c5_total,vehicles,distance,llm_calls,tokens,prompt_tokens,completion_tokens,solver_hash,wall_s,failure_reason,published_solver,improved
+single_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,11,False,False,False,False,False,False,0,10,,,80,296526,253566,42960,e64ec92406eef0a1,468.5,"Traceback (most recent call last):
+  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_dwr_ctrh\driver.py"", line 61, in <module>
+    result = _call_solve()
+  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_dwr_ctrh\driver.py"", line 26, in _call_solve
+    return solve(instance, **kwargs)
+",results/paper/solvers/single_agent/qwen25_coder_7b_seed11,
+single_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,22,True,False,False,False,False,False,0,10,,,80,234020,208023,25997,1eb5bef6951b601a,288.5,DEPOT: route must start and end at depot_id,results/paper/solvers/single_agent/qwen25_coder_7b_seed22,
+single_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,33,True,True,False,False,False,False,2,10,,,80,201604,186288,15316,a6ef2b17de7d995a,185.4,"Traceback (most recent call last):
+  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_2k7cg_xt\driver.py"", line 61, in <module>
+    result = _call_solve()
+  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_2k7cg_xt\driver.py"", line 26, in _call_solve
+    return solve(instance, **kwargs)
+",results/paper/solvers/single_agent/qwen25_coder_7b_seed33,
+single_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,44,False,False,False,False,False,False,0,10,,,80,238276,213076,25200,09d0899a33c57a4d,283.3,"Traceback (most recent call last):
+  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_6hz93j41\driver.py"", line 61, in <module>
+    result = _call_solve()
+  File ""C:\Users\ayoub\AppData\Local\Temp\evrptw_autolab_6hz93j41\driver.py"", line 26, in _call_solve
+    return solve(instance, **kwargs)
+",results/paper/solvers/single_agent/qwen25_coder_7b_seed44,
+single_agent_synthesis,qwen2.5-coder:7b,qwen25_coder_7b,55,False,False,False,False,False,False,0,10,,,80,224553,201113,23440,74f507a4cab293a8,2235.6,timeout,results/paper/solvers/single_agent/qwen25_coder_7b_seed55,

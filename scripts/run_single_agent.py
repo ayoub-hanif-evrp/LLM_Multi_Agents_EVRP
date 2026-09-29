@@ -82,6 +82,10 @@ def main() -> None:
     budget = int(cfg.get("max_llm_calls") or 80)
     if args.all:
         for seed in cfg["seeds"]:
+            dest = ROOT / "results" / "paper" / "single_agent" / f"{profile_id}_seed{int(seed)}.json"
+            if dest.exists():
+                print(f"keep existing {dest.name}")
+                continue
             run_one(profile_id, int(seed), budget)
         return
     if not args.seed:

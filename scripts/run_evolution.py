@@ -139,6 +139,10 @@ def main() -> None:
         parent = Path(parent_row["parent_file"])
     if args.all:
         for seed in cfg["seeds"]:
+            dest = ROOT / "results" / "paper" / "evolution" / f"{profile_id}_seed{int(seed)}.json"
+            if dest.exists():
+                print(f"keep existing {dest.name}")
+                continue
             run_one(profile_id, int(seed), parent, cfg)
         return
     if not args.seed:

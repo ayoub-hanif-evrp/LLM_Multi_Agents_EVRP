@@ -50,7 +50,9 @@ def _md_table(headers: list[str], body: list[list[object]]) -> str:
 def main() -> None:
     synthesis = [row for row in _rows("synthesis") if row.get("experiment") == "five_agent_synthesis"]
     single = [row for row in _rows("single_agent") if row.get("experiment") == "single_agent_synthesis"]
-    evolution = [row for row in _rows("evolution") if row.get("experiment") == "solver_evolution"]
+    evolution_all = [row for row in _rows("evolution") if row.get("experiment") == "solver_evolution"]
+    evolution = [row for row in evolution_all if row.get("seed") is not None]
+    blocked = [row for row in evolution_all if row.get("seed") is None]
     fields = [
         "experiment",
         "model",
@@ -103,8 +105,16 @@ def main() -> None:
     qwen7 = [row for row in synthesis if "7b" in str(row.get("model")) and "qwen" in str(row.get("model"))]
     qwen14 = [row for row in synthesis if "14b" in str(row.get("model"))]
     single7 = single
+    def _category(reason: str) -> str:
+        text = (reason or "").strip()
+        if not text:
+            return "ok"
+        if text.startswith("Traceback"):
+            return "crash"
+        return text.split(":")[0][:80]
+
     failures = Counter(
-        (row.get("failure_reason") or "ok").split(":")[0][:80]
+        _category(str(row.get("failure_reason") or ""))
         for row in synthesis + single + evolution
         if row.get("failure_reason")
     )
@@ -168,6 +178,11 @@ def main() -> None:
         "",
         f"Valid improvements kept: {len(evolved)}.",
         "",
+        *[
+            f"Evolution did not start: {row.get('failure_reason')}."
+            for row in blocked
+        ],
+        "",
         "## 5. Failure categories",
         "",
         _md_table(
@@ -179,7 +194,9 @@ def main() -> None:
         "",
     ]
     if best is None:
-        parts.append("No run produced a solver that is fully feasible on every discovery C5 instance.")
+        parts.append(
+            "No run produced a solver that is fully feasible on every non-held-out 5-customer instance."
+        )
     else:
         parts.append(
             f"- Experiment: `{best.get('experiment')}`\n"

@@ -6,41 +6,46 @@ from evrptw_autolab.problem.types import CandidateSolution
 def solve(instance, seed: int, time_limit_s: float):
     random.seed(seed)
     
-    # Initialize routes with depot at the start and end
-    routes = [[instance.depot_id] for _ in range(instance.vehicle.capacity)]
+    # Initialize routes with each customer in its own route starting and ending at the depot
+    routes = [[instance.depot_id, customer_id, instance.depot_id] for customer_id in instance.customer_ids]
     
-    # Assign customers to routes
-    customer_list = list(instance.customer_ids)
-    random.shuffle(customer_list)
+    # Function to evaluate the feasibility of a solution
+    def evaluate_solution(routes):
+        candidate = CandidateSolution(routes=routes)
+        fault = first_fault(instance, candidate)
+        if fault["family"] != "OK":
+            return float('inf'), fault["family"]
+        
+        # Calculate the total distance
+        total_distance = sum(distance(instance.node_map[routes[i][j]], instance.node_map[routes[i][j+1]]) for i in range(len(routes)) for j in range(len(routes[i]) - 1))
+        
+        return total_distance, "OK"
     
-    for customer_id in customer_list:
-        # Choose a random route to add the customer
-        route_index = random.randint(0, len(routes) - 1)
-        routes[route_index].insert(-1, customer_id)
+    # Local search to improve the solution
+    def local_search(routes, time_limit_s):
+        start_time = time.time()
+        while time.time() - start_time < time_limit_s:
+            # Select a random route to modify
+            route_index = random.randint(0, len(routes) - 1)
+            route = routes[route_index]
+            
+            # Select two random positions in the route to swap
+            pos1, pos2 = random.sample(range(1, len(route) - 1), 2)
+            
+            # Swap the positions
+            route[pos1], route[pos2] = route[pos2], route[pos1]
+            
+            # Evaluate the new solution
+            new_distance, fault = evaluate_solution(routes)
+            if fault == "OK":
+                return routes, new_distance
+        return routes, evaluate_solution(routes)[0]
     
-    # Ensure each route ends at the depot
-    for route in routes:
-        if route[-1] != instance.depot_id:
-            route.append(instance.depot_id)
+    # Main loop to improve the solution
+    best_routes, best_distance = routes, evaluate_solution(routes)[0]
+    for _ in range(10):  # Number of restarts
+        routes, distance = local_search(routes, time_limit_s / 10)
+        if distance < best_distance:
+            best_routes, best_distance = routes, distance
     
-    # Check for feasibility
-    candidate_solution = CandidateSolution(routes=routes)
-    fault = first_fault(instance, candidate_solution)
-    
-    if fault["family"] != "OK":
-        # If there's a fault, try to fix it
-        if fault["family"] == "BATTERY":
-            # Implement a simple charging strategy
-            for route in routes:
-                # Propagate the route to get stop states
-                stop_states = propagate_route(instance, route)
-                
-                # Check if the route is feasible
-                for i in range(len(stop_states) - 1):
-                    if stop_states[i].battery_arrival < 0:
-                        # If battery is depleted, recharge at the depot
-                        route.insert(i + 1, instance.depot_id)
-                        stop_states = propagate_route(instance, route)
-    
-    # Return the final routes
-    return {"routes": routes, "metadata": {}}
+    return {"routes": best_routes, "metadata": {"best_distance": best_distance}}

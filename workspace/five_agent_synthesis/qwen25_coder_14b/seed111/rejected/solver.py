@@ -6,79 +6,77 @@ from evrptw_autolab.problem.types import CandidateSolution
 def solve(instance, seed: int, time_limit_s: float):
     random.seed(seed)
     
-    def is_feasible(routes):
-        candidate = CandidateSolution(routes=routes)
-        fault = first_fault(instance, candidate)
-        return fault["family"] == "OK"
+    # Initialize routes with the depot
+    routes = [[instance.depot_id] for _ in range(int(instance.vehicle.capacity))]
     
-    def construct_initial_routes():
-        routes = []
-        current_route = [instance.depot_id]
-        current_load = 0
-        current_battery = instance.vehicle.start_soc
-        current_time = 0
-        
-        for customer_id in instance.customer_ids:
-            customer = instance.node_map[customer_id]
-            if current_load + customer.demand > instance.vehicle.capacity:
-                routes.append(current_route + [instance.depot_id])
-                current_route = [instance.depot_id]
-                current_load = 0
-                current_battery = instance.vehicle.start_soc
-                current_time = 0
-            
-            if current_battery - energy_required(instance.node_map[current_route[-1]], customer, instance.vehicle) < 0:
-                routes.append(current_route + [instance.depot_id])
-                current_route = [instance.depot_id]
-                current_battery = full_recharge(instance.vehicle, 0)
-                current_time = 0
-            
-            travel = travel_time(instance.node_map[current_route[-1]], customer, instance.vehicle)
-            if current_time + travel > customer.latest:
-                routes.append(current_route + [instance.depot_id])
-                current_route = [instance.depot_id]
-                current_battery = full_recharge(instance.vehicle, 0)
-                current_time = 0
-            
-            current_route.append(customer_id)
-            current_load += customer.demand
-            current_battery -= energy_required(instance.node_map[current_route[-2]], customer, instance.vehicle)
-            current_time += travel + customer.service_duration
-        
-        if current_route:
-            routes.append(current_route + [instance.depot_id])
-        
-        return routes
+    # Assign customers to routes
+    for customer_id in instance.customer_ids:
+        route = min(routes, key=lambda r: distance(instance.node_map[r[-1]], instance.node_map[customer_id]))
+        route.append(customer_id)
+        route.append(instance.depot_id)
     
-    def local_search(routes):
-        # Simple local search: 2-opt
-        improved = True
-        while improved:
-            improved = False
-            for i in range(len(routes)):
-                for j in range(i + 1, len(routes)):
-                    for k in range(1, len(routes[i]) - 1):
-                        for l in range(1, len(routes[j]) - 1):
-                            new_route_i = routes[i][:k] + routes[j][l:k+1] + routes[i][k+1:]
-                            new_route_j = routes[j][:l] + routes[i][k:l+1] + routes[j][l+1:]
-                            new_routes = [new_route_i, new_route_j]
-                            if is_feasible(new_routes):
-                                routes[i] = new_route_i
-                                routes[j] = new_route_j
-                                improved = True
-                                break
-                        if improved:
-                            break
-                    if improved:
-                        break
-                if improved:
+    # Ensure all customers are visited
+    visited_customers = set()
+    for route in routes:
+        for node_id in route:
+            if node_id in instance.customer_ids:
+                visited_customers.add(node_id)
+    
+    if len(visited_customers) != instance.n_customers:
+        # If not all customers are visited, return an empty solution
+        return {"routes": [], "metadata": {}}
+    
+    # Insert charges to ensure feasibility
+    for i in range(len(routes)):
+        routes[i] = insert_charges(instance, routes[i])
+    
+    # Check feasibility
+    candidate_solution = CandidateSolution(routes=routes)
+    fault = first_fault(instance, candidate_solution)
+    
+    if fault["family"] != "OK":
+        # If there's a fault, try to fix it by recharging at stations
+        for route in routes:
+            for i in range(1, len(route) - 1):
+                if fault["node_id"] == route[i]:
+                    # Insert a recharge at the nearest station
+                    nearest_station_id = find_nearest_station(instance, route[i])
+                    route.insert(i + 1, nearest_station_id)
                     break
-        return routes
     
-    initial_routes = construct_initial_routes()
-    if not is_feasible(initial_routes):
-        return {"routes": [], "metadata": {"feasibility": "infeasible"}}
+    # Final check
+    candidate_solution = CandidateSolution(routes=routes)
+    fault = first_fault(instance, candidate_solution)
     
-    final_routes = local_search(initial_routes)
+    if fault["family"] != "OK":
+        # If still not feasible, return an empty solution
+        return {"routes": [], "metadata": {}}
     
-    return {"routes": final_routes, "metadata": {"feasibility": "feasible"}}
+    return {"routes": routes, "metadata": {}}
+
+def full_recharge(vehicle, battery_on_arrival):
+    energy_charged = vehicle.battery_capacity - battery_on_arrival
+    duration = energy_charged / vehicle.inverse_refuel_rate
+    battery_departure = vehicle.battery_capacity
+    return ChargeDecision(energy_charged=energy_charged, duration=duration, battery_departure=battery_departure)
+
+def is_feasible_route(instance, route):
+    stop_states = propagate_route(instance, route)
+    for stop_state in stop_states:
+        if stop_state.battery_arrival < 0:
+            return False
+    return True
+
+def find_nearest_station(instance, node_id):
+    node = instance.node_map[node_id]
+    nearest_station = min(instance.stations, key=lambda s: distance(node, s))
+    return nearest_station.id
+
+def insert_charges(instance, route):
+    stop_states = propagate_route(instance, route)
+    for i in range(1, len(route) - 1):
+        if stop_states[i].battery_arrival < 0:
+            nearest_station_id = find_nearest_station(instance, route[i])
+            route.insert(i + 1, nearest_station_id)
+            stop_states = propagate_route(instance, route)
+    return route

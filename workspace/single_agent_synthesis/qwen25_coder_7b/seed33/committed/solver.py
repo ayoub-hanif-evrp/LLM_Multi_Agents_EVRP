@@ -6,15 +6,22 @@ def solve(instance, seed: int, time_limit_s: float):
     
     depot_id = instance.depot_id
     customer_ids = instance.customer_ids
-    customers = instance.customers
     vehicle = instance.vehicle
-    capacity = vehicle.capacity
-    battery_capacity = vehicle.battery_capacity
-    consumption_rate = vehicle.consumption_rate
     
+    # Initialize routes
     routes = [[depot_id]]
-    for customer_id in customer_ids:
-        routes[0].append(customer_id)
-    routes[0].append(depot_id)
     
-    return {"routes": routes, "metadata": {}}
+    # Add customers to routes
+    for customer_id in customer_ids:
+        customer = instance.node_map[customer_id]
+        if len(routes[-1]) + 1 > vehicle.capacity:
+            routes.append([depot_id])
+        routes[-1].append(customer_id)
+    
+    routes[-1].append(depot_id)
+    
+    # Return the solution
+    return {
+        "routes": routes,
+        "metadata": {}
+    }

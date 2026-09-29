@@ -1,47 +1,37 @@
 import random
 from evrptw_autolab.problem.physics import distance, travel_time, energy_required, full_recharge, propagate_route
-from evrptw_autolab.problem.types import EVRPTWInstance, Node, StopState
+from evrptw_autolab.problem.types import EVRPTWInstance, Node, VehicleSpec, StopState, ChargeDecision
 
 def solve(instance: EVRPTWInstance, seed: int, time_limit_s: float) -> dict:
-    """
-    Solve the EVRPTW instance using a complete executable solver.
-
-    Args:
-        instance: The EVRPTW instance to solve.
-        seed: The random seed to use for the search.
-        time_limit_s: The time limit for the search, in seconds.
-
-    Returns:
-        A dictionary containing the routes and metadata for the solution.
-    """
-    # Set the random seed
     random.seed(seed)
 
-    # Initialize the routes and metadata
+    # Initialize the vehicle
+    vehicle = instance.vehicle
+    vehicle.battery_capacity = vehicle.capacity
+    vehicle.inverse_refuel_rate = 1 / vehicle.consumption_rate
+
+    # Initialize the routes
     routes = []
-    metadata = {}
-
-    # Loop over the customers and create a route for each one
-    for customer in instance.customers:
+    for customer_id in instance.customer_ids:
         route = [instance.depot_id]
-        current_node = instance.depot_id
-
-        # Loop over the nodes in the route
-        for node in instance.node_map[customer]:
-            # If the node is not the depot, add it to the route
-            if node != instance.depot_id:
-                route.append(node)
-
-            # If the node is the depot, add it to the route and set the current node to the depot
-            else:
-                route.append(node)
-                current_node = node
-
-        # Add the route to the routes list
+        route.append(customer_id)
         routes.append(route)
 
-    # Set the metadata
-    metadata["routes"] = routes
-    metadata["time_limit_s"] = time_limit_s
+    # Propagate the routes
+    for route in routes:
+        for i in range(1, len(route)):
+            node_id = route[i]
+            node = instance.node_map[node_id]
+            vehicle.load = node.demand
+            vehicle.battery_arrival = node.ready_time
+            vehicle.battery_departure = node.due_time
+            vehicle.energy_required = energy_required(node, vehicle)
+            vehicle.distance_so_far = distance(node, vehicle)
+            vehicle.travel_time = travel_time(node, vehicle)
+            vehicle.energy_charged = full_recharge(vehicle, vehicle.battery_arrival)
+            vehicle.duration = vehicle.energy_charged.duration
+            vehicle.battery_departure = vehicle.battery_arrival + vehicle.duration
+            vehicle.distance_so_far += vehicle.distance_so_far
 
-    return metadata
+    # Return the routes
+    return {"routes": routes, "metadata": {"feasibility": "improve", "vehicles": "reduce"}}

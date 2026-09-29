@@ -3,30 +3,6 @@ from evrptw_autolab.problem.physics import distance, travel_time, energy_require
 from evrptw_autolab.problem.evaluator import first_fault
 from evrptw_autolab.problem.types import CandidateSolution
 
-def charging_logic(instance, routes):
-    for route in routes:
-        current_battery = instance.vehicle.start_soc
-        for i in range(len(route) - 1):
-            from_node = instance.node_map[route[i]]
-            to_node = instance.node_map[route[i + 1]]
-            energy_needed = energy_required(from_node, to_node, instance.vehicle)
-            if current_battery < energy_needed:
-                # Find the nearest station to recharge
-                nearest_station = min(
-                    instance.stations,
-                    key=lambda station: distance(station, from_node)
-                )
-                # Insert the station into the route
-                route.insert(i + 1, nearest_station.id)
-                # Recharge the battery
-                current_battery = full_recharge(instance.vehicle, current_battery)
-            else:
-                current_battery -= energy_needed
-        # Ensure the route ends at the depot
-        if route[-1] != instance.depot_id:
-            route.append(instance.depot_id)
-            current_battery = full_recharge(instance.vehicle, current_battery)
-
 def solve(instance, seed: int, time_limit_s: float):
     random.seed(seed)
     
@@ -35,55 +11,59 @@ def solve(instance, seed: int, time_limit_s: float):
         fault = first_fault(instance, candidate)
         return fault["family"] == "OK"
     
-    def initial_solution():
+    def generate_initial_routes():
         routes = []
         current_route = [instance.depot_id]
         current_load = 0
         current_battery = instance.vehicle.start_soc
+        current_time = 0
         
         for customer_id in instance.customer_ids:
             customer = instance.node_map[customer_id]
             if current_load + customer.demand > instance.vehicle.capacity:
-                current_route.append(instance.depot_id)
-                routes.append(current_route)
+                routes.append(current_route + [instance.depot_id])
                 current_route = [instance.depot_id]
                 current_load = 0
-                current_battery = full_recharge(instance.vehicle, current_battery)
+                current_battery = instance.vehicle.start_soc
+                current_time = 0
             
-            if current_battery - energy_required(instance.node_map[current_route[-1]], customer, instance.vehicle) < 0:
-                current_route.append(instance.depot_id)
-                routes.append(current_route)
-                current_route = [instance.depot_id]
-                current_load = 0
-                current_battery = full_recharge(instance.vehicle, current_battery)
+            travel = travel_time(instance.node_map[current_route[-1]], customer, instance.vehicle)
+            energy = energy_required(instance.node_map[current_route[-1]], customer, instance.vehicle)
+            
+            if current_time + travel > customer.ready_time:
+                current_time += travel
+            else:
+                current_time = customer.ready_time
+            
+            if current_battery - energy < 0:
+                charge_decision = full_recharge(instance.vehicle, current_battery)
+                current_time += charge_decision.duration
+                current_battery = charge_decision.battery_departure
             
             current_route.append(customer_id)
             current_load += customer.demand
-            current_battery -= energy_required(instance.node_map[current_route[-2]], customer, instance.vehicle)
+            current_battery -= energy
+            current_time += customer.service_time
         
         if current_route:
-            current_route.append(instance.depot_id)
-            routes.append(current_route)
+            routes.append(current_route + [instance.depot_id])
         
         return routes
     
     def local_search(routes):
-        # Simple local search: 2-opt
+        # Simple local search: try to swap two consecutive customers in a route
         improved = True
         while improved:
             improved = False
             for i in range(len(routes)):
-                for j in range(i + 1, len(routes)):
-                    for k in range(1, len(routes[i]) - 1):
-                        for l in range(1, len(routes[j]) - 1):
-                            new_routes = routes[:]
-                            new_routes[i] = new_routes[i][:k] + new_routes[j][l:k+1] + new_routes[i][k+1:]
-                            new_routes[j] = new_routes[j][:l] + new_routes[i][k:l+1] + new_routes[j][l+1:]
-                            if is_feasible(new_routes):
-                                routes = new_routes
-                                improved = True
-                                break
-                        if improved:
+                route = routes[i]
+                for j in range(1, len(route) - 2):
+                    for k in range(j + 1, len(route) - 1):
+                        new_route = route[:j] + [route[k], route[j]] + route[k+1:]
+                        new_routes = [r if r != route else new_route for r in routes]
+                        if is_feasible(new_routes):
+                            routes = new_routes
+                            improved = True
                             break
                     if improved:
                         break
@@ -91,17 +71,10 @@ def solve(instance, seed: int, time_limit_s: float):
                     break
         return routes
     
-    def construct_solution():
-        routes = initial_solution()
-        charging_logic(instance, routes)
-        routes = local_search(routes)
-        return routes
+    initial_routes = generate_initial_routes()
+    if not is_feasible(initial_routes):
+        return {"routes": [], "metadata": {}}
     
-    routes = construct_solution()
-    metadata = {
-        "feasibility": is_feasible(routes),
-        "vehicles": len(routes),
-        "distance": sum(distance(instance.node_map[routes[i][j]], instance.node_map[routes[i][j+1]]) for i in range(len(routes)) for j in range(len(routes[i]) - 1))
-    }
+    final_routes = local_search(initial_routes)
     
-    return {"routes": routes, "metadata": metadata}
+    return {"routes": final_routes, "metadata": {}}

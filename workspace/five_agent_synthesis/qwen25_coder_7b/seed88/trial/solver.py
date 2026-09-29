@@ -4,48 +4,66 @@ from evrptw_autolab.problem.physics import distance, travel_time, energy_require
 def solve(instance, seed: int, time_limit_s: float):
     random.seed(seed)
     
-    # Initialize routes
-    routes = [[] for _ in range(instance.vehicle.capacity)]
     depot_id = instance.depot_id
-    customers = list(instance.customer_ids)
+    customer_ids = instance.customer_ids
+    n_customers = instance.n_customers
+    customers = instance.customers
+    stations = instance.stations
+    vehicle = instance.vehicle
+    
+    # Initialize routes
+    routes = [[] for _ in range(n_customers)]
     
     # Function to calculate the total distance of a route
     def total_distance(route):
-        return sum(distance(instance.node_map[route[i]], instance.node_map[route[i+1]]) for i in range(len(route)-1))
+        total = 0
+        for i in range(len(route) - 1):
+            total += distance(instance.node_map[route[i]], instance.node_map[route[i + 1]])
+        return total
+    
+    # Function to calculate the total energy consumption of a route
+    def total_energy_consumption(route):
+        total = 0
+        current_soc = vehicle.start_soc
+        for i in range(len(route) - 1):
+            energy = energy_required(instance.node_map[route[i]], instance.node_map[route[i + 1]], vehicle)
+            current_soc -= energy / vehicle.battery_capacity * vehicle.consumption_rate
+            total += energy
+        return total
+    
+    # Function to check if a route is feasible
+    def is_feasible(route):
+        current_soc = vehicle.start_soc
+        for i in range(len(route) - 1):
+            energy = energy_required(instance.node_map[route[i]], instance.node_map[route[i + 1]], vehicle)
+            current_soc -= energy / vehicle.battery_capacity * vehicle.consumption_rate
+            if current_soc < 0:
+                return False
+        return True
     
     # Main loop to construct routes
-    while customers:
-        route = [depot_id]
-        current_capacity = instance.vehicle.capacity
-        current_battery = instance.vehicle.battery_capacity
+    for customer_id in customer_ids:
+        customer = instance.node_map[customer_id]
+        best_route = None
+        best_distance = float('inf')
+        best_energy = float('inf')
         
-        while customers and current_capacity > 0 and current_battery > 0:
-            next_customer = None
-            min_distance = float('inf')
-            
-            for customer in customers:
-                dist = distance(instance.node_map[route[-1]], instance.node_map[customer])
-                if dist < min_distance:
-                    min_distance = dist
-                    next_customer = customer
-            
-            if next_customer is None:
-                break
-            
-            route.append(next_customer)
-            current_capacity -= 1
-            current_battery -= energy_required(instance.node_map[route[-2]], instance.node_map[route[-1]], instance.vehicle)
-            customers.remove(next_customer)
+        for route in routes:
+            if is_feasible(route + [customer_id]):
+                route.append(customer_id)
+                if total_distance(route) < best_distance or (total_distance(route) == best_distance and total_energy_consumption(route) < best_energy):
+                    best_route = route
+                    best_distance = total_distance(route)
+                    best_energy = total_energy_consumption(route)
+                route.pop()
         
-        route.append(depot_id)
-        routes[0].extend(route)
+        if best_route:
+            routes[routes.index(best_route)].append(customer_id)
     
-    # Remove empty routes
-    routes = [route for route in routes if route]
+    # Convert routes to the required format
+    result_routes = []
+    for route in routes:
+        if route:
+            result_routes.append([depot_id] + route + [depot_id])
     
-    return {
-        "routes": routes,
-        "metadata": {
-            "total_distance": sum(total_distance(route) for route in routes)
-        }
-    }
+    return {"routes": result_routes, "metadata": {}}

@@ -7,90 +7,85 @@ def solve(instance, seed: int, time_limit_s: float):
     customer_ids = instance.customer_ids
     n_customers = instance.n_customers
     customers = instance.customers
-    stations = instance.stations
     vehicle = instance.vehicle
-    capacity = vehicle.capacity
     battery_capacity = vehicle.battery_capacity
     consumption_rate = vehicle.consumption_rate
     velocity = vehicle.velocity
     inverse_refuel_rate = vehicle.inverse_refuel_rate
     start_soc = vehicle.start_soc
 
-    def is_feasible(route):
-        current_soc = start_soc
-        current_load = 0
+    def calculate_route_cost(route):
+        total_distance = 0
         for i in range(len(route) - 1):
-            current_node = instance.node_map[route[i]]
-            next_node = instance.node_map[route[i + 1]]
-            current_soc -= consumption_rate * distance(current_node, next_node) / velocity
-            current_load += current_node.demand
-            if current_soc < 0 or current_load > capacity:
-                return False
-        return True
+            total_distance += distance(instance.node_map[route[i]], instance.node_map[route[i + 1]])
+        return total_distance
 
-    def repair_route(instance, route):
-        current_soc = start_soc
+    def calculate_route_energy(route):
+        total_energy = 0
         for i in range(len(route) - 1):
-            current_node = instance.node_map[route[i]]
-            next_node = instance.node_map[route[i + 1]]
-            current_soc -= consumption_rate * distance(current_node, next_node) / velocity
-            if current_soc < 0:
-                recharge_node = next_node
-                break
-        recharge_node = instance.node_map[min((distance(instance.node_map[node], recharge_node) / velocity) for node in customer_ids if node != recharge_node)]
-        return route[:i + 1] + [recharge_node.id] + route[i + 1:]
+            total_energy += energy_required(instance.node_map[route[i]], instance.node_map[route[i + 1]], vehicle)
+        return total_energy
 
-    def repair_visit(instance, route, node_id):
-        current_soc = start_soc
+    def calculate_route_battery(route):
+        battery = start_soc
         for i in range(len(route) - 1):
-            current_node = instance.node_map[route[i]]
-            next_node = instance.node_map[route[i + 1]]
-            current_soc -= consumption_rate * distance(current_node, next_node) / velocity
-            if current_soc < 0:
-                recharge_node = next_node
-                break
-        recharge_node = instance.node_map[min((distance(instance.node_map[node], recharge_node) / velocity) for node in customer_ids if node != recharge_node)]
-        return route[:i + 1] + [recharge_node.id] + route[i + 1:]
+            battery -= consumption_rate * travel_time(instance.node_map[route[i]], instance.node_map[route[i + 1]], vehicle)
+        return battery
 
-    def repair_depot(instance, route):
-        current_soc = start_soc
+    def repair_route_with_battery(route):
+        while True:
+            route = [depot_id] + route + [depot_id]
+            stop_states = propagate_route_with_charging(instance, route)
+            battery_arrival = stop_states[-1].battery_departure
+            if battery_arrival >= 0:
+                return route
+            else:
+                route = initialize_routes()[0]
+
+    def repair_routes_with_battery(routes):
+        return [repair_route_with_battery(route) for route in routes]
+
+    def repair_solution_with_battery(routes):
+        return {"routes": repair_routes_with_battery(routes), "metadata": {}}
+
+    def solve_with_repair_and_battery(instance, seed, time_limit_s):
+        routes = initialize_routes()
+        return repair_solution_with_battery(routes)
+
+    def initialize_routes():
+        routes = [[] for _ in range(n_customers)]
+        for customer in customers:
+            routes[random.randint(0, n_customers - 1)].append(customer.id)
+        routes = [[depot_id] + route + [depot_id] for route in routes]
+        return routes
+
+    def propagate_route_with_charging(instance, route):
+        stop_states = []
+        battery = start_soc
         for i in range(len(route) - 1):
-            current_node = instance.node_map[route[i]]
-            next_node = instance.node_map[route[i + 1]]
-            current_soc -= consumption_rate * distance(current_node, next_node) / velocity
-            if current_soc < 0:
-                recharge_node = next_node
-                break
-        recharge_node = instance.node_map[min((distance(instance.node_map[node], recharge_node) / velocity) for node in customer_ids if node != recharge_node)]
-        return route[:i + 1] + [recharge_node.id] + route[i + 1:]
+            start_node = instance.node_map[route[i]]
+            end_node = instance.node_map[route[i + 1]]
+            energy_used = energy_required(start_node, end_node, vehicle)
+            battery -= energy_used
+            if battery < 0:
+                station_id = find_nearest_station(instance, start_node)
+                stop_state = propagate_route(instance, [station_id])[0]
+                battery = full_recharge(vehicle, stop_state.battery_departure).battery_departure
+            stop_state = propagate_route(instance, [route[i], route[i + 1]])[1]
+            stop_states.append(stop_state)
+        return stop_states
 
-    def repair_capacity(instance, route):
-        current_soc = start_soc
-        current_load = 0
-        for i in range(len(route) - 1):
-            current_node = instance.node_map[route[i]]
-            next_node = instance.node_map[route[i + 1]]
-            current_soc -= consumption_rate * distance(current_node, next_node) / velocity
-            current_load += current_node.demand
-            if current_soc < 0 or current_load > capacity:
-                recharge_node = next_node
-                break
-        recharge_node = instance.node_map[min((distance(instance.node_map[node], recharge_node) / velocity) for node in customer_ids if node != recharge_node)]
-        return route[:i + 1] + [recharge_node.id] + route[i + 1:]
+    def find_nearest_station(instance, node):
+        nearest_station = None
+        min_distance = float('inf')
+        for station in instance.stations:
+            distance_to_station = distance(node, station)
+            if distance_to_station < min_distance:
+                min_distance = distance_to_station
+                nearest_station = station.id
+        return nearest_station
 
-    routes = [depot_id]
-    for customer in customers:
-        routes.append(customer.id)
-        routes.append(depot_id)
+    if "first_fault" in locals():
+        return solve_with_repair_and_battery(instance, seed, time_limit_s)
 
-    while not is_feasible(routes):
-        routes = repair_route(instance, routes)
-
-    return {
-        "routes": [routes],
-        "metadata": {
-            "feasibility": True,
-            "vehicles": 1,
-            "distance": sum(distance(instance.node_map[routes[i]], instance.node_map[routes[i + 1]]) for i in range(len(routes) - 1))
-        }
-    }
+    return {"routes": initialize_routes(), "metadata": {}}

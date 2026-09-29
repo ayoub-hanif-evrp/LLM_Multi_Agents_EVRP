@@ -1,4 +1,6 @@
 from evrptw_autolab.problem.physics import distance, travel_time, energy_required, full_recharge, propagate_route
+from evrptw_autolab.problem.evaluator import first_fault
+from evrptw_autolab.problem.types import CandidateSolution
 import random
 
 def solve(instance, seed: int, time_limit_s: float):
@@ -10,45 +12,48 @@ def solve(instance, seed: int, time_limit_s: float):
     stations = instance.stations
     vehicle = instance.vehicle
     
-    # Initialize routes with the depot
-    routes = [[depot_id] for _ in range(len(customers) + 1)]
+    # Initialize routes
+    routes = [[depot_id]]
     
-    # Assign customers to routes
-    for customer in customers:
-        best_route = None
-        best_cost = float('inf')
+    # Add customers to routes
+    for customer_id in customer_ids:
+        customer = instance.node_map[customer_id]
+        min_cost = float('inf')
+        best_route_index = -1
         
-        for route in routes:
+        for i, route in enumerate(routes):
             if len(route) == 1:
-                cost = distance(instance.node_map[depot_id], instance.node_map[customer.id]) + distance(instance.node_map[customer.id], instance.node_map[depot_id])
+                cost = distance(instance.node_map[route[-1]], customer)
             else:
-                cost = distance(instance.node_map[route[-1]], instance.node_map[customer.id])
+                cost = distance(instance.node_map[route[-1]], customer) + distance(customer, instance.node_map[route[0]])
             
-            if cost < best_cost:
-                best_cost = cost
-                best_route = route
+            if cost < min_cost:
+                min_cost = cost
+                best_route_index = i
         
-        best_route.append(customer.id)
+        if best_route_index == -1:
+            routes.append([depot_id, customer_id, depot_id])
+        else:
+            routes[best_route_index].append(customer_id)
     
     # Add depot to the end of each route
     for route in routes:
         route.append(depot_id)
     
-    # Check for feasibility and fix issues
-    for i, route in enumerate(routes):
-        if len(route) > 1:
-            states = propagate_route(instance, route)
-            for j, state in enumerate(states):
-                if state.battery_arrival < 0:
-                    # Find a charging station and recharge
-                    for station in stations:
-                        if station.id not in route:
-                            new_route = route[:j+1] + [station.id] + route[j+1:]
-                            states = propagate_route(instance, new_route)
-                            if all(state.battery_arrival >= 0 for state in states):
-                                routes[i] = new_route
-                                break
-                    break
+    # Check feasibility
+    packet = first_fault(instance, CandidateSolution(routes=routes))
+    if packet["family"] != "OK":
+        print(f"First fault detected: {packet}")
     
-    # Return the solution
+    # Apply full recharge at stations
+    for i, route in enumerate(routes):
+        for j in range(1, len(route) - 1):
+            node_id = route[j]
+            if node_id in instance.station_ids:
+                state = propagate_route(instance, route[:j+1])[-1]
+                recharge = full_recharge(vehicle, state.battery_arrival)
+                state.energy_charged = recharge.energy_charged
+                state.battery_departure = recharge.battery_departure
+                routes[i][j] = (node_id, state)
+    
     return {"routes": routes, "metadata": {}}

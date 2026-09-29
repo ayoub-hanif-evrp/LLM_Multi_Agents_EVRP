@@ -1,109 +1,62 @@
 import random
-import time
 from evrptw_autolab.problem.physics import distance, travel_time, energy_required, full_recharge, propagate_route
 
 def solve(instance, seed: int, time_limit_s: float):
     random.seed(seed)
-
+    
     depot_id = instance.depot_id
     customer_ids = instance.customer_ids
     n_customers = instance.n_customers
     customers = instance.customers
     stations = instance.stations
     vehicle = instance.vehicle
-
+    
     # Initialize routes
     routes = [[] for _ in range(n_customers)]
-
+    
     # Function to calculate the total distance of a route
     def total_distance(route):
-        return sum(distance(instance.node_map[route[i]], instance.node_map[route[i+1]]) for i in range(len(route)-1))
-
+        return sum(distance(instance.node_map[route[i]], instance.node_map[route[i + 1]]) for i in range(len(route) - 1))
+    
     # Function to calculate the total energy consumption of a route
     def total_energy_consumption(route):
-        return sum(energy_required(instance.node_map[route[i]], instance.node_map[route[i+1]], vehicle) for i in range(len(route)-1))
-
-    # Function to calculate the total number of vehicles used
-    def total_vehicles(routes):
-        return len([route for route in routes if route])
-
-    # Function to calculate the total distance of all routes
-    def total_distance_all_routes(routes):
-        return sum(total_distance(route) for route in routes if route)
-
-    # Function to calculate the total energy consumption of all routes
-    def total_energy_consumption_all_routes(routes):
-        return sum(total_energy_consumption(route) for route in routes if route)
-
-    # Function to add a customer to a route
-    def add_customer_to_route(route, customer_id):
-        route.append(customer_id)
-
-    # Function to remove a customer from a route
-    def remove_customer_from_route(route, customer_id):
-        route.remove(customer_id)
-
-    # Function to evaluate a route
-    def evaluate_route(route):
-        if not route:
-            return float('inf')
-        return total_distance(route) + total_energy_consumption(route)
-
-    # Function to evaluate all routes
-    def evaluate_all_routes(routes):
-        return sum(evaluate_route(route) for route in routes if route)
-
-    # Function to repair a route
-    def repair_route(route):
-        if not route:
-            return
-        while len(route) > 1:
-            customer_id = route.pop()
-            if evaluate_route(route) < evaluate_route(route + [customer_id]):
-                route.append(customer_id)
-                break
-
-    # Function to repair all routes
-    def repair_all_routes(routes):
-        for i in range(len(routes)):
-            repair_route(routes[i])
-
-    # Function to initialize routes
-    def initialize_routes():
-        for customer_id in customer_ids:
-            routes[random.randint(0, n_customers-1)].append(customer_id)
-
-    # Function to improve routes
-    def improve_routes():
-        for i in range(len(routes)):
-            for j in range(len(routes)):
-                if i == j:
-                    continue
-                for customer_id in routes[j]:
-                    routes[i].append(customer_id)
-                    routes[j].remove(customer_id)
-                    if evaluate_route(routes[i]) < evaluate_route(routes[j]):
-                        break
-                    else:
-                        routes[i].remove(customer_id)
-                        routes[j].append(customer_id)
-
-    # Function to repair and improve routes
-    def repair_and_improve_routes():
-        repair_all_routes(routes)
-        improve_routes()
-
-    # Main loop
-    start_time = time.time()
-    while time.time() - start_time < time_limit_s:
-        repair_and_improve_routes()
-
+        total_energy = 0
+        current_battery = vehicle.start_soc
+        for i in range(len(route) - 1):
+            current_battery -= energy_required(instance.node_map[route[i]], instance.node_map[route[i + 1]], vehicle)
+            total_energy += energy_required(instance.node_map[route[i]], instance.node_map[route[i + 1]], vehicle)
+        return total_energy
+    
+    # Main optimization loop
+    for _ in range(100):  # Number of iterations
+        for i in range(n_customers):
+            if customer_ids[i] not in [route[0] for route in routes]:
+                # Select a random customer to add to a route
+                customer = random.choice(customer_ids)
+                customer_id = instance.node_map[customer].id
+                
+                # Find the best route to add the customer to
+                best_route = None
+                best_distance = float('inf')
+                best_energy = float('inf')
+                
+                for route in routes:
+                    if customer_id not in route:
+                        new_route = route + [customer_id]
+                        new_distance = total_distance(new_route)
+                        new_energy = total_energy_consumption(new_route)
+                        if new_distance < best_distance or (new_distance == best_distance and new_energy < best_energy):
+                            best_route = new_route
+                            best_distance = new_distance
+                            best_energy = new_energy
+                
+                if best_route:
+                    routes[routes.index(best_route)].append(customer_id)
+    
+    # Ensure each customer is visited exactly once
+    for route in routes:
+        if len(route) == 1:
+            route.append(depot_id)
+    
     # Return the solution
-    return {
-        "routes": routes,
-        "metadata": {
-            "total_distance": total_distance_all_routes(routes),
-            "total_energy_consumption": total_energy_consumption_all_routes(routes),
-            "total_vehicles": total_vehicles(routes)
-        }
-    }
+    return {"routes": routes, "metadata": {"vehicles": len(routes), "distance": sum(total_distance(route) for route in routes)}}

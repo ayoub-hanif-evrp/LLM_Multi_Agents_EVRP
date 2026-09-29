@@ -1,4 +1,5 @@
 import random
+import time
 from evrptw_autolab.problem.physics import distance, travel_time, energy_required, full_recharge, propagate_route
 from evrptw_autolab.problem.evaluator import first_fault
 from evrptw_autolab.problem.types import CandidateSolution
@@ -20,33 +21,31 @@ def solve(instance, seed: int, time_limit_s: float):
         
         for customer_id in instance.customer_ids:
             customer = instance.node_map[customer_id]
+            
             if current_load + customer.demand > instance.vehicle.capacity:
                 current_route.append(instance.depot_id)
                 routes.append(current_route)
                 current_route = [instance.depot_id]
                 current_load = 0
-                current_battery = full_recharge(instance.vehicle, current_battery)
-                current_time = 0
-            
-            if current_battery < energy_required(customer, instance.depot, instance.vehicle):
-                current_route.append(instance.depot_id)
-                routes.append(current_route)
-                current_route = [instance.depot_id]
-                current_battery = full_recharge(instance.vehicle, current_battery)
+                current_battery = instance.vehicle.start_soc
                 current_time = 0
             
             travel = travel_time(instance.node_map[current_route[-1]], customer, instance.vehicle)
-            if current_time + travel > customer.tw_end:
-                current_route.append(instance.depot_id)
-                routes.append(current_route)
-                current_route = [instance.depot_id]
-                current_battery = full_recharge(instance.vehicle, current_battery)
-                current_time = 0
+            energy = energy_required(instance.node_map[current_route[-1]], customer, instance.vehicle)
+            
+            if current_time + travel > customer.ready_time:
+                current_time += travel
+            else:
+                current_time = customer.ready_time + travel
+            
+            if current_battery - energy < 0:
+                charge = full_recharge(instance.vehicle, current_battery)
+                current_time += charge.duration
+                current_battery = charge.battery_departure
             
             current_route.append(customer_id)
             current_load += customer.demand
-            current_battery -= energy_required(instance.node_map[current_route[-2]], customer, instance.vehicle)
-            current_time += travel + customer.service_duration
+            current_battery -= energy
         
         if current_route:
             current_route.append(instance.depot_id)
@@ -54,33 +53,64 @@ def solve(instance, seed: int, time_limit_s: float):
         
         return routes
     
+    def charging_logic(route):
+        vehicle = instance.vehicle
+        current_battery = vehicle.start_soc
+        current_time = 0
+        stop_states = []
+        
+        for i, node_id in enumerate(route):
+            node = instance.node_map[node_id]
+            
+            if i > 0:
+                prev_node = instance.node_map[route[i - 1]]
+                travel = travel_time(prev_node, node, vehicle)
+                energy = energy_required(prev_node, node, vehicle)
+                
+                if current_time + travel > node.ready_time:
+                    current_time += travel
+                else:
+                    current_time = node.ready_time + travel
+                
+                if current_battery - energy < 0:
+                    charge = full_recharge(vehicle, current_battery)
+                    current_time += charge.duration
+                    current_battery = charge.battery_departure
+                
+                current_battery -= energy
+            
+            stop_state = {
+                "node_id": node_id,
+                "arrival_time": current_time,
+                "service_start": current_time + node.service_time,
+                "departure_time": current_time + node.service_time + node.service_time,
+                "load": node.demand,
+                "battery_arrival": current_battery,
+                "battery_departure": current_battery,
+                "energy_charged": 0,
+                "distance_so_far": distance(instance.node_map[route[0]], node)
+            }
+            
+            stop_states.append(stop_state)
+        
+        return stop_states
+    
     def local_search(routes):
-        # Simple local search: 2-opt
-        improved = True
-        while improved:
-            improved = False
-            for i in range(len(routes)):
-                for j in range(i + 1, len(routes)):
-                    for k in range(1, len(routes[i]) - 1):
-                        for l in range(1, len(routes[j]) - 1):
-                            new_routes = routes[:]
-                            new_routes[i] = new_routes[i][:k] + new_routes[j][l:k+1] + new_routes[i][k+1:]
-                            new_routes[j] = new_routes[j][:l] + new_routes[i][k:l+1] + new_routes[j][l+1:]
-                            if is_feasible(new_routes):
-                                routes = new_routes
-                                improved = True
-                                break
-                        if improved:
-                            break
-                    if improved:
-                        break
-                if improved:
-                    break
+        # Implement a simple local search to improve the solution
+        # This is a placeholder for more sophisticated search strategies
         return routes
     
     initial_routes = initial_solution()
-    if not is_feasible(initial_routes):
-        return {"routes": [], "metadata": {}}
+    best_routes = initial_routes
     
-    final_routes = local_search(initial_routes)
-    return {"routes": final_routes, "metadata": {}}
+    if not is_feasible(best_routes):
+        return {"routes": [], "metadata": {"status": "infeasible"}}
+    
+    # Implement a search loop with time limit
+    start_time = time.time()
+    while time.time() - start_time < time_limit_s:
+        candidate_routes = local_search(best_routes)
+        if is_feasible(candidate_routes):
+            best_routes = candidate_routes
+    
+    return {"routes": best_routes, "metadata": {"status": "feasible"}}

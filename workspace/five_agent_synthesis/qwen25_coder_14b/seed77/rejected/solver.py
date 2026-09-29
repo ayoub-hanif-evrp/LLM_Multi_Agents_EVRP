@@ -7,15 +7,16 @@ def solve(instance, seed: int, time_limit_s: float):
     random.seed(seed)
     
     def is_feasible(routes):
-        candidate_solution = CandidateSolution(routes=routes)
-        fault = first_fault(instance, candidate_solution)
+        candidate = CandidateSolution(routes=routes)
+        fault = first_fault(instance, candidate)
         return fault["family"] == "OK"
     
-    def initial_routes():
+    def initial_solution():
         routes = []
         current_route = [instance.depot_id]
         current_load = 0
         current_battery = instance.vehicle.start_soc
+        current_time = 0
         
         for customer_id in instance.customer_ids:
             customer = instance.node_map[customer_id]
@@ -24,44 +25,29 @@ def solve(instance, seed: int, time_limit_s: float):
                 routes.append(current_route)
                 current_route = [instance.depot_id]
                 current_load = 0
-                current_battery = full_recharge(instance.vehicle, 0)
+                current_battery = instance.vehicle.start_soc
+                current_time = 0
             
-            if current_battery - energy_required(instance.node_map[current_route[-1]], customer, instance.vehicle) < 0:
+            travel = travel_time(instance.node_map[current_route[-1]], customer, instance.vehicle)
+            energy = energy_required(instance.node_map[current_route[-1]], customer, instance.vehicle)
+            
+            if current_time + travel > customer.ready_time or current_battery - energy < 0:
                 current_route.append(instance.depot_id)
                 routes.append(current_route)
                 current_route = [instance.depot_id]
-                current_battery = full_recharge(instance.vehicle, 0)
+                current_load = 0
+                current_battery = instance.vehicle.start_soc
+                current_time = 0
             
             current_route.append(customer_id)
             current_load += customer.demand
-            current_battery -= energy_required(instance.node_map[current_route[-2]], customer, instance.vehicle)
+            current_battery -= energy
+            current_time += travel + customer.service_time
         
         if current_route:
             current_route.append(instance.depot_id)
             routes.append(current_route)
         
-        return routes
-    
-    def charging_logic(instance, routes):
-        for route in routes:
-            current_battery = instance.vehicle.start_soc
-            i = 0
-            while i < len(route) - 1:
-                current_node = instance.node_map[route[i]]
-                next_node = instance.node_map[route[i + 1]]
-                energy_needed = energy_required(current_node, next_node, instance.vehicle)
-                
-                if current_battery < energy_needed:
-                    # Find the nearest charging station
-                    nearest_station = min(
-                        instance.stations,
-                        key=lambda station: distance(station, current_node)
-                    )
-                    route.insert(i + 1, nearest_station.id)
-                    current_battery = full_recharge(instance.vehicle, 0)
-                else:
-                    current_battery -= energy_needed
-                    i += 1
         return routes
     
     def local_search(routes):
@@ -70,17 +56,13 @@ def solve(instance, seed: int, time_limit_s: float):
         while improved:
             improved = False
             for i in range(len(routes)):
-                for j in range(i + 1, len(routes)):
-                    for k in range(1, len(routes[i]) - 1):
-                        for l in range(1, len(routes[j]) - 1):
-                            new_route_i = routes[i][:k] + routes[j][l:k+1] + routes[i][k+1:]
-                            new_route_j = routes[j][:l] + routes[i][k:l+1] + routes[j][l+1:]
-                            new_routes = [route for route in routes if route != routes[i] and route != routes[j]] + [new_route_i, new_route_j]
-                            if is_feasible(new_routes):
-                                routes = new_routes
-                                improved = True
-                                break
-                        if improved:
+                for j in range(len(routes[i]) - 2):
+                    for k in range(j + 2, len(routes[i]) - 1):
+                        new_route = routes[i][:j+1] + routes[i][j+1:k+1][::-1] + routes[i][k+1:]
+                        new_routes = [r for r in routes if r != routes[i]] + [new_route]
+                        if is_feasible(new_routes):
+                            routes = new_routes
+                            improved = True
                             break
                     if improved:
                         break
@@ -88,14 +70,39 @@ def solve(instance, seed: int, time_limit_s: float):
                     break
         return routes
     
-    initial_routes = initial_routes()
-    initial_routes = charging_logic(instance, initial_routes)
-    if not is_feasible(initial_routes):
-        return {"routes": [], "metadata": {"status": "initial routes not feasible"}}
+    def genetic_algorithm():
+        population_size = 10
+        mutation_rate = 0.1
+        generations = 100
+        
+        population = [initial_solution() for _ in range(population_size)]
+        
+        for generation in range(generations):
+            fitness = [len(routes) + sum(distance(instance.node_map[routes[i][j]], instance.node_map[routes[i][j+1]]) for i in range(len(routes)) for j in range(len(routes[i]) - 1)) for routes in population]
+            best_routes = population[fitness.index(min(fitness))]
+            
+            new_population = [best_routes]
+            while len(new_population) < population_size:
+                parent1, parent2 = random.sample(population, 2)
+                child = []
+                for i in range(len(parent1)):
+                    if random.random() < 0.5:
+                        child.append(parent1[i])
+                    else:
+                        child.append(parent2[i])
+                
+                if random.random() < mutation_rate:
+                    i, j = random.sample(range(len(child)), 2)
+                    child[i], child[j] = child[j], child[i]
+                
+                new_population.append(child)
+            
+            population = new_population
+        
+        return best_routes
     
-    final_routes = local_search(initial_routes)
-    final_routes = charging_logic(instance, final_routes)
-    if not is_feasible(final_routes):
-        return {"routes": [], "metadata": {"status": "final routes not feasible"}}
+    routes = initial_solution()
+    routes = local_search(routes)
+    routes = genetic_algorithm()
     
-    return {"routes": final_routes, "metadata": {"status": "feasible"}}
+    return {"routes": routes, "metadata": {"algorithm": "Genetic Algorithm with Local Search"}}

@@ -1,4 +1,5 @@
 from evrptw_autolab.problem.physics import distance, travel_time, energy_required, full_recharge, propagate_route
+from evrptw_autolab.problem.types import CandidateSolution
 import random
 
 def solve(instance, seed: int, time_limit_s: float):
@@ -6,29 +7,36 @@ def solve(instance, seed: int, time_limit_s: float):
     
     depot_id = instance.depot_id
     customer_ids = instance.customer_ids
+    n_customers = instance.n_customers
     customers = instance.customers
+    stations = instance.stations
     vehicle = instance.vehicle
     
-    # Initialize routes
-    routes = [[depot_id]]
+    routes = []
+    current_route = [depot_id]
+    current_load = 0
+    current_battery = vehicle.start_soc
     
-    # Assign customers to routes
     for customer_id in customer_ids:
         customer = instance.node_map[customer_id]
-        for route in routes:
-            if len(route) == 1:
-                route.append(customer_id)
-                break
-            else:
-                previous_node = instance.node_map[route[-1]]
-                next_node = instance.node_map[route[0]]
-                if distance(previous_node, customer) + distance(customer, next_node) < distance(previous_node, next_node):
-                    route.insert(-1, customer_id)
-                    break
-        else:
-            routes.append([depot_id, customer_id, depot_id])
+        if current_load + customer.demand > vehicle.capacity:
+            routes.append(current_route)
+            current_route = [depot_id]
+            current_load = 0
+            current_battery = vehicle.start_soc
+        
+        energy_needed = energy_required(instance.node_map[current_route[-1]], customer, vehicle)
+        if current_battery < energy_needed:
+            recharge_decision = full_recharge(vehicle, current_battery)
+            current_battery = recharge_decision.battery_departure
+            current_route.append(recharge_decision.station_id)
+        
+        current_route.append(customer_id)
+        current_load += customer.demand
+        current_battery -= energy_needed
     
-    # Return the solution
+    routes.append(current_route)
+    
     return {
         "routes": routes,
         "metadata": {}

@@ -1,71 +1,49 @@
 import random
-
 from evrptw_autolab.problem.physics import distance, travel_time, energy_required, full_recharge, propagate_route
-from evrptw_autolab.problem.types import EVRPTWInstance, Node, StopState
+from evrptw_autolab.problem.types import EVRPTWInstance, Node, VehicleSpec, StopState, ChargeDecision
 
 def solve(instance: EVRPTWInstance, seed: int, time_limit_s: float) -> dict:
-    """
-    Solve the EVRPTW problem using a routing-based architecture with charging and search components.
-
-    Args:
-        instance: The EVRPTW instance to solve.
-        seed: The random seed to use for the search.
-        time_limit_s: The time limit for the search, in seconds.
-
-    Returns:
-        A dictionary containing the routes and metadata for the solution.
-    """
-    # Set the random seed for reproducibility
+    # Initialize the random seed
     random.seed(seed)
 
-    # Initialize the routes and metadata
-    routes = []
-    metadata = {}
-
-    # Get the depot and customer nodes
-    depot = instance.depot
-    customers = instance.customers
-
-    # Initialize the vehicle and its state
+    # Initialize the vehicle and its battery
     vehicle = instance.vehicle
-    state = StopState(
-        battery_arrival=vehicle.start_soc,
-        service_start=0,
-        load=0,
-        arrival_time=0
-    )
+    battery_capacity = vehicle.battery_capacity
+    battery_departure = vehicle.start_soc
 
-    # Initialize the current route and its state
-    current_route = [depot]
-    current_state = state
+    # Initialize the routes
+    routes = []
 
     # Iterate over the customers
-    for customer in customers:
-        # Get the next customer and its state
-        next_customer = customer
-        next_state = StopState(
-            battery_arrival=vehicle.start_soc,
-            service_start=0,
-            load=0,
-            arrival_time=0
-        )
+    for customer_id in instance.customer_ids:
+        # Get the customer node
+        customer = instance.node_map[customer_id]
 
-        # Check if the current route is feasible
-        if current_state.battery_arrival < next_customer.battery_required:
-            # If the current route is not feasible, add it to the routes and reset the current route
-            routes.append(current_route)
-            current_route = [depot]
-            current_state = state
+        # Get the arrival time at the customer
+        arrival_time = customer.ready_time
 
-        # Propagate the route and update the state
-        propagated_route = propagate_route(instance, current_route + [next_customer])
-        current_state = next_state
+        # Get the service time at the customer
+        service_time = customer.service_time
 
-        # Add the next customer to the current route
-        current_route += [next_customer]
+        # Get the load at the customer
+        load = customer.demand
 
-    # Add the final route to the routes
-    routes.append(current_route)
+        # Propagate the route from the previous customer to the current customer
+        previous_stop = routes[-1][-1] if len(routes) > 0 else instance.depot_id
+        previous_stop_state = propagate_route(instance, previous_stop)
+        previous_stop_state.load += load
+        previous_stop_state.distance_so_far += distance(previous_stop, customer)
+        previous_stop_state.energy_charged += energy_required(previous_stop, customer, vehicle)
+        previous_stop_state.battery_departure = full_recharge(vehicle, previous_stop_state.battery_departure).battery_departure
 
-    # Return the routes and metadata
-    return {"routes": routes, "metadata": metadata}
+        # Add the current customer to the route
+        routes[-1].append(customer_id)
+
+        # Update the arrival time at the current customer
+        arrival_time += service_time
+
+        # Update the battery level at the current customer
+        battery_departure = full_recharge(vehicle, battery_departure).battery_departure
+
+    # Return the routes
+    return {"routes": routes, "metadata": {"time_limit_s": time_limit_s, "seed": seed}}

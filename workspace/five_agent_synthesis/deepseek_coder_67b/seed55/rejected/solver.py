@@ -1,44 +1,31 @@
 from evrptw_autolab.problem.physics import distance, travel_time, energy_required, full_recharge, propagate_route
+from evrptw_autolab.problem.types import CandidateSolution
+from evrptw_autolab.problem.evaluator import first_fault
 import random
 
 def solve(instance, seed: int, time_limit_s: float):
     # Set the seed for the random number generator
     random.seed(seed)
 
-    # Initialize variables
-    population = []
-    for _ in range(100):   # Create 100 random routes
-        individual = [instance.depot_id] + random.sample(instance.customer_ids, len(instance.customer.customer_ids)) + [instance.depot_id]
-        population.append(individual)
+    # Initialize the routes
+    routes = []
 
-    # Evaluate the initial population
-    def fitness(individual):
-        return sum(distance(instance.node_map[individual[i]], instance.node_map[individual[i+1]]) for i in range(len(individual) - 1))
-    scores = [fitness(individual) for individual in population]
+    # Sort the customers by due date
+    sorted_customers = sorted(instance.customers, key=lambda customer: customer.due_time)
 
-    # Main loop
-    for _ in range(100):   # Perform 100 generations of evolution
-        # Select two parents
-        parent1, parent2 = random.sample(population, 2)
+    # For each customer
+    for customer in sorted_customers:
+        # Try to find a route that can serve the customer
+        for route in routes:
+            if route[-1].due_time + distance(route[-1], customer) <= customer.due_time:
+                route.append(customer)
+                break
+        else:
+            # If no route can serve the customer, create a new one
+            routes.append([instance.depot, customer, instance.depot])
 
-        # Perform crossover
-        split_point = random.randint(1, len(parent1) - 2)
-        child = parent1[:split_point] + parent2[split_point:]
-
-        # Perform mutation
-        mutation_point = random.randint(1, len(child) - 2)
-        child[mutation.customer_ids)
-
-        # Replace the worst individual in the population with the new child
-        worst_individual = max(range(len(scores)), key=lambda i: scores[i])
-        if fitness(child) < scores[worst_individual]:
-            population[worst_individual] = child
-            scores[worst_individual] = fitness(child)
-
-        # Check if time limit is reached
-        if time_limit_s <= time_limit_s:
-            break
-
-    # Return the best route
-    best_individual = max(range(len(scores)), key=lambda i: scores[i])
-    return {"routes": [population[best_individual]], "metadata": {}}
+    # Return the routes and metadata
+    return {
+        "routes": [list(map(lambda node: node.id, route)) for route in routes],
+        "metadata": {}
+    }

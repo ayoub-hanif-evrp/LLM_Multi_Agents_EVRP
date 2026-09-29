@@ -6,8 +6,6 @@ def solve(instance, seed: int, time_limit_s: float):
     
     # Initialize routes
     routes = [[] for _ in range(instance.vehicle.capacity)]
-    depot_id = instance.depot_id
-    customers = list(instance.customer_ids)
     
     # Function to add a customer to a route
     def add_customer_to_route(route, customer_id):
@@ -20,47 +18,40 @@ def solve(instance, seed: int, time_limit_s: float):
             total += distance(instance.node_map[route[i]], instance.node_map[route[i + 1]])
         return total
     
-    # Main routing loop
-    while customers:
-        best_route_index = None
-        best_route = None
-        best_distance = float('inf')
-        
-        for i in range(len(routes)):
-            if not routes[i]:
-                continue
-            route = routes[i]
-            last_customer_id = route[-1]
-            last_customer = instance.node_map[last_customer_id]
-            for customer_id in customers:
-                customer = instance.node_map[customer_id]
-                if travel_time(last_customer, customer, instance.vehicle) <= instance.vehicle.battery_capacity:
-                    new_route = route + [customer_id]
-                    new_distance = total_distance(new_route)
-                    if new_distance < best_distance:
-                        best_route_index = i
-                        best_route = new_route
-                        best_distance = new_distance
-        
-        if best_route_index is not None:
-            routes[best_route_index] = best_route
-            customers.remove(best_route[-1])
-        else:
-            break
+    # Main optimization loop
+    start_time = time.time()
+    while time.time() - start_time < time_limit_s:
+        for route in routes:
+            if route:
+                last_customer = route[-1]
+                for customer_id in instance.customer_ids:
+                    if customer_id not in route:
+                        if energy_required(instance.node_map[last_customer], instance.node_map[customer_id], instance.vehicle) <= instance.vehicle.battery_capacity:
+                            add_customer_to_route(route, customer_id)
+                            break
     
     # Ensure all customers are visited
+    remaining_customers = set(instance.customer_ids)
+    for route in routes:
+        remaining_customers -= set(route)
+    
+    # Add remaining customers to new routes
+    for customer_id in remaining_customers:
+        for route in routes:
+            if not route:
+                add_customer_to_route(route, customer_id)
+                break
+    
+    # Add depot to the start and end of each route
     for i in range(len(routes)):
-        if not routes[i]:
-            routes[i] = [depot_id] + customers + [depot_id]
-            customers = []
+        if routes[i]:
+            routes[i].insert(0, instance.depot_id)
+            routes[i].append(instance.depot_id)
     
-    # Calculate total distance
-    total_distance = sum(total_distance(route) for route in routes)
-    
-    # Return the solution
-    return {
-        "routes": routes,
-        "metadata": {
-            "total_distance": total_distance
-        }
+    # Calculate metadata
+    metadata = {
+        "total_distance": sum(total_distance(route) for route in routes),
+        "number_of_vehicles": len(routes)
     }
+    
+    return {"routes": routes, "metadata": metadata}

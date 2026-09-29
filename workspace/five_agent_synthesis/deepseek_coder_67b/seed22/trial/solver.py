@@ -1,76 +1,49 @@
-from evrptw_autolab.problem.physics import distance, travel_time, energy_required, full_recharge, propagate_route
 import random
-import numpy as np
-import time
+from evrptw_autolab.problem.physics import distance, travel_time, energy_required, full_recharge, propagate_route
 
 def solve(instance, seed: int, time_limit_s: float):
     random.seed(seed)
 
-    # Initialize population
-    population = initialize_population(instance)
-
-    # Evaluate initial population
-    population = evaluate_population(instance, population)
-
-    # Start the search
-    start_time = time.time()
-    while time.time() - start_time < time_limit_s:
-        # Select parents
-        parent1, parent2 = select_parents(population)
-
-        # Perform crossover
-        child1, child2 = crossover(parent1, parent2)
-
-        # Perform mutation
-        child1 = mutation(child1)
-        child2 = mutation(child2)
-
-        # Evaluate children
-        child1 = evaluate_solution(instance, child1)
-        child2 = evaluate(instance, child2)
-
-        # Select parents
-        population = select_parents(population, child1, child2)
-
-    # Get the best solution
-    best_solution = min(population, key=lambda x: x['fitness'])
-
-    return {"routes": best_solution['routes'], "metadata": {}}
-
-def initialize_population(instance):
+    # Define the population
     population = []
-    for _ in range(100):  # Initialize 100 random routes
-        route = [instance.depot_id] + random.sample(instance.customer_ids, instance.n_customers) + [instance.depot_id]
-        population.append({'route': route, 'fitness': None})
-    return population
+    for _ in range(POPULATION_SIZE):
+        individual = []
+        for _ in range(instance.n_customers):
+            individual.append(random.choice(instance.customer_ids))
+        population.append(individual)
 
-def evaluate_population(instance, population):
-    for individual in population:
-        individual['fitness'] = evaluate_solution(instance, individual['route'])
-    return population
+    # Define the fitness function
+    def fitness(individual):
+        # Your fitness function should evaluate the quality of the individual
+        # based on the total distance, the number of vehicles used, and the feasibility of the individual
+        pass
 
-def select_parents(population):
-    # Select two parents using tournament selection
-    tournament = random.sample(population, 2)
-    return min(tournament, key=lambda x: x['fitness'])
+    # Define the selection function
+    def selection(population):
+        # Your selection function should select the best individuals based on the fitness function
+        pass
 
-def crossover(parent1, parent2):
-    # Perform crossover between two parents
-    split_point = random.randint(1, len(parent1['route']) - 1)
-    child1 = {'route': parent1['route'][:split_point] + parent2['route'][split_point:], 'fitness': None}
-    child2 = {'route': parent2['route'][:split_point] + parent1['route'][split_point:], 'fitness': None}
-    return child1, child2
+    # Define the crossover function
+    def crossover(parent1, parent2):
+        # Your crossover function should combine the characteristics of two parents to generate a child
+        pass
 
-def mutation(child):
-    # Perform mutation on a child
-    mutation_points = random.sample(range(1, len(child['route']) - 1), random.randint(1, len(child['route']) - 2))
-    for point in mutation:
-        child['route'][point], child['route'][point + 1] = child['route'][point + 1], child['route'][point]
-    return child
+    # Define the mutation function
+    def mutation(individual):
+        # Your mutation function should introduce random changes to the individual to maintain diversity in the population
+        pass
 
-def evaluate_solution(instance, solution):
-    # Evaluate a solution
-    total_distance = 0
-    for i in range(len(solution) - 1):
-        total_distance += distance(instance.node_map[solution[i]], instance.node_map[solution[i + 1]])
-    return total_distance
+    # Main loop
+    for _ in range(MAX_GENERATIONS):
+        new_population = []
+        for _ in range(int(POPULATION_SIZE / 2)):
+            parent1 = selection(population)
+            parent2 = selection(population)
+            child = crossover(parent1, parent2)
+            child = mutation(child)
+            new_population.append(child)
+        population = new_population
+
+    # Return the best individual
+    best_individual = min(population, key=fitness)
+    return {"routes": [best_individual], "metadata": {}}

@@ -1,7 +1,9 @@
 """From-scratch solver synthesis: five-agent team or one coding agent."""
 from __future__ import annotations
 
+import ast
 import json
+import re
 import time
 from pathlib import Path
 from typing import Any
@@ -10,7 +12,14 @@ from pydantic import BaseModel
 
 from evrptw_autolab.agents import build_team
 from evrptw_autolab.agents.base import Agent
-from evrptw_autolab.llm.usage import UsageLog
+from evrptw_autolab.evolution.evaluate import (
+    all_c5_instances,
+    code_hash,
+    find_hardcoded_node_ids,
+    known_ids_for_panel,
+    panel_instances,
+)
+from evrptw_autolab.llm.usage import BudgetExhausted, UsageLog
 from evrptw_autolab.problem.micro import (
     micro_g1_one_customer,
     micro_g2_needs_charge,
@@ -20,10 +29,11 @@ from evrptw_autolab.problem.types import EVRPTWInstance
 from evrptw_autolab.sandbox.limits import RunLimits
 from evrptw_autolab.sandbox.runner import run_solver
 from evrptw_autolab.sandbox.static_scan import scan_source
-from evrptw_autolab.slm_evo.evaluate import all_c5_instances, code_hash, panel_instances
 from evrptw_autolab.synthesis.contract import PROBLEM_BRIEF
 
 STAGES = ("executable", "routing", "charging", "multi_customer", "schneider_c5")
+INTEGRATION = {"SYNTAX", "RUNTIME", "TIMEOUT", "GENERALITY"}
+FAULTS = {"DEPOT", "VISIT", "CAPACITY", "WINDOW", "BATTERY", "CHARGE_POLICY"}
 
 
 class _SingleSchema(BaseModel):
@@ -36,74 +46,231 @@ class SingleAgent(Agent[_SingleSchema]):
     schema = _SingleSchema
 
 
-def _usage_totals(usage: UsageLog) -> tuple[int, int, int]:
+def usage_totals(usage: UsageLog) -> tuple[int, int, int]:
     rows = usage.all()
     prompt = sum(int(row.get("prompt_tokens") or 0) for row in rows)
     completion = sum(int(row.get("completion_tokens") or 0) for row in rows)
     return len(rows), prompt, completion
 
 
-def _brief(report: Any) -> dict[str, Any]:
-    fault = dict(report.first_fault or {})
+def format_runtime_error(error: str, source: str = "") -> dict[str, Any]:
+    """Keep the exception at the bottom of a traceback, not the opening banner."""
+    lines = [line.rstrip() for line in (error or "").splitlines() if line.strip()]
+    lines = [line for line in lines if not line.startswith("CONTRACT:")]
+    tail = lines[-8:]
+    exception_type = ""
+    exception_message = ""
+    for line in reversed(tail):
+        stripped = line.strip()
+        if stripped.startswith("Traceback") or stripped.startswith("File ") or stripped.startswith("raise "):
+            continue
+        if ":" in stripped and not stripped.startswith("File"):
+            exception_type, exception_message = stripped.split(":", 1)
+            exception_type = exception_type.strip().split()[-1]
+            exception_message = exception_message.strip()
+            break
+    context = ""
+    numbers = [int(match) for match in re.findall(r"line (\d+)", "\n".join(tail))]
+    if numbers and source:
+        lineno = numbers[-1]
+        rows = source.splitlines()
+        start = max(0, lineno - 3)
+        end = min(len(rows), lineno + 2)
+        context = "\n".join(f"{index + 1}: {rows[index]}" for index in range(start, end))
     return {
-        "feasible": bool(report.feasible),
-        "crashed": bool(report.crashed),
-        "parse_ok": bool(report.parse_ok),
-        "timed_out": bool(report.timed_out),
-        "vehicles": report.vehicles,
-        "distance": report.total_distance,
-        "error": str(report.error or "")[:500],
-        "first_fault": fault,
+        "exception_type": exception_type,
+        "exception_message": exception_message,
+        "traceback_tail": "\n".join(tail),
+        "source_context": context,
     }
 
 
-def _failure_text(report: Any) -> str:
-    if report.crashed or not report.parse_ok:
-        return str(report.error or "crash")[:300]
-    fault = report.first_fault or {}
-    family = str(fault.get("family") or "infeasible")
-    detail = str(fault.get("detail") or "")
-    return f"{family}: {detail}"[:300]
+def fault_packet(report: Any) -> dict[str, Any]:
+    fault = dict(report.first_fault or {})
+    return {
+        "family": str(fault.get("family") or ""),
+        "node_id": fault.get("node_id", ""),
+        "route_index": fault.get("route_index", -1),
+        "detail": str(fault.get("detail") or ""),
+    }
 
 
-def _eval_stage(
-    stage: str,
-    solver_dir: Path,
+def classify_category(
     *,
-    limits: RunLimits,
-    panel: list[EVRPTWInstance],
-) -> tuple[bool, str, dict[str, Any]]:
-    probes = {
+    g4_passed: bool,
+    category: str,
+    budget: bool,
+) -> str:
+    if g4_passed:
+        return "SUCCESS"
+    if category in FAULTS or category in {"SYNTAX", "RUNTIME", "TIMEOUT", "GENERALITY"}:
+        return category
+    if budget:
+        return "BUDGET"
+    return "RUNTIME"
+
+
+def precheck_source(source: str, known_ids: set[str]) -> dict[str, Any] | None:
+    """Reject a trial before execution. None means the source may be executed."""
+    text = source or ""
+    if "def solve" not in text:
+        return {
+            "category": "SYNTAX",
+            "ok": False,
+            "failure_reason": "model did not return def solve",
+            "execution": {"exception_type": "SyntaxError", "exception_message": "missing def solve", "traceback_tail": "", "source_context": ""},
+            "first_fault": {},
+        }
+    try:
+        ast.parse(text)
+    except SyntaxError as error:
+        return {
+            "category": "SYNTAX",
+            "ok": False,
+            "failure_reason": f"SyntaxError: {error.msg}",
+            "execution": {
+                "exception_type": "SyntaxError",
+                "exception_message": str(error.msg),
+                "traceback_tail": str(error),
+                "source_context": "",
+            },
+            "first_fault": {},
+        }
+    hardcoded = find_hardcoded_node_ids(text, known_ids=known_ids)
+    if hardcoded:
+        detail = ",".join(hardcoded)
+        return {
+            "category": "GENERALITY",
+            "ok": False,
+            "failure_reason": f"GENERALITY: {detail}",
+            "execution": {},
+            "first_fault": {"family": "GENERALITY", "node_id": "", "route_index": -1, "detail": detail},
+        }
+    scan_errors = scan_source(text)
+    if scan_errors:
+        detail = scan_errors[0]
+        if "heldout" in detail or "hardcode" in detail:
+            category = "GENERALITY"
+        elif detail.startswith("syntax_error"):
+            category = "SYNTAX"
+        else:
+            category = "RUNTIME"
+        return {
+            "category": category,
+            "ok": False,
+            "failure_reason": detail,
+            "execution": {"exception_type": category, "exception_message": detail, "traceback_tail": detail, "source_context": ""},
+            "first_fault": {},
+        }
+    return None
+
+
+def _probe(stage: str) -> EVRPTWInstance | None:
+    return {
         "executable": micro_g1_one_customer(),
         "routing": micro_g1_one_customer(),
         "charging": micro_g2_needs_charge(),
         "multi_customer": micro_g3_two_customers(),
-    }
-    if stage == "schneider_c5":
-        details = []
-        for instance in panel:
-            report = run_solver(solver_dir, instance, seed=0, limits=limits)
-            details.append({"instance": instance.instance_id, **_brief(report)})
-            if not report.feasible:
-                return False, _failure_text(report), {"instances": details}
-        return True, "", {"instances": details}
-    instance = probes[stage]
-    report = run_solver(solver_dir, instance, seed=0, limits=limits)
-    info = _brief(report)
+    }.get(stage)
+
+
+def _stage_ok(stage: str, report: Any) -> bool:
+    if report.timed_out:
+        return False
     if stage == "executable":
-        ok = bool(report.parse_ok and not report.crashed and not report.timed_out)
-        return ok, "" if ok else _failure_text(report), info
-    ok = bool(report.feasible and not report.crashed and not report.timed_out)
-    return ok, "" if ok else _failure_text(report), info
+        return bool(report.parse_ok and not report.crashed)
+    return bool(report.feasible and report.parse_ok and not report.crashed)
 
 
-def _write_sources(solver_dir: Path, source: str, routing: str = "", charging: str = "") -> None:
-    solver_dir.mkdir(parents=True, exist_ok=True)
-    (solver_dir / "solver.py").write_text(source, encoding="utf-8")
-    if routing.strip():
-        (solver_dir / "routing.py").write_text(routing, encoding="utf-8")
-    if charging.strip():
-        (solver_dir / "charging.py").write_text(charging, encoding="utf-8")
+def _report_failure(stage: str, report: Any, source: str) -> dict[str, Any]:
+    packet = fault_packet(report)
+    if report.timed_out:
+        category = "TIMEOUT"
+        reason = "timeout"
+        execution = format_runtime_error(report.error or "timeout", source)
+    elif report.crashed or not report.parse_ok:
+        category = "RUNTIME"
+        execution = format_runtime_error(str(report.error or ""), source)
+        reason = f"{execution.get('exception_type') or 'RuntimeError'}: {execution.get('exception_message') or ''}".strip()
+    else:
+        family = str(packet.get("family") or "").upper()
+        category = family if family in FAULTS else "RUNTIME"
+        execution = {}
+        reason = f"{category}: {packet.get('detail') or ''}".strip()
+    return {
+        "ok": False,
+        "failed_stage": stage,
+        "category": category,
+        "failure_reason": reason[:500],
+        "execution": execution,
+        "first_fault": packet,
+    }
+
+
+def evaluate_through(
+    solver_dir: Path,
+    stage: str,
+    *,
+    limits: RunLimits,
+    panel: list[EVRPTWInstance],
+) -> dict[str, Any]:
+    """A later gate counts only when every earlier gate still passes."""
+    if stage not in STAGES:
+        raise ValueError(f"unknown stage {stage}")
+    source = (solver_dir / "solver.py").read_text(encoding="utf-8")
+    last: dict[str, Any] = {"ok": True, "failed_stage": "", "category": "", "failure_reason": "", "execution": {}, "first_fault": {}}
+    for name in STAGES[: STAGES.index(stage) + 1]:
+        if name == "schneider_c5":
+            passed = 0
+            for instance in panel:
+                report = run_solver(solver_dir, instance, seed=0, limits=limits)
+                if not _stage_ok(name, report):
+                    failed = _report_failure(name, report, source)
+                    failed["g4_passed_here"] = passed
+                    return failed
+                passed += 1
+            last = {"ok": True, "failed_stage": "", "category": "", "failure_reason": "", "execution": {}, "first_fault": {}, "g4_passed_here": passed}
+            continue
+        probe = _probe(name)
+        if probe is None:
+            raise RuntimeError(f"missing probe for {name}")
+        report = run_solver(solver_dir, probe, seed=0, limits=limits)
+        if not _stage_ok(name, report):
+            return _report_failure(name, report, source)
+        last = {"ok": True, "failed_stage": "", "category": "", "failure_reason": "", "execution": {}, "first_fault": fault_packet(report)}
+    return last
+
+
+def roles_for(stage: str, category: str) -> list[str]:
+    if category in {"BATTERY", "WINDOW", "CHARGE_POLICY"}:
+        return ["architect", "charging", "search"]
+    if category in {"VISIT", "DEPOT", "CAPACITY"}:
+        return ["architect", "routing", "search"]
+    if stage == "executable":
+        return ["architect", "search"]
+    if stage == "routing":
+        return ["architect", "routing", "search"]
+    if stage == "charging":
+        return ["architect", "charging", "search"]
+    return ["architect", "routing", "charging", "search"]
+
+
+def _write_solver(directory: Path, source: str) -> None:
+    directory.mkdir(parents=True, exist_ok=True)
+    for extra in directory.glob("*.py"):
+        if extra.name != "solver.py":
+            extra.unlink()
+    (directory / "solver.py").write_text(source, encoding="utf-8")
+
+
+def _deepest(passed: dict[str, bool]) -> str:
+    deepest = ""
+    for name in STAGES:
+        if passed[name]:
+            deepest = name
+        else:
+            break
+    return deepest
 
 
 def run_from_scratch(
@@ -114,20 +281,28 @@ def run_from_scratch(
     workspace: Path,
     temperatures: dict[str, float] | None = None,
     max_llm_calls: int = 80,
+    token_ceiling: int | None = None,
     data_root: Path | None = None,
 ) -> dict[str, Any]:
-    """Synthesize solver.py from an empty directory. mode is 'five_agent' or 'single_agent'."""
+    """Synthesize one solver.py. mode is 'five_agent' or 'single_agent'."""
     if mode not in {"five_agent", "single_agent"}:
         raise ValueError("mode must be five_agent or single_agent")
     started = time.monotonic()
     workspace.mkdir(parents=True, exist_ok=True)
-    solver_dir = workspace / "solver"
+    committed_dir = workspace / "committed"
+    trial_dir = workspace / "trial"
+    rejected_dir = workspace / "rejected"
     usage = UsageLog(workspace / "llm_calls.jsonl")
+    if usage.path.exists():
+        usage.path.unlink()
     log_path = workspace / "rounds.jsonl"
+    if log_path.exists():
+        log_path.unlink()
     limits = RunLimits(wall_clock_s=20.0)
     panel = panel_instances(data_root)
     if len(panel) != 4:
         raise RuntimeError(f"expected 4 Schneider C5 panel instances, found {len(panel)}")
+    known_ids = known_ids_for_panel(data_root)
 
     if mode == "five_agent":
         team: dict[str, Any] = build_team(
@@ -135,149 +310,271 @@ def run_from_scratch(
         )
     else:
         temp = (temperatures or {}).get("single", 0.25)
-        team = {
-            "single": SingleAgent(backend, model=model, temperature=temp, usage_log=usage)
-        }
+        team = {"single": SingleAgent(backend, model=model, temperature=temp, usage_log=usage)}
+    for agent in team.values():
+        agent.max_calls = max_llm_calls
+        agent.token_ceiling = token_ceiling
 
     committed = ""
     rejected = ""
     stage_index = 0
     passed = {name: False for name in STAGES}
-    failure_reason = ""
+    failure: dict[str, Any] = {}
+    critic_note: dict[str, Any] = {}
+    architect_plan: dict[str, Any] | None = None
+    planned_stage = ""
+    repair_mode = False
+    repairs_used = 0
     rounds = 0
+    budget_hit = False
+    activated: list[str] = []
 
     def calls() -> int:
-        return _usage_totals(usage)[0]
+        return usage_totals(usage)[0]
 
-    while stage_index < len(STAGES) and calls() < max_llm_calls:
+    while stage_index < len(STAGES):
         stage = STAGES[stage_index]
-        payload = {
+        category = str(failure.get("category") or "")
+        if repair_mode and repairs_used < 2:
+            active = ["search"]
+            repairs_used += 1
+            repair_round = True
+        else:
+            repair_mode = False
+            repairs_used = 0
+            active = roles_for(stage, category)
+            repair_round = False
+        payload: dict[str, Any] = {
             "problem": PROBLEM_BRIEF,
             "stage": stage,
+            "gates_required": list(STAGES[: stage_index + 1]),
             "instruction": (
                 f"Current stage: {stage}. "
-                "Preserve feasibility already achieved. "
-                "Return a complete solver. The depot id may appear only at the start and end of each route."
+                "Preserve every earlier gate. "
+                "Return one complete self-contained solver.py. "
+                "The depot id may appear only at the start and end of each route."
             ),
-            "current_solver_py": committed,
+            "committed_solver_py": committed,
             "rejected_solver_py": rejected,
-            "failure_reason": failure_reason,
+            "failure_reason": failure.get("failure_reason") or "",
+            "failure_category": category,
+            "execution": failure.get("execution") or {},
+            "first_fault": failure.get("first_fault") or {},
+            "critic": critic_note,
+            "repair": repair_round,
         }
-        routing_src = ""
-        charging_src = ""
+        routing_fragment = ""
+        charging_fragment = ""
         try:
             if mode == "five_agent":
-                if calls() >= max_llm_calls:
-                    break
-                try:
-                    plan = team["architect"].run(payload)
-                    payload["architect"] = plan.model_dump()
-                except (TypeError, ValueError, KeyError) as error:
-                    payload["architect_error"] = str(error)[:300]
-                if calls() >= max_llm_calls:
-                    break
-                routing_src = team["routing"].write_python(
-                    payload, filename="routing.py", marker="def "
-                )
-                if calls() >= max_llm_calls:
-                    break
-                charging_src = team["charging"].write_python(
-                    payload, filename="charging.py", marker="def "
-                )
-                payload["routing_py"] = routing_src
-                payload["charging_py"] = charging_src
-                if calls() >= max_llm_calls:
-                    break
+                if "architect" in active and planned_stage != stage:
+                    architect_plan = team["architect"].run(payload).model_dump()
+                    planned_stage = stage
+                if architect_plan:
+                    payload["architect"] = architect_plan
+                if "routing" in active:
+                    routing_fragment = team["routing"].write_python(
+                        payload, filename="routing fragment", marker="def "
+                    )
+                    payload["routing_fragment"] = routing_fragment
+                if "charging" in active:
+                    charging_fragment = team["charging"].write_python(
+                        payload, filename="charging fragment", marker="def "
+                    )
+                    payload["charging_fragment"] = charging_fragment
                 source = team["search"].write_python(
                     payload, filename="solver.py", marker="def solve"
                 )
+                activated = list(active)
             else:
                 source = team["single"].write_python(
                     payload, filename="solver.py", marker="def solve"
                 )
+                activated = ["single"]
+        except BudgetExhausted:
+            budget_hit = True
+            break
         except (RuntimeError, ValueError, KeyError, TypeError) as error:
-            failure_reason = f"model_error: {error}"[:300]
+            failure = {
+                "category": "RUNTIME",
+                "failure_reason": f"model_error: {error}"[:500],
+                "execution": {},
+                "first_fault": {},
+            }
             break
 
         rounds += 1
-        scan_errors = scan_source(source or "")
-        if scan_errors or "def solve" not in (source or ""):
+        blocked = precheck_source(source or "", known_ids)
+        if blocked is not None:
+            info = blocked
             ok = False
-            reason = scan_errors[0] if scan_errors else "model did not return def solve"
-            info: dict[str, Any] = {}
         else:
-            _write_sources(solver_dir, source, routing_src, charging_src)
-            ok, reason, info = _eval_stage(stage, solver_dir, limits=limits, panel=panel)
+            _write_solver(trial_dir, source)
+            info = evaluate_through(trial_dir, stage, limits=limits, panel=panel)
+            ok = bool(info.get("ok"))
         if ok:
             committed = source
             rejected = ""
-            passed[stage] = True
+            _write_solver(committed_dir, committed)
+            for name in STAGES[: stage_index + 1]:
+                passed[name] = True
             stage_index += 1
-            failure_reason = ""
+            failure = {}
+            repair_mode = False
+            repairs_used = 0
         else:
-            failure_reason = reason or "stage failed"
+            failure = info
             rejected = source or ""
-            if not committed:
-                committed = source or committed
-        if mode == "five_agent" and calls() < max_llm_calls:
+            if rejected.strip():
+                _write_solver(rejected_dir, rejected)
+            if str(info.get("category") or "") in INTEGRATION:
+                if repairs_used < 2:
+                    repair_mode = True
+                else:
+                    repair_mode = False
+                    repairs_used = 0
+            else:
+                repair_mode = False
+                repairs_used = 0
+        if mode == "five_agent":
             try:
-                team["critic"].run(
+                decision = team["critic"].run(
                     {
                         "stage": stage,
                         "passed": ok,
-                        "failure_reason": failure_reason,
-                        "evaluation": info,
+                        "failure_reason": failure.get("failure_reason") or "",
+                        "failure_category": failure.get("category") or "",
+                        "execution": failure.get("execution") or {},
+                        "first_fault": failure.get("first_fault") or {},
+                        "evaluation": {"passed": ok, "stage": stage},
                     }
                 )
+                critic_note = {
+                    "diagnosis": decision.primary_cause,
+                    "evidence": list(decision.evidence),
+                    "recommended_next_target": decision.next_target,
+                    "lesson": decision.lesson,
+                }
+            except BudgetExhausted:
+                budget_hit = True
+                break
             except (TypeError, ValueError, KeyError):
-                pass
+                critic_note = critic_note or {
+                    "diagnosis": failure.get("failure_reason") or "",
+                    "evidence": [],
+                    "recommended_next_target": "SEARCH",
+                }
+        n_calls, prompt_tokens, completion_tokens = usage_totals(usage)
         row = {
             "round": rounds,
             "stage": stage,
             "passed": ok,
-            "failure_reason": failure_reason,
-            "calls": calls(),
+            "repair": repair_round,
+            "roles": activated,
+            "failure_category": failure.get("category") or "",
+            "failure_reason": failure.get("failure_reason") or "",
+            "critic": critic_note,
+            "calls": n_calls,
+            "tokens": prompt_tokens + completion_tokens,
         }
         with log_path.open("a", encoding="utf-8") as handle:
             handle.write(json.dumps(row) + "\n")
+        if budget_hit or calls() >= max_llm_calls:
+            if calls() >= max_llm_calls:
+                budget_hit = True
+            if budget_hit and stage_index >= len(STAGES):
+                break
+            if calls() >= max_llm_calls:
+                break
 
+    g4_passed = bool(passed["schneider_c5"])
+    confirmation_feasible = None
+    confirmation_total = None
+    g4_feasible = 0
+    vehicles = None
+    distance = None
+    fully = False
     if committed.strip():
-        _write_sources(solver_dir, committed)
-    c5 = all_c5_instances(data_root)
-    feasible = 0
-    vehicles = 0
-    distance = 0.0
-    if committed.strip() and (solver_dir / "solver.py").exists():
-        for instance in c5:
-            report = run_solver(solver_dir, instance, seed=0, limits=limits)
-            if report.feasible and not report.crashed:
-                feasible += 1
-                vehicles += int(report.vehicles or 0)
-                distance += float(report.total_distance or 0.0)
-    n_calls, prompt_tokens, completion_tokens = _usage_totals(usage)
-    fully = feasible == len(c5) and len(c5) > 0
-    if not passed["schneider_c5"] and not failure_reason:
-        failure_reason = "budget_exhausted"
+        _write_solver(committed_dir, committed)
+        g4_count = 0
+        for instance in panel:
+            report = run_solver(committed_dir, instance, seed=0, limits=limits)
+            if report.feasible and not report.crashed and not report.timed_out:
+                g4_count += 1
+        g4_feasible = g4_count
+        if g4_passed:
+            confirmation = [
+                instance
+                for instance in all_c5_instances(data_root)
+                if instance.instance_id not in {item.instance_id for item in panel}
+            ]
+            confirmation_total = len(confirmation)
+            confirmation_feasible = 0
+            held_vehicles = 0
+            held_distance = 0.0
+            panel_vehicles = 0
+            panel_distance = 0.0
+            for instance in panel:
+                report = run_solver(committed_dir, instance, seed=0, limits=limits)
+                if report.feasible and not report.crashed:
+                    panel_vehicles += int(report.vehicles or 0)
+                    panel_distance += float(report.total_distance or 0.0)
+            for instance in confirmation:
+                report = run_solver(committed_dir, instance, seed=0, limits=limits)
+                if report.feasible and not report.crashed and not report.timed_out:
+                    confirmation_feasible += 1
+                    held_vehicles += int(report.vehicles or 0)
+                    held_distance += float(report.total_distance or 0.0)
+            fully = confirmation_feasible == confirmation_total and g4_feasible == len(panel)
+            if fully:
+                vehicles = panel_vehicles + held_vehicles
+                distance = round(panel_distance + held_distance, 4)
+    n_calls, prompt_tokens, completion_tokens = usage_totals(usage)
+    tokens = prompt_tokens + completion_tokens
+    category = classify_category(
+        g4_passed=g4_passed,
+        category=str(failure.get("category") or ""),
+        budget=budget_hit or (not g4_passed and n_calls >= max_llm_calls),
+    )
+    if token_ceiling is not None and not g4_passed and tokens >= token_ceiling and category not in FAULTS | INTEGRATION:
+        category = "BUDGET"
+    rows = usage.all()
+    digest = next((str(row.get("digest") or "") for row in rows if row.get("digest")), "")
+    model_tag = next((str(row.get("model_tag") or "") for row in rows if row.get("model_tag")), model)
+    overshoot = 0
+    if token_ceiling is not None:
+        overshoot = max(0, tokens - int(token_ceiling))
+    solver_path = committed_dir / "solver.py"
     return {
         "experiment": "five_agent_synthesis" if mode == "five_agent" else "single_agent_synthesis",
         "model": model,
+        "model_tag": model_tag,
+        "model_digest": digest,
         "executable": passed["executable"],
         "routing": passed["routing"],
         "charging": passed["charging"],
         "multi_customer": passed["multi_customer"],
         "schneider_c5": passed["schneider_c5"],
+        "deepest_gate": _deepest(passed),
+        "g4_feasible": g4_feasible,
+        "g4_total": len(panel),
+        "confirmation_feasible": confirmation_feasible,
+        "confirmation_total": confirmation_total,
         "llm_calls": n_calls,
         "prompt_tokens": prompt_tokens,
         "completion_tokens": completion_tokens,
-        "tokens": prompt_tokens + completion_tokens,
-        "failure_reason": "" if passed["schneider_c5"] else failure_reason,
-        "feasible": feasible,
-        "c5_total": len(c5),
+        "tokens": tokens,
+        "token_ceiling": token_ceiling,
+        "token_overshoot": overshoot,
+        "failure_reason": "" if g4_passed else str(failure.get("failure_reason") or ""),
+        "failure_category": category,
+        "feasible": (g4_feasible + int(confirmation_feasible or 0)) if g4_passed else g4_feasible,
+        "c5_total": (len(panel) + int(confirmation_total or 0)) if g4_passed else len(panel),
         "fully_feasible": fully,
-        "vehicles": vehicles if fully else None,
-        "distance": round(distance, 4) if fully else None,
+        "vehicles": vehicles,
+        "distance": distance,
         "solver_hash": code_hash(committed)[:16] if committed.strip() else "",
         "wall_s": round(time.monotonic() - started, 1),
         "rounds": rounds,
-        "solver_path": str(solver_dir / "solver.py"),
+        "solver_path": str(solver_path),
     }

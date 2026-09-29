@@ -99,13 +99,33 @@ def main() -> None:
     cfg = _config()
     budget = int(cfg.get("max_llm_calls") or 80)
     if args.all:
-        for profile_id in cfg["five_agent_synthesis"]["profiles"]:
-            for seed in cfg["seeds"]:
+        for spec in cfg["five_agent_synthesis"]["runs"]:
+            profile_id = str(spec["profile"])
+            for seed in spec["seeds"]:
                 dest = ROOT / "results" / "paper" / "synthesis" / f"{profile_id}_seed{int(seed)}.json"
                 if dest.exists():
-                    print(f"keep existing {dest.name}")
+                    print(f"keep existing {dest.name}", flush=True)
                     continue
-                run_one(profile_id, int(seed), budget)
+                try:
+                    run_one(profile_id, int(seed), budget)
+                except Exception as error:  # noqa: BLE001
+                    dest.write_text(
+                        json.dumps(
+                            {
+                                "experiment": "five_agent_synthesis",
+                                "profile": profile_id,
+                                "seed": int(seed),
+                                "failure_reason": str(error)[:500],
+                                "failure_category": "RUNTIME",
+                                "schneider_c5": False,
+                                "fully_feasible": False,
+                                "llm_calls": 0,
+                                "tokens": 0,
+                            }
+                        ),
+                        encoding="utf-8",
+                    )
+                    print(f"recorded crash {profile_id} seed {seed}: {error}", flush=True)
         return
     if not args.profile or not args.seed:
         raise SystemExit("pass --all or both --profile and --seed")

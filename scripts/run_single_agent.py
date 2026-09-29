@@ -21,7 +21,15 @@ def _config() -> dict:
     return yaml.safe_load((ROOT / "configs" / "experiments.yaml").read_text(encoding="utf-8")) or {}
 
 
-def run_one(profile_id: str, seed: int, max_llm_calls: int) -> dict:
+def paired_token_ceiling(profile_id: str, seed: int) -> int | None:
+    path = ROOT / "results" / "paper" / "synthesis" / f"{profile_id}_seed{seed}.json"
+    if not path.exists():
+        return None
+    row = json.loads(path.read_text(encoding="utf-8"))
+    return int(row.get("tokens") or 0)
+
+
+def run_one(profile_id: str, seed: int, max_llm_calls: int, token_ceiling: int | None) -> dict:
     profile = resolve_profile(profile_id)
     backend = OllamaBackend(
         timeout_s=float(profile.timeout_s or 300.0),
@@ -55,6 +63,7 @@ def run_one(profile_id: str, seed: int, max_llm_calls: int) -> dict:
         workspace=workspace,
         temperatures=profile.temperatures,
         max_llm_calls=max_llm_calls,
+        token_ceiling=token_ceiling,
     )
     report["profile"] = profile_id
     report["seed"] = seed
@@ -79,18 +88,46 @@ def main() -> None:
     args = parser.parse_args()
     cfg = _config()
     profile_id = args.profile or cfg["single_agent_synthesis"]["profile"]
+    paired = str(cfg["single_agent_synthesis"].get("paired_profile") or profile_id)
     budget = int(cfg.get("max_llm_calls") or 80)
+    seeds = cfg["single_agent_synthesis"]["seeds"]
     if args.all:
-        for seed in cfg["seeds"]:
+        for seed in seeds:
             dest = ROOT / "results" / "paper" / "single_agent" / f"{profile_id}_seed{int(seed)}.json"
             if dest.exists():
-                print(f"keep existing {dest.name}")
+                print(f"keep existing {dest.name}", flush=True)
                 continue
-            run_one(profile_id, int(seed), budget)
+            ceiling = paired_token_ceiling(paired, int(seed))
+            if ceiling is None:
+                raise SystemExit(f"missing five-agent tokens for {paired} seed {seed}")
+            try:
+                run_one(profile_id, int(seed), budget, ceiling)
+            except Exception as error:  # noqa: BLE001
+                dest.write_text(
+                    json.dumps(
+                        {
+                            "experiment": "single_agent_synthesis",
+                            "profile": profile_id,
+                            "seed": int(seed),
+                            "failure_reason": str(error)[:500],
+                            "failure_category": "RUNTIME",
+                            "schneider_c5": False,
+                            "fully_feasible": False,
+                            "llm_calls": 0,
+                            "tokens": 0,
+                            "token_ceiling": ceiling,
+                        }
+                    ),
+                    encoding="utf-8",
+                )
+                print(f"recorded crash seed {seed}: {error}", flush=True)
         return
     if not args.seed:
         raise SystemExit("pass --all or --seed")
-    run_one(profile_id, args.seed, budget)
+    ceiling = paired_token_ceiling(paired, args.seed)
+    if ceiling is None:
+        raise SystemExit(f"missing five-agent tokens for {paired} seed {args.seed}")
+    run_one(profile_id, args.seed, budget, ceiling)
 
 
 if __name__ == "__main__":

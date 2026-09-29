@@ -1,4 +1,4 @@
-"""Parallel patch proposals from five SLM-Evo roles."""
+"""Parallel patch proposals from five solver evolution roles."""
 from __future__ import annotations
 
 import json
@@ -8,9 +8,8 @@ from typing import Any
 from pydantic import BaseModel, Field
 
 from evrptw_autolab.agents.base import Agent, extract_json
-from evrptw_autolab.llm.usage import UsageLog
-from evrptw_autolab.slm_evo.patch_apply import parse_proposal_json
-from evrptw_autolab.slm_evo.types import (
+from evrptw_autolab.evolution.patch_apply import parse_proposal_json
+from evrptw_autolab.evolution.types import (
     FOCUS_CYCLE,
     ROLES,
     UNLOCK,
@@ -18,6 +17,7 @@ from evrptw_autolab.slm_evo.types import (
     PatchProposal,
     RoleName,
 )
+from evrptw_autolab.llm.usage import UsageLog
 from evrptw_autolab.synthesis.contract import API_SNIPPET
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -29,8 +29,8 @@ class _PatchSchema(BaseModel):
 
 
 class PatchAgent(Agent[_PatchSchema]):
-    role = "slm_evo_patcher"
-    prompt_name = "slm_evo_patcher.md"
+    role = "patcher"
+    prompt_name = "evolution_patcher.md"
     schema = _PatchSchema
 
     def __init__(self, *args: Any, role_name: str = "patcher", **kwargs: Any) -> None:
@@ -43,7 +43,7 @@ ROLE_PERSPECTIVES: dict[RoleName, str] = {
     "routing": "Focus on customer assignment / sequencing code that could serve more customers per route.",
     "charging": "Focus on energy-aware improvements that keep routes feasible after packing customers.",
     "search": "Focus on global search/control mechanisms around the current construction.",
-    "critic_inventor": "Invent an alternative mechanism based on the observed one-route-per-customer limitation.",
+    "critic_inventor": "Invent an alternative mechanism from the executed feasibility and fleet evidence.",
 }
 
 
@@ -97,7 +97,11 @@ def propose_one(
 ) -> PatchProposal | None:
     if hasattr(backend, "seed"):
         backend.seed = seed
-    perspective = ROLE_PERSPECTIVES.get(role, "")  # type: ignore[arg-type]
+    perspective = ""
+    for key, value in ROLE_PERSPECTIVES.items():
+        if key == role:
+            perspective = value
+            break
     payload = {
         "role": role,
         "generation_focus": focus,
@@ -115,16 +119,11 @@ def propose_one(
     prompt = agent.prompt + "\n\nINPUT:\n" + json.dumps(payload, default=str)
     try:
         raw = agent._complete(prompt, json_mode=True)
-        agent._record_usage(retries=0, parse_valid=True)
         data = extract_json(raw)
         prop = parse_proposal_json(data, role=role, seed=seed)
         prop.raw = raw if isinstance(raw, str) else str(raw)
         return prop
     except Exception as err:  # noqa: BLE001 — candidate failures are expected
-        try:
-            agent._record_usage(retries=0, parse_valid=False)
-        except Exception:
-            pass
         return PatchProposal(
             hypothesis=f"propose_failed:{err}"[:200],
             ops=[],
@@ -194,7 +193,6 @@ def propose_charging_repair(
     prompt = agent.prompt + "\n\nINPUT:\n" + json.dumps(payload, default=str)
     try:
         raw = agent._complete(prompt, json_mode=True)
-        agent._record_usage(retries=0, parse_valid=True)
         data = extract_json(raw)
         prop = parse_proposal_json(data, role="charging", seed=seed)
         prop.raw = raw if isinstance(raw, str) else str(raw)

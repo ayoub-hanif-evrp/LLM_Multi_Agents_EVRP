@@ -44,10 +44,10 @@ You receive the **same fixed API / domain guidance** that the multi-agent lab gi
 - No hardcoded instance-specific node IDs / BKS tables. No LLM calls inside the solver.
 
 ## Feedback you will receive
-- Compile/runtime errors
-- Feasibility traces (BATTERY / WINDOW / CAPACITY / VISIT / DEPOT)
-- Gate identity and evaluation results
-- Current solver source
+- The same gate curriculum as the five-agent system. A later gate counts only if every earlier gate still passes.
+- Runtime diagnostics: exception type, exception message, and the last traceback lines, plus the relevant source lines when available.
+- Feasibility packets with `family`, `node_id`, `route_index`, and `detail` (DEPOT, VISIT, CAPACITY, WINDOW, BATTERY, CHARGE_POLICY).
+- The committed solver and the rejected trial. A failed trial does not replace the committed solver.
 
 ## Output
 When asked for code: reply with ONLY complete Python source for `solver.py` containing `def solve`.

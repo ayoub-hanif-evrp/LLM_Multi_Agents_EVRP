@@ -39,14 +39,13 @@ def best_parent(rows: list[dict]) -> dict | None:
         solver = ROOT / published if published else Path(row.get("solver_path") or "")
         if not solver.exists():
             continue
-        if not (row.get("fully_feasible") or row.get("schneider_c5")):
+        if not row.get("fully_feasible"):
             continue
         ranked.append((row, solver))
     if not ranked:
         return None
     ranked.sort(
         key=lambda item: (
-            0 if item[0].get("fully_feasible") else 1,
             item[0].get("vehicles") if item[0].get("vehicles") is not None else 10**9,
             item[0].get("distance") if item[0].get("distance") is not None else 10**12,
         )
@@ -79,7 +78,7 @@ def run_one(profile_id: str, seed: int, parent: Path, cfg: dict) -> dict:
         max_generations=int(evo.get("max_generations") or 8),
         candidates_per_role=int(evo.get("candidates_per_role") or 1),
         beam_size=int(evo.get("beam_size") or 2),
-        max_llm_calls=int(cfg.get("max_llm_calls") or 80),
+        max_llm_calls=int(evo.get("max_llm_calls") or cfg.get("max_llm_calls") or 80),
         seed_base=seed,
         campaign_id=f"seed{seed}",
     )
@@ -104,6 +103,9 @@ def run_one(profile_id: str, seed: int, parent: Path, cfg: dict) -> dict:
         "distance": all_c5.get("distance_sum") if fully else None,
         "solver_hash": result.get("best_hash"),
         "llm_calls": result.get("llm_calls"),
+        "prompt_tokens": result.get("prompt_tokens"),
+        "completion_tokens": result.get("completion_tokens"),
+        "tokens": result.get("tokens"),
         "wall_s": result.get("wall_s"),
         "trajectory_vehicles": result.get("trajectory_vehicles"),
         "failure_reason": "" if fully else "not fully feasible on all C5",
@@ -138,12 +140,29 @@ def main() -> None:
             return
         parent = Path(parent_row["parent_file"])
     if args.all:
-        for seed in cfg["seeds"]:
+        for seed in cfg["solver_evolution"]["seeds"]:
             dest = ROOT / "results" / "paper" / "evolution" / f"{profile_id}_seed{int(seed)}.json"
             if dest.exists():
-                print(f"keep existing {dest.name}")
+                print(f"keep existing {dest.name}", flush=True)
                 continue
-            run_one(profile_id, int(seed), parent, cfg)
+            try:
+                run_one(profile_id, int(seed), parent, cfg)
+            except Exception as error:  # noqa: BLE001
+                dest.write_text(
+                    json.dumps(
+                        {
+                            "experiment": "solver_evolution",
+                            "profile": profile_id,
+                            "seed": int(seed),
+                            "failure_reason": str(error)[:500],
+                            "failure_category": "RUNTIME",
+                            "improved": False,
+                            "fully_feasible": False,
+                        }
+                    ),
+                    encoding="utf-8",
+                )
+                print(f"recorded crash seed {seed}: {error}", flush=True)
         return
     if not args.seed:
         raise SystemExit("pass --all or --seed")

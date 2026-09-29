@@ -15,11 +15,11 @@ from evrptw_autolab.evaluation.fidelity import (
     partition_of,
     split_instances,
 )
+from evrptw_autolab.evolution.types import PANEL_IDS, PanelMetrics
 from evrptw_autolab.problem.types import EVRPTWInstance
 from evrptw_autolab.sandbox.limits import RunLimits
 from evrptw_autolab.sandbox.runner import run_solver
 from evrptw_autolab.sandbox.static_scan import scan_source
-from evrptw_autolab.slm_evo.types import PANEL_IDS, PanelMetrics
 
 
 @dataclass
@@ -233,9 +233,13 @@ def vehicle_reduction_on_any(parent: PanelMetrics, child_partial: PanelMetrics) 
     return hits
 
 
-def experimental_battery_or_window(metrics: PanelMetrics) -> bool:
-    fault = (metrics.primary_fault or "").upper()
-    return any(x in fault for x in ("BATTERY", "WINDOW", "CHARGE_POLICY"))
+def only_charge_related_faults(metrics: PanelMetrics) -> bool:
+    """True when every failed instance fault is battery, window, or charge policy."""
+    rows = [row for row in (metrics.by_instance or {}).values() if not row.get("ok")]
+    if not rows:
+        return False
+    allowed = ("BATTERY", "WINDOW", "CHARGE_POLICY")
+    return all(any(name in str(row.get("fault") or "").upper() for name in allowed) for row in rows)
 
 
 def write_solver(dir_path: Path, source: str) -> Path:
@@ -247,6 +251,29 @@ def write_solver(dir_path: Path, source: str) -> Path:
 
 def source_hash(source: str) -> str:
     return code_hash(source)[:16]
+
+
+def final_scale_sets(data_root: Path | None = None) -> dict[str, list[EVRPTWInstance]]:
+    """Frozen zero-LLM slices. RC2 is included only in the held-out and full-scale slices."""
+    instances = load_all(data_root)
+
+    def c5(part: str) -> list[EVRPTWInstance]:
+        chosen = [
+            instance
+            for instance in instances
+            if len(instance.customer_ids) == 5 and partition_of(instance) == part
+        ]
+        chosen.sort(key=lambda instance: instance.instance_id)
+        return chosen
+
+    return {
+        "c5_development": c5("discovery"),
+        "c5_confirmation": c5("confirmation"),
+        "c5_heldout_rc2": c5("heldout"),
+        "c10": by_customer_count(instances, [10]),
+        "c15": by_customer_count(instances, [15]),
+        "larger": [instance for instance in instances if len(instance.customer_ids) > 15],
+    }
 
 
 def milestone_instances(metrics: PanelMetrics, *, threshold: int = 4) -> list[str]:

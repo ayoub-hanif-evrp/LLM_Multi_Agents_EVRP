@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal, cast
 
 import yaml
 
@@ -213,9 +213,10 @@ def apply_specialist_gated(
                 }
             )
         except (ValueError, TypeError, AttributeError):
+            owner = role.upper() if role.upper() in {"ROUTING", "CHARGING", "SEARCH"} else "SEARCH"
             verdict = HandshakeVerdict(
                 verdict="RETURN",
-                owner=role.upper() if role.upper() in {"ROUTING", "CHARGING", "SEARCH"} else "SEARCH",
+                owner=cast(Literal["ROUTING", "CHARGING", "SEARCH", "ARCHITECTURE"], owner),
                 instruction="; ".join(errors)[:400],
             )
         if getattr(verdict, "verdict", "PASS") == "RETURN":

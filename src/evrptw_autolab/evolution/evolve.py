@@ -1,4 +1,4 @@
-"""SLM-Evo generation loop: parallel patches, beam, experimental repair."""
+"""solver evolution generation loop: parallel patches, beam, experimental repair."""
 from __future__ import annotations
 
 import json
@@ -8,36 +8,36 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from evrptw_autolab.llm.usage import UsageLog
-from evrptw_autolab.sandbox.limits import RunLimits
-from evrptw_autolab.slm_evo.evaluate import (
+from evrptw_autolab.evolution.evaluate import (
     all_c5_instances,
     evaluate_panel,
-    experimental_battery_or_window,
     known_ids_for_panel,
     lex_better_panel,
     milestone_instances,
+    only_charge_related_faults,
     panel_instances,
     source_hash,
     validate_source,
     vehicle_reduction_on_any,
     write_solver,
 )
-from evrptw_autolab.slm_evo.freeze import assert_not_immutable, freeze_dir_for
-from evrptw_autolab.slm_evo.patch_apply import apply_proposal
-from evrptw_autolab.slm_evo.propose import (
+from evrptw_autolab.evolution.freeze import assert_not_immutable, freeze_dir_for
+from evrptw_autolab.evolution.patch_apply import apply_proposal
+from evrptw_autolab.evolution.propose import (
     build_patch_agents,
     focus_for_generation,
     proposal_seed,
     propose_charging_repair,
     propose_generation,
 )
-from evrptw_autolab.slm_evo.types import (
+from evrptw_autolab.evolution.types import (
     CandidateRecord,
     GenerationReport,
     PanelMetrics,
     PatchProposal,
 )
+from evrptw_autolab.llm.usage import UsageLog
+from evrptw_autolab.sandbox.limits import RunLimits
 
 
 @dataclass
@@ -135,7 +135,7 @@ def _process_candidate(
     if (
         allow_experimental_repair
         and not metrics.fully_feasible
-        and experimental_battery_or_window(metrics)
+        and only_charge_related_faults(metrics)
         and vehicle_reduction_on_any(parent_metrics, metrics)
     ):
         rec.experimental = True
@@ -218,7 +218,7 @@ def _write_freeze(
     return dest
 
 
-def run_slm_evo(
+def run_evolution(
     *,
     model: str,
     backend: Any,
@@ -244,7 +244,7 @@ def run_slm_evo(
     parent_source = parent_solver.read_text(encoding="utf-8")
     panel = panel_instances(data_root)
     if not panel:
-        raise RuntimeError("empty SLM-Evo panel")
+        raise RuntimeError("empty solver evolution panel")
     known_ids = known_ids_for_panel(data_root)
     limits = RunLimits(wall_clock_s=20.0)
     probe = panel[0]
@@ -449,6 +449,9 @@ def run_slm_evo(
     traj_line = " -> ".join(
         str(s.get("all_c5_veh")) for s in state.trajectory if s.get("all_c5_veh") is not None
     )
+    usage_rows = usage.all()
+    prompt_tokens = sum(int(row.get("prompt_tokens") or 0) for row in usage_rows)
+    completion_tokens = sum(int(row.get("completion_tokens") or 0) for row in usage_rows)
 
     return {
         "protocol": "solver_evolution",
@@ -470,6 +473,9 @@ def run_slm_evo(
         "generations": len(state.generations),
         "generation_reports": [g.as_dict() for g in state.generations],
         "llm_calls": _usage_count(usage),
+        "prompt_tokens": prompt_tokens,
+        "completion_tokens": completion_tokens,
+        "tokens": prompt_tokens + completion_tokens,
         "wall_s": round(time.monotonic() - started, 1),
         "best_path": str(best_dir / "solver.py"),
         "freeze_dir": freeze_dir,

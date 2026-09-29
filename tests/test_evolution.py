@@ -1,4 +1,4 @@
-"""Integration-style tests for SLM-Evo with FakeBackend."""
+"""Integration-style tests for solver evolution with FakeBackend."""
 from __future__ import annotations
 
 import json
@@ -6,10 +6,10 @@ from pathlib import Path
 
 import pytest
 
+from evrptw_autolab.evolution.evolve import run_evolution
+from evrptw_autolab.evolution.patch_apply import apply_ops
+from evrptw_autolab.evolution.types import PatchOp
 from evrptw_autolab.llm.registry import FakeBackend
-from evrptw_autolab.slm_evo.evolve import run_slm_evo
-from evrptw_autolab.slm_evo.patch_apply import apply_ops
-from evrptw_autolab.slm_evo.types import PatchOp
 
 ROOT = Path(__file__).resolve().parents[1]
 FROZEN = ROOT / "tests" / "fixtures" / "feasible_parent" / "solver.py"
@@ -38,7 +38,7 @@ def test_fake_generation_rejects_crash_patch(tmp_path: Path) -> None:
     backend = FakeBackend({role: [crash] for role in (
         "architect", "routing", "charging", "search", "critic_inventor"
     )})
-    result = run_slm_evo(
+    result = run_evolution(
         model="fake",
         backend=backend,
         workspace=tmp_path / "evo",
@@ -70,7 +70,7 @@ def test_fake_empty_ops_recorded(tmp_path: Path) -> None:
     backend = FakeBackend(
         {role: ["not-json"] for role in ("architect", "routing", "charging", "search", "critic_inventor")}
     )
-    result = run_slm_evo(
+    result = run_evolution(
         model="fake",
         backend=backend,
         workspace=tmp_path / "evo2",
@@ -86,8 +86,8 @@ def test_fake_empty_ops_recorded(tmp_path: Path) -> None:
 
 
 def test_milestone_instances_detects_four_vehicle_win() -> None:
-    from evrptw_autolab.slm_evo.evaluate import milestone_instances
-    from evrptw_autolab.slm_evo.types import PanelMetrics
+    from evrptw_autolab.evolution.evaluate import milestone_instances
+    from evrptw_autolab.evolution.types import PanelMetrics
 
     metrics = PanelMetrics(
         feasible=4,
@@ -106,8 +106,8 @@ def test_milestone_instances_detects_four_vehicle_win() -> None:
 
 def test_freeze_artifact_on_vehicle_milestone(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Simulate lex-better panel with a 5→4 instance win and assert freeze + all-C5 path."""
-    from evrptw_autolab.slm_evo import evolve as evolve_mod
-    from evrptw_autolab.slm_evo.types import PanelMetrics
+    from evrptw_autolab.evolution import evolve as evolve_mod
+    from evrptw_autolab.evolution.types import PanelMetrics
 
     parent_panel = PanelMetrics(
         feasible=4,
@@ -176,7 +176,7 @@ def test_freeze_artifact_on_vehicle_milestone(tmp_path: Path, monkeypatch: pytes
     backend = FakeBackend(
         {role: [good] for role in ("architect", "routing", "charging", "search", "critic_inventor")}
     )
-    result = run_slm_evo(
+    result = run_evolution(
         model="fake",
         backend=backend,
         workspace=tmp_path / "evo_win",
@@ -186,7 +186,7 @@ def test_freeze_artifact_on_vehicle_milestone(tmp_path: Path, monkeypatch: pytes
         beam_size=2,
         max_llm_calls=40,
         seed_base=11,
-        campaign_id="opt_seed11",
+        campaign_id="paper_seed11",
         stop_on_milestone=False,
     )
     assert result["milestone_hit"] is True
@@ -207,7 +207,7 @@ def test_freeze_artifact_on_vehicle_milestone(tmp_path: Path, monkeypatch: pytes
 
 
 def test_proposal_seed_formula() -> None:
-    from evrptw_autolab.slm_evo.propose import proposal_seed
+    from evrptw_autolab.evolution.propose import proposal_seed
 
     assert proposal_seed(11, 0, 0, 0) == 110000
     assert proposal_seed(11, 1, 2, 1) == 110000 + 100 + 20 + 1
@@ -216,15 +216,15 @@ def test_proposal_seed_formula() -> None:
 def test_freeze_refuses_published_solvers() -> None:
     import pytest as _pytest
 
-    from evrptw_autolab.slm_evo.freeze import IMMUTABLE_DIR, assert_not_immutable
+    from evrptw_autolab.evolution.freeze import IMMUTABLE_DIR, assert_not_immutable
 
     with _pytest.raises(RuntimeError):
         assert_not_immutable(IMMUTABLE_DIR)
 
 
 def test_stop_on_milestone_false_continues(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    from evrptw_autolab.slm_evo import evolve as evolve_mod
-    from evrptw_autolab.slm_evo.types import PanelMetrics
+    from evrptw_autolab.evolution import evolve as evolve_mod
+    from evrptw_autolab.evolution.types import PanelMetrics
 
     parent_panel = PanelMetrics(
         feasible=4,
@@ -275,7 +275,7 @@ def test_stop_on_milestone_false_continues(tmp_path: Path, monkeypatch: pytest.M
         ],
     }
     backend = FakeBackend(replies)
-    result = run_slm_evo(
+    result = run_evolution(
         model="fake",
         backend=backend,
         workspace=tmp_path / "evo_cont",

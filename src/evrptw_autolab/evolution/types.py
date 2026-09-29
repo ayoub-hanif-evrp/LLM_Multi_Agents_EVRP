@@ -1,4 +1,4 @@
-"""SLM-Evo types: patch ops, candidates, generation reports."""
+"""solver evolution types: patch ops, candidates, generation reports."""
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field

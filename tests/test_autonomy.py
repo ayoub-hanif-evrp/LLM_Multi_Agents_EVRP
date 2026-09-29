@@ -1,4 +1,4 @@
-"""P0 clean-lab autonomy invariants.
+"""Clean-lab autonomy invariants.
 
 Governing rule: the fixed laboratory may expose failures; it must never convert
 a failed candidate into a better EVRPTW candidate by injecting solver code.

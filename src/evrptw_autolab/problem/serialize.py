@@ -46,7 +46,7 @@ def load_instance_json(path: Path | str) -> EVRPTWInstance:
     nodes = tuple(
         Node(
             id=str(n["id"]),
-            kind=n["kind"],  # type: ignore[arg-type]
+            kind=str(n["kind"]),  # type: ignore[arg-type]
             x=float(n["x"]),
             y=float(n["y"]),
             demand=float(n.get("demand") or 0.0),

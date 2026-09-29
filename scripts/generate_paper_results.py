@@ -4,6 +4,7 @@ from __future__ import annotations
 import csv
 import json
 from collections import Counter
+from math import comb
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -35,6 +36,99 @@ def _rate(rows: list[dict], key: str) -> str:
     if not rows:
         return "0/0"
     return f"{sum(1 for row in rows if row.get(key))}/{len(rows)}"
+
+
+def _depth(row: dict) -> int:
+    score = 0
+    for key in ("executable", "routing", "charging", "multi_customer", "schneider_c5"):
+        if row.get(key):
+            score += 1
+        else:
+            break
+    return score
+
+
+def _sign_test(wins: int, losses: int) -> float | None:
+    n = wins + losses
+    if n == 0:
+        return None
+    tail = min(wins, losses)
+    one_side = sum(comb(n, index) for index in range(tail + 1))
+    return min(1.0, 2.0 * one_side / (2**n))
+
+
+def _category(row: dict) -> str:
+    stored = str(row.get("failure_category") or "").upper()
+    allowed = {
+        "SUCCESS",
+        "SYNTAX",
+        "RUNTIME",
+        "TIMEOUT",
+        "DEPOT",
+        "VISIT",
+        "CAPACITY",
+        "WINDOW",
+        "BATTERY",
+        "CHARGE_POLICY",
+        "GENERALITY",
+        "BUDGET",
+    }
+    if stored in allowed:
+        return stored
+    if row.get("schneider_c5") or row.get("improved"):
+        return "SUCCESS"
+    return "RUNTIME"
+
+
+def _scale_section() -> str:
+    directory = PAPER / "evaluation"
+    if not directory.exists():
+        return "Held-out evaluation has not been run."
+    status_path = directory / "status.json"
+    lines = []
+    if status_path.exists():
+        status = json.loads(status_path.read_text(encoding="utf-8"))
+        if status.get("synthesis_status"):
+            lines.append(status["synthesis_status"] + ".")
+        if status.get("evolution_status"):
+            lines.append(status["evolution_status"] + ".")
+    rows: list[list[object]] = []
+    for label, filename in (("synthesized", "synthesized.json"), ("evolved", "evolved.json")):
+        path = directory / filename
+        if not path.exists():
+            continue
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        sets = payload.get("sets") or {}
+        for name in (
+            "c5_development",
+            "c5_confirmation",
+            "c5_heldout_rc2",
+            "c10",
+            "c15",
+            "larger",
+        ):
+            metrics = sets.get(name) or {}
+            rows.append(
+                [
+                    label,
+                    name,
+                    f"{metrics.get('feasible', 0)}/{metrics.get('total', 0)}",
+                    metrics.get("vehicles_sum"),
+                    metrics.get("distance_sum"),
+                    metrics.get("primary_fault") or "",
+                ]
+            )
+    if not rows:
+        lines.append("No frozen solver was evaluated. Held-out instances were not used to adapt any solver.")
+        return "\n".join(lines)
+    lines.append(
+        _md_table(
+            ["Solver", "Slice", "Feasible", "Vehicles", "Distance", "Primary fault"],
+            rows,
+        )
+    )
+    lines.append("These numbers were measured after prompts and solvers were frozen. They were not fed back into synthesis or evolution.")
+    return "\n".join(lines)
 
 
 def _md_table(headers: list[str], body: list[list[object]]) -> str:
@@ -105,19 +199,44 @@ def main() -> None:
     qwen7 = [row for row in synthesis if "7b" in str(row.get("model")) and "qwen" in str(row.get("model"))]
     qwen14 = [row for row in synthesis if "14b" in str(row.get("model"))]
     single7 = single
-    def _category(reason: str) -> str:
-        text = (reason or "").strip()
-        if not text:
-            return "ok"
-        if text.startswith("Traceback"):
-            return "crash"
-        return text.split(":")[0][:80]
-
-    failures = Counter(
-        _category(str(row.get("failure_reason") or ""))
-        for row in synthesis + single + evolution
-        if row.get("failure_reason")
-    )
+    failures = Counter(_category(row) for row in synthesis + single + evolution)
+    by_seed_five = {int(row["seed"]): row for row in qwen7 if row.get("seed") is not None}
+    by_seed_single = {int(row["seed"]): row for row in single7 if row.get("seed") is not None}
+    paired_seeds = sorted(set(by_seed_five) & set(by_seed_single))
+    stage_wins = stage_ties = stage_losses = 0
+    g4_wins = g4_ties = g4_losses = 0
+    for seed in paired_seeds:
+        five_depth = _depth(by_seed_five[seed])
+        one_depth = _depth(by_seed_single[seed])
+        if five_depth > one_depth:
+            stage_wins += 1
+        elif five_depth < one_depth:
+            stage_losses += 1
+        else:
+            stage_ties += 1
+        five_g4 = int(by_seed_five[seed].get("g4_feasible") or 0)
+        one_g4 = int(by_seed_single[seed].get("g4_feasible") or 0)
+        if five_g4 > one_g4:
+            g4_wins += 1
+        elif five_g4 < one_g4:
+            g4_losses += 1
+        else:
+            g4_ties += 1
+    stage_p = _sign_test(stage_wins, stage_losses)
+    if stage_p is None:
+        paired_claim = "No paired seeds were available."
+    elif stage_p < 0.05 and stage_wins != stage_losses:
+        direction = "five-agent" if stage_wins > stage_losses else "single-agent"
+        paired_claim = (
+            f"On non-tied seeds the exact two-sided sign test gives p={stage_p:.4f} "
+            f"in favor of the {direction} stage depth."
+        )
+    else:
+        shown = "n/a" if stage_p is None else f"{stage_p:.4f}"
+        paired_claim = (
+            f"Exact two-sided sign test on non-tied stage depths: p={shown}. "
+            "This comparison does not establish that one architecture is superior."
+        )
     evolved = [row for row in evolution if row.get("improved") and row.get("fully_feasible")]
     best = None
     pool = [row for row in synthesis + single + evolution if row.get("fully_feasible") and row.get("vehicles") is not None]
@@ -139,12 +258,18 @@ def main() -> None:
         "## 2. Five-agent Qwen 7B vs single-agent Qwen 7B",
         "",
         _md_table(
-            ["System", "Seeds", "Executable", "Routing", "Charging", "Multi-customer", "Schneider C5 panel", "All C5"],
+            ["System", "Seeds", "Executable", "Routing", "Charging", "Multi-customer", "Schneider C5 panel", "All C5", "Tokens"],
             [
-                ["five-agent Qwen 7B", len(qwen7), _rate(qwen7, "executable"), _rate(qwen7, "routing"), _rate(qwen7, "charging"), _rate(qwen7, "multi_customer"), _rate(qwen7, "schneider_c5"), _rate(qwen7, "fully_feasible")],
-                ["single-agent Qwen 7B", len(single7), _rate(single7, "executable"), _rate(single7, "routing"), _rate(single7, "charging"), _rate(single7, "multi_customer"), _rate(single7, "schneider_c5"), _rate(single7, "fully_feasible")],
+                ["five-agent Qwen 7B", len(qwen7), _rate(qwen7, "executable"), _rate(qwen7, "routing"), _rate(qwen7, "charging"), _rate(qwen7, "multi_customer"), _rate(qwen7, "schneider_c5"), _rate(qwen7, "fully_feasible"), sum(int(r.get("tokens") or 0) for r in qwen7)],
+                ["single-agent Qwen 7B", len(single7), _rate(single7, "executable"), _rate(single7, "routing"), _rate(single7, "charging"), _rate(single7, "multi_customer"), _rate(single7, "schneider_c5"), _rate(single7, "fully_feasible"), sum(int(r.get("tokens") or 0) for r in single7)],
             ],
         ),
+        "",
+        f"Paired seeds: {len(paired_seeds)}. Stage-depth wins/ties/losses (five-agent vs single-agent): {stage_wins}/{stage_ties}/{stage_losses}.",
+        f"G4-feasible-count wins/ties/losses: {g4_wins}/{g4_ties}/{g4_losses}.",
+        paired_claim,
+        "",
+        "Single-agent token ceilings are the paired five-agent token totals. Call-boundary overshoot is recorded on each single-agent row as `token_overshoot`.",
         "",
         "## 3. Qwen 7B vs Qwen 14B (five-agent)",
         "",
@@ -183,11 +308,18 @@ def main() -> None:
             for row in blocked
         ],
         "",
-        "## 5. Failure categories",
+        "## 5. Final held-out and scale evaluation",
+        "",
+        _scale_section(),
+        "",
+        "## 6. Failure categories",
         "",
         _md_table(
-            ["Failure", "Count"],
-            [[name, count] for name, count in failures.most_common()] or [["none", 0]],
+            ["Category", "Count"],
+            [[name, failures.get(name, 0)] for name in (
+                "SUCCESS", "SYNTAX", "RUNTIME", "TIMEOUT", "DEPOT", "VISIT", "CAPACITY",
+                "WINDOW", "BATTERY", "CHARGE_POLICY", "GENERALITY", "BUDGET",
+            )],
         ),
         "",
         "## Best valid generated solver",

@@ -5,7 +5,7 @@ import ast
 import re
 from dataclasses import dataclass
 
-from evrptw_autolab.slm_evo.types import PatchOp, PatchProposal
+from evrptw_autolab.evolution.types import PatchOp, PatchProposal
 
 
 @dataclass

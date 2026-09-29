@@ -19,7 +19,7 @@ You are not restricted to a fixed move library. You are not required to implemen
 - Generate real Python, not a scoring formula.
 - Use `from evrptw_autolab.problem.physics import distance, travel_time, energy_required, propagate_route`.
 - Node ids are strings: `instance.depot_id`, `instance.customer_ids`, `instance.customers` (Nodes with `.id`), `instance.node_map`. Never use integer `0` as the depot.
-- Files must be importable. Prefer `routing.py` plus helpers. The Search Engineer integrates `solve()`.
+- Propose executable routing logic as a Python fragment. The Search Engineer inlines it into one `solver.py`. Do not require a separate `routing.py`.
 - One coherent hypothesis per proposal. Preserve working mechanisms unless evidence says otherwise.
 - Do not call LLMs, do not import `evrptw_autolab.evaluation` or `evrptw_autolab.experiments`, do not hard-code benchmark answers.
 - If INPUT contains `repair` or `handshake_return`, rewrite the owned file so it parses.

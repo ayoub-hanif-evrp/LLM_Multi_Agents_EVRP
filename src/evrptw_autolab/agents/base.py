@@ -7,7 +7,7 @@ from typing import Any, Generic, TypeVar
 
 from pydantic import BaseModel, ValidationError
 
-from evrptw_autolab.llm.usage import LLMUsage, UsageLog
+from evrptw_autolab.llm.usage import BudgetExhausted, LLMUsage, UsageLog
 
 ROOT = Path(__file__).resolve().parents[3]
 TModel = TypeVar("TModel", bound=BaseModel)
@@ -163,8 +163,24 @@ class Agent(Generic[TModel]):
         self.temperature = temperature
         self.usage_log = usage_log
         self.prompt = (ROOT / "prompts" / self.prompt_name).read_text(encoding="utf-8")
+        self.max_calls: int | None = None
+        self.token_ceiling: int | None = None
+
+    def _spent(self) -> tuple[int, int]:
+        if self.usage_log is None:
+            return 0, 0
+        rows = self.usage_log.all()
+        tokens = 0
+        for row in rows:
+            tokens += int(row.get("prompt_tokens") or 0) + int(row.get("completion_tokens") or 0)
+        return len(rows), tokens
 
     def _complete(self, prompt: str, *, json_mode: bool = True) -> str:
+        calls, tokens = self._spent()
+        if self.max_calls is not None and calls >= self.max_calls:
+            raise BudgetExhausted("call ceiling")
+        if self.token_ceiling is not None and tokens >= self.token_ceiling:
+            raise BudgetExhausted("token ceiling")
         raw = self.backend.complete(
             prompt=prompt,
             role=self.role,
@@ -172,34 +188,35 @@ class Agent(Generic[TModel]):
             model=self.model,
             json_mode=json_mode,
         )
-        return raw if isinstance(raw, str) else json.dumps(raw)
-
-    def _record_usage(self, *, retries: int, parse_valid: bool) -> None:
-        usage = getattr(self.backend, "last_usage", None)
-        if not isinstance(usage, LLMUsage):
-            usage = LLMUsage(
-                model_id=self.model,
-                provider=type(self.backend).__name__,
-                role=self.role,
-                latency_s=0.0,
-                retry_count=retries,
-                parse_valid=parse_valid,
-            )
+        pending = getattr(self.backend, "pending_usages", None)
+        if pending is None:
+            recorded = [
+                LLMUsage(
+                    model_id=self.model,
+                    provider=type(self.backend).__name__,
+                    role=self.role,
+                    latency_s=0.0,
+                    model_tag=self.model,
+                )
+            ]
         else:
-            usage.retry_count = retries
-            usage.parse_valid = parse_valid
+            recorded = list(pending)
+            self.backend.pending_usages = []
         if self.usage_log is not None:
-            self.usage_log.record(usage)
+            for usage in recorded:
+                usage.role = self.role
+                if not usage.model_tag:
+                    usage.model_tag = self.model
+                self.usage_log.record(usage)
+        return raw if isinstance(raw, str) else json.dumps(raw)
 
     def run(self, payload: dict[str, Any]) -> TModel:
         prompt = self.prompt + "\n\nINPUT:\n" + json.dumps(payload, default=str)
         raw = self._complete(prompt)
-        retries = 0
         try:
             data = coerce_schema_payload(self.schema.__name__, extract_json(raw))
             parsed = self.schema.model_validate(data)
         except (ValidationError, ValueError, json.JSONDecodeError) as first:
-            retries = 1
             repair = (
                 "\n\nINVALID_ARCHITECT_PLAN. Reply with ONLY one valid JSON object. "
                 "target must be exactly one of BOOTSTRAP, ROUTING, CHARGING, SEARCH, "
@@ -212,9 +229,7 @@ class Agent(Generic[TModel]):
                 data = coerce_schema_payload(self.schema.__name__, extract_json(raw))
                 parsed = self.schema.model_validate(data)
             except (ValidationError, ValueError, json.JSONDecodeError) as second:
-                self._record_usage(retries=retries, parse_valid=False)
                 raise ValueError(f"{self.role} output invalid: {second}") from first
-        self._record_usage(retries=retries, parse_valid=True)
         return parsed
 
     def write_python(self, payload: dict[str, Any], *, filename: str, marker: str) -> str:
@@ -232,5 +247,4 @@ class Agent(Generic[TModel]):
         self.last_raw = raw if isinstance(raw, str) else str(raw)
         source = extract_python_source(raw)
         self.last_extracted = source
-        self._record_usage(retries=0, parse_valid=bool(source.strip()))
         return source

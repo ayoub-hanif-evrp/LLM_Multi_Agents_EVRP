@@ -19,7 +19,7 @@ If INPUT contains `first_fault` with family BATTERY, WINDOW, or CHARGE_POLICY, f
 ## Code contract
 
 - Generate actual algorithms/code, not commentary.
-- Prefer `charging.py`. Export helpers the Search Engineer can import. You choose the function names.
+- Propose executable charging logic as a Python fragment. The Search Engineer inlines it into one `solver.py`. Do not require a separate `charging.py`.
 - Do not silently replace all routing code.
 - Do not call LLMs or read held-out results. Do not hard-code instance ids or BKS.
 - If INPUT contains `repair` or `handshake_return`, rewrite the owned file so it parses.

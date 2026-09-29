@@ -1,19 +1,27 @@
-# Equal budget for every synthesis and evolution run.
-seeds: [11, 22, 33, 44, 55]
+# Equal safety ceiling for every synthesis and evolution run.
+# A run stops when synthesis succeeds. It does not spend leftover calls.
 max_llm_calls: 80
 
 five_agent_synthesis:
-  profiles:
-    - qwen25_coder_7b
-    - deepseek_coder_67b
-    - codellama_7b
-    - qwen25_coder_14b
+  runs:
+    - profile: qwen25_coder_7b
+      seeds: [11, 22, 33, 44, 55, 66, 77, 88, 99, 111]
+    - profile: qwen25_coder_14b
+      seeds: [11, 22, 33, 44, 55, 66, 77, 88, 99, 111]
+    - profile: deepseek_coder_67b
+      seeds: [11, 22, 33, 44, 55]
+    - profile: codellama_7b
+      seeds: [11, 22, 33, 44, 55]
 
 single_agent_synthesis:
   profile: qwen25_coder_7b
+  paired_profile: qwen25_coder_7b
+  seeds: [11, 22, 33, 44, 55, 66, 77, 88, 99, 111]
 
 solver_evolution:
   profile: qwen25_coder_14b
+  seeds: [11, 22, 33, 44, 55]
   max_generations: 8
-  candidates_per_role: 1
+  candidates_per_role: 2
   beam_size: 2
+  max_llm_calls: 80

@@ -9,7 +9,7 @@ class CriticAgent(Agent[CriticDecision]):
 
     def handshake(self, payload: dict) -> HandshakeVerdict:
         previous = self.schema
-        self.schema = HandshakeVerdict  # type: ignore[misc]
+        self.schema = HandshakeVerdict  # type: ignore[assignment]
         try:
             result = self.run({**payload, "task": "HANDSHAKE"})
         finally:

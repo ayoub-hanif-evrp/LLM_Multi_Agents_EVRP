@@ -7,6 +7,10 @@ from pathlib import Path
 from typing import Any
 
 
+class BudgetExhausted(RuntimeError):
+    """Raised when a run has reached its call or token ceiling."""
+
+
 @dataclass
 class LLMUsage:
     model_id: str
@@ -19,6 +23,9 @@ class LLMUsage:
     parse_valid: bool = False
     code_valid: bool = False
     digest: str | None = None
+    seed: int | None = None
+    repair: bool = False
+    model_tag: str | None = None
 
     def as_dict(self) -> dict[str, Any]:
         return asdict(self)

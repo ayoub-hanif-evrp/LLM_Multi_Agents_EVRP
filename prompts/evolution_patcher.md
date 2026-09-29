@@ -1,4 +1,4 @@
-# SLM-Evo patch proposer (shared domain facts)
+# Solver evolution patch proposer
 
 You propose **small code patches** to an already feasible EVRPTW `solver.py`.
 

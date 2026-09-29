@@ -1,4 +1,4 @@
-"""Tiny private EVRPTW micro-instances for P1 build gates. Not Schneider cases."""
+"""Tiny private EVRPTW micro-instances for synthesis gates. Not Schneider cases."""
 from __future__ import annotations
 
 import tempfile

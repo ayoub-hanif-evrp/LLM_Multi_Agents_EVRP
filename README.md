@@ -17,13 +17,11 @@ The problem is Schneider’s Electric Vehicle Routing Problem with Time Windows 
 uv sync
 uv run pytest -q
 uv run ruff check src tests
+uv run mypy src/evrptw_autolab
 uv run voltforge validate-data
 uv run voltforge models list
 
-uv run python scripts/run_five_agent.py --all
-uv run python scripts/run_single_agent.py --all
-uv run python scripts/run_evolution.py --all
-uv run python scripts/generate_paper_results.py
+uv run python scripts/run_final_experiments.py
 ```
 
 Models, seeds, and the shared call budget live in `configs/models.yaml` and `configs/experiments.yaml`. A missing local model is recorded as `SKIPPED_NOT_INSTALLED` and is not replaced.

@@ -29,10 +29,11 @@ def _module_defines(tree: ast.AST, name: str) -> bool:
 def _solve_contract_errors(tree: ast.AST, source: str) -> list[str]:
     """Static contract for solver.py. Feasibility is not required; stubs and wrong APIs are."""
     errors: list[str] = []
-    for node in tree.body:
+    body = getattr(tree, "body", [])
+    for node in body:
         if isinstance(node, ast.ClassDef) and node.name in _FORBIDDEN_SOLVER_CLASSES:
             errors.append(f"forbidden:redefine_{node.name}")
-    solve = next((n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == "solve"), None)
+    solve = next((n for n in body if isinstance(n, ast.FunctionDef) and n.name == "solve"), None)
     if solve is None:
         return errors
     args = [a.arg for a in solve.args.args]

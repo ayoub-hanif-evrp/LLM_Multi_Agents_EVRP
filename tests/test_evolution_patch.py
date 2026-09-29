@@ -1,12 +1,12 @@
-"""Unit tests for SLM-Evo AST patch applicator."""
+"""Unit tests for solver evolution AST patch applicator."""
 from __future__ import annotations
 
 from pathlib import Path
 
 import pytest
 
-from evrptw_autolab.slm_evo.patch_apply import apply_ops, parse_proposal_json
-from evrptw_autolab.slm_evo.types import PatchOp
+from evrptw_autolab.evolution.patch_apply import apply_ops, parse_proposal_json
+from evrptw_autolab.evolution.types import PatchOp
 
 ROOT = Path(__file__).resolve().parents[1]
 FROZEN = ROOT / "tests" / "fixtures" / "feasible_parent" / "solver.py"

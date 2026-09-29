@@ -1,0 +1,7 @@
+{
+  "synthesis_solver": null,
+  "evolution_solver": null,
+  "evolution_started": false,
+  "synthesis_status": "no fully feasible synthesized solver",
+  "evolution_status": "no fully feasible evolved solver"
+}

@@ -4,7 +4,7 @@ from evrptw_autolab.agents.schemas import CriticDecision, HandshakeVerdict
 
 class CriticAgent(Agent[CriticDecision]):
     role = "critic"
-    prompt_name = "test_evolution_critic.md"
+    prompt_name = "critic.md"
     schema = CriticDecision
 
     def handshake(self, payload: dict) -> HandshakeVerdict:

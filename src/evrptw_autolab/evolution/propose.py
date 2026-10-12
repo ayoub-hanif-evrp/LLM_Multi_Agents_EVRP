@@ -30,7 +30,7 @@ class _PatchSchema(BaseModel):
 
 class PatchAgent(Agent[_PatchSchema]):
     role = "patcher"
-    prompt_name = "evolution_patcher.md"
+    prompt_name = "evolution.md"
     schema = _PatchSchema
 
     def __init__(self, *args: Any, role_name: str = "patcher", **kwargs: Any) -> None:

@@ -1,5 +1,0 @@
-{"round": 1, "stage": "executable", "passed": true, "repair": false, "roles": ["single"], "failure_category": "", "failure_reason": "", "critic": {}, "calls": 1, "tokens": 2670}
-{"round": 2, "stage": "routing", "passed": true, "repair": false, "roles": ["single"], "failure_category": "", "failure_reason": "", "critic": {}, "calls": 2, "tokens": 5764}
-{"round": 3, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 3, "tokens": 8861}
-{"round": 4, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 4, "tokens": 12548}
-{"round": 5, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 5, "tokens": 16360}

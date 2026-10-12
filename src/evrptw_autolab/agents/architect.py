@@ -4,5 +4,5 @@ from evrptw_autolab.agents.schemas import ArchitectPlan
 
 class ArchitectAgent(Agent[ArchitectPlan]):
     role = "architect"
-    prompt_name = "solver_architect.md"
+    prompt_name = "architect.md"
     schema = ArchitectPlan

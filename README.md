@@ -2,13 +2,29 @@
 
 Local coding models act as agents, write an EVRPTW solver, execute it, receive evaluator feedback, and improve the code. After synthesis or evolution, the solver runs with **zero LLM calls**.
 
-The problem is Schneider’s Electric Vehicle Routing Problem with Time Windows (full recharge). The laboratory provides the instances, the physics API, a sandbox, and an exact evaluator. It does not provide a route-construction method or a hidden fallback solver.
+```
+LOCAL CODING MODELS
+        ↓
+5 SPECIALIZED AGENTS
+        ↓
+GENERATED solver.py
+        ↓
+DETERMINISTIC EVRPTW EVALUATOR
+        ↓
+FEEDBACK + REPAIR
+        ↓
+FROZEN SOLVER
+        ↓
+ZERO LLM CALLS AT DEPLOYMENT
+```
+
+The laboratory provides instances, the physics API, a sandbox, and an exact evaluator. It does not provide a route-construction method or a hidden fallback solver.
 
 ## Experiments
 
 | Name | What it does |
 | --- | --- |
-| `five_agent_synthesis` | Five roles (architect, routing, charging, search, critic) share one local model and create a solver from scratch. |
+| `five_agent_synthesis` | Architect, Routing, Charging, Search, Critic share one local model and create a solver. Each coding role returns a complete `solver.py` candidate. |
 | `single_agent_synthesis` | One coding agent receives the same problem and API information and creates a solver alone. |
 | `solver_evolution` | Starting from a valid generated solver, the model proposes small code patches. Only feasible improvements are kept. |
 | `evaluation` | Run a frozen solver with no language model. |
@@ -21,12 +37,13 @@ uv run mypy src/evrptw_autolab
 uv run voltforge validate-data
 uv run voltforge models list
 
+uv run python scripts/smoke_micro.py
 uv run python scripts/run_final_experiments.py
 ```
 
 Models, seeds, and the shared call budget live in `configs/models.yaml` and `configs/experiments.yaml`. A missing local model is recorded as `SKIPPED_NOT_INSTALLED` and is not replaced.
 
-Paper tables are written to `results/paper/`. The earlier engineering-validation campaign is kept in `results/engineering_validation/` and is not the paper table.
+Paper tables are written to `results/paper/`. Run provenance is copied to `results/paper/raw/`. Temporary `workspace/` is gitignored. Earlier engineering-validation artifacts remain in `results/engineering_validation/`.
 
 ## Dataset
 

@@ -1,6 +1,0 @@
-{"round": 1, "stage": "executable", "passed": false, "repair": false, "roles": ["single"], "failure_category": "RUNTIME", "failure_reason": "NameError: name 'random' is not defined. Did you forget to import 'random'?", "critic": {}, "calls": 1, "tokens": 2485}
-{"round": 2, "stage": "executable", "passed": true, "repair": true, "roles": ["single"], "failure_category": "", "failure_reason": "", "critic": {}, "calls": 2, "tokens": 5591}
-{"round": 3, "stage": "routing", "passed": true, "repair": false, "roles": ["single"], "failure_category": "", "failure_reason": "", "critic": {}, "calls": 3, "tokens": 8276}
-{"round": 4, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 4, "tokens": 11286}
-{"round": 5, "stage": "charging", "passed": false, "repair": false, "roles": ["single"], "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000", "critic": {}, "calls": 5, "tokens": 14907}
-{"round": 6, "stage": "charging", "passed": false, "stagnation": true, "failure_category": "BATTERY", "failure_reason": "BATTERY: battery_arrival=-20.000 | repeated identical trial"}

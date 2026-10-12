@@ -1,5 +1,0 @@
-{"round": 1, "stage": "executable", "passed": false, "repair": false, "roles": ["single"], "failure_category": "RUNTIME", "failure_reason": "AttributeError: 'str' object has no attribute 'x'", "critic": {}, "calls": 1, "tokens": 2604}
-{"round": 2, "stage": "executable", "passed": true, "repair": true, "roles": ["single"], "failure_category": "", "failure_reason": "", "critic": {}, "calls": 2, "tokens": 5948}
-{"round": 3, "stage": "routing", "passed": false, "repair": false, "roles": ["single"], "failure_category": "DEPOT", "failure_reason": "DEPOT: route must start and end at depot_id", "critic": {}, "calls": 3, "tokens": 8899}
-{"round": 4, "stage": "routing", "passed": false, "repair": false, "roles": ["single"], "failure_category": "DEPOT", "failure_reason": "DEPOT: route must start and end at depot_id", "critic": {}, "calls": 4, "tokens": 12244}
-{"round": 5, "stage": "routing", "passed": false, "stagnation": true, "failure_category": "DEPOT", "failure_reason": "DEPOT: route must start and end at depot_id | repeated identical trial"}

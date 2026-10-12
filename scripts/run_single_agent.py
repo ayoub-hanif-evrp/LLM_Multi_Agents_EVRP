@@ -14,7 +14,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from evrptw_autolab.llm.ollama import OllamaBackend  # noqa: E402
 from evrptw_autolab.llm.registry import availability, resolve_profile  # noqa: E402
-from evrptw_autolab.synthesis.from_scratch import run_from_scratch  # noqa: E402
+from evrptw_autolab.synthesis.from_scratch import copy_run_provenance, run_from_scratch  # noqa: E402
 
 
 def _config() -> dict:
@@ -76,6 +76,11 @@ def run_one(profile_id: str, seed: int, max_llm_calls: int, token_ceiling: int |
     else:
         report["published_solver"] = ""
     dest.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    copy_run_provenance(
+        workspace,
+        ROOT / "results" / "paper" / "raw" / "single_agent" / f"{profile_id}_seed{seed}",
+        report,
+    )
     print(json.dumps({k: report[k] for k in ("profile", "seed", "schneider_c5", "failure_reason", "llm_calls")}))
     return report
 

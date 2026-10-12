@@ -1,6 +1,0 @@
-{"round": 1, "stage": "executable", "passed": false, "repair": false, "roles": ["single"], "failure_category": "RUNTIME", "failure_reason": "AttributeError: 'str' object has no attribute 'x'", "critic": {}, "calls": 1, "tokens": 2571}
-{"round": 2, "stage": "executable", "passed": false, "repair": true, "roles": ["single"], "failure_category": "RUNTIME", "failure_reason": "AttributeError: 'str' object has no attribute 'x'", "critic": {}, "calls": 2, "tokens": 5841}
-{"round": 3, "stage": "executable", "passed": false, "repair": true, "roles": ["single"], "failure_category": "RUNTIME", "failure_reason": "AttributeError: 'str' object has no attribute 'x'", "critic": {}, "calls": 3, "tokens": 9110}
-{"round": 4, "stage": "executable", "passed": false, "repair": false, "roles": ["single"], "failure_category": "RUNTIME", "failure_reason": "AttributeError: 'str' object has no attribute 'x'", "critic": {}, "calls": 4, "tokens": 12390}
-{"round": 5, "stage": "executable", "passed": false, "repair": true, "roles": ["single"], "failure_category": "RUNTIME", "failure_reason": "AttributeError: 'str' object has no attribute 'x'", "critic": {}, "calls": 5, "tokens": 15641}
-{"round": 6, "stage": "executable", "passed": false, "stagnation": true, "failure_category": "RUNTIME", "failure_reason": "AttributeError: 'str' object has no attribute 'x' | repeated identical trial"}

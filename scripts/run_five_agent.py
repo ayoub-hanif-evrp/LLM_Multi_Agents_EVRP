@@ -14,7 +14,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from evrptw_autolab.llm.ollama import OllamaBackend  # noqa: E402
 from evrptw_autolab.llm.registry import availability, resolve_profile  # noqa: E402
-from evrptw_autolab.synthesis.from_scratch import run_from_scratch  # noqa: E402
+from evrptw_autolab.synthesis.from_scratch import copy_run_provenance, run_from_scratch  # noqa: E402
 
 
 def _config() -> dict:
@@ -87,7 +87,13 @@ def run_one(profile_id: str, seed: int, max_llm_calls: int) -> dict:
         temperatures=profile.temperatures,
         max_llm_calls=max_llm_calls,
     )
-    return _publish(report, profile_id, seed)
+    published = _publish(report, profile_id, seed)
+    copy_run_provenance(
+        workspace,
+        ROOT / "results" / "paper" / "raw" / "five_agent" / f"{profile_id}_seed{seed}",
+        published,
+    )
+    return published
 
 
 def main() -> None:

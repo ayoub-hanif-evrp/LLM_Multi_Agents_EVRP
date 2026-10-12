@@ -53,6 +53,16 @@ Routes must be list[list[str]], each starting and ending at instance.depot_id.
 The depot id may appear only as the first and last stop. D → C1 → D → C2 → D is invalid:
 an internal depot must not make several trips count as one vehicle.
 
+Charging representation (API facts, not a routing heuristic):
+- A returned route is a list of node-ID strings.
+- The evaluator recomputes energy from the returned route.
+- The ONLY way a returned route contains a charging visit is that a station ID appears as a node in that route.
+- propagate_route() automatically performs the Schneider full recharge when it encounters a station.
+- StopState is diagnostic and immutable. Modifying a StopState does NOT modify the route.
+- Do not manually assign stop.battery_departure, stop.energy_charged, or stop.arrival_time.
+- full_recharge() returns ChargeDecision, not a float.
+- ChargeDecision.battery_departure is the resulting battery level after full recharge.
+
 Physics signatures (positional Node / VehicleSpec — do not pass floats or routes):
 from evrptw_autolab.problem.physics import distance, travel_time, energy_required, full_recharge, propagate_route
 distance(a: Node, b: Node) -> float
@@ -63,7 +73,7 @@ ChargeDecision fields: energy_charged: float, duration: float, battery_departure
 full_recharge does not return a float. Do not compare a ChargeDecision to a float.
 propagate_route(instance, node_ids: list[str]) -> list[StopState]
 StopState fields: node_id: str, arrival_time: float, service_start: float, departure_time: float, load: float, battery_arrival: float, battery_departure: float, energy_charged: float, distance_so_far: float.
-When a stop is a station, propagate_route applies full recharge itself and writes that ChargeDecision onto the StopState. StopState and ChargeDecision are frozen; do not assign to their fields.
+StopState and ChargeDecision live in evrptw_autolab.problem.physics, not problem.types.
 Get a Node with instance.node_map[node_id]. instance.customers is a tuple of Node; do not index it with a Node or dict.
 A route stores STRING ids only.
 Every customer_id must appear exactly once across routes.
@@ -76,12 +86,27 @@ from evrptw_autolab.problem.types import CandidateSolution
 packet = first_fault(instance, CandidateSolution(routes=routes))
 # packet["family"] == "OK" means the oracle accepts the routes.
 
-The lab reports a first-fault packet (family, node_id, route_index, detail). Fix that family.
+The lab reports a diagnostic for failed solutions (family, route, failed_node, battery_deficit, states, ...). Fix that family. The diagnostic never tells you which station to insert.
 
 def solve(instance, seed: int, time_limit_s: float) must live in solver.py and return
 {"routes": [...], "metadata": {...}} or an object with .routes.
 No LLM calls. Do not import evrptw_autolab.evaluation or evrptw_autolab.experiments.
 Do not hard-code instance ids, BKS tables, or routes.
+"""
+
+
+SELF_CHECK = """
+Before returning solver.py, verify internally (do not paste examples):
+- solve() exists at module level
+- every customer is returned exactly once
+- routes start and end at the depot
+- no internal depot visits
+- routes contain string node IDs only
+- charging stations, if used, appear as actual route nodes
+- no mutation of StopState fields
+- no invented Node attributes
+- no hardcoded benchmark IDs
+- earlier passed capabilities are preserved
 """
 
 
@@ -92,6 +117,6 @@ Unlimited fleet. Laboratory ranking of a finished solve() is lexicographic:
 feasibility, then number of vehicles, then total Euclidean distance.
 Invent the algorithm yourself.
 The framework does not supply construction, charging-repair, merge, or acceptance operators.
-""" + INSTANCE_API
+""" + INSTANCE_API + "\n" + SELF_CHECK
 
 API_SNIPPET = INSTANCE_API

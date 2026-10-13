@@ -15,6 +15,10 @@ sys.path.insert(0, str(ROOT / "src"))
 from evrptw_autolab.llm.ollama import OllamaBackend  # noqa: E402
 from evrptw_autolab.llm.registry import availability, resolve_profile  # noqa: E402
 from evrptw_autolab.synthesis.from_scratch import copy_run_provenance, run_from_scratch  # noqa: E402
+from evrptw_autolab.synthesis.provenance import (  # noqa: E402
+    should_reuse_result,
+    stamp_report,
+)
 
 
 def _config() -> dict:
@@ -25,6 +29,8 @@ def _publish(report: dict, profile_id: str, seed: int) -> dict:
     dest = ROOT / "results" / "paper" / "synthesis" / f"{profile_id}_seed{seed}.json"
     solver_out = ROOT / "results" / "paper" / "solvers" / "five_agent" / f"{profile_id}_seed{seed}"
     source = Path(report["solver_path"])
+    if not source.is_absolute():
+        source = ROOT / source
     if source.exists() and source.read_text(encoding="utf-8").strip():
         solver_out.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(source, solver_out / "solver.py")
@@ -33,6 +39,9 @@ def _publish(report: dict, profile_id: str, seed: int) -> dict:
         report["published_solver"] = ""
     report["profile"] = profile_id
     report["seed"] = seed
+    report.setdefault("model_tag", report.get("model") or "")
+    report.setdefault("model_digest", report.get("model_digest") or "")
+    report = stamp_report(report, ROOT)
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(json.dumps(report, indent=2), encoding="utf-8")
     print(json.dumps({k: report[k] for k in ("profile", "seed", "schneider_c5", "failure_reason", "llm_calls")}))
@@ -109,9 +118,11 @@ def main() -> None:
             profile_id = str(spec["profile"])
             for seed in spec["seeds"]:
                 dest = ROOT / "results" / "paper" / "synthesis" / f"{profile_id}_seed{int(seed)}.json"
-                if dest.exists():
+                if should_reuse_result(dest, ROOT):
                     print(f"keep existing {dest.name}", flush=True)
                     continue
+                if dest.exists():
+                    dest.unlink()
                 try:
                     run_one(profile_id, int(seed), budget)
                 except Exception as error:  # noqa: BLE001

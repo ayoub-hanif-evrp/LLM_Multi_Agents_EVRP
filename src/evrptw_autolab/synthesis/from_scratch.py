@@ -8,6 +8,7 @@ import time
 from pathlib import Path
 from typing import Any
 
+import yaml
 from pydantic import BaseModel, Field
 
 from evrptw_autolab.agents import build_team
@@ -19,7 +20,11 @@ from evrptw_autolab.evolution.evaluate import (
     known_ids_for_panel,
     panel_instances,
 )
-from evrptw_autolab.evolution.patch_apply import apply_proposal, parse_proposal_json
+from evrptw_autolab.evolution.patch_apply import (
+    apply_proposal,
+    parse_proposal_json,
+    proposal_from_raw_function,
+)
 from evrptw_autolab.llm.usage import BudgetExhausted, UsageLog
 from evrptw_autolab.problem.micro import (
     micro_g1_one_customer,
@@ -27,7 +32,7 @@ from evrptw_autolab.problem.micro import (
     micro_g3_two_customers,
 )
 from evrptw_autolab.problem.types import EVRPTWInstance
-from evrptw_autolab.sandbox.limits import RunLimits
+from evrptw_autolab.sandbox.limits import RunLimits, limits_from_config
 from evrptw_autolab.sandbox.runner import run_solver
 from evrptw_autolab.sandbox.static_scan import scan_source
 from evrptw_autolab.synthesis.contract import PROBLEM_BRIEF
@@ -41,6 +46,8 @@ __all__ = [
     "STAGES",
     "STAGE_CANDIDATES",
     "PROPOSALS_PER_ROLE",
+    "BEAM_SIZE",
+    "MAX_RESTARTS_PER_STAGE",
     "NOOP_NOTE",
     "SingleAgent",
     "classify_category",
@@ -59,6 +66,20 @@ STAGES = ("executable", "routing", "charging", "multi_customer", "schneider_c5")
 INTEGRATION = {"SYNTAX", "RUNTIME", "TIMEOUT", "GENERALITY"}
 FAULTS = {"DEPOT", "VISIT", "CAPACITY", "WINDOW", "BATTERY", "CHARGE_POLICY"}
 PROPOSALS_PER_ROLE = 2
+BEAM_SIZE = 2
+MAX_RESTARTS_PER_STAGE = 2
+FORBIDDEN_SOLVER_MODULES = {
+    "evrptw_autolab.problem.evaluator",
+    "evrptw_autolab.llm",
+}
+FORBIDDEN_SOLVER_PREFIXES = (
+    "evrptw_autolab.llm",
+    "evrptw_autolab.experiments",
+    "evrptw_autolab.evaluation",
+    "evrptw_autolab.orchestration",
+    "evrptw_autolab.synthesis",
+)
+FORBIDDEN_SOLVER_NAMES = {"evaluator"}
 NOOP_NOTE = (
     "The proposed patch produced a program already tested at this stage. "
     "Make a materially different code change based on the diagnostic."
@@ -116,6 +137,35 @@ def classify_category(*, g4_passed: bool, category: str, budget: bool) -> str:
     return "RUNTIME"
 
 
+def _forbidden_solver_imports(source: str) -> str | None:
+    """Reject benchmark evaluator / LLM / experiment runner imports in solver.py."""
+    try:
+        tree = ast.parse(source or "")
+    except SyntaxError:
+        return None
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                name = alias.name
+                if name in FORBIDDEN_SOLVER_MODULES or name.startswith(FORBIDDEN_SOLVER_PREFIXES):
+                    return f"forbidden_import:{name}"
+                if name.split(".")[0] == "evrptw_autolab" and any(
+                    name == mod or name.startswith(mod + ".") for mod in FORBIDDEN_SOLVER_MODULES
+                ):
+                    return f"forbidden_import:{name}"
+        elif isinstance(node, ast.ImportFrom):
+            module = node.module or ""
+            if module in FORBIDDEN_SOLVER_MODULES or module.startswith(FORBIDDEN_SOLVER_PREFIXES):
+                return f"forbidden_import:{module}"
+            if module == "evrptw_autolab.problem":
+                for alias in node.names:
+                    if alias.name in FORBIDDEN_SOLVER_NAMES:
+                        return f"forbidden_import:{module}.{alias.name}"
+            if module.startswith("evrptw_autolab.problem.evaluator"):
+                return f"forbidden_import:{module}"
+    return None
+
+
 def precheck_source(source: str, known_ids: set[str]) -> dict[str, Any] | None:
     """Reject a trial before execution. None means the source may be executed."""
     text = source or ""
@@ -125,6 +175,9 @@ def precheck_source(source: str, known_ids: set[str]) -> dict[str, Any] | None:
         ast.parse(text)
     except SyntaxError as error:
         return _blocked("SYNTAX", f"SyntaxError: {error.msg}", syntax=True, detail=str(error))
+    forbidden = _forbidden_solver_imports(text)
+    if forbidden:
+        return _blocked("RUNTIME", forbidden, syntax=False, detail=forbidden)
     hardcoded = find_hardcoded_node_ids(text, known_ids=known_ids)
     if hardcoded:
         detail = ",".join(hardcoded)
@@ -498,6 +551,22 @@ def _request_full_solver(agent: Agent[Any], payload: dict[str, Any]) -> str:
     return agent.write_python(body, filename="solver.py", marker="def solve")
 
 
+def _try_raw_function_patch(text: str, parent: str) -> tuple[str, str] | None:
+    """Accept a single raw FunctionDef as ADD/REPLACE against parent."""
+    fallback = extract_python_source(text)
+    if not fallback.strip():
+        return None
+    proposal = proposal_from_raw_function(fallback, parent)
+    if proposal is not None:
+        applied = apply_proposal(parent, proposal)
+        if applied.ok:
+            return applied.source, ""
+        return "", f"patch_apply: {applied.error}"
+    if "def solve" in fallback:
+        return fallback, ""
+    return None
+
+
 def _request_patch(agent: Agent[Any], payload: dict[str, Any], parent: str) -> tuple[str, str]:
     """Return (source, error). error non-empty means apply/parse failed."""
     symbols = _top_level_names(parent)
@@ -524,9 +593,9 @@ def _request_patch(agent: Agent[Any], payload: dict[str, Any], parent: str) -> t
     try:
         data = extract_json(text)
     except (ValueError, json.JSONDecodeError, TypeError) as error:
-        fallback = extract_python_source(text)
-        if "def solve" in fallback:
-            return fallback, ""
+        raw_hit = _try_raw_function_patch(text, parent)
+        if raw_hit is not None:
+            return raw_hit
         return "", f"patch_parse: {error}"
     try:
         proposal = parse_proposal_json(data, role=getattr(agent, "role", ""))
@@ -534,9 +603,9 @@ def _request_patch(agent: Agent[Any], payload: dict[str, Any], parent: str) -> t
         files_src = _source_from_files_payload(data)
         if "def solve" in files_src:
             return files_src, ""
-        fallback = extract_python_source(text)
-        if "def solve" in fallback:
-            return fallback, ""
+        raw_hit = _try_raw_function_patch(text, parent)
+        if raw_hit is not None:
+            return raw_hit
         return "", f"patch_parse: {error}"
     applied = apply_proposal(parent, proposal)
     if applied.ok:
@@ -544,7 +613,51 @@ def _request_patch(agent: Agent[Any], payload: dict[str, Any], parent: str) -> t
     files_src = _source_from_files_payload(data)
     if "def solve" in files_src:
         return files_src, ""
+    raw_hit = _try_raw_function_patch(text, parent)
+    if raw_hit is not None:
+        return raw_hit
     return "", f"patch_apply: {applied.error}"
+
+
+def _protocol_knobs(repo_root: Path) -> tuple[int, int]:
+    beam = BEAM_SIZE
+    restarts = MAX_RESTARTS_PER_STAGE
+    path = repo_root / "configs" / "experiments.yaml"
+    if path.exists():
+        raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        beam = int(raw.get("beam_size") or beam)
+        restarts = int(raw.get("max_restarts_per_stage") or restarts)
+    return max(1, beam), max(0, restarts)
+
+
+def _distinct_sources(rows: list[dict[str, Any]], limit: int) -> list[str]:
+    out: list[str] = []
+    seen: set[str] = set()
+    for row in rows:
+        source = str(row.get("source") or "")
+        if not source.strip():
+            continue
+        digest = code_hash(source)
+        if digest in seen:
+            continue
+        seen.add(digest)
+        out.append(source)
+        if len(out) >= limit:
+            break
+    return out
+
+
+def _select_passing_beam(passing: list[dict[str, Any]], *, stage: str, limit: int) -> list[str]:
+    """G0–G3: distinct passers in discovery order. G4 4/4: lex vehicles/distance."""
+    if stage == "schneider_c5":
+        ordered = sorted(passing, key=_lex_pass_key)
+        return _distinct_sources(ordered, limit)
+    return _distinct_sources(passing, limit)
+
+
+def _select_stage_best_beam(evaluated: list[dict[str, Any]], limit: int) -> list[str]:
+    ordered = sorted(evaluated, key=progress_key, reverse=True)
+    return _distinct_sources(ordered, limit)
 
 
 def run_from_scratch(
@@ -569,6 +682,7 @@ def run_from_scratch(
         if name not in STAGES:
             raise ValueError(f"unknown stage {name}")
     root = repo_root or Path(__file__).resolve().parents[3]
+    beam_limit, max_restarts = _protocol_knobs(root)
     started = time.monotonic()
     workspace.mkdir(parents=True, exist_ok=True)
     committed_dir = workspace / "committed"
@@ -581,7 +695,7 @@ def run_from_scratch(
     log_path = workspace / "rounds.jsonl"
     if log_path.exists():
         log_path.unlink()
-    limits = RunLimits(wall_clock_s=20.0)
+    limits = limits_from_config()
     panel = panel_instances(data_root) if "schneider_c5" in active_stages else []
     if "schneider_c5" in active_stages and len(panel) != 4:
         raise RuntimeError(f"expected 4 Schneider C5 panel instances, found {len(panel)}")
@@ -601,8 +715,11 @@ def run_from_scratch(
         agent.token_ceiling = token_ceiling
 
     committed = ""
+    beam: list[str] = []
     stage_best = ""
     stage_best_info: dict[str, Any] = {}
+    stage_best_beam: list[str] = []
+    committed_by_stage: dict[str, str] = {}
     stage_index = 0
     passed = {name: False for name in STAGES}
     failure: dict[str, Any] = {}
@@ -613,7 +730,11 @@ def run_from_scratch(
     rounds = 0
     budget_hit = False
     failed_hashes: set[str] = set()
-    best_g4 = 0
+    curriculum_g4_best = 0
+    batches_without_improvement = 0
+    restart_count = 0
+    last_stage_for_plateau = ""
+    last_progress_snapshot: tuple = ()
 
     def calls() -> int:
         return usage_totals(usage)[0]
@@ -628,6 +749,15 @@ def run_from_scratch(
         if token_ceiling is not None and tokens_spent() >= token_ceiling:
             return False
         return True
+
+    def patch_parents() -> list[str]:
+        if stage_best_beam:
+            return list(stage_best_beam)
+        if beam:
+            return list(beam)
+        if committed.strip():
+            return [committed]
+        return []
 
     def base_payload(stage: str, extra: str = "") -> dict[str, Any]:
         return {
@@ -661,16 +791,59 @@ def run_from_scratch(
             "use_patches": bool(committed.strip()),
         }
 
-    def produce_source(agent: Agent[Any], payload: dict[str, Any]) -> tuple[str, str]:
-        if committed.strip():
-            return _request_patch(agent, payload, committed if not stage_best else (stage_best or committed))
-        return _request_full_solver(agent, payload), ""
+    def evaluate_candidate(source: str, stage: str, role: str, proposal_ix: int) -> dict[str, Any]:
+        trial_hash = code_hash(source)
+        blocked = precheck_source(source, known_ids)
+        if blocked is not None:
+            info = blocked
+            ok = False
+        else:
+            cand_dir = candidates_dir / f"r{rounds + 1}_{role}_{proposal_ix}"
+            _write_solver(cand_dir, source)
+            _write_solver(trial_dir, source)
+            info = evaluate_through(cand_dir, stage, limits=limits, panel=panel)
+            ok = bool(info.get("ok"))
+        if not ok:
+            failed_hashes.add(trial_hash)
+            if (source or "").strip():
+                _write_solver(rejected_dir, source)
+        return {
+            "role": role,
+            "source": source,
+            "hash": trial_hash,
+            "ok": ok,
+            "skipped_noop": False,
+            "resampled": False,
+            "category": info.get("category") or "",
+            "failure_reason": info.get("failure_reason") or "",
+            "execution": info.get("execution") or {},
+            "first_fault": info.get("first_fault") or {},
+            "diagnostic": info.get("diagnostic") or {},
+            "gates_passed": info.get("gates_passed") or 0,
+            "instances_feasible": info.get("instances_feasible") or 0,
+            "by_instance": info.get("by_instance") or {},
+            "vehicles": info.get("vehicles"),
+            "distance": info.get("distance"),
+            "info": info,
+        }
+
+    def progress_snapshot() -> tuple:
+        return (
+            stage_index,
+            curriculum_g4_best,
+            progress_key(stage_best_info or {}),
+        )
 
     while stage_index < len(active_stages):
         if not budget_left():
             budget_hit = True
             break
         stage = active_stages[stage_index]
+        if stage != last_stage_for_plateau:
+            last_stage_for_plateau = stage
+            batches_without_improvement = 0
+            restart_count = 0
+            last_progress_snapshot = progress_snapshot()
         category = str(failure.get("category") or "")
         family = str((failure.get("diagnostic") or {}).get("family") or category)
 
@@ -683,6 +856,8 @@ def run_from_scratch(
 
         payload = base_payload(stage)
         candidate_rows: list[dict[str, Any]] = []
+        parents = patch_parents()
+        proposal_slot = 0
 
         try:
             if mode == "five_agent" and need_architect and budget_left():
@@ -692,12 +867,15 @@ def run_from_scratch(
             if architect_plan:
                 payload["architect"] = architect_plan
 
-            parent_for_patch = stage_best if stage_best.strip() else committed
             for role in producers:
                 for _proposal_ix in range(max(1, int(proposals_per_role))):
                     if not budget_left():
                         budget_hit = True
                         break
+                    parent_for_patch = ""
+                    if parents:
+                        parent_for_patch = parents[proposal_slot % len(parents)]
+                    proposal_slot += 1
                     agent = team[role]
                     attempt_payload = dict(payload)
                     source = ""
@@ -718,7 +896,6 @@ def run_from_scratch(
                             ).strip()
                             resampled = True
                         if attempt == 2 and parent_for_patch.strip() and committed.strip():
-                            # Patches could not land on this parent; allow one complete rewrite.
                             used_full_fallback = True
                             attempt_payload = dict(payload)
                             attempt_payload["use_patches"] = False
@@ -743,7 +920,8 @@ def run_from_scratch(
                             apply_error = apply_error or "empty candidate"
                             continue
                         trial_hash = code_hash(source)
-                        if trial_hash == code_hash(parent_for_patch) or trial_hash in failed_hashes:
+                        parent_hash = code_hash(parent_for_patch) if parent_for_patch.strip() else ""
+                        if (parent_hash and trial_hash == parent_hash) or trial_hash in failed_hashes:
                             apply_error = "noop_or_duplicate"
                             source = ""
                             continue
@@ -770,7 +948,8 @@ def run_from_scratch(
                         )
                         continue
                     trial_hash = code_hash(source)
-                    if trial_hash in failed_hashes or trial_hash == code_hash(parent_for_patch):
+                    parent_hash = code_hash(parent_for_patch) if parent_for_patch.strip() else ""
+                    if trial_hash in failed_hashes or (parent_hash and trial_hash == parent_hash):
                         candidate_rows.append(
                             {
                                 "role": role,
@@ -788,39 +967,8 @@ def run_from_scratch(
                             }
                         )
                         continue
-                    blocked = precheck_source(source, known_ids)
-                    if blocked is not None:
-                        info = blocked
-                        ok = False
-                    else:
-                        cand_dir = candidates_dir / f"r{rounds + 1}_{role}_{_proposal_ix}"
-                        _write_solver(cand_dir, source)
-                        _write_solver(trial_dir, source)
-                        info = evaluate_through(cand_dir, stage, limits=limits, panel=panel)
-                        ok = bool(info.get("ok"))
-                    if not ok:
-                        failed_hashes.add(trial_hash)
-                        if (source or "").strip():
-                            _write_solver(rejected_dir, source)
-                    row = {
-                        "role": role,
-                        "source": source,
-                        "hash": trial_hash,
-                        "ok": ok,
-                        "skipped_noop": False,
-                        "resampled": resampled,
-                        "category": info.get("category") or "",
-                        "failure_reason": info.get("failure_reason") or "",
-                        "execution": info.get("execution") or {},
-                        "first_fault": info.get("first_fault") or {},
-                        "diagnostic": info.get("diagnostic") or {},
-                        "gates_passed": info.get("gates_passed") or 0,
-                        "instances_feasible": info.get("instances_feasible") or 0,
-                        "by_instance": info.get("by_instance") or {},
-                        "vehicles": info.get("vehicles"),
-                        "distance": info.get("distance"),
-                        "info": info,
-                    }
+                    row = evaluate_candidate(source, stage, role, _proposal_ix)
+                    row["resampled"] = resampled
                     candidate_rows.append(row)
                 if budget_hit:
                     break
@@ -846,30 +994,47 @@ def run_from_scratch(
 
         rounds += 1
         passing = [row for row in evaluated if row.get("ok")]
+        improved = False
         if passing:
-            best = sorted(passing, key=_lex_pass_key)[0]
-            committed = best["source"]
+            beam = _select_passing_beam(passing, stage=stage, limit=beam_limit)
+            committed = beam[0]
             stage_best = ""
             stage_best_info = {}
+            stage_best_beam = []
             _write_solver(committed_dir, committed)
             for name in active_stages[: stage_index + 1]:
                 passed[name] = True
             for name in STAGES[: STAGES.index(stage) + 1]:
                 passed[name] = True
+            committed_by_stage[stage] = committed
             if stage == "schneider_c5":
-                best_g4 = max(best_g4, int(best.get("instances_feasible") or 0))
+                curriculum_g4_best = max(
+                    curriculum_g4_best,
+                    max(int(row.get("instances_feasible") or 0) for row in passing),
+                )
             stage_index += 1
             failure = {}
             critic_note = {}
             planned_family = ""
             failed_hashes.clear()
+            batches_without_improvement = 0
+            restart_count = 0
+            improved = True
         else:
             if evaluated:
                 best_failed = max(evaluated, key=progress_key)
                 if not stage_best or progress_key(best_failed) > progress_key(stage_best_info or {}):
                     stage_best = best_failed["source"]
                     stage_best_info = best_failed
-                best_g4 = max(best_g4, int(best_failed.get("instances_feasible") or 0))
+                    improved = True
+                if stage == "schneider_c5":
+                    g4_here = max(int(row.get("instances_feasible") or 0) for row in evaluated)
+                    if g4_here > curriculum_g4_best:
+                        curriculum_g4_best = g4_here
+                        improved = True
+                    stage_best_beam = _select_stage_best_beam(evaluated, beam_limit)
+                    if stage_best_beam:
+                        stage_best = stage_best_beam[0]
                 failure = {
                     "category": best_failed.get("category") or "RUNTIME",
                     "failure_reason": best_failed.get("failure_reason") or "",
@@ -920,6 +1085,88 @@ def run_from_scratch(
                         "recommended_next_target": "SEARCH",
                     }
 
+            snap = progress_snapshot()
+            if improved or snap != last_progress_snapshot:
+                batches_without_improvement = 0
+                last_progress_snapshot = snap
+            else:
+                batches_without_improvement += 1
+
+            if (
+                not passing
+                and batches_without_improvement >= 2
+                and restart_count < max_restarts
+                and budget_left()
+            ):
+                restart_count += 1
+                batches_without_improvement = 0
+                prev_stage = ""
+                if stage_index > 0:
+                    prev_stage = active_stages[stage_index - 1]
+                reset_src = committed_by_stage.get(prev_stage, committed)
+                committed = reset_src
+                beam = [committed] if committed.strip() else []
+                stage_best = ""
+                stage_best_info = {}
+                stage_best_beam = []
+                if committed.strip():
+                    _write_solver(committed_dir, committed)
+                search_agent = team.get("search") or team.get("single")
+                if search_agent is not None and budget_left():
+                    restart_payload = base_payload(
+                        stage,
+                        extra=(
+                            f" Plateau restart {restart_count}/{max_restarts}. "
+                            "Return a COMPLETE modular solver.py with a fresh approach. "
+                            + MODULAR_CREATE_NOTE
+                        ),
+                    )
+                    restart_payload["use_patches"] = False
+                    try:
+                        fresh = _request_full_solver(search_agent, restart_payload)
+                    except BudgetExhausted:
+                        budget_hit = True
+                        fresh = ""
+                    if (fresh or "").strip() and code_hash(fresh) not in failed_hashes:
+                        fresh_row = evaluate_candidate(fresh, stage, "search", 99)
+                        candidate_rows.append(fresh_row)
+                        if fresh_row.get("ok"):
+                            beam = _select_passing_beam(
+                                [fresh_row], stage=stage, limit=beam_limit
+                            )
+                            committed = beam[0]
+                            _write_solver(committed_dir, committed)
+                            for name in active_stages[: stage_index + 1]:
+                                passed[name] = True
+                            for name in STAGES[: STAGES.index(stage) + 1]:
+                                passed[name] = True
+                            committed_by_stage[stage] = committed
+                            if stage == "schneider_c5":
+                                curriculum_g4_best = max(
+                                    curriculum_g4_best,
+                                    int(fresh_row.get("instances_feasible") or 0),
+                                )
+                            stage_index += 1
+                            failure = {}
+                            critic_note = {}
+                            planned_family = ""
+                            failed_hashes.clear()
+                            passing = [fresh_row]
+                        else:
+                            if progress_key(fresh_row) > progress_key(stage_best_info or {}):
+                                stage_best = fresh_row["source"]
+                                stage_best_info = fresh_row
+                                if stage == "schneider_c5":
+                                    stage_best_beam = _select_stage_best_beam(
+                                        [fresh_row, *evaluated], beam_limit
+                                    )
+                                    curriculum_g4_best = max(
+                                        curriculum_g4_best,
+                                        int(fresh_row.get("instances_feasible") or 0),
+                                    )
+                                elif len(beam) < beam_limit:
+                                    beam.append(fresh_row["source"])
+
         n_calls, prompt_tokens, completion_tokens = usage_totals(usage)
         with log_path.open("a", encoding="utf-8") as handle:
             handle.write(
@@ -946,7 +1193,9 @@ def run_from_scratch(
                         ],
                         "failure_category": failure.get("category") or "",
                         "failure_reason": failure.get("failure_reason") or "",
-                        "best_g4": best_g4,
+                        "curriculum_g4_best": curriculum_g4_best,
+                        "beam_size": len(beam),
+                        "restart_count": restart_count,
                         "critic": critic_note if not passing else {},
                         "calls": n_calls,
                         "tokens": prompt_tokens + completion_tokens,
@@ -961,7 +1210,7 @@ def run_from_scratch(
     g4_passed = bool(passed.get("schneider_c5"))
     confirmation_feasible = None
     confirmation_total = None
-    g4_feasible = 0
+    posthoc_g4_score = 0
     vehicles = None
     distance = None
     fully = False
@@ -973,8 +1222,7 @@ def run_from_scratch(
                 report = run_solver(committed_dir, instance, seed=0, limits=limits)
                 if report.feasible and not report.crashed and not report.timed_out:
                     g4_count += 1
-            g4_feasible = g4_count
-            best_g4 = max(best_g4, g4_count)
+            posthoc_g4_score = g4_count
         if g4_passed:
             confirmation = [
                 instance
@@ -998,7 +1246,10 @@ def run_from_scratch(
                     confirmation_feasible += 1
                     held_vehicles += int(report.vehicles or 0)
                     held_distance += float(report.total_distance or 0.0)
-            fully = confirmation_feasible == confirmation_total and g4_feasible == len(panel)
+            fully = (
+                confirmation_feasible == confirmation_total
+                and posthoc_g4_score == len(panel)
+            )
             if fully:
                 vehicles = panel_vehicles + held_vehicles
                 distance = round(panel_distance + held_distance, 4)
@@ -1037,9 +1288,11 @@ def run_from_scratch(
         "multi_customer": passed["multi_customer"],
         "schneider_c5": passed["schneider_c5"],
         "deepest_gate": _deepest(passed),
-        "g4_feasible": g4_feasible,
+        "g4_feasible": curriculum_g4_best,
         "g4_total": len(panel),
-        "best_g4_feasible": best_g4,
+        "curriculum_g4_best": curriculum_g4_best,
+        "posthoc_g4_score": posthoc_g4_score,
+        "best_g4_feasible": curriculum_g4_best,
         "confirmation_feasible": confirmation_feasible,
         "confirmation_total": confirmation_total,
         "llm_calls": n_calls,
@@ -1050,7 +1303,9 @@ def run_from_scratch(
         "token_overshoot": overshoot,
         "failure_reason": "" if g4_passed else str(failure.get("failure_reason") or ""),
         "failure_category": category,
-        "feasible": (g4_feasible + int(confirmation_feasible or 0)) if g4_passed else g4_feasible,
+        "feasible": (
+            (posthoc_g4_score + int(confirmation_feasible or 0)) if g4_passed else curriculum_g4_best
+        ),
         "c5_total": (len(panel) + int(confirmation_total or 0)) if g4_passed else len(panel),
         "fully_feasible": fully,
         "vehicles": vehicles,
@@ -1058,6 +1313,7 @@ def run_from_scratch(
         "solver_hash": code_hash(committed)[:16] if committed.strip() else "",
         "wall_s": round(time.monotonic() - started, 1),
         "rounds": rounds,
+        "beam_size": beam_limit,
         "solver_path": _relative(solver_path, root),
     }
 

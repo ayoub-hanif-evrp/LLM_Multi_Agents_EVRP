@@ -2,7 +2,13 @@
 # A run stops when synthesis succeeds. It does not spend leftover calls.
 max_llm_calls: 80
 
+# Single wall-clock for every generated-solver sandbox evaluation.
+generated_solver_wall_clock_s: 30
+beam_size: 2
+max_restarts_per_stage: 2
+
 five_agent_synthesis:
+  # selected_strong_model: filled after strong_model_pilot
   runs:
     - profile: qwen25_coder_7b
       seeds: [11, 22, 33, 44, 55, 66, 77, 88, 99, 111]
@@ -19,7 +25,9 @@ single_agent_synthesis:
   seeds: [11, 22, 33, 44, 55, 66, 77, 88, 99, 111]
 
 solver_evolution:
+  # Uses selected strong model after pilot; placeholder until pilot selects one.
   profile: qwen25_coder_14b
+  selected_strong_model: ""
   seeds: [11, 22, 33, 44, 55]
   max_generations: 8
   candidates_per_role: 2
@@ -30,7 +38,9 @@ solver_evolution:
 strong_model_pilot:
   max_llm_calls: 120
   token_ceiling: 300000
+  beam_size: 2
   seeds: [11, 22, 33]
   profiles:
     - devstral_small_2_24b
     - qwen3_coder_30b
+    - gpt_oss_20b

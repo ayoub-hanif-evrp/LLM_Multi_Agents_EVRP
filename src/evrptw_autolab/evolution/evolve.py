@@ -37,7 +37,7 @@ from evrptw_autolab.evolution.types import (
     PatchProposal,
 )
 from evrptw_autolab.llm.usage import UsageLog
-from evrptw_autolab.sandbox.limits import RunLimits
+from evrptw_autolab.sandbox.limits import RunLimits, limits_from_config
 
 
 @dataclass
@@ -246,7 +246,7 @@ def run_evolution(
     if not panel:
         raise RuntimeError("empty solver evolution panel")
     known_ids = known_ids_for_panel(data_root)
-    limits = RunLimits(wall_clock_s=20.0)
+    limits = limits_from_config()
     probe = panel[0]
     c5 = all_c5_instances(data_root)
 

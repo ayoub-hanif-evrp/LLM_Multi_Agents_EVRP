@@ -17,7 +17,7 @@ from evrptw_autolab.evaluation.fidelity import (
 )
 from evrptw_autolab.evolution.types import PANEL_IDS, PanelMetrics
 from evrptw_autolab.problem.types import EVRPTWInstance
-from evrptw_autolab.sandbox.limits import RunLimits
+from evrptw_autolab.sandbox.limits import RunLimits, limits_from_config
 from evrptw_autolab.sandbox.runner import run_solver
 from evrptw_autolab.sandbox.static_scan import scan_source
 
@@ -77,7 +77,7 @@ def validate_candidate(
     limits: RunLimits | None = None,
     known_ids: set[str] | None = None,
 ) -> CandidateValidation:
-    limits = limits or RunLimits(wall_clock_s=20.0)
+    limits = limits or limits_from_config()
     try:
         ast.parse(source)
     except SyntaxError as error:
@@ -150,7 +150,7 @@ def evaluate_panel(
     *,
     limits: RunLimits | None = None,
 ) -> tuple[PanelMetrics, list[Any]]:
-    limits = limits or RunLimits(wall_clock_s=20.0)
+    limits = limits or limits_from_config()
     reports = []
     by: dict[str, dict[str, Any]] = {}
     ok = 0
@@ -194,7 +194,7 @@ def validate_source(
     known_ids: set[str],
     limits: RunLimits | None = None,
 ) -> tuple[bool, str]:
-    limits = limits or RunLimits(wall_clock_s=20.0)
+    limits = limits or limits_from_config()
     hard = find_hardcoded_node_ids(source, probe, known_ids=known_ids)
     if hard:
         return False, f"HARDCODED_INSTANCE_IDENTIFIER: {hard}"

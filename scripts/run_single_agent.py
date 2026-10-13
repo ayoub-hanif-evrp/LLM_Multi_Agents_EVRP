@@ -15,6 +15,10 @@ sys.path.insert(0, str(ROOT / "src"))
 from evrptw_autolab.llm.ollama import OllamaBackend  # noqa: E402
 from evrptw_autolab.llm.registry import availability, resolve_profile  # noqa: E402
 from evrptw_autolab.synthesis.from_scratch import copy_run_provenance, run_from_scratch  # noqa: E402
+from evrptw_autolab.synthesis.provenance import (  # noqa: E402
+    should_reuse_result,
+    stamp_report,
+)
 
 
 def _config() -> dict:
@@ -67,7 +71,11 @@ def run_one(profile_id: str, seed: int, max_llm_calls: int, token_ceiling: int |
     )
     report["profile"] = profile_id
     report["seed"] = seed
+    report.setdefault("model_tag", report.get("model") or "")
+    report.setdefault("model_digest", report.get("model_digest") or "")
     source = Path(report["solver_path"])
+    if not source.is_absolute():
+        source = ROOT / source
     solver_out = ROOT / "results" / "paper" / "solvers" / "single_agent" / f"{profile_id}_seed{seed}"
     if source.exists() and source.read_text(encoding="utf-8").strip():
         solver_out.mkdir(parents=True, exist_ok=True)
@@ -75,6 +83,7 @@ def run_one(profile_id: str, seed: int, max_llm_calls: int, token_ceiling: int |
         report["published_solver"] = str(solver_out.relative_to(ROOT)).replace("\\", "/")
     else:
         report["published_solver"] = ""
+    report = stamp_report(report, ROOT)
     dest.write_text(json.dumps(report, indent=2), encoding="utf-8")
     copy_run_provenance(
         workspace,
@@ -99,9 +108,11 @@ def main() -> None:
     if args.all:
         for seed in seeds:
             dest = ROOT / "results" / "paper" / "single_agent" / f"{profile_id}_seed{int(seed)}.json"
-            if dest.exists():
+            if should_reuse_result(dest, ROOT):
                 print(f"keep existing {dest.name}", flush=True)
                 continue
+            if dest.exists():
+                dest.unlink()
             ceiling = paired_token_ceiling(paired, int(seed))
             if ceiling is None:
                 raise SystemExit(f"missing five-agent tokens for {paired} seed {seed}")

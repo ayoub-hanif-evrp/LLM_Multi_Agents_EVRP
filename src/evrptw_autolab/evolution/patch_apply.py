@@ -196,6 +196,34 @@ def apply_proposal(source: str, proposal: PatchProposal) -> ApplyResult:
     return apply_ops(source, proposal.ops)
 
 
+def proposal_from_raw_function(code: str, parent_source: str) -> PatchProposal | None:
+    """If code has exactly one top-level FunctionDef, build ADD or REPLACE vs parent."""
+    text = _normalize_code(code)
+    if not text.strip() or not (parent_source or "").strip():
+        return None
+    try:
+        tree = ast.parse(text)
+        parent_tree = ast.parse(parent_source)
+    except SyntaxError:
+        return None
+    funcs = [node for node in tree.body if isinstance(node, ast.FunctionDef)]
+    if len(funcs) != 1:
+        return None
+    func = funcs[0]
+    lines = text.splitlines(keepends=True)
+    start = func.lineno - 1
+    end = (func.end_lineno or func.lineno) - 1
+    func_code = "".join(lines[start : end + 1])
+    if not func_code.endswith("\n"):
+        func_code += "\n"
+    parent_names = set(_top_level_funcs(parent_tree))
+    action: str = "REPLACE" if func.name in parent_names else "ADD"
+    return PatchProposal(
+        hypothesis="raw_function_fallback",
+        ops=[PatchOp(action=action, symbol=func.name, code=func_code)],  # type: ignore[arg-type]
+    )
+
+
 def parse_proposal_json(data: dict, *, role: str = "", seed: int | None = None) -> PatchProposal:
     hypothesis = str(data.get("hypothesis") or "")[:800]
     raw_ops = data.get("ops") or []

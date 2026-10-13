@@ -15,10 +15,16 @@ class RunLimits:
     memory_mb: int = 1024
 
 
-def limits_from_synthesis(*, default_s: float = 20.0) -> RunLimits:
-    path = ROOT / "configs" / "synthesis.yaml"
+def limits_from_config(*, default_s: float = 30.0) -> RunLimits:
+    """Single wall-clock source: experiments.yaml generated_solver_wall_clock_s."""
+    path = ROOT / "configs" / "experiments.yaml"
     wall = default_s
     if path.exists():
         raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
-        wall = float((raw.get("cycle") or {}).get("wall_clock_s") or default_s)
+        wall = float(raw.get("generated_solver_wall_clock_s") or default_s)
     return RunLimits(wall_clock_s=wall)
+
+
+def limits_from_synthesis(*, default_s: float = 30.0) -> RunLimits:
+    """Compat alias — wall clock lives in experiments.yaml."""
+    return limits_from_config(default_s=default_s)

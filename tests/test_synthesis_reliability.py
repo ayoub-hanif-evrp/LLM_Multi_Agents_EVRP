@@ -6,17 +6,20 @@ from pathlib import Path
 
 from evrptw_autolab.agents.search_engineer import SearchEngineer
 from evrptw_autolab.evolution.evaluate import find_hardcoded_node_ids
+from evrptw_autolab.evolution.patch_apply import proposal_from_raw_function
 from evrptw_autolab.llm.usage import LLMUsage, UsageLog
 from evrptw_autolab.problem.micro import micro_g2_needs_charge
 from evrptw_autolab.problem.physics import StopState
 from evrptw_autolab.problem.types import EvaluationReport
-from evrptw_autolab.sandbox.limits import RunLimits
+from evrptw_autolab.sandbox.limits import RunLimits, limits_from_config
 from evrptw_autolab.synthesis.contract import INSTANCE_API
 from evrptw_autolab.synthesis.diagnostics import solution_diagnostic
 from evrptw_autolab.synthesis.from_scratch import (
+    BEAM_SIZE,
     NOOP_NOTE,
     PROPOSALS_PER_ROLE,
     STAGE_CANDIDATES,
+    _request_patch,
     copy_run_provenance,
     evaluate_through,
     format_runtime_error,
@@ -215,6 +218,183 @@ def test_failed_candidates_never_overwrite_committed(tmp_path: Path) -> None:
 
 def test_noop_note_is_defined() -> None:
     assert "already tested" in NOOP_NOTE
+
+
+def test_beam_size_constant() -> None:
+    assert BEAM_SIZE == 2
+    assert PROPOSALS_PER_ROLE == 2
+
+
+def test_limits_from_config_reads_experiments_yaml() -> None:
+    limits = limits_from_config()
+    assert limits.wall_clock_s == 30.0
+
+
+def test_forbidden_evaluator_import_rejected() -> None:
+    source = (
+        "from evrptw_autolab.problem import evaluator\n"
+        "def solve(instance, seed: int, time_limit_s: float):\n"
+        "    return {'routes': [], 'metadata': {}}\n"
+    )
+    blocked = precheck_source(source, set())
+    assert blocked is not None
+    assert "forbidden_import" in str(blocked.get("failure_reason") or "")
+
+    llm_src = (
+        "import evrptw_autolab.llm\n"
+        "def solve(instance, seed: int, time_limit_s: float):\n"
+        "    return {'routes': [], 'metadata': {}}\n"
+    )
+    assert precheck_source(llm_src, set()) is not None
+
+
+def test_raw_function_patch_acceptance() -> None:
+    parent = (
+        "def helper(x):\n"
+        "    return x\n\n"
+        "def solve(instance, seed: int, time_limit_s: float):\n"
+        "    return {'routes': [], 'metadata': {}}\n"
+    )
+    replacement = (
+        "def helper(x):\n"
+        "    return list(x) if hasattr(x, '__iter__') else x\n"
+    )
+    proposal = proposal_from_raw_function(replacement, parent)
+    assert proposal is not None
+    assert proposal.ops[0].action == "REPLACE"
+    assert proposal.ops[0].symbol == "helper"
+
+    added = proposal_from_raw_function(
+        "def pack(instance):\n    return list(instance.customer_ids)\n",
+        parent,
+    )
+    assert added is not None
+    assert added.ops[0].action == "ADD"
+
+
+def test_request_patch_accepts_raw_function() -> None:
+    parent = (
+        "def helper(x):\n"
+        "    return x\n\n"
+        "def solve(instance, seed: int, time_limit_s: float):\n"
+        "    return {'routes': [], 'metadata': {}}\n"
+    )
+
+    class _Agent:
+        role = "search"
+        prompt = "patch"
+
+        def _complete(self, prompt: str, json_mode: bool = True) -> str:
+            return "def helper(x):\n    return [x]\n"
+
+    source, error = _request_patch(_Agent(), {"instruction": "fix helper"}, parent)  # type: ignore[arg-type]
+    assert error == ""
+    assert "return [x]" in source
+    assert "def solve" in source
+
+
+def test_curriculum_vs_posthoc_g4_separation(tmp_path: Path, monkeypatch) -> None:  # noqa: ANN001
+    """Curriculum G4 must not be overwritten by post-loop panel scoring."""
+
+    def fake_evaluate(solver_dir, stage, *, limits, panel):  # noqa: ANN001
+        source = (solver_dir / "solver.py").read_text(encoding="utf-8")
+        if stage != "schneider_c5":
+            return {
+                "ok": True,
+                "gates_passed": 4,
+                "instances_feasible": 0,
+                "by_instance": {},
+                "category": "",
+                "failure_reason": "",
+                "execution": {},
+                "first_fault": {},
+                "diagnostic": {},
+            }
+        return {
+            "ok": False,
+            "gates_passed": 4,
+            "instances_feasible": 2,
+            "by_instance": {"a": {"ok": True}, "b": {"ok": True}, "c": {"ok": False}, "d": {"ok": False}},
+            "category": "BATTERY",
+            "failure_reason": "G4 2/4",
+            "execution": {},
+            "first_fault": {},
+            "diagnostic": {"family": "BATTERY", "g4_feasible": 2},
+            "source": source,
+        }
+
+    class Inst:
+        def __init__(self, instance_id: str) -> None:
+            self.instance_id = instance_id
+
+    panel = [Inst(f"i{i}C5") for i in range(4)]
+    posthoc_hits = {"n": 0}
+
+    def fake_run(solver_dir, instance, seed=0, limits=None):  # noqa: ANN001
+        posthoc_hits["n"] += 1
+        # Post-hoc: 3/4 feasible (distinct from curriculum 2).
+        ok = posthoc_hits["n"] <= 3
+        return EvaluationReport(
+            parse_ok=True,
+            feasible=ok,
+            vehicles=1 if ok else 0,
+            total_distance=1.0 if ok else 0.0,
+            first_fault={"family": "OK" if ok else "BATTERY", "node_id": "", "route_index": -1, "detail": ""},
+        )
+
+    call_n = {"n": 0}
+
+    def handler(role: str, prompt: str, json_mode: bool = True) -> str:
+        call_n["n"] += 1
+        if role == "architect":
+            return ARCHITECT
+        if role == "critic":
+            return CRITIC
+        if '"stage": "schneider_c5"' in prompt or "schneider_c5" in prompt:
+            return json.dumps(
+                {
+                    "hypothesis": "g4 try",
+                    "ops": [
+                        {
+                            "action": "REPLACE",
+                            "symbol": "solve",
+                            "code": (
+                                "def solve(instance, seed: int, time_limit_s: float):\n"
+                                f"    return {{'routes': [], 'metadata': {{'t': {call_n['n']}}}}}\n"
+                            ),
+                        }
+                    ],
+                }
+            )
+        return EMPTY
+
+    monkeypatch.setattr("evrptw_autolab.synthesis.from_scratch.evaluate_through", fake_evaluate)
+    monkeypatch.setattr("evrptw_autolab.synthesis.from_scratch.run_solver", fake_run)
+    monkeypatch.setattr(
+        "evrptw_autolab.synthesis.from_scratch.panel_instances",
+        lambda data_root=None: panel,
+    )
+    monkeypatch.setattr(
+        "evrptw_autolab.synthesis.from_scratch.known_ids_for_panel",
+        lambda data_root=None: set(),
+    )
+
+    backend = Scripted(handler)
+    report = run_from_scratch(
+        mode="five_agent",
+        model="fake",
+        backend=backend,
+        workspace=tmp_path / "g4sep",
+        max_llm_calls=40,
+        stages=("executable", "routing", "charging", "multi_customer", "schneider_c5"),
+        proposals_per_role=1,
+    )
+    assert report["curriculum_g4_best"] == 2
+    assert report["best_g4_feasible"] == 2
+    assert report["g4_feasible"] == 2
+    assert report["posthoc_g4_score"] == 3
+    assert report["deepest_gate"] != "schneider_c5"
+    assert report["schneider_c5"] is False
 
 
 def test_single_agent_receives_runtime_diagnostics(tmp_path: Path) -> None:

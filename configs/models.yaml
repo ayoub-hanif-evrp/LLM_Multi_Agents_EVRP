@@ -50,3 +50,11 @@ models:
     num_ctx: 8192
     timeout_s: 600
     note: Stronger local coding-model anchor — Qwen3-Coder 30B
+
+  gpt_oss_20b:
+    enabled: true
+    provider: ollama
+    model: gpt-oss:20b
+    num_ctx: 8192
+    timeout_s: 600
+    note: Stronger local coding-model anchor — GPT-OSS 20B

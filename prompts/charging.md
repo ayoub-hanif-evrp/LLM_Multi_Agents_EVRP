@@ -23,6 +23,10 @@ Do not prescribe which station to insert.
 
 solve exists; customers once; depot ends only; stations as route nodes if used; ChargeDecision not treated as float; earlier gates preserved.
 
+Every loop must either make observable progress or terminate.
+Never allow a while-loop to repeat indefinitely with unchanged customers, routes, or search state.
+Do not import the benchmark evaluator or LLM modules into solver.py.
+
 ## Output
 
 Patch mode — JSON only:

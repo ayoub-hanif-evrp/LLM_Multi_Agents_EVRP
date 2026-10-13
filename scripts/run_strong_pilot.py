@@ -19,6 +19,10 @@ from evrptw_autolab.synthesis.from_scratch import (  # noqa: E402
     copy_run_provenance,
     run_from_scratch,
 )
+from evrptw_autolab.synthesis.provenance import (  # noqa: E402
+    should_reuse_result,
+    stamp_report,
+)
 
 
 def _config() -> dict:
@@ -134,6 +138,8 @@ def run_one(profile_id: str, seed: int, max_llm_calls: int, token_ceiling: int, 
     report["profile"] = profile_id
     report["seed"] = seed
     report["label"] = "stronger local coding-model anchor"
+    report.setdefault("model_tag", report.get("model") or "")
+    report.setdefault("model_digest", report.get("model_digest") or "")
     report["published_solver"] = ""
     if report.get("solver_hash"):
         solver_out = ROOT / "results" / "strong_pilot" / "solvers" / f"{profile_id}_seed{seed}"
@@ -146,6 +152,7 @@ def run_one(profile_id: str, seed: int, max_llm_calls: int, token_ceiling: int, 
             report["published_solver"] = _rel(solver_out / "solver.py")
     if report.get("solver_path"):
         report["solver_path"] = str(report["solver_path"]).replace("\\", "/")
+    report = stamp_report(report, ROOT)
     dest.write_text(json.dumps(report, indent=2), encoding="utf-8")
     copy_run_provenance(
         workspace,
@@ -158,7 +165,9 @@ def run_one(profile_id: str, seed: int, max_llm_calls: int, token_ceiling: int, 
             "profile",
             "seed",
             "deepest_gate",
+            "curriculum_g4_best",
             "best_g4_feasible",
+            "posthoc_g4_score",
             "g4_feasible",
             "schneider_c5",
             "confirmation_feasible",
@@ -202,7 +211,9 @@ def _write_summary(profiles: list[str], seeds: list[int]) -> None:
                 "model": r.get("model"),
                 "seed": r.get("seed"),
                 "deepest_gate": r.get("deepest_gate"),
+                "curriculum_g4_best": r.get("curriculum_g4_best"),
                 "best_g4_feasible": r.get("best_g4_feasible"),
+                "posthoc_g4_score": r.get("posthoc_g4_score"),
                 "g4_feasible": r.get("g4_feasible"),
                 "schneider_c5": r.get("schneider_c5"),
                 "confirmation_feasible": r.get("confirmation_feasible"),
@@ -238,9 +249,11 @@ def main() -> None:
         for profile_id in profiles:
             for seed in seeds:
                 dest = ROOT / "results" / "strong_pilot" / f"{profile_id}_seed{seed}.json"
-                if dest.exists():
+                if should_reuse_result(dest, ROOT):
                     print(f"keep existing {dest.name}", flush=True)
                     continue
+                if dest.exists():
+                    dest.unlink()
                 try:
                     run_one(str(profile_id), seed, max_calls, token_ceiling, cfg)
                 except Exception as error:  # noqa: BLE001

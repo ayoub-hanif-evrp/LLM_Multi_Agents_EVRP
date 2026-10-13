@@ -1,0 +1,162 @@
+{
+  "selected_strong_model": "qwen3_coder_30b",
+  "rule": [
+    "n seeds that entered G4 (curriculum_g4_best>0 or schneider_c5)",
+    "n 4/4 successes",
+    "best curriculum_g4_best",
+    "n reaching G3",
+    "lower total tokens"
+  ],
+  "summary": {
+    "profile": "qwen3_coder_30b",
+    "model": "qwen3-coder:30b",
+    "n_seeds": 3,
+    "n_reached_g4": 2,
+    "n_4of4": 0,
+    "best_curriculum_g4": 3,
+    "n_reached_g3": 2,
+    "total_tokens": 911006
+  },
+  "ranking": [
+    {
+      "profile": "devstral_small_2_24b",
+      "model": "devstral-small-2:24b",
+      "n_seeds": 3,
+      "n_reached_g4": 0,
+      "n_4of4": 0,
+      "best_curriculum_g4": 0,
+      "n_reached_g3": 1,
+      "total_tokens": 788528
+    },
+    {
+      "profile": "gpt_oss_20b",
+      "model": "gpt-oss:20b",
+      "n_seeds": 3,
+      "n_reached_g4": 1,
+      "n_4of4": 0,
+      "best_curriculum_g4": 2,
+      "n_reached_g3": 1,
+      "total_tokens": 323650
+    },
+    {
+      "profile": "qwen3_coder_30b",
+      "model": "qwen3-coder:30b",
+      "n_seeds": 3,
+      "n_reached_g4": 2,
+      "n_4of4": 0,
+      "best_curriculum_g4": 3,
+      "n_reached_g3": 2,
+      "total_tokens": 911006
+    }
+  ],
+  "all_profiles": [
+    {
+      "profile": "devstral_small_2_24b",
+      "model": "devstral-small-2:24b",
+      "seeds": [
+        {
+          "seed": 11,
+          "deepest_gate": "multi_customer",
+          "curriculum_g4_best": 0,
+          "posthoc_g4_score": 0,
+          "schneider_c5": false,
+          "tokens": 184585,
+          "llm_calls": 39,
+          "solver_hash": "98b3b1b392635a0a"
+        },
+        {
+          "seed": 22,
+          "deepest_gate": "routing",
+          "curriculum_g4_best": 0,
+          "posthoc_g4_score": 0,
+          "schneider_c5": false,
+          "tokens": 303028,
+          "llm_calls": 50,
+          "solver_hash": "bb67916964474d1d"
+        },
+        {
+          "seed": 33,
+          "deepest_gate": "routing",
+          "curriculum_g4_best": 0,
+          "posthoc_g4_score": 0,
+          "schneider_c5": false,
+          "tokens": 300915,
+          "llm_calls": 50,
+          "solver_hash": "036cfcd1acfe90d8"
+        }
+      ]
+    },
+    {
+      "profile": "gpt_oss_20b",
+      "model": "gpt-oss:20b",
+      "seeds": [
+        {
+          "seed": 11,
+          "deepest_gate": "multi_customer",
+          "curriculum_g4_best": 2,
+          "posthoc_g4_score": 0,
+          "schneider_c5": false,
+          "tokens": 198538,
+          "llm_calls": 34,
+          "solver_hash": "f3d50f7c7483928a"
+        },
+        {
+          "seed": 22,
+          "deepest_gate": "routing",
+          "curriculum_g4_best": 0,
+          "posthoc_g4_score": 4,
+          "schneider_c5": false,
+          "tokens": 61931,
+          "llm_calls": 12,
+          "solver_hash": "f0f62ad39e09f446"
+        },
+        {
+          "seed": 33,
+          "deepest_gate": "routing",
+          "curriculum_g4_best": 0,
+          "posthoc_g4_score": 0,
+          "schneider_c5": false,
+          "tokens": 63181,
+          "llm_calls": 11,
+          "solver_hash": "9198a2094c7b8d88"
+        }
+      ]
+    },
+    {
+      "profile": "qwen3_coder_30b",
+      "model": "qwen3-coder:30b",
+      "seeds": [
+        {
+          "seed": 11,
+          "deepest_gate": "multi_customer",
+          "curriculum_g4_best": 2,
+          "posthoc_g4_score": 2,
+          "schneider_c5": false,
+          "tokens": 304439,
+          "llm_calls": 60,
+          "solver_hash": "a5d2ade9c68ef1e7"
+        },
+        {
+          "seed": 22,
+          "deepest_gate": "charging",
+          "curriculum_g4_best": 0,
+          "posthoc_g4_score": 0,
+          "schneider_c5": false,
+          "tokens": 301905,
+          "llm_calls": 52,
+          "solver_hash": "267cefecfd479e39"
+        },
+        {
+          "seed": 33,
+          "deepest_gate": "multi_customer",
+          "curriculum_g4_best": 3,
+          "posthoc_g4_score": 3,
+          "schneider_c5": false,
+          "tokens": 304662,
+          "llm_calls": 57,
+          "solver_hash": "1a4ef51d4d482707"
+        }
+      ]
+    }
+  ]
+}

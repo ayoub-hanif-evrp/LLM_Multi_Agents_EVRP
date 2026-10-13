@@ -8,10 +8,10 @@ import time
 from pathlib import Path
 from typing import Any
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from evrptw_autolab.agents import build_team
-from evrptw_autolab.agents.base import Agent
+from evrptw_autolab.agents.base import Agent, extract_json, extract_python_source
 from evrptw_autolab.evolution.evaluate import (
     all_c5_instances,
     code_hash,
@@ -19,6 +19,7 @@ from evrptw_autolab.evolution.evaluate import (
     known_ids_for_panel,
     panel_instances,
 )
+from evrptw_autolab.evolution.patch_apply import apply_proposal, parse_proposal_json
 from evrptw_autolab.llm.usage import BudgetExhausted, UsageLog
 from evrptw_autolab.problem.micro import (
     micro_g1_one_customer,
@@ -36,10 +37,11 @@ from evrptw_autolab.synthesis.diagnostics import (  # noqa: F401
     solution_diagnostic,
 )
 
-# Re-export for tests and callers that historically imported from this module.
 __all__ = [
     "STAGES",
     "STAGE_CANDIDATES",
+    "PROPOSALS_PER_ROLE",
+    "NOOP_NOTE",
     "SingleAgent",
     "classify_category",
     "copy_run_provenance",
@@ -56,8 +58,23 @@ __all__ = [
 STAGES = ("executable", "routing", "charging", "multi_customer", "schneider_c5")
 INTEGRATION = {"SYNTAX", "RUNTIME", "TIMEOUT", "GENERALITY"}
 FAULTS = {"DEPOT", "VISIT", "CAPACITY", "WINDOW", "BATTERY", "CHARGE_POLICY"}
+PROPOSALS_PER_ROLE = 2
+NOOP_NOTE = (
+    "The proposed patch produced a program already tested at this stage. "
+    "Make a materially different code change based on the diagnostic."
+)
+PATCH_FAIL_NOTE = (
+    "Previous patch JSON failed to parse or apply. "
+    "Top-level symbols only (nested defs inside solve cannot be REPLACE targets). "
+    "Either ADD new module-level helpers and REPLACE solve to call them, "
+    "or REPLACE solve itself. Ops must use action ADD|REPLACE|REMOVE."
+)
+MODULAR_CREATE_NOTE = (
+    "Put helpers as MODULE-LEVEL functions (def build_routes, def insert_charge, ...), "
+    "not nested inside solve. Later patches REPLACE one top-level function at a time."
+)
 
-# Coding roles that emit a complete candidate solver.py for each stage.
+# Coding roles that propose candidates for each stage (Architect/Critic separate).
 STAGE_CANDIDATES: dict[str, list[str]] = {
     "executable": ["search"],
     "routing": ["routing", "search"],
@@ -69,6 +86,11 @@ STAGE_CANDIDATES: dict[str, list[str]] = {
 
 class _SingleSchema(BaseModel):
     note: str = ""
+
+
+class _PatchSchema(BaseModel):
+    hypothesis: str = ""
+    ops: list[dict[str, Any]] = Field(default_factory=list)
 
 
 class SingleAgent(Agent[_SingleSchema]):
@@ -84,12 +106,7 @@ def usage_totals(usage: UsageLog) -> tuple[int, int, int]:
     return len(rows), prompt, completion
 
 
-def classify_category(
-    *,
-    g4_passed: bool,
-    category: str,
-    budget: bool,
-) -> str:
+def classify_category(*, g4_passed: bool, category: str, budget: bool) -> str:
     if g4_passed:
         return "SUCCESS"
     if category in FAULTS or category in {"SYNTAX", "RUNTIME", "TIMEOUT", "GENERALITY"}:
@@ -103,39 +120,11 @@ def precheck_source(source: str, known_ids: set[str]) -> dict[str, Any] | None:
     """Reject a trial before execution. None means the source may be executed."""
     text = source or ""
     if "def solve" not in text:
-        return {
-            "category": "SYNTAX",
-            "ok": False,
-            "failure_reason": "model did not return def solve",
-            "execution": {
-                "exception_type": "SyntaxError",
-                "exception_message": "missing def solve",
-                "traceback_tail": "",
-                "source_context": "",
-            },
-            "first_fault": {},
-            "diagnostic": {"crashed": True, "syntax_valid": False, "family": "SYNTAX"},
-            "gates_passed": 0,
-            "instances_feasible": 0,
-        }
+        return _blocked("SYNTAX", "model did not return def solve", syntax=True)
     try:
         ast.parse(text)
     except SyntaxError as error:
-        return {
-            "category": "SYNTAX",
-            "ok": False,
-            "failure_reason": f"SyntaxError: {error.msg}",
-            "execution": {
-                "exception_type": "SyntaxError",
-                "exception_message": str(error.msg),
-                "traceback_tail": str(error),
-                "source_context": "",
-            },
-            "first_fault": {},
-            "diagnostic": {"crashed": True, "syntax_valid": False, "family": "SYNTAX"},
-            "gates_passed": 0,
-            "instances_feasible": 0,
-        }
+        return _blocked("SYNTAX", f"SyntaxError: {error.msg}", syntax=True, detail=str(error))
     hardcoded = find_hardcoded_node_ids(text, known_ids=known_ids)
     if hardcoded:
         detail = ",".join(hardcoded)
@@ -144,15 +133,11 @@ def precheck_source(source: str, known_ids: set[str]) -> dict[str, Any] | None:
             "ok": False,
             "failure_reason": f"GENERALITY: {detail}",
             "execution": {},
-            "first_fault": {
-                "family": "GENERALITY",
-                "node_id": "",
-                "route_index": -1,
-                "detail": detail,
-            },
+            "first_fault": {"family": "GENERALITY", "node_id": "", "route_index": -1, "detail": detail},
             "diagnostic": {"crashed": False, "syntax_valid": True, "family": "GENERALITY", "detail": detail},
             "gates_passed": 0,
             "instances_feasible": 0,
+            "by_instance": {},
         }
     scan_errors = scan_source(text)
     if scan_errors:
@@ -163,22 +148,27 @@ def precheck_source(source: str, known_ids: set[str]) -> dict[str, Any] | None:
             category = "SYNTAX"
         else:
             category = "RUNTIME"
-        return {
-            "category": category,
-            "ok": False,
-            "failure_reason": detail,
-            "execution": {
-                "exception_type": category,
-                "exception_message": detail,
-                "traceback_tail": detail,
-                "source_context": "",
-            },
-            "first_fault": {},
-            "diagnostic": {"crashed": True, "syntax_valid": category != "GENERALITY", "family": category},
-            "gates_passed": 0,
-            "instances_feasible": 0,
-        }
+        return _blocked(category, detail, syntax=(category == "SYNTAX"), detail=detail)
     return None
+
+
+def _blocked(category: str, reason: str, *, syntax: bool, detail: str = "") -> dict[str, Any]:
+    return {
+        "category": category,
+        "ok": False,
+        "failure_reason": reason,
+        "execution": {
+            "exception_type": "SyntaxError" if syntax else category,
+            "exception_message": reason,
+            "traceback_tail": detail or reason,
+            "source_context": "",
+        },
+        "first_fault": {},
+        "diagnostic": {"crashed": True, "syntax_valid": not syntax or category == "SYNTAX", "family": category},
+        "gates_passed": 0,
+        "instances_feasible": 0,
+        "by_instance": {},
+    }
 
 
 def _probe(stage: str) -> EVRPTWInstance | None:
@@ -206,6 +196,7 @@ def _report_failure(
     instance: EVRPTWInstance | None = None,
     gates_passed: int = 0,
     instances_feasible: int = 0,
+    by_instance: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     diagnostic = solution_diagnostic(report, source=source, instance=instance)
     if report.timed_out:
@@ -241,6 +232,7 @@ def _report_failure(
         "diagnostic": diagnostic,
         "gates_passed": gates_passed,
         "instances_feasible": instances_feasible,
+        "by_instance": by_instance or {},
     }
 
 
@@ -251,7 +243,10 @@ def evaluate_through(
     limits: RunLimits,
     panel: list[EVRPTWInstance],
 ) -> dict[str, Any]:
-    """A later gate counts only when every earlier gate still passes."""
+    """A later gate counts only when every earlier gate still passes.
+
+    For schneider_c5 every development instance is evaluated; scoring uses X/4.
+    """
     if stage not in STAGES:
         raise ValueError(f"unknown stage {stage}")
     source = (solver_dir / "solver.py").read_text(encoding="utf-8")
@@ -265,19 +260,36 @@ def evaluate_through(
         "diagnostic": {},
         "gates_passed": 0,
         "instances_feasible": 0,
+        "by_instance": {},
         "vehicles": None,
         "distance": None,
     }
     gates_passed = 0
     for name in STAGES[: STAGES.index(stage) + 1]:
         if name == "schneider_c5":
+            by_instance: dict[str, Any] = {}
             passed = 0
             vehicles = 0
             distance = 0.0
+            first_fail: dict[str, Any] | None = None
+            missing: list[str] = []
+            duplicated: list[str] = []
+            depot_violations = 0
+            capacity_excess = 0.0
+            battery_deficit = 0.0
+            lateness = 0.0
             for instance in panel:
                 report = run_solver(solver_dir, instance, seed=0, limits=limits)
-                if not _stage_ok(name, report):
-                    failed = _report_failure(
+                ok = _stage_ok(name, report)
+                entry: dict[str, Any] = {"ok": ok}
+                if ok:
+                    passed += 1
+                    vehicles += int(report.vehicles or 0)
+                    distance += float(report.total_distance or 0.0)
+                    entry["vehicles"] = int(report.vehicles or 0)
+                    entry["distance"] = float(report.total_distance or 0.0)
+                else:
+                    fail = _report_failure(
                         name,
                         report,
                         source,
@@ -285,26 +297,71 @@ def evaluate_through(
                         gates_passed=gates_passed,
                         instances_feasible=passed,
                     )
-                    failed["g4_passed_here"] = passed
-                    return failed
-                passed += 1
-                vehicles += int(report.vehicles or 0)
-                distance += float(report.total_distance or 0.0)
-            last = {
-                "ok": True,
-                "failed_stage": "",
-                "category": "",
-                "failure_reason": "",
+                    entry["category"] = fail["category"]
+                    entry["failure_reason"] = fail["failure_reason"]
+                    entry["diagnostic"] = fail.get("diagnostic") or {}
+                    diag = dict(entry["diagnostic"] or {})
+                    missing = _unique_str_ids(missing + list(diag.get("customers_missing") or []))
+                    duplicated = _unique_str_ids(
+                        duplicated + list(diag.get("customers_duplicated") or [])
+                    )
+                    depot_violations += int(diag.get("depot_violations") or 0)
+                    capacity_excess += float(diag.get("capacity_excess") or 0.0)
+                    battery_deficit += float(diag.get("battery_deficit") or 0.0)
+                    lateness += float(diag.get("lateness") or 0.0)
+                    if first_fail is None:
+                        first_fail = fail
+                by_instance[instance.instance_id] = entry
+            if passed == len(panel) and panel:
+                return {
+                    "ok": True,
+                    "failed_stage": "",
+                    "category": "",
+                    "failure_reason": "",
+                    "execution": {},
+                    "first_fault": {},
+                    "diagnostic": {},
+                    "gates_passed": gates_passed + 1,
+                    "instances_feasible": passed,
+                    "by_instance": by_instance,
+                    "g4_passed_here": passed,
+                    "vehicles": vehicles,
+                    "distance": round(distance, 4),
+                }
+            total_diag = {
+                "customers_missing": missing,
+                "customers_duplicated": duplicated,
+                "depot_violations": depot_violations,
+                "capacity_excess": round(capacity_excess, 4),
+                "battery_deficit": round(battery_deficit, 4),
+                "lateness": round(lateness, 4),
+                "g4_feasible": passed,
+                "g4_total": len(panel),
+            }
+            failed = first_fail or {
+                "ok": False,
+                "failed_stage": name,
+                "category": "RUNTIME",
+                "failure_reason": "no panel instance feasible",
                 "execution": {},
                 "first_fault": {},
-                "diagnostic": {},
-                "gates_passed": gates_passed + 1,
-                "instances_feasible": passed,
-                "g4_passed_here": passed,
-                "vehicles": vehicles,
-                "distance": round(distance, 4),
+                "diagnostic": total_diag,
             }
-            continue
+            failed["ok"] = False
+            failed["gates_passed"] = gates_passed
+            failed["instances_feasible"] = passed
+            failed["by_instance"] = by_instance
+            failed["g4_passed_here"] = passed
+            failed["diagnostic"] = {
+                **dict(failed.get("diagnostic") or {}),
+                **total_diag,
+            }
+            failed["failure_reason"] = (
+                f"G4 {passed}/{len(panel)}; "
+                + str(failed.get("failure_reason") or "")
+            )[:500]
+            return failed
+
         probe = _probe(name)
         if probe is None:
             raise RuntimeError(f"missing probe for {name}")
@@ -329,6 +386,7 @@ def evaluate_through(
             "diagnostic": {},
             "gates_passed": gates_passed,
             "instances_feasible": 1 if name != "executable" else 0,
+            "by_instance": {},
             "vehicles": int(report.vehicles or 0) if report.feasible else None,
             "distance": float(report.total_distance or 0.0) if report.feasible else None,
         }
@@ -336,12 +394,11 @@ def evaluate_through(
 
 
 def roles_for(stage: str, category: str = "") -> list[str]:
-    """Architect plus coding roles that produce complete solver.py candidates."""
     coding = list(STAGE_CANDIDATES.get(stage, ["search"]))
-    if category in {"BATTERY", "WINDOW", "CHARGE_POLICY"} and "charging" not in coding:
-        coding = ["charging", *coding]
-    if category in {"VISIT", "DEPOT", "CAPACITY"} and "routing" not in coding:
-        coding = ["routing", *coding]
+    if category in {"BATTERY", "WINDOW", "CHARGE_POLICY"}:
+        coding = ["charging", "search"]
+    elif category in {"VISIT", "DEPOT", "CAPACITY"}:
+        coding = ["routing", "search"]
     return ["architect", *coding]
 
 
@@ -351,6 +408,10 @@ def owner_for(category: str) -> str:
     if category in {"VISIT", "DEPOT", "CAPACITY"}:
         return "routing"
     return "search"
+
+
+def coding_roles_for(stage: str, category: str = "") -> list[str]:
+    return [role for role in roles_for(stage, category) if role != "architect"]
 
 
 def _write_solver(directory: Path, source: str) -> None:
@@ -380,37 +441,110 @@ def _lex_pass_key(info: dict[str, Any]) -> tuple:
     )
 
 
-def _base_payload(
-    *,
-    stage: str,
-    stage_index: int,
-    committed: str,
-    stage_best: str,
-    failure: dict[str, Any],
-    critic_note: dict[str, Any],
-    instruction_extra: str = "",
-) -> dict[str, Any]:
-    return {
-        "problem": PROBLEM_BRIEF,
-        "stage": stage,
-        "gates_required": list(STAGES[: stage_index + 1]),
-        "instruction": (
-            f"Current stage: {stage}. Preserve every earlier gate. "
-            "Return one complete self-contained solver.py with module-level def solve. "
-            "The depot id may appear only at the start and end of each route. "
-            "Charging visits must appear as station node ids in the returned routes. "
-            + instruction_extra
-        ).strip(),
-        "committed_solver_py": committed,
-        "stage_best_solver_py": stage_best,
-        "rejected_solver_py": failure.get("source") or "",
-        "failure_reason": failure.get("failure_reason") or "",
-        "failure_category": failure.get("category") or "",
-        "execution": failure.get("execution") or {},
-        "first_fault": failure.get("first_fault") or {},
-        "diagnostic": failure.get("diagnostic") or {},
-        "critic": critic_note,
-    }
+def _relative(path: Path, root: Path) -> str:
+    try:
+        return str(path.resolve().relative_to(root.resolve())).replace("\\", "/")
+    except ValueError:
+        return str(path).replace("\\", "/")
+
+
+def _unique_str_ids(values: Any) -> list[str]:
+    """Flatten nested id lists and dedupe while keeping order."""
+    out: list[str] = []
+    seen: set[str] = set()
+
+    def walk(item: Any) -> None:
+        if item is None:
+            return
+        if isinstance(item, (list, tuple, set)):
+            for child in item:
+                walk(child)
+            return
+        text = str(item)
+        if text and text not in seen:
+            seen.add(text)
+            out.append(text)
+
+    walk(values)
+    return out
+
+
+def _top_level_names(source: str) -> list[str]:
+    try:
+        tree = ast.parse(source or "")
+    except SyntaxError:
+        return []
+    return [node.name for node in tree.body if isinstance(node, ast.FunctionDef)]
+
+
+def _source_from_files_payload(data: dict[str, Any]) -> str:
+    files = data.get("files") or []
+    if not isinstance(files, list):
+        return ""
+    for item in files:
+        if not isinstance(item, dict):
+            continue
+        content = str(item.get("content") or "")
+        if "def solve" in content:
+            return content
+    return ""
+
+
+def _request_full_solver(agent: Agent[Any], payload: dict[str, Any]) -> str:
+    body = dict(payload)
+    instruction = str(body.get("instruction") or "")
+    if MODULAR_CREATE_NOTE not in instruction:
+        body["instruction"] = (instruction + " " + MODULAR_CREATE_NOTE).strip()
+    return agent.write_python(body, filename="solver.py", marker="def solve")
+
+
+def _request_patch(agent: Agent[Any], payload: dict[str, Any], parent: str) -> tuple[str, str]:
+    """Return (source, error). error non-empty means apply/parse failed."""
+    symbols = _top_level_names(parent)
+    body = dict(payload)
+    body["mode"] = "patch"
+    body["parent_top_level_symbols"] = symbols
+    body["instruction"] = (
+        str(payload.get("instruction") or "")
+        + " Return ONLY one JSON object with keys hypothesis and ops. "
+        "Each op is {action: ADD|REPLACE|REMOVE, symbol: function_name, code: def ...}. "
+        f"Parent top-level symbols: {symbols or ['(none — ADD helpers then REPLACE solve)']}. "
+        "Nested functions inside solve are NOT patchable; ADD module-level helpers or REPLACE solve. "
+        "Prefer changing one top-level function. Keep def solve."
+    ).strip()
+    prompt = (
+        agent.prompt
+        + "\n\nINPUT:\n"
+        + json.dumps({k: v for k, v in body.items() if k != "instruction"}, default=str)
+        + "\n\n"
+        + body["instruction"]
+    )
+    raw = agent._complete(prompt, json_mode=True)
+    text = raw if isinstance(raw, str) else str(raw)
+    try:
+        data = extract_json(text)
+    except (ValueError, json.JSONDecodeError, TypeError) as error:
+        fallback = extract_python_source(text)
+        if "def solve" in fallback:
+            return fallback, ""
+        return "", f"patch_parse: {error}"
+    try:
+        proposal = parse_proposal_json(data, role=getattr(agent, "role", ""))
+    except (ValueError, TypeError, KeyError) as error:
+        files_src = _source_from_files_payload(data)
+        if "def solve" in files_src:
+            return files_src, ""
+        fallback = extract_python_source(text)
+        if "def solve" in fallback:
+            return fallback, ""
+        return "", f"patch_parse: {error}"
+    applied = apply_proposal(parent, proposal)
+    if applied.ok:
+        return applied.source, ""
+    files_src = _source_from_files_payload(data)
+    if "def solve" in files_src:
+        return files_src, ""
+    return "", f"patch_apply: {applied.error}"
 
 
 def run_from_scratch(
@@ -424,6 +558,8 @@ def run_from_scratch(
     token_ceiling: int | None = None,
     data_root: Path | None = None,
     stages: tuple[str, ...] | None = None,
+    proposals_per_role: int = PROPOSALS_PER_ROLE,
+    repo_root: Path | None = None,
 ) -> dict[str, Any]:
     """Synthesize one solver.py. mode is 'five_agent' or 'single_agent'."""
     if mode not in {"five_agent", "single_agent"}:
@@ -432,6 +568,7 @@ def run_from_scratch(
     for name in active_stages:
         if name not in STAGES:
             raise ValueError(f"unknown stage {name}")
+    root = repo_root or Path(__file__).resolve().parents[3]
     started = time.monotonic()
     workspace.mkdir(parents=True, exist_ok=True)
     committed_dir = workspace / "committed"
@@ -465,6 +602,7 @@ def run_from_scratch(
 
     committed = ""
     stage_best = ""
+    stage_best_info: dict[str, Any] = {}
     stage_index = 0
     passed = {name: False for name in STAGES}
     failure: dict[str, Any] = {}
@@ -472,22 +610,61 @@ def run_from_scratch(
     architect_plan: dict[str, Any] | None = None
     planned_stage = ""
     planned_family = ""
-    repair_step = 0
     rounds = 0
     budget_hit = False
-    seen_hashes: set[str] = set()
+    failed_hashes: set[str] = set()
+    best_g4 = 0
 
     def calls() -> int:
         return usage_totals(usage)[0]
 
+    def tokens_spent() -> int:
+        _, prompt_tokens, completion_tokens = usage_totals(usage)
+        return prompt_tokens + completion_tokens
+
     def budget_left() -> bool:
         if calls() >= max_llm_calls:
             return False
-        if token_ceiling is not None:
-            _, prompt_tokens, completion_tokens = usage_totals(usage)
-            if prompt_tokens + completion_tokens >= token_ceiling:
-                return False
+        if token_ceiling is not None and tokens_spent() >= token_ceiling:
+            return False
         return True
+
+    def base_payload(stage: str, extra: str = "") -> dict[str, Any]:
+        return {
+            "problem": PROBLEM_BRIEF,
+            "stage": stage,
+            "gates_required": list(STAGES[: STAGES.index(stage) + 1]),
+            "instruction": (
+                f"Current stage: {stage}. Preserve every earlier gate. "
+                + (
+                    "Return a small ADD/REPLACE/REMOVE patch against committed_solver_py. "
+                    if committed.strip()
+                    else (
+                        "Return one complete self-contained solver.py. "
+                        + MODULAR_CREATE_NOTE
+                        + " "
+                    )
+                )
+                + "Depot only at route ends. Station ids must appear in routes for charging. "
+                + extra
+            ).strip(),
+            "committed_solver_py": committed,
+            "stage_best_solver_py": stage_best,
+            "rejected_solver_py": failure.get("source") or "",
+            "failure_reason": failure.get("failure_reason") or "",
+            "failure_category": failure.get("category") or "",
+            "execution": failure.get("execution") or {},
+            "first_fault": failure.get("first_fault") or {},
+            "diagnostic": failure.get("diagnostic") or {},
+            "by_instance": failure.get("by_instance") or {},
+            "critic": critic_note,
+            "use_patches": bool(committed.strip()),
+        }
+
+    def produce_source(agent: Agent[Any], payload: dict[str, Any]) -> tuple[str, str]:
+        if committed.strip():
+            return _request_patch(agent, payload, committed if not stage_best else (stage_best or committed))
+        return _request_full_solver(agent, payload), ""
 
     while stage_index < len(active_stages):
         if not budget_left():
@@ -498,133 +675,157 @@ def run_from_scratch(
         family = str((failure.get("diagnostic") or {}).get("family") or category)
 
         if mode == "five_agent":
-            if repair_step == 1:
-                producers = [owner_for(category)]
-                repair_label = "first_repair"
-            elif repair_step == 2:
-                producers = ["search"]
-                repair_label = "second_repair"
-            else:
-                producers = list(STAGE_CANDIDATES.get(stage, ["search"]))
-                repair_label = "fresh"
-            need_architect = planned_stage != stage or (
-                family and family != planned_family and repair_step == 0
-            )
+            producers = coding_roles_for(stage, category)
+            need_architect = planned_stage != stage or (family and family != planned_family)
         else:
             producers = ["single"]
-            repair_label = "first_repair" if repair_step == 1 else (
-                "second_repair" if repair_step == 2 else "fresh"
-            )
             need_architect = False
 
-        instruction_extra = ""
-        if repair_step == 1:
-            instruction_extra = (
-                "First repair: edit the failed solver using the exact diagnostic. "
-                "Return a complete solver.py."
-            )
-        elif repair_step == 2:
-            instruction_extra = (
-                "Second repair: use the failed solver, diagnostic, and Critic note. "
-                "Return a complete solver.py."
-            )
-
-        payload = _base_payload(
-            stage=stage,
-            stage_index=STAGES.index(stage),
-            committed=committed,
-            stage_best=stage_best,
-            failure=failure,
-            critic_note=critic_note,
-            instruction_extra=instruction_extra,
-        )
-        payload["repair"] = repair_step > 0
-        payload["repair_step"] = repair_step
+        payload = base_payload(stage)
+        candidate_rows: list[dict[str, Any]] = []
 
         try:
-            if mode == "five_agent" and need_architect:
+            if mode == "five_agent" and need_architect and budget_left():
                 architect_plan = team["architect"].run(payload).model_dump()
                 planned_stage = stage
                 planned_family = family
             if architect_plan:
                 payload["architect"] = architect_plan
 
-            candidate_rows: list[dict[str, Any]] = []
+            parent_for_patch = stage_best if stage_best.strip() else committed
             for role in producers:
-                if not budget_left():
-                    budget_hit = True
-                    break
-                source = team[role].write_python(
-                    payload, filename="solver.py", marker="def solve"
-                )
-                trial_hash = code_hash(source or "")
-                same_round = any(row.get("hash") == trial_hash for row in candidate_rows)
-                if same_round or (trial_hash in seen_hashes and repair_step == 0 and len(producers) > 1):
-                    # Skip only same-round duplicates or previously failed hashes while
-                    # another producer in this fresh round can still be evaluated.
-                    already_evaluated = any(
-                        row.get("hash") == trial_hash and not row.get("skipped_duplicate")
-                        for row in candidate_rows
-                    )
-                    if already_evaluated or (
-                        trial_hash in seen_hashes and any(not row.get("skipped_duplicate") for row in candidate_rows)
-                    ):
+                for _proposal_ix in range(max(1, int(proposals_per_role))):
+                    if not budget_left():
+                        budget_hit = True
+                        break
+                    agent = team[role]
+                    attempt_payload = dict(payload)
+                    source = ""
+                    apply_error = ""
+                    resampled = False
+                    used_full_fallback = False
+                    for attempt in range(3):
+                        if not budget_left():
+                            budget_hit = True
+                            break
+                        if attempt == 1:
+                            attempt_payload = dict(payload)
+                            note = NOOP_NOTE if apply_error == "noop_or_duplicate" else PATCH_FAIL_NOTE
+                            if apply_error and apply_error not in {"noop_or_duplicate", ""}:
+                                note = f"{PATCH_FAIL_NOTE} Last error: {apply_error}."
+                            attempt_payload["instruction"] = (
+                                str(payload.get("instruction") or "") + " " + note
+                            ).strip()
+                            resampled = True
+                        if attempt == 2 and parent_for_patch.strip() and committed.strip():
+                            # Patches could not land on this parent; allow one complete rewrite.
+                            used_full_fallback = True
+                            attempt_payload = dict(payload)
+                            attempt_payload["use_patches"] = False
+                            attempt_payload["instruction"] = (
+                                str(payload.get("instruction") or "")
+                                + " Patch mode failed twice. Return a COMPLETE modular solver.py. "
+                                + MODULAR_CREATE_NOTE
+                            ).strip()
+                            source = _request_full_solver(agent, attempt_payload)
+                            apply_error = ""
+                        elif parent_for_patch.strip() and committed.strip() and not used_full_fallback:
+                            source, apply_error = _request_patch(
+                                agent, attempt_payload, parent_for_patch
+                            )
+                        else:
+                            source = _request_full_solver(agent, attempt_payload)
+                            apply_error = ""
+                        if apply_error and apply_error != "noop_or_duplicate":
+                            source = ""
+                            continue
+                        if not (source or "").strip():
+                            apply_error = apply_error or "empty candidate"
+                            continue
+                        trial_hash = code_hash(source)
+                        if trial_hash == code_hash(parent_for_patch) or trial_hash in failed_hashes:
+                            apply_error = "noop_or_duplicate"
+                            source = ""
+                            continue
+                        apply_error = ""
+                        break
+                    if budget_hit:
+                        break
+                    if apply_error or not (source or "").strip():
                         candidate_rows.append(
                             {
                                 "role": role,
-                                "source": source or "",
-                                "hash": trial_hash,
-                                "skipped_duplicate": True,
+                                "source": "",
+                                "hash": "",
                                 "ok": False,
+                                "skipped_noop": True,
+                                "resampled": resampled,
                                 "category": "RUNTIME",
-                                "failure_reason": "duplicate candidate hash skipped",
+                                "failure_reason": apply_error or "empty candidate",
+                                "gates_passed": 0,
+                                "instances_feasible": 0,
+                                "by_instance": {},
+                                "diagnostic": {},
                             }
                         )
                         continue
-                seen_hashes.add(trial_hash)
-                blocked = precheck_source(source or "", known_ids)
-                if blocked is not None:
-                    info = blocked
-                    ok = False
-                else:
-                    cand_dir = candidates_dir / f"r{rounds + 1}_{role}"
-                    _write_solver(cand_dir, source or "")
-                    _write_solver(trial_dir, source or "")
-                    info = evaluate_through(cand_dir, stage, limits=limits, panel=panel)
-                    ok = bool(info.get("ok"))
-                if not ok and (source or "").strip():
-                    _write_solver(rejected_dir, source or "")
-                row = {
-                    "role": role,
-                    "source": source or "",
-                    "hash": trial_hash,
-                    "ok": ok,
-                    "category": info.get("category") or "",
-                    "failure_reason": info.get("failure_reason") or "",
-                    "execution": info.get("execution") or {},
-                    "first_fault": info.get("first_fault") or {},
-                    "diagnostic": info.get("diagnostic") or {},
-                    "gates_passed": info.get("gates_passed") or 0,
-                    "instances_feasible": info.get("instances_feasible") or 0,
-                    "vehicles": info.get("vehicles"),
-                    "distance": info.get("distance"),
-                    "info": info,
-                }
-                candidate_rows.append(row)
-                if not ok:
-                    ideas = payload.get("specialist_ideas")
-                    if not isinstance(ideas, list):
-                        ideas = []
-                        payload["specialist_ideas"] = ideas
-                    ideas.append(
-                        {
-                            "role": role,
-                            "failure_reason": str(row.get("failure_reason") or "")[:200],
-                        }
-                    )
+                    trial_hash = code_hash(source)
+                    if trial_hash in failed_hashes or trial_hash == code_hash(parent_for_patch):
+                        candidate_rows.append(
+                            {
+                                "role": role,
+                                "source": source,
+                                "hash": trial_hash,
+                                "ok": False,
+                                "skipped_noop": True,
+                                "resampled": resampled,
+                                "category": "RUNTIME",
+                                "failure_reason": "noop_or_duplicate",
+                                "gates_passed": 0,
+                                "instances_feasible": 0,
+                                "by_instance": {},
+                                "diagnostic": {},
+                            }
+                        )
+                        continue
+                    blocked = precheck_source(source, known_ids)
+                    if blocked is not None:
+                        info = blocked
+                        ok = False
+                    else:
+                        cand_dir = candidates_dir / f"r{rounds + 1}_{role}_{_proposal_ix}"
+                        _write_solver(cand_dir, source)
+                        _write_solver(trial_dir, source)
+                        info = evaluate_through(cand_dir, stage, limits=limits, panel=panel)
+                        ok = bool(info.get("ok"))
+                    if not ok:
+                        failed_hashes.add(trial_hash)
+                        if (source or "").strip():
+                            _write_solver(rejected_dir, source)
+                    row = {
+                        "role": role,
+                        "source": source,
+                        "hash": trial_hash,
+                        "ok": ok,
+                        "skipped_noop": False,
+                        "resampled": resampled,
+                        "category": info.get("category") or "",
+                        "failure_reason": info.get("failure_reason") or "",
+                        "execution": info.get("execution") or {},
+                        "first_fault": info.get("first_fault") or {},
+                        "diagnostic": info.get("diagnostic") or {},
+                        "gates_passed": info.get("gates_passed") or 0,
+                        "instances_feasible": info.get("instances_feasible") or 0,
+                        "by_instance": info.get("by_instance") or {},
+                        "vehicles": info.get("vehicles"),
+                        "distance": info.get("distance"),
+                        "info": info,
+                    }
+                    candidate_rows.append(row)
+                if budget_hit:
+                    break
         except BudgetExhausted:
             budget_hit = True
-            break
         except (RuntimeError, ValueError, KeyError, TypeError) as error:
             failure = {
                 "category": "RUNTIME",
@@ -633,42 +834,42 @@ def run_from_scratch(
                 "first_fault": {},
                 "diagnostic": {"crashed": True, "family": "RUNTIME"},
                 "source": "",
+                "by_instance": {},
             }
             break
 
-        if budget_hit and not candidate_rows:
-            break
+        evaluated = [row for row in candidate_rows if not row.get("skipped_noop")]
+        if not evaluated and not candidate_rows:
+            if budget_hit:
+                break
+            continue
 
         rounds += 1
-        passing = [row for row in candidate_rows if row.get("ok")]
+        passing = [row for row in evaluated if row.get("ok")]
         if passing:
-            best = sorted(passing, key=lambda row: _lex_pass_key(row))[0]
+            best = sorted(passing, key=_lex_pass_key)[0]
             committed = best["source"]
             stage_best = ""
+            stage_best_info = {}
             _write_solver(committed_dir, committed)
-            for name in STAGES[: STAGES.index(stage) + 1]:
-                if name in active_stages[: stage_index + 1] or name in STAGES[: STAGES.index(stage) + 1]:
-                    passed[name] = True
-            # Mark all active stages up through current.
             for name in active_stages[: stage_index + 1]:
                 passed[name] = True
+            for name in STAGES[: STAGES.index(stage) + 1]:
+                passed[name] = True
+            if stage == "schneider_c5":
+                best_g4 = max(best_g4, int(best.get("instances_feasible") or 0))
             stage_index += 1
             failure = {}
-            repair_step = 0
+            critic_note = {}
             planned_family = ""
-            seen_hashes.clear()
+            failed_hashes.clear()
         else:
-            evaluated = [row for row in candidate_rows if not row.get("skipped_duplicate")]
             if evaluated:
                 best_failed = max(evaluated, key=progress_key)
-                if not stage_best or progress_key(best_failed) > progress_key(
-                    {
-                        "gates_passed": failure.get("gates_passed") or 0,
-                        "instances_feasible": failure.get("instances_feasible") or 0,
-                        "diagnostic": failure.get("diagnostic") or {},
-                    }
-                ):
+                if not stage_best or progress_key(best_failed) > progress_key(stage_best_info or {}):
                     stage_best = best_failed["source"]
+                    stage_best_info = best_failed
+                best_g4 = max(best_g4, int(best_failed.get("instances_feasible") or 0))
                 failure = {
                     "category": best_failed.get("category") or "RUNTIME",
                     "failure_reason": best_failed.get("failure_reason") or "",
@@ -677,57 +878,47 @@ def run_from_scratch(
                     "diagnostic": best_failed.get("diagnostic") or {},
                     "gates_passed": best_failed.get("gates_passed") or 0,
                     "instances_feasible": best_failed.get("instances_feasible") or 0,
+                    "by_instance": best_failed.get("by_instance") or {},
                     "source": best_failed.get("source") or "",
                 }
-            if not evaluated:
-                seen_hashes.clear()
-                repair_step = 0
-            elif repair_step < 2:
-                repair_step += 1
-            else:
-                repair_step = 0
-                seen_hashes.clear()
-
-        if mode == "five_agent" and candidate_rows:
-            try:
-                decision = team["critic"].run(
-                    {
-                        "stage": stage,
-                        "passed": bool(passing),
-                        "candidates": [
-                            {
-                                "role": row.get("role"),
-                                "ok": row.get("ok"),
-                                "category": row.get("category"),
-                                "failure_reason": row.get("failure_reason"),
-                                "diagnostic": row.get("diagnostic"),
-                                "gates_passed": row.get("gates_passed"),
-                                "instances_feasible": row.get("instances_feasible"),
-                            }
-                            for row in candidate_rows
-                        ],
-                        "failure_reason": failure.get("failure_reason") or "",
-                        "failure_category": failure.get("category") or "",
-                        "execution": failure.get("execution") or {},
-                        "first_fault": failure.get("first_fault") or {},
-                        "diagnostic": failure.get("diagnostic") or {},
-                        "evaluation": {"passed": bool(passing), "stage": stage},
+            if mode == "five_agent" and evaluated and budget_left():
+                try:
+                    decision = team["critic"].run(
+                        {
+                            "stage": stage,
+                            "passed": False,
+                            "candidates": [
+                                {
+                                    "role": row.get("role"),
+                                    "ok": row.get("ok"),
+                                    "category": row.get("category"),
+                                    "failure_reason": row.get("failure_reason"),
+                                    "instances_feasible": row.get("instances_feasible"),
+                                    "by_instance": row.get("by_instance"),
+                                    "diagnostic": row.get("diagnostic"),
+                                }
+                                for row in evaluated
+                            ],
+                            "failure_reason": failure.get("failure_reason") or "",
+                            "failure_category": failure.get("category") or "",
+                            "diagnostic": failure.get("diagnostic") or {},
+                            "by_instance": failure.get("by_instance") or {},
+                        }
+                    )
+                    critic_note = {
+                        "diagnosis": decision.primary_cause,
+                        "evidence": list(decision.evidence),
+                        "recommended_next_target": decision.next_target,
+                        "lesson": decision.lesson,
                     }
-                )
-                critic_note = {
-                    "diagnosis": decision.primary_cause,
-                    "evidence": list(decision.evidence),
-                    "recommended_next_target": decision.next_target,
-                    "lesson": decision.lesson,
-                }
-            except BudgetExhausted:
-                budget_hit = True
-            except (TypeError, ValueError, KeyError):
-                critic_note = critic_note or {
-                    "diagnosis": failure.get("failure_reason") or "",
-                    "evidence": [],
-                    "recommended_next_target": "SEARCH",
-                }
+                except BudgetExhausted:
+                    budget_hit = True
+                except (TypeError, ValueError, KeyError):
+                    critic_note = critic_note or {
+                        "diagnosis": failure.get("failure_reason") or "",
+                        "evidence": [],
+                        "recommended_next_target": "SEARCH",
+                    }
 
         n_calls, prompt_tokens, completion_tokens = usage_totals(usage)
         with log_path.open("a", encoding="utf-8") as handle:
@@ -737,22 +928,26 @@ def run_from_scratch(
                         "round": rounds,
                         "stage": stage,
                         "passed": bool(passing),
-                        "repair_step": repair_step if not passing else 0,
-                        "repair_label": repair_label,
                         "roles": [row.get("role") for row in candidate_rows],
                         "candidates": [
                             {
                                 "role": row.get("role"),
                                 "ok": row.get("ok"),
                                 "category": row.get("category"),
-                                "hash": row.get("hash"),
-                                "skipped_duplicate": bool(row.get("skipped_duplicate")),
+                                "hash": (row.get("hash") or "")[:16],
+                                "instances_feasible": row.get("instances_feasible"),
+                                "skipped_noop": bool(row.get("skipped_noop")),
+                                "by_instance": {
+                                    key: {"ok": val.get("ok"), "category": val.get("category")}
+                                    for key, val in (row.get("by_instance") or {}).items()
+                                },
                             }
                             for row in candidate_rows
                         ],
                         "failure_category": failure.get("category") or "",
                         "failure_reason": failure.get("failure_reason") or "",
-                        "critic": critic_note,
+                        "best_g4": best_g4,
+                        "critic": critic_note if not passing else {},
                         "calls": n_calls,
                         "tokens": prompt_tokens + completion_tokens,
                     }
@@ -779,6 +974,7 @@ def run_from_scratch(
                 if report.feasible and not report.crashed and not report.timed_out:
                     g4_count += 1
             g4_feasible = g4_count
+            best_g4 = max(best_g4, g4_count)
         if g4_passed:
             confirmation = [
                 instance
@@ -806,6 +1002,7 @@ def run_from_scratch(
             if fully:
                 vehicles = panel_vehicles + held_vehicles
                 distance = round(panel_distance + held_distance, 4)
+
     n_calls, prompt_tokens, completion_tokens = usage_totals(usage)
     tokens = prompt_tokens + completion_tokens
     category = classify_category(
@@ -842,6 +1039,7 @@ def run_from_scratch(
         "deepest_gate": _deepest(passed),
         "g4_feasible": g4_feasible,
         "g4_total": len(panel),
+        "best_g4_feasible": best_g4,
         "confirmation_feasible": confirmation_feasible,
         "confirmation_total": confirmation_total,
         "llm_calls": n_calls,
@@ -860,7 +1058,7 @@ def run_from_scratch(
         "solver_hash": code_hash(committed)[:16] if committed.strip() else "",
         "wall_s": round(time.monotonic() - started, 1),
         "rounds": rounds,
-        "solver_path": str(solver_path),
+        "solver_path": _relative(solver_path, root),
     }
 
 

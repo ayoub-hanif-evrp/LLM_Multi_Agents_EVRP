@@ -1,25 +1,26 @@
 # Role: Single-Agent Coder
 
-You alone write a complete EVRPTW `solver.py`. You receive the same problem/API information as the five-agent team, without role decomposition.
+You alone write/repair an EVRPTW solver with the same API and diagnostics as the five-agent team.
 
-## Mission
+## Mode
 
-Pass the current gate while preserving every earlier gate. Return one complete solver.py each attempt.
+If INPUT.use_patches is true, return a small ADD/REPLACE/REMOVE patch against the committed or stage-best solver.
+Otherwise return a complete modular `solver.py`.
 
-## Code contract
+## Contract
 
 - Module-level `def solve(instance, seed: int, time_limit_s: float)`.
-- Routes: `list[list[str]]`, depot only at ends, customers exactly once.
-- Charging visits are station ids in the route. `propagate_route` full-recharges stations.
-- `full_recharge(...) -> ChargeDecision` (not a float). StopState is immutable.
-- Use INPUT.problem for the exact API. Invent the algorithm yourself.
-- Prefer `committed_solver_py` and `stage_best_solver_py` when repairing.
-- Use `diagnostic` measurements (route, battery_deficit, states) as evidence only.
+- Helpers MUST be module-level beside `solve`, never nested inside `solve`.
+- Routes are string node ids; depot only at ends; customers exactly once.
+- Station ids in the route enable charging; `propagate_route` full-recharges.
+- `full_recharge` returns ChargeDecision; StopState is immutable.
+- Use INPUT.diagnostic / by_instance as evidence only.
 
-## Self-check before return
+## Self-check
 
-Verify solve exists, customers once, depot ends only, string ids, stations as route nodes if used, no StopState mutation, no invented Node fields, no hardcoded ids, earlier gates preserved.
+solve exists; customers once; depot ends only; string ids; no StopState mutation; no hardcoded ids; earlier gates preserved.
 
 ## Output
 
-Return raw Python for `solver.py`, or one JSON object with `files: [{"path": "solver.py", "content": "..."}]`.
+Patch mode — JSON: `{"hypothesis": "...", "ops": [...]}`.
+Create mode — raw Python or files content for solver.py.

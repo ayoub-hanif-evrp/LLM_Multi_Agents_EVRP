@@ -1,0 +1,25 @@
+name: ci
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v4
+        with:
+          enable-cache: true
+      - name: Sync
+        run: uv sync
+      - name: Pytest
+        run: uv run pytest -q
+      - name: Ruff
+        run: uv run ruff check src tests
+      - name: Mypy
+        run: uv run mypy src/evrptw_autolab
+      - name: Validate data
+        run: uv run voltforge validate-data

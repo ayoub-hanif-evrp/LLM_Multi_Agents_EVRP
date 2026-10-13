@@ -24,8 +24,12 @@ def test_configured_comparison_models() -> None:
     profiles = list_profiles()
     assert len(profiles) >= 4
     ids = {p.id for p in profiles}
-    assert "qwen25_coder_3b" in ids
+    assert "qwen25_coder_7b" in ids
+    assert "qwen25_coder_14b" in ids
+    assert "devstral_small_2_24b" in ids
+    assert "qwen3_coder_30b" in ids
     assert resolve_profile("qwen25_coder_7b").model == "qwen2.5-coder:7b"
+    assert resolve_profile("devstral_small_2_24b").model == "devstral-small-2:24b"
 
 
 def test_missing_model_is_skipped() -> None:

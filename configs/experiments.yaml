@@ -25,3 +25,12 @@ solver_evolution:
   candidates_per_role: 2
   beam_size: 2
   max_llm_calls: 80
+
+# Strong-model selection pilot (development instances only).
+strong_model_pilot:
+  max_llm_calls: 120
+  token_ceiling: 300000
+  seeds: [11, 22, 33]
+  profiles:
+    - devstral_small_2_24b
+    - qwen3_coder_30b

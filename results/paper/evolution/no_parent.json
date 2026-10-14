@@ -1,0 +1,4 @@
+{
+  "experiment": "solver_evolution",
+  "failure_reason": "no valid synthesized solver to evolve"
+}

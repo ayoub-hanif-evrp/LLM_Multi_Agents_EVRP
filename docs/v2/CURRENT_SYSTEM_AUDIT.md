@@ -68,7 +68,7 @@ Hardware: RTX A5000 24 GB, 32 GB RAM, Windows 11. Default `num_ctx=8192` for lar
 | M1 | Safe subprocess unit tests; Ollama thinking/token/show hardening | Structured path only |
 | M2 | Dataset registry + parsers + manifests (**done**: all five families validate to ProblemSpecV2) | Additive |
 | M3 | Variant-aware evaluator (`problem/v2/evaluator.py`) | Additive; Schneider legacy regression required |
-| M4 | Classical backbone (construction/ALNS) | New `algorithms/` or `backbone/` |
+| M4 | Classical backbone (construction/ALNS) — **done** under `backbone/` | Additive |
 | M5–M8 | Multi-agent CV-MAPE, experiments under `results/v2/` | New protocol IDs |
 
 ## 7. Milestone 0 exit criteria

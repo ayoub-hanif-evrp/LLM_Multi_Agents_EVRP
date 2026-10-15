@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from evrptw_autolab.backbone.util import clone_solution, vehicle_for_route
 from evrptw_autolab.problem.v2.charging import nonlinear_charge_duration
-from evrptw_autolab.problem.v2.transport import EPSILON, energy_required, travel_time
+from evrptw_autolab.problem.v2.transport import EPSILON, energy_required
 from evrptw_autolab.problem.v2.types import ProblemSpecV2, RouteStopV2, SolutionV2, VehicleTypeV2
 
 

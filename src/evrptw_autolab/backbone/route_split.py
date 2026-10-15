@@ -18,7 +18,7 @@ _SPLIT_FAMILIES = frozenset({"BATTERY", "CHARGE_POLICY", "WINDOW", "DURATION"})
 def _units_on_route(spec: ProblemSpecV2, route) -> list[tuple[str, ...]]:
     ids = {s.node_id for s in route}
     if spec.capabilities.pickup_delivery and spec.requests:
-        units = []
+        units: list[tuple[str, ...]] = []
         for req in spec.requests:
             if req.pickup_id in ids and req.delivery_id in ids:
                 units.append((req.pickup_id, req.delivery_id))

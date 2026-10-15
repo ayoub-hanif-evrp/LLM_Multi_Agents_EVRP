@@ -1,22 +1,26 @@
 # VoltForge 2.0 — Research Readiness Report
 
 **Date:** 2026-10-15  
-**Baseline commit reviewed:** `6925de8e5444`  
-**Working tree:** uncommitted targeted-repair changes on top of `6925de8` (see §2).
+**Pushed repair commit:** `d18fe0edd6f8` (14/14 classical pilot)  
+**This document tracks subsequent integrity work on top of that commit.**
 
-## 1. Verdict
+## 1. Verdict (honest layers)
 
 | Layer | Status |
 |---|---|
-| Classical backbone feasibility (14-instance seed-7 panel) | **14/14 feasible** (was 9/14) |
-| Evaluator independence / fleet counting | Fixed + regression tested |
-| Objective-aware ALNS + deadline | Implemented |
-| Component interfaces + fallback attribution | Implemented |
-| CV-MAPE evolution (FakeBackend) | Implemented + tested |
-| Real Qwen3-Coder multi-agent research claim | **Not yet** — no fair LLM-vs-classical comparison completed in this session |
+| Mathematical formulation validation | Prior Bezzi/objective work; not reopened here |
+| Engineering tests / CI | Ruff + pytest + mypy required green |
+| Classical solver feasibility (seed-7, 14-dev panel) | **14/14** at `d18fe0e` — one seed only |
+| Classical objective quality | Feasible but not BKS-competitive (esp. Montoya/Hiermann) |
+| Evolution fitness scientific validity | Panel-comparable lex ranking + attribution (Milestone 1) |
+| Real LLM synthesis | Bounded Qwen smoke only; not a research claim |
+| Multi-agent causal contribution | **Not demonstrated** with fair ablations yet |
+| Cross-variant transfer | Logging scaffold; negative-transfer study pending |
+| Held-out generalization | **Not run** |
+| Publication readiness | **Not ready** for an algorithm-design claim |
 
-**Engineering success:** yes — multi-variant evaluation and classical solving are reproducible.  
-**Research success (LLM multi-agent superiority):** **not claimed**. Pipeline existence ≠ demonstrated improvement over controlled baselines.
+**Engineering success:** classical multi-variant solving is reproducible.  
+**Research success (LLM multi-agent superiority):** **not claimed**.
 
 ## 2. Files changed (this repair wave)
 

@@ -305,14 +305,13 @@ def _find_station_insertions(
         left_id = route[j].node_id
         right_id = route[j + 1].node_id
         if j == 0:
-            soc = cap
+            soc = float(cap)
         else:
-            soc = _soc_at_index(spec, route, vehicle, j)
-            if soc is None:
+            soc_at = _soc_at_index(spec, route, vehicle, j)
+            if soc_at is None:
                 continue
-            if spec.node_map[left_id].kind == "station":
-                soc = cap
-        _push(_candidate(left_id, right_id, float(soc), j + 1))
+            soc = float(cap) if spec.node_map[left_id].kind == "station" else float(soc_at)
+        _push(_candidate(left_id, right_id, soc, j + 1))
     return ordered
 
 

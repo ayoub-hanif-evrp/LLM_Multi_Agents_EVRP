@@ -18,13 +18,46 @@ SKIPPED_NO_CREDENTIAL = "SKIPPED_NO_CREDENTIAL"
 
 
 class FakeBackend:
-    """Deterministic fixture backend for tests. Maps role -> JSON text or a sequence of replies."""
+    """Deterministic fixture backend for tests. Maps role -> JSON text or a sequence of replies.
 
-    def __init__(self, replies: dict[str, str | list[str]]) -> None:
+    Optional ``token_sequence`` injects known usage values for budget tests.
+    Optional ``fail_then_succeed`` forces a first HTTP failure then a retry success.
+    """
+
+    def __init__(
+        self,
+        replies: dict[str, str | list[str]],
+        *,
+        token_sequence: list[int] | None = None,
+        fail_first_n: int = 0,
+    ) -> None:
+        from evrptw_autolab.llm.usage import LLMUsage
+
         self.replies = {key: ([value] if isinstance(value, str) else list(value)) for key, value in replies.items()}
         self.indexes = dict.fromkeys(self.replies, 0)
         self.calls: list[str] = []
-        self.last_usage = None
+        self.last_usage: LLMUsage | None = None
+        self.pending_usages: list[LLMUsage] = []
+        self.token_sequence = list(token_sequence or [])
+        self._token_index = 0
+        self.fail_first_n = int(fail_first_n)
+        self._fail_count = 0
+        self.provider = "fake"
+
+    @property
+    def last_tokens(self) -> int:
+        if self.pending_usages:
+            return sum(u.total_tokens for u in self.pending_usages)
+        if self.last_usage is not None:
+            return self.last_usage.total_tokens
+        return 0
+
+    def _next_tokens(self) -> int:
+        if self._token_index < len(self.token_sequence):
+            value = int(self.token_sequence[self._token_index])
+            self._token_index += 1
+            return value
+        return 0
 
     def complete(
         self,
@@ -36,12 +69,43 @@ class FakeBackend:
         json_mode: bool = True,
         **kwargs: Any,
     ) -> str:
+        from evrptw_autolab.llm.usage import LLMUsage
+
         self.calls.append(role)
+        self.pending_usages = []
         if role not in self.replies:
             raise KeyError(f"FakeBackend has no reply for role={role}")
+
+        def _record(*, repair: bool, failed: bool, tokens: int) -> None:
+            usage = LLMUsage(
+                model_id=model,
+                provider="fake",
+                role=role,
+                latency_s=0.0,
+                prompt_tokens=0,
+                completion_tokens=tokens,
+                retry_count=1 if repair else 0,
+                repair=repair,
+                failed=failed,
+            )
+            self.pending_usages.append(usage)
+            self.last_usage = usage
+
+        if self._fail_count < self.fail_first_n:
+            self._fail_count += 1
+            _record(repair=False, failed=True, tokens=self._next_tokens())
+            # Successful retry attempt (mirrors Ollama's one repair).
+            tokens = self._next_tokens()
+            sequence = self.replies[role]
+            index = min(self.indexes[role], len(sequence) - 1)
+            self.indexes[role] += 1
+            _record(repair=True, failed=False, tokens=tokens)
+            return sequence[index]
+
         sequence = self.replies[role]
         index = min(self.indexes[role], len(sequence) - 1)
         self.indexes[role] += 1
+        _record(repair=False, failed=False, tokens=self._next_tokens())
         return sequence[index]
 
 

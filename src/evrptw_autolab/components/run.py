@@ -22,6 +22,7 @@ from evrptw_autolab.components.schemas import (
     ComponentProposal,
     ExperimentFeedback,
 )
+from evrptw_autolab.llm.usage import UsageCollector
 from evrptw_autolab.problem.v2.types import ProblemSpecV2
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -42,8 +43,21 @@ def _prompt(name: str) -> str:
     return path.read_text(encoding="utf-8") if path.exists() else ""
 
 
-def _call_json(backend: Any, *, role: str, prompt: str, model: str, temperature: float = 0.2) -> dict[str, Any]:
-    raw = backend.complete(prompt=prompt, role=role, temperature=temperature, model=model, json_mode=True)
+def _call_json(
+    backend: Any,
+    *,
+    role: str,
+    prompt: str,
+    model: str,
+    temperature: float = 0.2,
+    collector: UsageCollector | None = None,
+) -> dict[str, Any]:
+    if collector is not None:
+        raw = collector.complete(
+            backend, prompt=prompt, role=role, temperature=temperature, model=model, json_mode=True
+        )
+    else:
+        raw = backend.complete(prompt=prompt, role=role, temperature=temperature, model=model, json_mode=True)
     return extract_json(raw)
 
 
@@ -74,8 +88,7 @@ def synthesize_components(
 ) -> dict[str, Any]:
     """Run five-role component synthesis and evaluate with the classical backbone."""
     started = time.monotonic()
-    llm_calls = 0
-    llm_tokens = 0
+    collector = UsageCollector()
     work = work_dir or (ROOT / "workspace" / "components" / f"seed{seed}")
     work.mkdir(parents=True, exist_ok=True)
 
@@ -84,9 +97,8 @@ def synthesize_components(
         role="architect",
         prompt=_prompt("architect") + f"\n\nVariant family={spec.family} caps={spec.capabilities}",
         model=model,
+        collector=collector,
     )
-    llm_calls += 1
-    llm_tokens += int(getattr(backend, "last_tokens", 0) or 0)
     plan = AlgorithmPlan.model_validate(plan_raw)
     wanted: list[ComponentKind] = list(plan.components) or [
         "insertion_score",
@@ -107,9 +119,8 @@ def synthesize_components(
             role=role,
             prompt=_prompt(prompt_name) + f"\n\nSignature:\n{SIGNATURES[kind]}",
             model=model,
+            collector=collector,
         )
-        llm_calls += 1
-        llm_tokens += int(getattr(backend, "last_tokens", 0) or 0)
         generated_raw = str(payload.get("code") or "")
         fallback_reason = ""
         llm_generated = True
@@ -192,17 +203,15 @@ def synthesize_components(
         distance=report.total_distance,
         fault_family=(report.first_fault.family if report.first_fault else ""),
         detail=(report.first_fault.detail if report.first_fault else ""),
-        llm_calls=llm_calls,
+        llm_calls=collector.logical_calls,
     )
-
     decision_raw = _call_json(
         backend,
         role="critic",
         prompt=_prompt("critic") + f"\n\nFeedback:\n{feedback.model_dump_json()}",
         model=model,
+        collector=collector,
     )
-    llm_calls += 1
-    llm_tokens += int(getattr(backend, "last_tokens", 0) or 0)
     try:
         decision = CandidateDecision.model_validate(decision_raw)
     except Exception:  # noqa: BLE001
@@ -229,9 +238,8 @@ def synthesize_components(
                     + f"Signature:\n{SIGNATURES[kind]}"
                 ),
                 model=model,
+                collector=collector,
             )
-            llm_calls += 1
-            llm_tokens += int(getattr(backend, "last_tokens", 0) or 0)
             code, extract_status = _extract_code(payload, kind)
             llm_generated = not extract_status.startswith("fallback")
             if validate_component_source(kind, code).get("ok") and llm_generated:
@@ -269,7 +277,7 @@ def synthesize_components(
                 distance=report.total_distance,
                 fault_family=(report.first_fault.family if report.first_fault else ""),
                 detail=(report.first_fault.detail if report.first_fault else ""),
-                llm_calls=llm_calls,
+                llm_calls=collector.logical_calls,
             )
 
     final_verdict = decision.verdict
@@ -293,8 +301,9 @@ def synthesize_components(
         "distance": report.total_distance,
         "fault_family": feedback.fault_family,
         "detail": feedback.detail,
-        "llm_calls": llm_calls,
-        "llm_tokens": llm_tokens,
+        "llm_calls": collector.logical_calls,
+        "llm_tokens": collector.total_tokens,
+        "http_attempts": collector.http_attempts,
         "rounds": rounds,
         "critic_verdict": final_verdict,
         "load_errors": errors,

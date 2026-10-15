@@ -95,6 +95,15 @@ class OllamaBackend:
         self.pending_usages: list[LLMUsage] = []
         self.ollama_version: str | None = None
 
+    @property
+    def last_tokens(self) -> int:
+        """Total tokens from the most recent complete() attempt list (includes retries)."""
+        if self.pending_usages:
+            return sum(u.total_tokens for u in self.pending_usages)
+        if self.last_usage is not None:
+            return self.last_usage.total_tokens
+        return 0
+
     def available(self) -> bool:
         try:
             urllib.request.urlopen(f"{self.host}/api/tags", timeout=2.0)

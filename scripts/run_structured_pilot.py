@@ -113,6 +113,12 @@ def run_one(profile_id: str, seed: int, cfg: dict, *, ablation: str = "full") ->
         return report
 
     backend = make_backend(profile)
+    if hasattr(backend, "seed"):
+        backend.seed = seed
+    if hasattr(backend, "diversify_calls"):
+        backend.diversify_calls = True
+    if hasattr(backend, "num_ctx") and profile.num_ctx:
+        backend.num_ctx = profile.num_ctx
     workspace = ROOT / "workspace" / "structured_synthesis" / profile_id / f"seed{seed}"
     report = run_structured_synthesis(
         model=profile.model,

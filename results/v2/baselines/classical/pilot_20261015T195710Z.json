@@ -1,0 +1,2975 @@
+{
+  "protocol": "classical_baseline_pilot_v1",
+  "solver": "classical_backbone",
+  "llm_calls": 0,
+  "created_utc": "20261015T195710Z",
+  "rows": [
+    {
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "feasible": true,
+      "objective": 3.0,
+      "objective_key": [
+        3.0,
+        250.03796759039258
+      ],
+      "vehicles": 3,
+      "distance": 250.03796759039258,
+      "duration": 2103.3516622524944,
+      "runtime_s": 0.6017606999957934,
+      "first_fault": "OK: feasible",
+      "violation_families": [],
+      "unserved": 0,
+      "charging_visits": 2,
+      "routes": [
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "C12",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "S5",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "C100",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          }
+        ],
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "C30",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "S0",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "C85",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          }
+        ],
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "C64",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          }
+        ]
+      ],
+      "error": ""
+    },
+    {
+      "family": "schneider",
+      "instance_id": "c103C5",
+      "seed": 7,
+      "feasible": false,
+      "objective": 1.0,
+      "objective_key": [
+        1.0,
+        172.03385483879657
+      ],
+      "vehicles": 1,
+      "distance": 172.03385483879657,
+      "duration": 1114.0,
+      "runtime_s": 0.3490917000162881,
+      "first_fault": "BATTERY: battery_arrival=-33.671358 battery_departure=-33.671358",
+      "violation_families": [
+        "BATTERY"
+      ],
+      "unserved": 0,
+      "charging_visits": 1,
+      "routes": [
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "C65",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "S0",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "C98",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C20",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C24",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C57",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          }
+        ]
+      ],
+      "error": ""
+    },
+    {
+      "family": "schneider",
+      "instance_id": "r104C5",
+      "seed": 7,
+      "feasible": true,
+      "objective": 2.0,
+      "objective_key": [
+        2.0,
+        137.00776826983545
+      ],
+      "vehicles": 2,
+      "distance": 137.00776826983545,
+      "duration": 340.97904768236333,
+      "runtime_s": 0.5198546999890823,
+      "first_fault": "OK: feasible",
+      "violation_families": [],
+      "unserved": 0,
+      "charging_visits": 1,
+      "routes": [
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "C1",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C71",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "S3",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          }
+        ],
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "C5",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C99",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C87",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          }
+        ]
+      ],
+      "error": ""
+    },
+    {
+      "family": "schneider",
+      "instance_id": "r105C5",
+      "seed": 7,
+      "feasible": false,
+      "objective": 2.0,
+      "objective_key": [
+        2.0,
+        194.29201581325643
+      ],
+      "vehicles": 2,
+      "distance": 194.29201581325643,
+      "duration": 434.60659806421324,
+      "runtime_s": 0.6914828000008129,
+      "first_fault": "WINDOW: depot return arrival=279.740529 due=230.000000",
+      "violation_families": [
+        "WINDOW"
+      ],
+      "unserved": 0,
+      "charging_visits": 3,
+      "routes": [
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "C75",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "S1",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "C78",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C28",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "S0",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "S13",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          }
+        ],
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "C91",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C95",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          }
+        ]
+      ],
+      "error": ""
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc105C5",
+      "seed": 7,
+      "feasible": true,
+      "objective": 3.0,
+      "objective_key": [
+        3.0,
+        238.05223158918278
+      ],
+      "vehicles": 3,
+      "distance": 238.05223158918278,
+      "duration": 417.2470138870242,
+      "runtime_s": 0.6266563000099268,
+      "first_fault": "OK: feasible",
+      "violation_families": [],
+      "unserved": 0,
+      "charging_visits": 1,
+      "routes": [
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "C55",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "S3",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "C36",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          }
+        ],
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "C11",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C82",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          }
+        ],
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "C22",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          }
+        ]
+      ],
+      "error": ""
+    },
+    {
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 7,
+      "feasible": false,
+      "objective": 19.067079030031493,
+      "objective_key": [
+        19.067079030031493
+      ],
+      "vehicles": 2,
+      "distance": 513.1916241646372,
+      "duration": 19.067079030031493,
+      "runtime_s": 1.6780998000176623,
+      "first_fault": "BATTERY: battery_arrival=-697.756586 battery_departure=-697.756586",
+      "violation_families": [
+        "BATTERY",
+        "DURATION"
+      ],
+      "unserved": 0,
+      "charging_visits": 3,
+      "routes": [
+        [
+          {
+            "node_id": "0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV0"
+          },
+          {
+            "node_id": "2",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "5",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "9",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "11",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV0"
+          },
+          {
+            "node_id": "3",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "12",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV0"
+          },
+          {
+            "node_id": "1",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "6",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "10",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV0"
+          }
+        ],
+        [
+          {
+            "node_id": "0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV0"
+          },
+          {
+            "node_id": "8",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "11",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV0"
+          },
+          {
+            "node_id": "4",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "7",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV0"
+          }
+        ]
+      ],
+      "error": ""
+    },
+    {
+      "family": "montoya",
+      "instance_id": "tc0c10s3cf1",
+      "seed": 7,
+      "feasible": false,
+      "objective": 19.067079030031493,
+      "objective_key": [
+        19.067079030031493
+      ],
+      "vehicles": 2,
+      "distance": 513.1916241646372,
+      "duration": 19.067079030031493,
+      "runtime_s": 1.9580658999911975,
+      "first_fault": "BATTERY: battery_arrival=-697.756586 battery_departure=-697.756586",
+      "violation_families": [
+        "BATTERY",
+        "DURATION"
+      ],
+      "unserved": 0,
+      "charging_visits": 3,
+      "routes": [
+        [
+          {
+            "node_id": "0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV0"
+          },
+          {
+            "node_id": "2",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "5",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "9",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "11",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV0"
+          },
+          {
+            "node_id": "3",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "12",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV0"
+          },
+          {
+            "node_id": "1",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "6",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "10",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV0"
+          }
+        ],
+        [
+          {
+            "node_id": "0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV0"
+          },
+          {
+            "node_id": "8",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "11",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV0"
+          },
+          {
+            "node_id": "4",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "7",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV0"
+          }
+        ]
+      ],
+      "error": ""
+    },
+    {
+      "family": "bezzi",
+      "instance_id": "C101-5",
+      "seed": 7,
+      "feasible": false,
+      "objective": 0.0,
+      "objective_key": [
+        0.0
+      ],
+      "vehicles": 1,
+      "distance": 170.0,
+      "duration": 620.0,
+      "runtime_s": 1.4071971999946982,
+      "first_fault": "CHARGE_POLICY: missing_charge_decisions",
+      "violation_families": [
+        "BATTERY",
+        "CHARGE_POLICY"
+      ],
+      "unserved": 0,
+      "charging_visits": 1,
+      "routes": [
+        [
+          {
+            "node_id": "8",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "type_0"
+          },
+          {
+            "node_id": "5",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "type_0"
+          },
+          {
+            "node_id": "4",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "3",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "2",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "1",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "0",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "8",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "type_0"
+          }
+        ]
+      ],
+      "error": ""
+    },
+    {
+      "family": "bezzi",
+      "instance_id": "R105-5",
+      "seed": 7,
+      "feasible": false,
+      "objective": 0.0,
+      "objective_key": [
+        0.0
+      ],
+      "vehicles": 1,
+      "distance": 160.0,
+      "duration": 210.0,
+      "runtime_s": 3.069140600011451,
+      "first_fault": "CHARGE_POLICY: missing_charge_decisions",
+      "violation_families": [
+        "BATTERY",
+        "CHARGE_POLICY"
+      ],
+      "unserved": 0,
+      "charging_visits": 4,
+      "routes": [
+        [
+          {
+            "node_id": "8",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "type_0"
+          },
+          {
+            "node_id": "5",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "type_0"
+          },
+          {
+            "node_id": "5",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "type_0"
+          },
+          {
+            "node_id": "1",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "3",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "6",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "type_0"
+          },
+          {
+            "node_id": "2",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "5",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "type_0"
+          },
+          {
+            "node_id": "4",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "0",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "8",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "type_0"
+          }
+        ]
+      ],
+      "error": ""
+    },
+    {
+      "family": "bezzi",
+      "instance_id": "10-N10",
+      "seed": 7,
+      "feasible": false,
+      "objective": 25.55,
+      "objective_key": [
+        25.55
+      ],
+      "vehicles": 4,
+      "distance": 1454.4,
+      "duration": 1611.2333390000001,
+      "runtime_s": 11.768242699996335,
+      "first_fault": "CHARGE_POLICY: 12:missing_charge_technology",
+      "violation_families": [
+        "BATTERY",
+        "CHARGE_POLICY"
+      ],
+      "unserved": 0,
+      "charging_visits": 5,
+      "routes": [
+        [
+          {
+            "node_id": "19",
+            "event": "depot",
+            "charge_amount": 128.0,
+            "charge_technology": "0",
+            "target_soc": null,
+            "vehicle_type_id": "type_0"
+          },
+          {
+            "node_id": "1",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "8",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "11",
+            "event": "charge",
+            "charge_amount": 31.0,
+            "charge_technology": "1",
+            "target_soc": null,
+            "vehicle_type_id": "type_0"
+          },
+          {
+            "node_id": "4",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "12",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "type_0"
+          },
+          {
+            "node_id": "12",
+            "event": "charge",
+            "charge_amount": 17.0,
+            "charge_technology": "2",
+            "target_soc": null,
+            "vehicle_type_id": "type_0"
+          },
+          {
+            "node_id": "19",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "type_0"
+          }
+        ],
+        [
+          {
+            "node_id": "19",
+            "event": "depot",
+            "charge_amount": 101.0,
+            "charge_technology": "0",
+            "target_soc": null,
+            "vehicle_type_id": "type_0"
+          },
+          {
+            "node_id": "2",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "3",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "19",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "type_0"
+          }
+        ],
+        [
+          {
+            "node_id": "19",
+            "event": "depot",
+            "charge_amount": 128.0,
+            "charge_technology": "0",
+            "target_soc": null,
+            "vehicle_type_id": "type_0"
+          },
+          {
+            "node_id": "6",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "10",
+            "event": "charge",
+            "charge_amount": 46.0,
+            "charge_technology": "1",
+            "target_soc": null,
+            "vehicle_type_id": "type_0"
+          },
+          {
+            "node_id": "5",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "19",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "type_0"
+          }
+        ],
+        [
+          {
+            "node_id": "19",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "type_0"
+          },
+          {
+            "node_id": "9",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "7",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "0",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "11",
+            "event": "charge",
+            "charge_amount": 19.0,
+            "charge_technology": "1",
+            "target_soc": null,
+            "vehicle_type_id": "type_0"
+          },
+          {
+            "node_id": "19",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "type_0"
+          }
+        ]
+      ],
+      "error": ""
+    },
+    {
+      "family": "goeke",
+      "instance_id": "c101C6",
+      "seed": 7,
+      "feasible": true,
+      "objective": 3.0,
+      "objective_key": [
+        3.0,
+        270.9864386050047
+      ],
+      "vehicles": 3,
+      "distance": 270.9864386050047,
+      "duration": 2194.426531152045,
+      "runtime_s": 0.6533722000021953,
+      "first_fault": "OK: feasible",
+      "violation_families": [],
+      "unserved": 0,
+      "charging_visits": 2,
+      "routes": [
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "C101",
+            "event": "pickup",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C100",
+            "event": "delivery",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          }
+        ],
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "C64",
+            "event": "pickup",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "S0",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "C85",
+            "event": "delivery",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          }
+        ],
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "S5",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "C12",
+            "event": "pickup",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C30",
+            "event": "delivery",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          }
+        ]
+      ],
+      "error": ""
+    },
+    {
+      "family": "goeke",
+      "instance_id": "r104C6",
+      "seed": 7,
+      "feasible": true,
+      "objective": 2.0,
+      "objective_key": [
+        2.0,
+        213.02536547545287
+      ],
+      "vehicles": 2,
+      "distance": 213.02536547545287,
+      "duration": 348.20428060993856,
+      "runtime_s": 0.45892070000991225,
+      "first_fault": "OK: feasible",
+      "violation_families": [],
+      "unserved": 0,
+      "charging_visits": 3,
+      "routes": [
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "C71",
+            "event": "pickup",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "S3",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "S9",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "C87",
+            "event": "delivery",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          }
+        ],
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "C1",
+            "event": "pickup",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "S9",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "C5",
+            "event": "delivery",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C100",
+            "event": "pickup",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C99",
+            "event": "delivery",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          }
+        ]
+      ],
+      "error": ""
+    },
+    {
+      "family": "goeke",
+      "instance_id": "rc105C6",
+      "seed": 7,
+      "feasible": false,
+      "objective": 3.0,
+      "objective_key": [
+        3.0,
+        259.1910622615038
+      ],
+      "vehicles": 3,
+      "distance": 259.1910622615038,
+      "duration": 413.1910841848244,
+      "runtime_s": 0.852654899994377,
+      "first_fault": "WINDOW: service_start=157.400980 due=146.000000 lateness=11.400980",
+      "violation_families": [
+        "WINDOW"
+      ],
+      "unserved": 0,
+      "charging_visits": 3,
+      "routes": [
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "S3",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "C36",
+            "event": "pickup",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "S0",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "C82",
+            "event": "delivery",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          }
+        ],
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "C11",
+            "event": "pickup",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "S15",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "C22",
+            "event": "delivery",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          }
+        ],
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "C83",
+            "event": "pickup",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C55",
+            "event": "delivery",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          }
+        ]
+      ],
+      "error": ""
+    },
+    {
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "feasible": true,
+      "objective": 4207.6062738032415,
+      "objective_key": [
+        4207.6062738032415
+      ],
+      "vehicles": 20,
+      "distance": 3033.3492412617284,
+      "duration": 24672.47851023562,
+      "runtime_s": 29.28623970001354,
+      "first_fault": "OK: feasible",
+      "violation_families": [],
+      "unserved": 0,
+      "charging_visits": 0,
+      "routes": [
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          },
+          {
+            "node_id": "C20",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C24",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C29",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C27",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C33",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C31",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          }
+        ],
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          },
+          {
+            "node_id": "C23",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C22",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C25",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C36",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C39",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          }
+        ],
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          },
+          {
+            "node_id": "C21",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C34",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C32",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C30",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C28",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          }
+        ],
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          },
+          {
+            "node_id": "C90",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C87",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C73",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C70",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C71",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          }
+        ],
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          },
+          {
+            "node_id": "C63",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C65",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C79",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C77",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C76",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          }
+        ],
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "7"
+          },
+          {
+            "node_id": "C67",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "7"
+          },
+          {
+            "node_id": "C74",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "7"
+          },
+          {
+            "node_id": "C62",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "7"
+          },
+          {
+            "node_id": "C64",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "7"
+          },
+          {
+            "node_id": "C68",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "7"
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "7"
+          }
+        ],
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          },
+          {
+            "node_id": "C75",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C1",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C12",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C14",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C16",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          }
+        ],
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          },
+          {
+            "node_id": "C41",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C60",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C42",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C44",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C45",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C48",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C84",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          }
+        ],
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          },
+          {
+            "node_id": "C59",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C40",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C58",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C56",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C53",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          }
+        ],
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          },
+          {
+            "node_id": "C98",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C95",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C94",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C19",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C46",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          }
+        ],
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          },
+          {
+            "node_id": "C69",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C37",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C35",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C54",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C72",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C61",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          }
+        ],
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          },
+          {
+            "node_id": "C92",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C93",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C97",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C10",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          }
+        ],
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          },
+          {
+            "node_id": "C86",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C82",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C83",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C80",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C81",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C52",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          }
+        ],
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          },
+          {
+            "node_id": "C38",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C18",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C17",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C7",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C3",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          }
+        ],
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          },
+          {
+            "node_id": "C2",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C4",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C6",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C100",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C99",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C5",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          }
+        ],
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          },
+          {
+            "node_id": "C78",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C85",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C88",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C89",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C91",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          }
+        ],
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          },
+          {
+            "node_id": "C26",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C15",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C11",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C9",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C13",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          }
+        ],
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          },
+          {
+            "node_id": "C47",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C43",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C50",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C49",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C66",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          }
+        ],
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          },
+          {
+            "node_id": "C51",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C55",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C57",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          }
+        ],
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          },
+          {
+            "node_id": "C96",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C8",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "1"
+          }
+        ]
+      ],
+      "error": ""
+    }
+  ],
+  "aggregate": [
+    {
+      "family": "bezzi",
+      "instances_tested": 3,
+      "feasible": 0,
+      "feasibility_rate": 0.0,
+      "mean_objective_feasible": null,
+      "mean_runtime_s": 5.414860166667495
+    },
+    {
+      "family": "goeke",
+      "instances_tested": 3,
+      "feasible": 2,
+      "feasibility_rate": 0.6666666666666666,
+      "mean_objective_feasible": 2.5,
+      "mean_runtime_s": 0.6549826000021616
+    },
+    {
+      "family": "hiermann",
+      "instances_tested": 1,
+      "feasible": 1,
+      "feasibility_rate": 1.0,
+      "mean_objective_feasible": 4207.6062738032415,
+      "mean_runtime_s": 29.28623970001354
+    },
+    {
+      "family": "montoya",
+      "instances_tested": 2,
+      "feasible": 0,
+      "feasibility_rate": 0.0,
+      "mean_objective_feasible": null,
+      "mean_runtime_s": 1.81808285000443
+    },
+    {
+      "family": "schneider",
+      "instances_tested": 5,
+      "feasible": 3,
+      "feasibility_rate": 0.6,
+      "mean_objective_feasible": 2.6666666666666665,
+      "mean_runtime_s": 0.5577692400023807
+    }
+  ]
+}

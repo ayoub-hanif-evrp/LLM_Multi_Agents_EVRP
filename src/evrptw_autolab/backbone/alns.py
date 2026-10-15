@@ -255,9 +255,12 @@ def alns_improve(
                 best_report = current_report
         temperature *= cooling
 
+    from evrptw_autolab.backbone.charge_completion import complete_solution_charges
+
     best = relocate_improve(spec, best, max_passes=2)
     best = two_opt_improve(spec, best)
     best = repair_energy(spec, best, policy=policy)
+    best = complete_solution_charges(spec, best)
     best.metadata["alns_best_feasible"] = bool(best_report.feasible)
     best.metadata["alns_iterations"] = it + 1 if iterations else 0
     return best

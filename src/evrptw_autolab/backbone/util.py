@@ -11,14 +11,23 @@ from evrptw_autolab.problem.v2.types import ProblemSpecV2, RouteStopV2, Solution
 def default_vehicle_id(spec: ProblemSpecV2) -> str:
     if not spec.vehicle_types:
         raise ValueError("spec has no vehicle types")
-    # Prefer BEV when heterogeneous; else first type.
-    for vehicle in spec.vehicle_types:
-        if vehicle.is_electric and not vehicle.is_hybrid and not vehicle.is_conventional:
+    if not spec.capabilities.heterogeneous_fleet:
+        return spec.vehicle_types[0].type_id
+    # Prefer the cheapest fixed-cost type that can serve at least one customer demand.
+    candidates = sorted(spec.vehicle_types, key=lambda v: (v.fixed_cost, v.type_id))
+    demands = [n.demand for n in spec.nodes if n.kind in {"customer", "pickup"} and n.demand > 0]
+    max_demand = max(demands) if demands else 0.0
+    for vehicle in candidates:
+        if vehicle.capacity is None or vehicle.capacity + 1e-9 >= max_demand:
             return vehicle.type_id
-    for vehicle in spec.vehicle_types:
-        if vehicle.is_electric or vehicle.is_hybrid:
-            return vehicle.type_id
-    return spec.vehicle_types[0].type_id
+    return candidates[0].type_id
+
+
+def candidate_vehicle_ids(spec: ProblemSpecV2) -> list[str]:
+    """Vehicle types to try when opening or reassigning a route."""
+    if not spec.capabilities.heterogeneous_fleet:
+        return [default_vehicle_id(spec)]
+    return [v.type_id for v in sorted(spec.vehicle_types, key=lambda v: (v.fixed_cost, v.type_id))]
 
 
 def vehicle_for_route(

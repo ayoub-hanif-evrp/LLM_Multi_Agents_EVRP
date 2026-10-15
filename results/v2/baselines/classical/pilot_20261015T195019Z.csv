@@ -1,0 +1,12 @@
+family,instance_id,seed,feasible,objective,vehicles,distance,duration,runtime_s,first_fault,unserved
+schneider,c101C5,7,True,3.0,3,274.8085809486088,2103.3516622524944,0.5977,OK: feasible,0
+schneider,c103C5,7,True,2.0,2,184.49780808583205,1265.6116872029975,0.4036,OK: feasible,0
+montoya,tc0c10s2cf1,7,False,17.271485935199784,1,452.36431594159063,17.271485935199784,1.7253,CHARGE_POLICY: 11:negative_battery_on_arrival,0
+montoya,tc0c10s3cf1,7,False,17.271485935199784,1,452.36431594159063,17.271485935199784,1.7541,CHARGE_POLICY: 11:negative_battery_on_arrival,0
+bezzi,C101-5,7,False,0.0,1,170.0,620.0,0.2085,CHARGE_POLICY: missing_charge_decisions,0
+bezzi,R105-5,7,False,0.0,1,137.0,187.0,0.2072,CHARGE_POLICY: missing_charge_decisions,0
+bezzi,10-N10,7,False,9.36,4,1497.6,1590.6,2.0271,CHARGE_POLICY: missing_charge_decisions,0
+goeke,c101C6,7,False,2.0,2,252.11171011653198,1728.8110030239563,0.6856,BATTERY: battery_arrival=-9.578309 battery_departure=-9.578309,0
+goeke,r104C6,7,False,2.0,2,187.9802273477132,316.48324060902826,0.6743,BATTERY: battery_arrival=-10.700011 battery_departure=-10.700011,0
+goeke,rc105C6,7,False,2.0,2,228.95246174335733,335.64700690557254,0.586,BATTERY: battery_arrival=-5.833130 battery_departure=-5.833130,0
+hiermann,c101_21,7,True,4207.6062738032415,20,3033.3492412617284,24672.47851023562,21.0287,OK: feasible,0

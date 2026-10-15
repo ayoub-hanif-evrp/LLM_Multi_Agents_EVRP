@@ -275,6 +275,73 @@ def test_hiermann_travel_time_and_mixed_fleet_costs() -> None:
     assert len(set(round(v, 6) for v in costs.values())) == 3
 
 
+def test_montoya_partial_can_beat_full_recharge_on_duration() -> None:
+    """Under a tight max duration, charging only what is needed can be feasible while full is not."""
+    curve = [
+        {"battery_level": 0.0, "charging_time": 0.0},
+        {"battery_level": 50.0, "charging_time": 1.0},
+        {"battery_level": 100.0, "charging_time": 10.0},
+    ]
+    # Start full. Arrive at S with 50. Remaining energy need is 90, so target 90.
+    # Full recharge to 100 adds enough charging time to violate max_travel_time=148.
+    spec = ProblemSpecV2(
+        instance_id="montoya_partial_vs_full",
+        family="montoya",
+        capabilities=CapabilityFlags(
+            battery=True,
+            nonlinear_charging=True,
+            partial_recharge=True,
+            euclidean_distances=True,
+            max_route_duration=True,
+        ),
+        nodes=(
+            NodeV2("D", "depot", 0, 0),
+            NodeV2("S", "station", 50, 0, charge_technologies=("fast",)),
+            NodeV2("C", "customer", 70, 0, service_time=0.0),
+        ),
+        vehicle_types=(
+            VehicleTypeV2(
+                "EV",
+                capacity=0.0,
+                battery_capacity=100.0,
+                consumption_rate=1.0,
+                velocity=1.0,
+                metadata={"charging_functions": {"fast": curve}, "max_travel_time": 148.0},
+            ),
+        ),
+        depot_ids=("D",),
+        metadata={"charging_functions": {"fast": curve}, "max_travel_time": 148.0},
+    )
+    partial = SolutionV2(
+        routes=[
+            [
+                RouteStopV2("D", event="depot"),
+                RouteStopV2("S", event="charge", charge_technology="fast", target_soc=90.0),
+                RouteStopV2("C", event="visit"),
+                RouteStopV2("D", event="depot"),
+            ]
+        ],
+        vehicle_assignments=["EV"],
+    )
+    full = SolutionV2(
+        routes=[
+            [
+                RouteStopV2("D", event="depot"),
+                RouteStopV2("S", event="charge", charge_technology="fast", target_soc=100.0),
+                RouteStopV2("C", event="visit"),
+                RouteStopV2("D", event="depot"),
+            ]
+        ],
+        vehicle_assignments=["EV"],
+    )
+    r_partial = evaluate_solution_v2(spec, partial)
+    r_full = evaluate_solution_v2(spec, full)
+    assert r_partial.feasible
+    assert not r_full.feasible
+    assert any(v.family == "DURATION" for v in r_full.violations)
+    assert r_partial.total_duration < r_full.total_duration
+
+
 def test_montoya_partial_charge_changes_duration() -> None:
     spec = load_montoya(ROOT / "dataset" / "montoya-et-al-2017" / "tc0c10s2cf1.xml")
     curve = next(iter(spec.metadata["charging_functions"].values()))
@@ -346,10 +413,27 @@ def test_bezzi_published_optima_match_recharge_cost() -> None:
         instance_path = solution_path.parent.parent / "Instances" / solution_path.name.removeprefix("SOL-")
         spec = load_bezzi(instance_path)
         published = load_published_bezzi_solution(solution_path, spec)
+        assert published.charges_reconstructed
         assert len(published.solution.routes) <= spec.fleet_availability[spec.vehicle_types[0].type_id]
         report = evaluate_solution_v2(spec, published.solution)
         assert report.feasible, [v.detail for v in report.violations[:5]]
         assert abs(float(report.objective or -1) - published.total_cost) < 1e-3
+
+
+def test_bezzi_evaluator_does_not_invent_charges() -> None:
+    from evrptw_autolab.problem.datasets.bezzi_reference import load_published_bezzi_solution
+
+    root = ROOT / "dataset" / "Bezzi & Ceselli EVRP-MRT"
+    solution_path = root / "Dataset_A" / "Solutions" / "SOL-C101-5.xml"
+    instance_path = root / "Dataset_A" / "Instances" / "C101-5.xml"
+    spec = load_bezzi(instance_path)
+    raw = load_published_bezzi_solution(solution_path, spec, reconstruct_charges=False)
+    assert all(stop.charge_amount is None for route in raw.solution.routes for stop in route)
+    report = evaluate_solution_v2(spec, raw.solution)
+    assert not report.feasible
+    assert any(
+        v.family == "CHARGE_POLICY" and "missing_charge_decisions" in v.detail for v in report.violations
+    )
 
 
 def test_bezzi_fleet_availability_is_hard() -> None:

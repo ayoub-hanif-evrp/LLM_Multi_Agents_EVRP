@@ -180,7 +180,8 @@ def load_hiermann(path: Path | str) -> ProblemSpecV2:
             "note": (
                 "Travel time equals Euclidean distance (dataset readme). "
                 "Station rechargingrate is energy per unit time. "
-                "PHEV uses electric energy until the battery is exhausted, then fuel."
+                "PHEV uses electric mode first, then fuel — matching Hiermann et al. "
+                "(EJOR 2019) greedy evaluation rule 'Use electric energy mode in priority'."
             ),
         },
     )

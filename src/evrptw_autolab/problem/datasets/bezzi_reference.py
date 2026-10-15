@@ -1,6 +1,11 @@
 """Load published Bezzi solution XML for validation only.
 
 These files must never be used as construction hints or LLM feedback.
+
+Published XML lists the node sequence and a route cost label, but not charge
+amounts. Reconstruction of charge amounts for reference checks is done here
+through the optimizer-side DP, then the trusted evaluator validates the
+completed solution without inventing further decisions.
 """
 from __future__ import annotations
 
@@ -9,6 +14,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
 
+from evrptw_autolab.backbone.charge_completion import complete_solution_charges
 from evrptw_autolab.problem.v2.types import ProblemSpecV2, RouteStopV2, SolutionV2
 
 
@@ -17,13 +23,19 @@ class PublishedBezziSolution:
     instance_name: str
     solution: SolutionV2
     route_costs: tuple[float, ...]
+    charges_reconstructed: bool = False
 
     @property
     def total_cost(self) -> float:
         return float(sum(self.route_costs))
 
 
-def load_published_bezzi_solution(path: Path | str, spec: ProblemSpecV2) -> PublishedBezziSolution:
+def load_published_bezzi_solution(
+    path: Path | str,
+    spec: ProblemSpecV2,
+    *,
+    reconstruct_charges: bool = True,
+) -> PublishedBezziSolution:
     path = Path(path)
     root = ET.parse(path).getroot()
     routes: list[list[RouteStopV2]] = []
@@ -49,12 +61,21 @@ def load_published_bezzi_solution(path: Path | str, spec: ProblemSpecV2) -> Publ
             stops.append(RouteStopV2(node_id, event=event))
         routes.append(stops)
     vehicle_id = spec.vehicle_types[0].type_id
+    solution = SolutionV2(
+        routes=routes,
+        vehicle_assignments=[vehicle_id] * len(routes),
+        metadata={"published_solution": str(path), "validation_only": True},
+    )
+    reconstructed = False
+    if reconstruct_charges:
+        solution = complete_solution_charges(spec, solution)
+        reconstructed = True
+        solution.metadata["published_solution"] = str(path)
+        solution.metadata["validation_only"] = True
+        solution.metadata["charges_reconstructed_via"] = "backbone.charge_completion"
     return PublishedBezziSolution(
         instance_name=str(root.get("instance") or path.stem),
-        solution=SolutionV2(
-            routes=routes,
-            vehicle_assignments=[vehicle_id] * len(routes),
-            metadata={"published_solution": str(path), "validation_only": True},
-        ),
+        solution=solution,
         route_costs=tuple(costs),
+        charges_reconstructed=reconstructed,
     )

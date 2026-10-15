@@ -16,10 +16,42 @@ app = typer.Typer(no_args_is_help=True, add_completion=False)
 models_app = typer.Typer(no_args_is_help=True, help="Inspect configured LLM model profiles.")
 datasets_app = typer.Typer(no_args_is_help=True, help="Dataset registry and audit.")
 components_app = typer.Typer(no_args_is_help=True, help="Component synthesis smoke (Track 2).")
+baselines_app = typer.Typer(no_args_is_help=True, help="Classical and LLM baseline pilots.")
 app.add_typer(models_app, name="models")
 app.add_typer(datasets_app, name="datasets")
 app.add_typer(components_app, name="components")
+app.add_typer(baselines_app, name="baselines")
 ROOT = Path(__file__).resolve().parents[2]
+
+
+@baselines_app.command("pilot")
+def baselines_pilot(
+    seed: int = typer.Option(7, "--seed"),
+) -> None:
+    """Run the human-authored classical solver on the five-family development panel."""
+    from evrptw_autolab.baselines.classical_pilot import run_classical_pilot
+
+    result = run_classical_pilot(seed=seed, out_dir=ROOT / "results" / "v2" / "baselines" / "classical")
+    typer.echo(json.dumps({"n": result["n"], "aggregate": result["aggregate"], "paths": result["paths"]}, indent=2))
+
+
+@app.command("validate-v2")
+def validate_v2() -> None:
+    """Offline mathematical / parser / reference checks (no Ollama)."""
+    import subprocess
+    import sys
+
+    cmd = [
+        sys.executable,
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_evaluator_v2.py",
+        "tests/test_dataset_parsers.py",
+        "tests/test_v2_datasets_and_types.py",
+        "tests/test_component_interpreter.py",
+    ]
+    raise typer.Exit(code=subprocess.call(cmd, cwd=ROOT))
 
 
 @app.command("validate-data")

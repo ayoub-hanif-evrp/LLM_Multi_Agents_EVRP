@@ -7,11 +7,47 @@ from dataclasses import dataclass
 from typing import Any
 
 from evrptw_autolab.backbone.alns import alns_improve
+from evrptw_autolab.backbone.charge_completion import complete_solution_charges
 from evrptw_autolab.backbone.construct import construct_greedy
 from evrptw_autolab.backbone.energy_repair import remove_redundant_stations, repair_energy
 from evrptw_autolab.backbone.local_search import relocate_improve, two_opt_improve
-from evrptw_autolab.backbone.util import evaluate
-from evrptw_autolab.problem.v2.types import ProblemSpecV2, SolutionV2
+from evrptw_autolab.backbone.util import candidate_vehicle_ids, clone_solution, evaluate, is_better
+from evrptw_autolab.problem.v2.types import ProblemSpecV2, RouteStopV2, SolutionV2
+
+
+def _reassign_vehicles(spec: ProblemSpecV2, solution: SolutionV2) -> SolutionV2:
+    """Try cheaper vehicle types per route on heterogeneous fleets."""
+    if not spec.capabilities.heterogeneous_fleet:
+        return solution
+    current = clone_solution(solution)
+    current_report = evaluate(spec, current)
+    for r_idx in range(len(current.routes)):
+        best = current
+        best_report = current_report
+        for type_id in candidate_vehicle_ids(spec):
+            trial = clone_solution(current)
+            if r_idx < len(trial.vehicle_assignments):
+                trial.vehicle_assignments[r_idx] = type_id
+            else:
+                trial.vehicle_assignments.append(type_id)
+            trial.routes[r_idx] = [
+                RouteStopV2(
+                    node_id=stop.node_id,
+                    vehicle_type_id=type_id,
+                    event=stop.event,
+                    charge_amount=stop.charge_amount,
+                    charge_technology=stop.charge_technology,
+                    target_soc=stop.target_soc,
+                )
+                for stop in trial.routes[r_idx]
+            ]
+            report = evaluate(spec, trial)
+            if is_better(report, best_report):
+                best = trial
+                best_report = report
+        current = best
+        current_report = best_report
+    return current
 
 
 @dataclass
@@ -29,9 +65,11 @@ class ClassicalSolver:
         rng = random.Random(int(self.seed))
         solution = construct_greedy(spec, rng, policy=self.policy)
         solution = repair_energy(spec, solution, policy=self.policy)
+        solution = complete_solution_charges(spec, solution)
         solution = relocate_improve(spec, solution, max_passes=2)
         solution = two_opt_improve(spec, solution)
         solution = repair_energy(spec, solution, policy=self.policy)
+        solution = complete_solution_charges(spec, solution)
         remaining = max(0.1, float(self.time_limit_s) - (time.monotonic() - started))
         if self.use_alns and remaining > 0.2:
             solution = alns_improve(
@@ -43,6 +81,8 @@ class ClassicalSolver:
                 policy=self.policy,
             )
         solution = remove_redundant_stations(spec, solution)
+        solution = complete_solution_charges(spec, solution)
+        solution = _reassign_vehicles(spec, solution)
         report = evaluate(spec, solution)
         solution.metadata.update(
             {
@@ -50,6 +90,7 @@ class ClassicalSolver:
                 "seed": int(self.seed),
                 "feasible": bool(report.feasible),
                 "objective": report.objective,
+                "objective_key": list(report.objective_key),
                 "vehicles": report.vehicles,
                 "distance": report.total_distance,
                 "runtime_s": time.monotonic() - started,

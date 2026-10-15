@@ -124,7 +124,7 @@ def _objective(
         report.objective_key = (duration,)
         report.objective_components = {"total_duration": duration}
     elif spec.family == "goeke":
-        # Readme specifies physics but not the scalar objective; use vehicles then distance.
+        # Goeke (EJOR 2019) PDPTW-EV / VRP-REP: minimize fleet size then travel distance.
         report.objective_key = (vehicles, distance)
         report.objective_components = {"vehicles": vehicles, "distance": distance}
     elif spec.family == "bezzi":

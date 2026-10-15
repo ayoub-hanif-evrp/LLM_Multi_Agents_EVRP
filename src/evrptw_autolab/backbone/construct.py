@@ -4,6 +4,7 @@ from __future__ import annotations
 import random
 
 from evrptw_autolab.backbone.util import (
+    candidate_vehicle_ids,
     clone_solution,
     default_vehicle_id,
     empty_route,
@@ -64,8 +65,11 @@ def _try_insert(
     # During construction we allow incomplete coverage; reject capacity/window/depot/parse.
     hard = {v.family for v in report.violations} - {"VISIT", "PAIRING"}
     # BATTERY deferred to energy repair.
-    hard -= {"BATTERY", "CHARGE_POLICY", "DURATION"}
-    if hard & {"PARSE", "DEPOT", "CAPACITY", "WINDOW", "PRECEDENCE"}:
+    hard -= {"BATTERY", "CHARGE_POLICY"}
+    # Duration is hard during construction when the variant publishes a route limit.
+    if not spec.capabilities.max_route_duration:
+        hard -= {"DURATION"}
+    if hard & {"PARSE", "DEPOT", "CAPACITY", "WINDOW", "PRECEDENCE", "DURATION"}:
         return None
     return cand
 
@@ -113,17 +117,33 @@ def construct_greedy(
                     best_cost = cost
                     best = trial
         if best is None:
-            # Open a new route.
-            new_route = empty_route(spec, vehicle_id)
-            new_route.insert(1, make_customer_stop(customer_id, spec))
-            trial = clone_solution(solution)
-            trial.routes.append(new_route)
-            trial.vehicle_assignments.append(vehicle_id)
-            report = evaluate(spec, trial)
-            hard = {v.family for v in report.violations} - {"VISIT", "PAIRING", "BATTERY", "CHARGE_POLICY", "DURATION"}
-            if hard & {"PARSE", "DEPOT", "CAPACITY", "WINDOW"}:
-                # Last resort: still keep the dedicated route (repair later).
-                pass
+            # Open a new route; try cheaper vehicle types first on heterogeneous fleets.
+            trial = None
+            for vid in candidate_vehicle_ids(spec):
+                new_route = empty_route(spec, vid)
+                new_route.insert(1, make_customer_stop(customer_id, spec))
+                cand = clone_solution(solution)
+                cand.routes.append(new_route)
+                cand.vehicle_assignments.append(vid)
+                report = evaluate(spec, cand)
+                hard = {v.family for v in report.violations} - {
+                    "VISIT",
+                    "PAIRING",
+                    "BATTERY",
+                    "CHARGE_POLICY",
+                }
+                if not spec.capabilities.max_route_duration:
+                    hard -= {"DURATION"}
+                if hard & {"PARSE", "DEPOT", "CAPACITY", "WINDOW", "FLEET", "DURATION"}:
+                    continue
+                trial = cand
+                break
+            if trial is None:
+                new_route = empty_route(spec, vehicle_id)
+                new_route.insert(1, make_customer_stop(customer_id, spec))
+                trial = clone_solution(solution)
+                trial.routes.append(new_route)
+                trial.vehicle_assignments.append(vehicle_id)
             solution = trial
         else:
             solution = best

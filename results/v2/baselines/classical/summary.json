@@ -1,0 +1,42 @@
+[
+  {
+    "family": "bezzi",
+    "instances_tested": 3,
+    "feasible": 2,
+    "feasibility_rate": 0.6666666666666666,
+    "mean_objective_feasible": 127.395,
+    "mean_runtime_s": 8.716660666667545
+  },
+  {
+    "family": "goeke",
+    "instances_tested": 3,
+    "feasible": 2,
+    "feasibility_rate": 0.6666666666666666,
+    "mean_objective_feasible": 2.0,
+    "mean_runtime_s": 0.5531483999996757
+  },
+  {
+    "family": "hiermann",
+    "instances_tested": 1,
+    "feasible": 1,
+    "feasibility_rate": 1.0,
+    "mean_objective_feasible": 4207.6062738032415,
+    "mean_runtime_s": 20.662989600008586
+  },
+  {
+    "family": "montoya",
+    "instances_tested": 2,
+    "feasible": 0,
+    "feasibility_rate": 0.0,
+    "mean_objective_feasible": null,
+    "mean_runtime_s": 1.6129350000119302
+  },
+  {
+    "family": "schneider",
+    "instances_tested": 5,
+    "feasible": 4,
+    "feasibility_rate": 0.8,
+    "mean_objective_feasible": 2.0,
+    "mean_runtime_s": 0.5839597199927085
+  }
+]

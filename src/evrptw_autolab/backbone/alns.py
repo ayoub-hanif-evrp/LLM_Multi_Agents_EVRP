@@ -232,13 +232,14 @@ def alns_improve(
             accept = True
             weights[destroy_name] += 0.5
         else:
-            # SA on objective among infeasible/feasible mixed via violation count.
-            cur_score = (0 if current_report.feasible else 1e6) + (
-                current_report.objective or current_report.total_distance
-            ) + 10 * len(current_report.violations)
-            new_score = (0 if cand_report.feasible else 1e6) + (
-                cand_report.objective or cand_report.total_distance
-            ) + 10 * len(cand_report.violations)
+            # Metropolis step on distance and violation count. The published objective
+            # stays a lexicographic tuple; this score is only an acceptance temperature.
+            cur_score = (0.0 if current_report.feasible else 1e6) + 100.0 * len(
+                current_report.violations
+            ) + current_report.total_distance
+            new_score = (0.0 if cand_report.feasible else 1e6) + 100.0 * len(
+                cand_report.violations
+            ) + cand_report.total_distance
             delta = new_score - cur_score
             if delta < 0 or rng.random() < math.exp(-delta / max(temperature, 1e-6)):
                 accept = True

@@ -17,6 +17,8 @@ class StopStateV2:
     energy_charged: float
     distance_so_far: float
     charge_technology: str | None = None
+    fuel_used: float = 0.0
+    electric_used: float = 0.0
 
 
 @dataclass
@@ -36,6 +38,7 @@ class EvaluationReportV2:
     feasible: bool = False
     parse_ok: bool = True
     objective: float | None = None
+    objective_key: tuple[float, ...] = ()
     objective_components: dict[str, float] = field(default_factory=dict)
     vehicles: int = 0
     total_distance: float = 0.0

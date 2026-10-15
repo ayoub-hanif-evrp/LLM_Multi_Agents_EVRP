@@ -78,19 +78,14 @@ def evaluate(spec: ProblemSpecV2, solution: SolutionV2) -> EvaluationReportV2:
 
 
 def is_better(a: EvaluationReportV2, b: EvaluationReportV2) -> bool:
-    """Feasibility-first comparison."""
+    """Feasibility-first comparison using lexicographic objective keys."""
     if a.feasible != b.feasible:
         return a.feasible and not b.feasible
     if a.feasible and b.feasible:
-        ao = float("inf") if a.objective is None else a.objective
-        bo = float("inf") if b.objective is None else b.objective
-        return ao < bo - 1e-9
-    # Both infeasible: fewer hard violations, then lower objective if any.
+        return tuple(a.objective_key) < tuple(b.objective_key)
     if len(a.violations) != len(b.violations):
         return len(a.violations) < len(b.violations)
-    ao = float("inf") if a.objective is None else a.objective
-    bo = float("inf") if b.objective is None else b.objective
-    return ao < bo - 1e-9
+    return tuple(a.objective_key) < tuple(b.objective_key)
 
 
 def served_request_nodes(spec: ProblemSpecV2) -> list[str]:

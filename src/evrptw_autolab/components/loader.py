@@ -1,8 +1,8 @@
 """Validate and load pure scoring components.
 
-Validation runs in a subprocess. Loading into the parent uses a restricted
-namespace **only after** AST scan + subprocess smoke pass. Components must be
-pure numeric functions (no imports). Full generated solvers still use sandbox.
+Validation runs in a subprocess. The parent binds the function through a
+bounded arithmetic interpreter. Generated source is never ``exec``'d in the
+controller.
 """
 from __future__ import annotations
 
@@ -14,23 +14,9 @@ from pathlib import Path
 from typing import Any
 
 from evrptw_autolab.components.interfaces import SIGNATURES, ComponentKind
+from evrptw_autolab.components.interpret import UnsafeComponent, compile_component
 from evrptw_autolab.sandbox.safe_exec import run_python_source
 from evrptw_autolab.sandbox.static_scan import scan_source
-
-SAFE_BUILTINS = {
-    "abs": abs,
-    "min": min,
-    "max": max,
-    "float": float,
-    "int": int,
-    "bool": bool,
-    "len": len,
-    "range": range,
-    "sum": sum,
-    "pow": pow,
-    "round": round,
-}
-
 
 _SMOKE_DRIVER = r'''
 import json
@@ -123,18 +109,14 @@ def validate_component_source(kind: ComponentKind, source: str, *, wall_clock_s:
 
 
 def load_component(kind: ComponentKind, source: str) -> ComponentLoadResult:
-    """Validate then bind a restricted callable in the parent process."""
+    """Validate then bind through the arithmetic interpreter. Never exec in parent."""
     check = validate_component_source(kind, source)
     if not check.get("ok"):
         return ComponentLoadResult(False, kind, source, error=str(check.get("detail") or "invalid"))
-    namespace: dict[str, Any] = {"__builtins__": SAFE_BUILTINS}
     try:
-        exec(compile(source, f"<{kind}>", "exec"), namespace, namespace)  # noqa: S102 — post-validation only
-    except Exception as error:  # noqa: BLE001
+        fn = compile_component(kind, source)
+    except (UnsafeComponent, SyntaxError, TypeError, ValueError) as error:
         return ComponentLoadResult(False, kind, source, error=f"bind_failed: {error}")
-    fn = namespace.get(kind)
-    if not callable(fn):
-        return ComponentLoadResult(False, kind, source, error="not callable after bind")
     return ComponentLoadResult(
         True,
         kind,

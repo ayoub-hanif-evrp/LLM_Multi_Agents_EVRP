@@ -70,6 +70,9 @@ def resolve_charge(
         target = float(stop.target_soc)
     elif stop.charge_amount is not None:
         target = battery_arrival + float(stop.charge_amount)
+    elif caps.multiple_charge_technologies:
+        # Bezzi recharge amounts are decision variables. Do not invent a full recharge.
+        target = battery_arrival
     else:
         target = float(battery_cap)  # default: charge to full
 
@@ -122,13 +125,22 @@ def resolve_charge(
     else:
         # Linear full/partial using inverse_refuel_rate on vehicle metadata or station rate.
         inv = vehicle.metadata.get("inverse_refuel_rate")
-        if inv is None and station.recharging_rate is not None:
-            # Hiermann: rechargingrate column — treat as inverse rate (time per energy).
-            inv = station.recharging_rate
-        if inv is None:
+        rate = station.recharging_rate
+        recharge_model = str(spec.metadata.get("recharge_model") or "")
+        if inv is not None:
+            duration = energy * float(inv)
+        elif rate is not None and "energy_charged / station.recharging_rate" in recharge_model:
+            if float(rate) <= EPSILON:
+                errors.append("nonpositive_recharge_rate")
+                duration = 0.0
+            else:
+                # Hiermann readme column: energy recovered per unit time.
+                duration = energy / float(rate)
+        elif rate is not None:
+            duration = energy * float(rate)
+        else:
             errors.append("missing_refuel_rate")
-            inv = 0.0
-        duration = energy * float(inv)
+            duration = 0.0
         if caps.full_recharge and not caps.partial_recharge:
             expected = max(0.0, float(battery_cap) - battery_arrival)
             if abs(energy - expected) > EPSILON:

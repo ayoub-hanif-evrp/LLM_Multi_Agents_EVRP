@@ -46,9 +46,20 @@ def _required_visit_ids(spec: ProblemSpecV2) -> list[str]:
     return [n.id for n in spec.nodes if n.kind == "customer"]
 
 
-def _check_depot(spec: ProblemSpecV2, route: list[RouteStopV2], route_index: int, report: EvaluationReportV2) -> None:
-    depot = spec.depot_ids[0]
-    if not route or route[0].node_id != depot or route[-1].node_id != depot:
+def _check_depot(
+    spec: ProblemSpecV2,
+    route: list[RouteStopV2],
+    route_index: int,
+    report: EvaluationReportV2,
+    vehicle: VehicleTypeV2 | None = None,
+) -> None:
+    origin = spec.depot_ids[0]
+    destination = spec.depot_ids[0]
+    if vehicle is not None:
+        origin = str(vehicle.metadata.get("departure_node") or origin)
+        destination = str(vehicle.metadata.get("arrival_node") or destination)
+    depot = origin
+    if not route or route[0].node_id != origin or route[-1].node_id != destination:
         report.add(
             "DEPOT",
             node_id=route[0].node_id if route else "",
@@ -96,27 +107,80 @@ def _check_pd_precedence(
                 )
 
 
-def _objective(spec: ProblemSpecV2, report: EvaluationReportV2, _trajectories: list[list[StopStateV2]]) -> None:
+def _objective(
+    spec: ProblemSpecV2,
+    report: EvaluationReportV2,
+    trajectories: list[list[StopStateV2]],
+    assignments: list[str],
+) -> None:
+    """Variant objectives as lexicographic tuples (all minimized)."""
     distance = report.total_distance
-    vehicles = report.vehicles
+    vehicles = float(report.vehicles)
     duration = report.total_duration
     if spec.family == "schneider":
-        # Lexicographic vehicles then distance encoded as a single comparable float for tables.
-        report.objective = float(vehicles) * 1e9 + distance
-        report.objective_components = {"vehicles": float(vehicles), "distance": distance}
+        report.objective_key = (vehicles, distance)
+        report.objective_components = {"vehicles": vehicles, "distance": distance}
     elif spec.family == "montoya":
-        report.objective = duration
+        report.objective_key = (duration,)
         report.objective_components = {"total_duration": duration}
     elif spec.family == "goeke":
-        report.objective = float(vehicles) * 1e9 + distance
-        report.objective_components = {"vehicles": float(vehicles), "distance": distance}
+        # Readme specifies physics but not the scalar objective; use vehicles then distance.
+        report.objective_key = (vehicles, distance)
+        report.objective_components = {"vehicles": vehicles, "distance": distance}
+    elif spec.family == "bezzi":
+        # Felipe et al. 2014 / Ceselli et al. 2021: minimize recharge cost, not distance.
+        fixed = float(spec.metadata.get("fixed_recharge_cost") or 0.0)
+        variable = 0.0
+        operations = 0
+        type_ids = assignments[: len(trajectories)]
+        if len(type_ids) < len(trajectories) and spec.vehicle_types:
+            type_ids = type_ids + [spec.vehicle_types[0].type_id] * (len(trajectories) - len(type_ids))
+        by_id = {v.type_id: v for v in spec.vehicle_types}
+        for traj, type_id in zip(trajectories, type_ids, strict=True):
+            vehicle = by_id.get(type_id)
+            techs = {} if vehicle is None else (vehicle.metadata.get("charging_techs") or {})
+            for state in traj:
+                if state.energy_charged <= EPSILON:
+                    continue
+                tech_key = str(state.charge_technology) if state.charge_technology is not None else "0"
+                gamma = float(techs.get(tech_key, {}).get("gamma", 0.0))
+                variable += gamma * state.energy_charged
+                operations += 1
+        cost = fixed * operations + variable
+        report.objective_key = (cost,)
+        report.objective_components = {
+            "recharge_cost": cost,
+            "fixed_recharge_cost": fixed * operations,
+            "variable_recharge_cost": variable,
+            "recharge_operations": float(operations),
+            "matrix_travel": distance,
+            "total_duration": duration,
+        }
     elif spec.family == "hiermann":
-        # Detailed energy-price accounting lands with full H2E-FTW cost model (M3+).
-        report.objective = float(vehicles) * 1e9 + distance
-        report.objective_components = {"vehicles": float(vehicles), "distance": distance}
+        prices = spec.metadata.get("energy_prices") or {}
+        fossil = float(prices.get("fossil-fuel", 0.0))
+        elec = float(prices.get("electricity", 0.0))
+        fuel = sum(traj[-1].fuel_used for traj in trajectories if traj)
+        electric = sum(traj[-1].electric_used for traj in trajectories if traj)
+        fixed = 0.0
+        type_ids = assignments[: len(trajectories)] or [
+            spec.vehicle_types[0].type_id for _ in trajectories if spec.vehicle_types
+        ]
+        for type_id in type_ids:
+            fixed += next((v.fixed_cost for v in spec.vehicle_types if v.type_id == type_id), 0.0)
+        cost = fixed + fossil * fuel + elec * electric
+        report.objective_key = (cost,)
+        report.objective_components = {
+            "fixed_cost": fixed,
+            "fuel_used": fuel,
+            "electric_used": electric,
+            "energy_cost": fossil * fuel + elec * electric,
+            "total_cost": cost,
+        }
     else:
-        report.objective = distance
+        report.objective_key = (distance, duration)
         report.objective_components = {"distance": distance, "duration": duration}
+    report.objective = report.objective_key[0] if report.objective_key else None
 
 
 def evaluate_solution_v2(spec: ProblemSpecV2, solution: SolutionV2) -> EvaluationReportV2:
@@ -140,8 +204,8 @@ def evaluate_solution_v2(spec: ProblemSpecV2, solution: SolutionV2) -> Evaluatio
 
     try:
         for route_index, route in enumerate(solution.routes):
-            _check_depot(spec, route, route_index, report)
             vehicle = _vehicle_for_route(spec, solution, route_index, route)
+            _check_depot(spec, route, route_index, report, vehicle)
             # Fleet availability (soft count later; hard if finite and exceeded tracked via Counter at end).
             _check_pd_precedence(spec, route, route_index, report)
             traj, charge_errs = simulate_route(spec, route, vehicle)
@@ -226,15 +290,16 @@ def evaluate_solution_v2(spec: ProblemSpecV2, solution: SolutionV2) -> Evaluatio
                         ),
                         magnitude=lateness,
                     )
-            if traj and max_travel is not None and traj[-1].departure_time > float(max_travel) + EPSILON:
-                excess = traj[-1].departure_time - float(max_travel)
+            route_limit = vehicle.metadata.get("max_travel_time", max_travel)
+            if traj and route_limit is not None and traj[-1].departure_time > float(route_limit) + EPSILON:
+                excess = traj[-1].departure_time - float(route_limit)
                 report.add(
                     "DURATION",
                     node_id=spec.depot_ids[0],
                     route_index=route_index,
                     detail=(
                         f"route_duration={traj[-1].departure_time:.6f} "
-                        f"max_travel_time={float(max_travel):.6f}"
+                        f"max_travel_time={float(route_limit):.6f}"
                     ),
                     magnitude=excess,
                 )
@@ -269,6 +334,18 @@ def evaluate_solution_v2(spec: ProblemSpecV2, solution: SolutionV2) -> Evaluatio
                         detail=f"incomplete request {req.request_id}",
                     )
 
+    used_types = Counter(solution.vehicle_assignments)
+    for type_id, count in used_types.items():
+        limit = spec.fleet_availability.get(type_id)
+        if limit is None or limit >= 10**8:
+            continue
+        if count > int(limit):
+            report.add(
+                "FLEET",
+                detail=f"vehicle type {type_id} used {count} times; available {limit}",
+                magnitude=float(count - int(limit)),
+            )
+
     hard_families = {
         "PARSE",
         "DEPOT",
@@ -280,10 +357,11 @@ def evaluate_solution_v2(spec: ProblemSpecV2, solution: SolutionV2) -> Evaluatio
         "PRECEDENCE",
         "PAIRING",
         "DURATION",
+        "FLEET",
     }
     hard = [v for v in report.violations if v.family in hard_families]
     report.feasible = report.parse_ok and not hard
-    _objective(spec, report, report.trajectories)
+    _objective(spec, report, report.trajectories, list(solution.vehicle_assignments))
     if report.first_fault is None:
         from evrptw_autolab.problem.v2.report import ViolationV2
 

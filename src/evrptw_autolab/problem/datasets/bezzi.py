@@ -73,9 +73,9 @@ def load_bezzi(path: Path | str) -> ProblemSpecV2:
         station_techs: tuple[str, ...] = ()
         custom = node_el.find("custom")
         if custom is not None:
-            has_tech = text_child(custom, "has_tech")
-            if has_tech is not None:
-                station_techs = (has_tech,)
+            techs = [str(el.text).strip() for el in custom.findall("has_tech") if el.text and str(el.text).strip()]
+            if techs:
+                station_techs = tuple(techs)
         if kind_name == "depot":
             node_kind: Literal["depot", "customer", "station"] = "depot"
         elif kind_name == "customer":
@@ -104,11 +104,17 @@ def load_bezzi(path: Path | str) -> ProblemSpecV2:
     links = network.find("links")
     if links is None or len(list(links.findall("link"))) == 0:
         raise ValueError(f"{path}: missing explicit <links> matrix")
+    symmetric = str(links.get("symmetric") or "false").lower() in {"1", "true", "yes"}
     for link in links.findall("link"):
         head = str(link.get("head"))
         tail = str(link.get("tail"))
-        travel.setdefault(head, {})[tail] = float_child(link, "travel_time")
-        energy.setdefault(head, {})[tail] = float_child(link, "energy_consumption")
+        t_ij = float_child(link, "travel_time")
+        e_ij = float_child(link, "energy_consumption")
+        travel.setdefault(head, {})[tail] = t_ij
+        energy.setdefault(head, {})[tail] = e_ij
+        if symmetric and head != tail:
+            travel.setdefault(tail, {})[head] = t_ij
+            energy.setdefault(tail, {})[head] = e_ij
 
     fleet = root.find("fleet")
     if fleet is None:
@@ -187,6 +193,12 @@ def load_bezzi(path: Path | str) -> ProblemSpecV2:
     if not customers:
         raise ValueError(f"{path}: no customers")
 
+    subset = next((p for p in path.parts if p.startswith("Dataset_")), None)
+    # f is not stored in the XML. No-station published routes identify it:
+    # Dataset A labels equal total energy (gamma_0 = 1), so f = 0 there.
+    # Datasets B and C satisfy cost = 2.27 + gamma_0 * energy on 84/85 no-station routes.
+    fixed_recharge_cost = 0.0 if subset == "Dataset_A" else 2.27
+
     return ProblemSpecV2(
         instance_id=instance_id,
         family="bezzi",
@@ -202,7 +214,15 @@ def load_bezzi(path: Path | str) -> ProblemSpecV2:
             "publication": "Bezzi & Ceselli EVRP-MRT",
             "travel_time_matrix": travel,
             "energy_matrix": energy,
-            "dataset_subset": next((p for p in path.parts if p.startswith("Dataset_")), None),
+            "dataset_subset": subset,
+            "fixed_recharge_cost": fixed_recharge_cost,
+            "fixed_recharge_cost_source": (
+                "Dataset A published route labels equal total arc energy, so f=0. "
+                "Datasets B and C: every no-station published route except SOL-19-N10 "
+                "19-3-4-19 satisfies cost = 2.27 + gamma_0 * energy. "
+                "f is the per-recharge fixed cost in Felipe et al. (2014) / Ceselli et al. (2021); "
+                "it is not a field in the instance XML."
+            ),
             "solutions_excluded": True,
         },
     )

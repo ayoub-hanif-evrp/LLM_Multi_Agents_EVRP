@@ -1,6 +1,7 @@
 """Deterministic route state propagation for ProblemSpecV2."""
 from __future__ import annotations
 
+from evrptw_autolab.problem.v2.bezzi_recharge import plan_bezzi_recharges
 from evrptw_autolab.problem.v2.charging import resolve_charge
 from evrptw_autolab.problem.v2.report import StopStateV2
 from evrptw_autolab.problem.v2.transport import energy_required, travel_distance, travel_time
@@ -19,13 +20,26 @@ def simulate_route(
     time = 0.0
     load = 0.0
     travelled = 0.0
+    fuel_used = 0.0
+    electric_used = 0.0
     battery_cap = vehicle.battery_capacity
-    if vehicle.is_conventional and not vehicle.is_electric and not vehicle.is_hybrid:
+    pure_icev = vehicle.is_conventional and not vehicle.is_electric and not vehicle.is_hybrid
+    if pure_icev:
+        battery = 0.0
+    elif spec.capabilities.multiple_charge_technologies:
+        # Overnight depot recharge is a decision, not an implicit full battery.
+        unspecified = all(stop.charge_amount is None and stop.target_soc is None for stop in stops)
+        if unspecified:
+            planned = plan_bezzi_recharges(spec, stops, vehicle)
+            if planned is not None:
+                stops = planned
         battery = 0.0
     else:
         battery = float(battery_cap) if battery_cap is not None else 0.0
     trajectory: list[StopStateV2] = []
     charge_errors: list[str] = []
+    fuel_rate = float(vehicle.metadata.get("fuel_consumption_rate") or 0.0)
+    elec_rate = float(vehicle.metadata.get("energy_consumption_rate") or vehicle.consumption_rate or 0.0)
 
     for index, stop in enumerate(stops):
         if stop.node_id not in nodes:
@@ -33,10 +47,26 @@ def simulate_route(
         node = nodes[stop.node_id]
         if index:
             prev = nodes[stops[index - 1].node_id]
-            travelled += travel_distance(spec, prev, node)
+            dist = travel_distance(spec, prev, node)
+            travelled += dist
             time += travel_time(spec, prev, node, vehicle)
-            if vehicle.is_electric or vehicle.is_hybrid:
-                battery -= energy_required(spec, prev, node, vehicle)
+            if pure_icev:
+                fuel_used += dist * fuel_rate
+            elif vehicle.is_hybrid:
+                # Battery-first PHEV: electric until SoC is exhausted, then fuel.
+                need = dist * elec_rate
+                available = max(0.0, battery)
+                take = min(available, need)
+                battery -= take
+                electric_used += take
+                if need > take + 1e-9 and elec_rate > 0:
+                    fuel_used += ((need - take) / elec_rate) * fuel_rate
+                elif need > take + 1e-9:
+                    fuel_used += dist * fuel_rate
+            elif vehicle.is_electric:
+                used = energy_required(spec, prev, node, vehicle)
+                battery -= used
+                electric_used += used
 
         arrival = time
         arrival_battery = battery
@@ -51,7 +81,12 @@ def simulate_route(
         if node.kind in {"customer", "pickup", "delivery"}:
             load += node.demand
             departure = start + node.service_time
-        elif node.kind == "station":
+        elif node.kind == "station" or (
+            index == 0
+            and node.kind == "depot"
+            and spec.capabilities.multiple_charge_technologies
+            and stop.charge_amount is not None
+        ):
             if vehicle.is_conventional and not vehicle.is_electric and not vehicle.is_hybrid:
                 charge_errors.append(f"conventional_vehicle_at_station:{node.id}")
                 departure = start
@@ -79,6 +114,8 @@ def simulate_route(
                 energy_charged=charged,
                 distance_so_far=travelled,
                 charge_technology=tech,
+                fuel_used=fuel_used,
+                electric_used=electric_used,
             )
         )
     return trajectory, charge_errors

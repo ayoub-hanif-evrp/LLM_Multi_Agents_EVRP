@@ -173,10 +173,14 @@ def load_hiermann(path: Path | str) -> ProblemSpecV2:
             "source_sha256": sha256_file(path),
             "publication": "Hiermann et al. H2E-FTW set 1",
             "energy_prices": energy_prices,
+            # Dataset readme: "travel times between nodes equals the distance."
+            "travel_time_model": "distance_equals_time",
+            "recharge_model": "duration = energy_charged / station.recharging_rate",
+            "phev_model": "battery_first_then_fuel",
             "note": (
-                "Velocity / travel-time scaling is not present in the raw file; "
-                "evaluator must apply the paper's documented distance-time convention "
-                "explicitly rather than inventing a speed."
+                "Travel time equals Euclidean distance (dataset readme). "
+                "Station rechargingrate is energy per unit time. "
+                "PHEV uses electric energy until the battery is exhausted, then fuel."
             ),
         },
     )

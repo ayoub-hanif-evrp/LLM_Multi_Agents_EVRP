@@ -35,21 +35,18 @@ SIGNATURES: dict[ComponentKind, str] = {
 DEFAULT_SOURCES: dict[ComponentKind, str] = {
     "insertion_score": '''\
 def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:
-    """Lower is better."""
-    urgency = 0.0 if due_time > 1e15 else (1.0 / max(due_time - ready_time, 1.0))
-    slack_pen = 0.0 if capacity_slack >= demand else 1e6
-    return float(delta_distance) + 0.01 * float(due_time) + urgency + slack_pen
+    """Lower is better. Single arithmetic return for the bounded interpreter."""
+    return delta_distance + 0.01 * due_time + (0.0 if due_time > 1e15 else (1.0 / max(due_time - ready_time, 1.0))) + (0.0 if capacity_slack >= demand else 1e6)
 ''',
     "station_score": '''\
 def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:
     """Lower is better."""
-    urgency = 0.0 if battery_arrival > 0 else 1000.0
-    return float(detour) + 0.1 * float(station_rate) + urgency
+    return detour + 0.1 * station_rate + (0.0 if battery_arrival > 0.0 else 1000.0)
 ''',
     "removal_priority": '''\
 def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:
     """Higher means remove sooner."""
-    return float(due_time) + 10.0 * float(route_distance_share) + 0.01 * float(rng_value)
+    return due_time + 10.0 * route_distance_share + 0.01 * rng_value
 ''',
 }
 

@@ -25,6 +25,7 @@ problem/datasets/    Family parsers (Schneider adapter + 4 new families)
 sandbox/safe_exec.py Shared subprocess boundary for generated code
 backbone/            Classical construction, energy repair, local search, ALNS
                      (human-authored Track 2 scaffolding; no LLM calls)
+components/          LLM-generated pure scoring hooks + multi-agent orchestration
 ```
 
 ## Classical baseline (Milestone 4)

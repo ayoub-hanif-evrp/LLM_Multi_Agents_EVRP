@@ -16,24 +16,40 @@ def _stations(spec: ProblemSpecV2) -> list[str]:
     return [n.id for n in spec.nodes if n.kind == "station"]
 
 
-def _best_station_between(spec: ProblemSpecV2, left_id: str, right_id: str) -> str | None:
+def _best_station_between(
+    spec: ProblemSpecV2,
+    left_id: str,
+    right_id: str,
+    *,
+    battery_arrival: float = 0.0,
+    policy: object | None = None,
+) -> str | None:
     stations = _stations(spec)
     if not stations:
         return None
     left = spec.node_map[left_id]
     right = spec.node_map[right_id]
+    scorer = getattr(policy, "station_score", None) if policy is not None else None
     best = None
     best_cost = float("inf")
     for sid in stations:
         station = spec.node_map[sid]
-        cost = travel_distance(spec, left, station) + travel_distance(spec, station, right)
+        detour = travel_distance(spec, left, station) + travel_distance(spec, station, right)
+        rate = float(station.recharging_rate or 0.0)
+        cost = float(scorer(detour, battery_arrival, rate)) if scorer is not None else float(detour)
         if cost < best_cost:
             best_cost = cost
             best = sid
     return best
 
 
-def repair_energy(spec: ProblemSpecV2, solution: SolutionV2, *, max_inserts: int = 40) -> SolutionV2:
+def repair_energy(
+    spec: ProblemSpecV2,
+    solution: SolutionV2,
+    *,
+    max_inserts: int = 40,
+    policy: object | None = None,
+) -> SolutionV2:
     """Insert stations until battery-feasible or inserts exhausted.
 
     Uses full-recharge station stops (charge_amount unset → charge to full).
@@ -83,23 +99,31 @@ def repair_energy(spec: ProblemSpecV2, solution: SolutionV2, *, max_inserts: int
                 insert_pos = fail_at - 1
             else:
                 insert_pos = fail_at
-            station_id = _best_station_between(spec, left_id, right_id)
+            batt_left = traj[insert_pos - 1].battery_departure if insert_pos > 0 else 0.0
+            station_id = _best_station_between(
+                spec, left_id, right_id, battery_arrival=batt_left, policy=policy
+            )
             if station_id is None:
                 continue
             # Skip if station already immediately before.
             if insert_pos > 0 and route[insert_pos - 1].node_id == station_id:
-                # Try a different station: farthest energy-saving among alternatives.
                 alts = [s for s in _stations(spec) if s != station_id]
                 station_id = None
                 best = float("inf")
+                scorer = getattr(policy, "station_score", None) if policy is not None else None
                 for sid in alts:
-                    cost = travel_distance(
+                    detour = travel_distance(
                         spec, spec.node_map[left_id], spec.node_map[sid]
                     ) + travel_distance(spec, spec.node_map[sid], spec.node_map[right_id])
-                    # Prefer stations reachable with remaining battery from left.
                     if traj[insert_pos - 1].battery_departure + EPSILON >= energy_required(
                         spec, spec.node_map[left_id], spec.node_map[sid], vehicle
                     ):
+                        rate = float(spec.node_map[sid].recharging_rate or 0.0)
+                        cost = (
+                            float(scorer(detour, batt_left, rate))
+                            if scorer is not None
+                            else float(detour)
+                        )
                         if cost < best:
                             best = cost
                             station_id = sid

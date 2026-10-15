@@ -22,15 +22,16 @@ class ClassicalSolver:
     time_limit_s: float = 5.0
     alns_iterations: int = 60
     use_alns: bool = True
+    policy: object | None = None
 
     def solve(self, spec: ProblemSpecV2) -> SolutionV2:
         started = time.monotonic()
         rng = random.Random(int(self.seed))
-        solution = construct_greedy(spec, rng)
-        solution = repair_energy(spec, solution)
+        solution = construct_greedy(spec, rng, policy=self.policy)
+        solution = repair_energy(spec, solution, policy=self.policy)
         solution = relocate_improve(spec, solution, max_passes=2)
         solution = two_opt_improve(spec, solution)
-        solution = repair_energy(spec, solution)
+        solution = repair_energy(spec, solution, policy=self.policy)
         remaining = max(0.1, float(self.time_limit_s) - (time.monotonic() - started))
         if self.use_alns and remaining > 0.2:
             solution = alns_improve(
@@ -39,6 +40,7 @@ class ClassicalSolver:
                 rng,
                 time_limit_s=remaining,
                 iterations=self.alns_iterations,
+                policy=self.policy,
             )
         solution = remove_redundant_stations(spec, solution)
         report = evaluate(spec, solution)
@@ -64,12 +66,14 @@ def solve_classical(
     time_limit_s: float = 5.0,
     alns_iterations: int = 60,
     use_alns: bool = True,
+    policy: object | None = None,
 ) -> SolutionV2:
     return ClassicalSolver(
         seed=seed,
         time_limit_s=time_limit_s,
         alns_iterations=alns_iterations,
         use_alns=use_alns,
+        policy=policy,
     ).solve(spec)
 
 

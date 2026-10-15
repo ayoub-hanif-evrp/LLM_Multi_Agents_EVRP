@@ -15,15 +15,37 @@ from evrptw_autolab.problem.v2.transport import travel_distance
 from evrptw_autolab.problem.v2.types import ProblemSpecV2, RouteStopV2, SolutionV2
 
 
-def _insertion_cost(spec: ProblemSpecV2, route: list[RouteStopV2], index: int, node_id: str) -> float:
-    """Cheap delta-distance estimate (not a feasibility check)."""
+def _insertion_cost(
+    spec: ProblemSpecV2,
+    route: list[RouteStopV2],
+    index: int,
+    node_id: str,
+    policy: object | None = None,
+) -> float:
+    """Cheap insertion score (not a feasibility check). Lower is better."""
     prev = spec.node_map[route[index - 1].node_id]
     nxt = spec.node_map[route[index].node_id]
     node = spec.node_map[node_id]
-    return (
+    delta = (
         travel_distance(spec, prev, node)
         + travel_distance(spec, node, nxt)
         - travel_distance(spec, prev, nxt)
+    )
+    scorer = getattr(policy, "insertion_score", None) if policy is not None else None
+    if scorer is None:
+        return delta
+    vehicle_cap = spec.vehicle_types[0].capacity if spec.vehicle_types else 0.0
+    # Rough load on route (sum demands of request nodes).
+    load = sum(spec.node_map[s.node_id].demand for s in route if s.event != "depot")
+    slack = float(vehicle_cap) - float(load)
+    return float(
+        scorer(
+            float(delta),
+            float(node.due_time),
+            float(node.ready_time),
+            float(node.demand),
+            float(slack),
+        )
     )
 
 
@@ -66,7 +88,11 @@ def _customer_order(spec: ProblemSpecV2, rng: random.Random) -> list[str]:
     return order
 
 
-def construct_greedy(spec: ProblemSpecV2, rng: random.Random) -> SolutionV2:
+def construct_greedy(
+    spec: ProblemSpecV2,
+    rng: random.Random,
+    policy: object | None = None,
+) -> SolutionV2:
     """Cheapest feasible insertion (TW/capacity); battery repaired later."""
     vehicle_id = default_vehicle_id(spec)
     solution = SolutionV2(routes=[empty_route(spec, vehicle_id)], vehicle_assignments=[vehicle_id])
@@ -79,7 +105,7 @@ def construct_greedy(spec: ProblemSpecV2, rng: random.Random) -> SolutionV2:
         best_cost = float("inf")
         for r_idx, route in enumerate(solution.routes):
             for pos in range(1, len(route)):
-                cost = _insertion_cost(spec, route, pos, customer_id)
+                cost = _insertion_cost(spec, route, pos, customer_id, policy=policy)
                 trial = _try_insert(spec, solution, r_idx, pos, customer_id)
                 if trial is None:
                     continue

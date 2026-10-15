@@ -64,9 +64,14 @@ def destroy_random(spec: ProblemSpecV2, solution: SolutionV2, rng: random.Random
     return _remove_nodes(solution, nodes), removed
 
 
-def destroy_worst(spec: ProblemSpecV2, solution: SolutionV2, rng: random.Random, k: int) -> tuple[SolutionV2, list[tuple[str, ...]]]:
-    """Remove units that appear on routes with the most violations / distance share."""
-    report = evaluate(spec, solution)
+def destroy_worst(
+    spec: ProblemSpecV2,
+    solution: SolutionV2,
+    rng: random.Random,
+    k: int,
+    policy: object | None = None,
+) -> tuple[SolutionV2, list[tuple[str, ...]]]:
+    """Remove units with highest removal_priority (or due-time fallback)."""
     units = _request_units(spec)
     present = []
     present_ids = {s.node_id for route in solution.routes for s in route}
@@ -75,16 +80,22 @@ def destroy_worst(spec: ProblemSpecV2, solution: SolutionV2, rng: random.Random,
             present.append(unit)
     if not present:
         return clone_solution(solution), []
-    # Score by due-time tightness + random jitter for determinism under seed.
+    total_dist = max(evaluate(spec, solution).total_distance, 1e-9)
+    scorer = getattr(policy, "removal_priority", None) if policy is not None else None
     scored = []
     for unit in present:
-        score = sum(spec.node_map[n].due_time for n in unit) + rng.random()
-        scored.append((score, unit))
+        due = sum(spec.node_map[n].due_time for n in unit) / len(unit)
+        share = 1.0 / max(len(present), 1)
+        rng_value = rng.random()
+        if scorer is not None:
+            score = float(scorer(float(due), float(share), float(rng_value)))
+        else:
+            score = float(due) + 10.0 * share + 0.01 * rng_value
+        scored.append((score + 1e-9 * (due / total_dist), unit))
     scored.sort(reverse=True)
     k = max(1, min(k, len(scored)))
     removed = [u for _, u in scored[:k]]
     nodes = {n for unit in removed for n in unit}
-    _ = report  # reserved for richer worst criteria
     return _remove_nodes(solution, nodes), removed
 
 
@@ -93,6 +104,7 @@ def repair_greedy(
     solution: SolutionV2,
     removed: list[tuple[str, ...]],
     rng: random.Random,
+    policy: object | None = None,
 ) -> SolutionV2:
     current = clone_solution(solution)
     vehicle_id = default_vehicle_id(spec)
@@ -164,7 +176,7 @@ def repair_greedy(
                 current.vehicle_assignments.append(vehicle_id)
             else:
                 current = best
-    return repair_energy(spec, current)
+    return repair_energy(spec, current, policy=policy)
 
 
 def alns_improve(
@@ -174,11 +186,12 @@ def alns_improve(
     *,
     time_limit_s: float = 5.0,
     iterations: int = 80,
+    policy: object | None = None,
 ) -> SolutionV2:
     """ALNS with random/worst destroy + greedy repair + SA acceptance."""
     start = time.monotonic()
     current = clone_solution(solution)
-    current = repair_energy(spec, current)
+    current = repair_energy(spec, current, policy=policy)
     current_report = evaluate(spec, current)
     best = clone_solution(current)
     best_report = current_report
@@ -203,12 +216,12 @@ def alns_improve(
                 destroy_name = name
                 break
         if destroy_name == "worst":
-            destroyed, removed = destroy_worst(spec, current, rng, k)
+            destroyed, removed = destroy_worst(spec, current, rng, k, policy=policy)
         else:
             destroyed, removed = destroy_random(spec, current, rng, k)
         if not removed:
             continue
-        candidate = repair_greedy(spec, destroyed, removed, rng)
+        candidate = repair_greedy(spec, destroyed, removed, rng, policy=policy)
         if it % 5 == 0:
             candidate = relocate_improve(spec, candidate, max_passes=1)
             candidate = two_opt_improve(spec, candidate)
@@ -243,7 +256,7 @@ def alns_improve(
 
     best = relocate_improve(spec, best, max_passes=2)
     best = two_opt_improve(spec, best)
-    best = repair_energy(spec, best)
+    best = repair_energy(spec, best, policy=policy)
     best.metadata["alns_best_feasible"] = bool(best_report.feasible)
     best.metadata["alns_iterations"] = it + 1 if iterations else 0
     return best

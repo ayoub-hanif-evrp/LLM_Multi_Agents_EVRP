@@ -1,1 +1,7 @@
-profile,seed,model,ablation,deepest_gate,best_g4_feasible,schneider_c5,llm_calls,tokens,solver_hash,failure_reason
+profile,seed,model,ablation,deepest_gate,best_g4_feasible,schneider_c5,success_4_4,confirmation,llm_calls,tokens,wall_s,cost,solver_hash,failure_reason
+qwen3_coder_30b,11,qwen3-coder:30b,full,,0,False,False,,339,1956211,2805.4,0,5b861b0912af5986,TypeError: energy_required() missing 1 required positional argument: 'vehicle'
+qwen3_coder_30b,22,qwen3-coder:30b,full,,0,False,False,,244,1200493,1792.4,0,fac3992475f8e582,TypeError: travel_time() missing 1 required positional argument: 'vehicle'
+qwen3_coder_30b,33,qwen3-coder:30b,full,multi_customer,1,False,False,,237,1398208,2295.3,0,68d2b455d86e1c2c,G4 1/4; timeout
+deepseek_v4_pro,11,deepseek-v4-pro,full,,0,False,False,,0,0,,0,,SKIPPED_NO_CREDENTIAL
+deepseek_v4_pro,22,deepseek-v4-pro,full,,0,False,False,,0,0,,0,,SKIPPED_NO_CREDENTIAL
+deepseek_v4_pro,33,deepseek-v4-pro,full,,0,False,False,,0,0,,0,,SKIPPED_NO_CREDENTIAL

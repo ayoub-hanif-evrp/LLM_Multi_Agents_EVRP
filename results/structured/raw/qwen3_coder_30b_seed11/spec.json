@@ -1,0 +1,34 @@
+{
+  "OBJECTIVE": "Lexicographic laboratory ranking: feasibility, then fewer vehicles, then smaller total Euclidean distance. Unlimited fleet. Full recharge only.",
+  "INPUT_FIELDS": [
+    "instance.depot_id (str)",
+    "instance.customer_ids (tuple[str, ...])",
+    "instance.station_ids (tuple[str, ...])",
+    "instance.node_map[node_id] -> Node",
+    "instance.vehicle (VehicleSpec: capacity, battery_capacity, consumption_rate, velocity, inverse_refuel_rate, start_soc)",
+    "Node: id, kind, x, y, demand, ready_time, due_time, service_time"
+  ],
+  "OUTPUT_CONTRACT": "solve(instance, seed, time_limit_s) returns CandidateSolution or {'routes': list[list[str]], 'metadata': dict}. Zero LLM calls in solver.py.",
+  "VISIT": "Every customer_id appears exactly once across all routes (no missing, no duplicates).",
+  "DEPOT": "Each route is list[str] starting and ending at instance.depot_id. Depot may appear only as first and last stop (no internal depot visits).",
+  "CAPACITY": "Vehicle load never exceeds instance.vehicle.capacity along any route.",
+  "TIME_WINDOWS": "Service start at each customer must respect ready_time and due_time (waiting allowed before ready_time).",
+  "SERVICE_TIMES": "Service time at customers (and charging duration at stations) advances the clock.",
+  "BATTERY": "Battery never goes negative. Energy from travel uses consumption_rate * distance. start_soc is already energy at the depot (do not multiply by battery_capacity).",
+  "CHARGING": "Full recharge only. Station ids must appear as nodes in the returned route. propagate_route performs Schneider full recharge; full_recharge returns ChargeDecision, not float. Do not mutate StopState fields.",
+  "TERMINATION": "Honor time_limit_s inside solve. Always return a routes structure even if incomplete. Loop-safe: no unbounded search without a time or iteration guard.",
+  "notes": [
+    "String node ids only (never integer 0 as depot).",
+    "Do not hard-code Schneider instance ids or BKS tables.",
+    "Invent the algorithm; do not name published heuristics.",
+    "EVRPTW (Schneider 2014, 92-instance contract): visit each customer once."
+  ],
+  "fault_families": [
+    "VISIT",
+    "DEPOT",
+    "CAPACITY",
+    "WINDOW",
+    "BATTERY",
+    "CHARGE_POLICY"
+  ]
+}

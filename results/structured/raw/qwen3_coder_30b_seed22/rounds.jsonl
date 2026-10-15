@@ -1,0 +1,12 @@
+{"generation": 1, "archive": 7, "best_fitness": [0, 0, 0, 0, 0, 0, -0.0, -0.0, -0.0, 0, 0.0], "g4": 0, "gates_passed": 0, "calls": 48, "tokens": 227396, "ablation": "full"}
+{"generation": 2, "archive": 8, "best_fitness": [0, 0, 0, 0, 0, 0, -0.0, -0.0, -0.0, 0, 0.0], "g4": 0, "gates_passed": 0, "calls": 63, "tokens": 303315, "ablation": "full"}
+{"generation": 3, "archive": 8, "best_fitness": [0, 0, 0, 0, 0, 0, -0.0, -0.0, -0.0, 0, 0.0], "g4": 0, "gates_passed": 0, "calls": 84, "tokens": 402493, "ablation": "full"}
+{"generation": 4, "archive": 8, "best_fitness": [0, 0, 0, 0, 0, 0, -0.0, -0.0, -0.0, 0, 0.0], "g4": 0, "gates_passed": 0, "calls": 107, "tokens": 508428, "ablation": "full"}
+{"generation": 5, "archive": 8, "best_fitness": [0, 0, 0, 0, 0, 0, -0.0, -0.0, -0.0, 0, 0.0], "g4": 0, "gates_passed": 0, "calls": 125, "tokens": 598112, "ablation": "full"}
+{"generation": 6, "archive": 8, "best_fitness": [0, 0, 0, 0, 0, 0, -0.0, -0.0, -0.0, 0, 0.0], "g4": 0, "gates_passed": 0, "calls": 142, "tokens": 681159, "ablation": "full"}
+{"generation": 7, "archive": 8, "best_fitness": [0, 0, 0, 0, 0, 0, -0.0, -0.0, -0.0, 0, 0.0], "g4": 0, "gates_passed": 0, "calls": 157, "tokens": 756543, "ablation": "full"}
+{"generation": 8, "archive": 8, "best_fitness": [0, 0, 0, 0, 0, 0, -0.0, -0.0, -0.0, 0, 0.0], "g4": 0, "gates_passed": 0, "calls": 172, "tokens": 833055, "ablation": "full"}
+{"generation": 9, "archive": 8, "best_fitness": [0, 0, 0, 0, 0, 0, -0.0, -0.0, -0.0, 0, 0.0], "g4": 0, "gates_passed": 0, "calls": 190, "tokens": 923324, "ablation": "full"}
+{"generation": 10, "archive": 8, "best_fitness": [0, 0, 0, 0, 0, 0, -0.0, -0.0, -0.0, 0, 0.0], "g4": 0, "gates_passed": 0, "calls": 208, "tokens": 1012582, "ablation": "full"}
+{"generation": 11, "archive": 8, "best_fitness": [0, 0, 0, 0, 0, 0, -0.0, -0.0, -0.0, 0, 0.0], "g4": 0, "gates_passed": 0, "calls": 226, "tokens": 1114239, "ablation": "full"}
+{"generation": 12, "archive": 8, "best_fitness": [0, 0, 0, 0, 0, 0, -0.0, -0.0, -0.0, 0, 0.0], "g4": 0, "gates_passed": 0, "calls": 244, "tokens": 1200493, "ablation": "full"}

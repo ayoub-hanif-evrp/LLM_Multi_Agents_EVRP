@@ -1,0 +1,19 @@
+{
+  "experiment": "structured_synthesis",
+  "profile": "deepseek_v4_pro",
+  "seed": 11,
+  "model": "deepseek-v4-pro",
+  "ablation": "full",
+  "failure_reason": "SKIPPED_NO_CREDENTIAL",
+  "failure_category": "SKIPPED_NO_CREDENTIAL",
+  "schneider_c5": false,
+  "fully_feasible": false,
+  "best_g4_feasible": 0,
+  "llm_calls": 0,
+  "tokens": 0,
+  "executable": false,
+  "git_commit": "11926642dacec9dc99e3ca4ee9c954609c0ca205",
+  "protocol_hash": "07e980ca0277da4a258dbd7ce8c092119b28f187ac788be865324f493e42791f",
+  "config_hash": "aa730b25ed0649959d924149fbd520abc3681982c77999aa5a570029efe14db0",
+  "timestamp": "2026-10-15T15:15:13Z"
+}

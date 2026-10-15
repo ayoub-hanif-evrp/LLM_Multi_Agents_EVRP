@@ -334,7 +334,14 @@ def evaluate_solution_v2(spec: ProblemSpecV2, solution: SolutionV2) -> Evaluatio
                         detail=f"incomplete request {req.request_id}",
                     )
 
-    used_types = Counter(solution.vehicle_assignments)
+    # Count every actual route's resolved vehicle type, not only an incomplete assignment list.
+    resolved_types: list[str] = []
+    for route_index, route in enumerate(solution.routes):
+        try:
+            resolved_types.append(_vehicle_for_route(spec, solution, route_index, route).type_id)
+        except ValueError as error:
+            report.add("FLEET", route_index=route_index, detail=str(error)[:200])
+    used_types = Counter(resolved_types)
     for type_id, count in used_types.items():
         limit = spec.fleet_availability.get(type_id)
         if limit is None or limit >= 10**8:

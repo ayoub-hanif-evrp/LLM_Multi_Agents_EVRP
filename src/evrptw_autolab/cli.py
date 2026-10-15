@@ -184,9 +184,20 @@ def components_smoke(
     result = synthesize_components(
         spec, backend, model=model, seed=seed, time_limit_s=5.0, work_dir=out_dir
     )
-    typer.echo(json.dumps({k: result[k] for k in (
-        "feasible", "vehicles", "distance", "llm_calls", "critic_verdict", "wall_s", "bundle_dir"
-    )}, indent=2))
+    keys = (
+        "feasible",
+        "vehicles",
+        "distance",
+        "llm_calls",
+        "llm_tokens",
+        "genuine_llm_components",
+        "default_heuristic_count",
+        "critic_verdict",
+        "wall_s",
+        "bundle_dir",
+        "model",
+    )
+    typer.echo(json.dumps({k: result[k] for k in keys if k in result}, indent=2))
 
 
 def main() -> None:

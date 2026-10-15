@@ -93,53 +93,84 @@ def repair_energy(
                 traj, _ = simulate_route(spec, route, vehicle)
             except (KeyError, ValueError):
                 continue
-            insertion = _find_station_insertion(spec, route, vehicle, traj, policy=policy)
-            if insertion is None:
-                continue
-            insert_pos, station_id = insertion
-            if insert_pos > 0 and route[insert_pos - 1].node_id == station_id:
-                continue
-            # Avoid only immediate consecutive duplicates; station revisits are allowed.
-            trial = clone_solution(current)
-            trial.routes[r_idx].insert(
-                insert_pos,
-                RouteStopV2(station_id, vehicle_type_id=vehicle.type_id, event="charge"),
-            )
-            # Clear prior charge annotations so DP recomputes for the new sequence.
-            if spec.capabilities.multiple_charge_technologies:
-                trial.routes[r_idx] = [
-                    RouteStopV2(
-                        node_id=s.node_id,
-                        vehicle_type_id=s.vehicle_type_id,
-                        event=s.event,
-                        charge_amount=None,
-                        charge_technology=None,
-                        target_soc=None,
-                    )
-                    for s in trial.routes[r_idx]
-                ]
-            trial = complete_solution_charges(spec, trial)
-            trial_report = evaluate(spec, trial)
-            old_batt = sum(1 for v in report.violations if v.family in {"BATTERY", "CHARGE_POLICY"})
-            new_batt = sum(
-                1 for v in trial_report.violations if v.family in {"BATTERY", "CHARGE_POLICY"}
-            )
-            old_dur = sum(1 for v in report.violations if v.family == "DURATION")
-            new_dur = sum(1 for v in trial_report.violations if v.family == "DURATION")
-            accept = trial_report.feasible or new_batt < old_batt or is_better_coverage(
-                trial_report, report
-            )
-            if spec.capabilities.multiple_charge_technologies and len(trial_report.unserved) <= len(
-                report.unserved
-            ):
-                # Bezzi may need several inserts before DP succeeds.
-                accept = accept or len(trial.routes[r_idx]) > len(route)
-            if new_dur > old_dur and new_batt >= old_batt and not trial_report.feasible:
-                accept = False
-            if accept:
-                current = trial
-                inserts += 1
-                progress = True
+            candidates = _find_station_insertions(spec, route, vehicle, traj, policy=policy)
+            for insert_pos, station_id in candidates:
+                if insert_pos > 0 and route[insert_pos - 1].node_id == station_id:
+                    continue
+                trial = clone_solution(current)
+                trial.routes[r_idx].insert(
+                    insert_pos,
+                    RouteStopV2(station_id, vehicle_type_id=vehicle.type_id, event="charge"),
+                )
+                if spec.capabilities.multiple_charge_technologies:
+                    trial.routes[r_idx] = [
+                        RouteStopV2(
+                            node_id=s.node_id,
+                            vehicle_type_id=s.vehicle_type_id,
+                            event=s.event,
+                            charge_amount=None,
+                            charge_technology=None,
+                            target_soc=None,
+                        )
+                        for s in trial.routes[r_idx]
+                    ]
+                trial = complete_solution_charges(spec, trial)
+                trial_report = evaluate(spec, trial)
+                old_batt = sum(
+                    1 for v in report.violations if v.family in {"BATTERY", "CHARGE_POLICY"}
+                )
+                new_batt = sum(
+                    1 for v in trial_report.violations if v.family in {"BATTERY", "CHARGE_POLICY"}
+                )
+                old_dur = sum(1 for v in report.violations if v.family == "DURATION")
+                new_dur = sum(1 for v in trial_report.violations if v.family == "DURATION")
+                old_win = sum(1 for v in report.violations if v.family == "WINDOW")
+                new_win = sum(1 for v in trial_report.violations if v.family == "WINDOW")
+                old_mag = sum(
+                    float(v.magnitude or 0.0)
+                    for v in report.violations
+                    if v.family in {"BATTERY", "CHARGE_POLICY"}
+                )
+                new_mag = sum(
+                    float(v.magnitude or 0.0)
+                    for v in trial_report.violations
+                    if v.family in {"BATTERY", "CHARGE_POLICY"}
+                )
+                # Route-local battery magnitude (ignore other routes / VISIT noise).
+                old_route_mag = sum(
+                    float(v.magnitude or 0.0)
+                    for v in report.violations
+                    if v.family in {"BATTERY", "CHARGE_POLICY"} and v.route_index == r_idx
+                )
+                new_route_mag = sum(
+                    float(v.magnitude or 0.0)
+                    for v in trial_report.violations
+                    if v.family in {"BATTERY", "CHARGE_POLICY"} and v.route_index == r_idx
+                )
+                accept = trial_report.feasible or new_batt < old_batt or is_better_coverage(
+                    trial_report, report
+                )
+                if not accept and new_batt <= old_batt and new_mag + EPSILON < old_mag:
+                    accept = True
+                if not accept and new_route_mag + EPSILON < old_route_mag:
+                    accept = True
+                if spec.capabilities.multiple_charge_technologies:
+                    # Bezzi DP often needs several coordinated station inserts plus a
+                    # depot recharge; accept structural station progress even when the
+                    # violation count temporarily rises.
+                    added_station = len(trial.routes[r_idx]) > len(route)
+                    if added_station and len(trial_report.unserved) <= len(report.unserved):
+                        accept = True
+                if new_win > old_win and not trial_report.feasible:
+                    accept = False
+                if new_dur > old_dur and new_batt >= old_batt and not trial_report.feasible:
+                    accept = False
+                if accept:
+                    current = trial
+                    inserts += 1
+                    progress = True
+                    break
+            if progress:
                 break
         if not progress:
             break
@@ -148,87 +179,141 @@ def repair_energy(
     return current
 
 
-def _find_station_insertion(
+def _soc_at_index(spec: ProblemSpecV2, route: list[RouteStopV2], vehicle, index: int) -> float | None:
+    """Battery SoC on arrival at route[index], assuming full recharge at every station."""
+    cap = float(vehicle.battery_capacity or 0.0)
+    soc = cap
+    for k in range(1, index + 1):
+        a = spec.node_map[route[k - 1].node_id]
+        b = spec.node_map[route[k].node_id]
+        if a.kind == "station":
+            soc = cap
+        try:
+            need = energy_required(spec, a, b, vehicle)
+        except ValueError:
+            return None
+        if soc + EPSILON < need:
+            return None
+        soc -= need
+    return soc
+
+
+def _station_enables_progress(
+    spec: ProblemSpecV2,
+    station_id: str,
+    right_id: str,
+    vehicle,
+) -> bool:
+    """After a full charge, the vehicle must be able to leave toward the next stop."""
+    station = spec.node_map[station_id]
+    right = spec.node_map[right_id]
+    cap = float(vehicle.battery_capacity or 0.0)
+    try:
+        leave = energy_required(spec, station, right, vehicle)
+    except ValueError:
+        return False
+    return leave <= cap + EPSILON
+
+
+def _find_station_insertions(
     spec: ProblemSpecV2,
     route: list[RouteStopV2],
     vehicle,
     traj,
     *,
     policy: object | None = None,
-) -> tuple[int, str] | None:
-    """Return (insert_pos, station_id) for the first energy-critical hop that is repairable."""
+) -> list[tuple[int, str]]:
+    """Ranked station insertion candidates for an energy-infeasible route."""
     cap = float(vehicle.battery_capacity or 0.0)
     if cap <= EPSILON:
-        return None
+        return []
 
-    # Walk as if the vehicle left the last charge opportunity with a full battery.
+    def _candidate(
+        left_id: str, right_id: str, battery_arrival: float, insert_pos: int
+    ) -> tuple[int, str] | None:
+        station_id = _best_station_between(
+            spec,
+            left_id,
+            right_id,
+            vehicle,
+            battery_arrival=max(0.0, battery_arrival),
+            policy=policy,
+        )
+        if station_id is None:
+            return None
+        if insert_pos > 0 and route[insert_pos - 1].node_id == station_id:
+            return None
+        if insert_pos < len(route) and route[insert_pos].node_id == station_id:
+            return None
+        if not _station_enables_progress(spec, station_id, right_id, vehicle):
+            return None
+        return insert_pos, station_id
+
     battery = cap
+    fail_at: int | None = None
+    fail_battery = 0.0
     for i in range(1, len(route)):
         left_id = route[i - 1].node_id
         right_id = route[i].node_id
         left = spec.node_map[left_id]
-        right = spec.node_map[right_id]
         if left.kind == "station":
             battery = cap
         try:
-            need = energy_required(spec, left, right, vehicle)
+            need = energy_required(spec, left, spec.node_map[right_id], vehicle)
         except ValueError:
-            return None
+            return []
         if battery + EPSILON >= need:
             battery -= need
             continue
-        # Cannot reach next node: insert a station before this hop if reachable from left.
-        station_id = _best_station_between(
-            spec, left_id, right_id, vehicle, battery_arrival=max(0.0, battery), policy=policy
-        )
-        if station_id is not None:
-            return i, station_id
-        # If already at a station or no reachable station from here, try earlier positions
-        # where a station was still reachable and the remaining suffix is heavy.
-        for j in range(i - 1, 0, -1):
-            prev_id = route[j].node_id
-            nxt_id = route[j + 1].node_id if j + 1 < len(route) else right_id
-            # Reconstruct SoC at j assuming full start and full recharge at stations.
-            soc = cap
-            ok = True
-            for k in range(1, j + 1):
-                a = spec.node_map[route[k - 1].node_id]
-                b = spec.node_map[route[k].node_id]
-                if a.kind == "station":
-                    soc = cap
-                try:
-                    e = energy_required(spec, a, b, vehicle)
-                except ValueError:
-                    ok = False
-                    break
-                if soc + EPSILON < e:
-                    ok = False
-                    break
-                soc -= e
-            if not ok:
-                continue
-            sid = _best_station_between(
-                spec, prev_id, nxt_id, vehicle, battery_arrival=max(0.0, soc), policy=policy
-            )
-            if sid is not None and route[j].node_id != sid:
-                return j + 1, sid
-        return None
+        fail_at = i
+        fail_battery = battery
+        break
 
-    # Trajectory already negative under explicit simulation (non-Bezzi).
-    for i, state in enumerate(traj):
-        if i == 0:
-            continue
-        if state.battery_arrival < -EPSILON:
-            left_id = route[i - 1].node_id
-            right_id = route[i].node_id
-            batt_left = traj[i - 1].battery_departure
-            station_id = _best_station_between(
-                spec, left_id, right_id, vehicle, battery_arrival=max(0.0, batt_left), policy=policy
-            )
-            if station_id is not None:
-                return i, station_id
-            return None
-    return None
+    if fail_at is None:
+        for i, state in enumerate(traj):
+            if i == 0:
+                continue
+            if state.battery_arrival < -EPSILON:
+                fail_at = i
+                fail_battery = float(traj[i - 1].battery_departure)
+                break
+        if fail_at is None:
+            return []
+
+    ordered: list[tuple[int, str]] = []
+    seen: set[tuple[int, str]] = set()
+
+    def _push(hit: tuple[int, str] | None) -> None:
+        if hit is None or hit in seen:
+            return
+        seen.add(hit)
+        ordered.append(hit)
+
+    # 1) Failing hop.
+    _push(
+        _candidate(
+            route[fail_at - 1].node_id,
+            route[fail_at].node_id,
+            fail_battery,
+            fail_at,
+        )
+    )
+    # 2) Near-failure hops (immediately upstream), then depot-side.
+    near = list(range(fail_at - 1, 0, -1))
+    early = [0] if fail_at > 0 else []
+    for j in near + early:
+        left_id = route[j].node_id
+        right_id = route[j + 1].node_id
+        if j == 0:
+            soc = cap
+        else:
+            soc = _soc_at_index(spec, route, vehicle, j)
+            if soc is None:
+                continue
+            if spec.node_map[left_id].kind == "station":
+                soc = cap
+        _push(_candidate(left_id, right_id, float(soc), j + 1))
+    return ordered
 
 
 def is_better_coverage(a, b) -> bool:

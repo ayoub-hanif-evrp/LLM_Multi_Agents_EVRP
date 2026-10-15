@@ -506,3 +506,38 @@ def test_goeke_complete_request_is_load_feasible() -> None:
     bad = evaluate_solution_v2(spec, split)
     assert any(v.family == "PAIRING" for v in bad.violations)
     assert any(v.family == "FLEET" for v in bad.violations)
+
+
+def test_fleet_counts_resolved_routes_without_assignment_list() -> None:
+    """Two routes on a one-vehicle fleet must fail even when assignments are omitted."""
+    spec = ProblemSpecV2(
+        instance_id="fleet_omit",
+        family="schneider",
+        capabilities=CapabilityFlags(time_windows=True, capacity=True, battery=False),
+        nodes=(
+            NodeV2("D", "depot", 0, 0, due_time=100),
+            NodeV2("C1", "customer", 1, 0, demand=1, ready_time=0, due_time=50, service_time=0),
+            NodeV2("C2", "customer", 2, 0, demand=1, ready_time=0, due_time=50, service_time=0),
+        ),
+        vehicle_types=(
+            VehicleTypeV2(
+                "EV",
+                capacity=10,
+                battery_capacity=0,
+                velocity=1.0,
+                is_electric=False,
+                is_conventional=True,
+            ),
+        ),
+        depot_ids=("D",),
+        fleet_availability={"EV": 1},
+    )
+    omitted = SolutionV2(
+        routes=[
+            [RouteStopV2("D", vehicle_type_id="EV", event="depot"), RouteStopV2("C1", event="visit"), RouteStopV2("D", event="depot")],
+            [RouteStopV2("D", vehicle_type_id="EV", event="depot"), RouteStopV2("C2", event="visit"), RouteStopV2("D", event="depot")],
+        ],
+        vehicle_assignments=[],
+    )
+    report = evaluate_solution_v2(spec, omitted)
+    assert any(v.family == "FLEET" for v in report.violations), report.violations

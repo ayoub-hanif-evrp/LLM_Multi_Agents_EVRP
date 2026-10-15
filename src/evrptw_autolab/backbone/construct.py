@@ -16,6 +16,12 @@ from evrptw_autolab.problem.v2.transport import travel_distance
 from evrptw_autolab.problem.v2.types import ProblemSpecV2, RouteStopV2, SolutionV2
 
 
+def _finite_due(node) -> float:
+    from evrptw_autolab.components.interfaces import normalize_due_time
+
+    return normalize_due_time(float(node.due_time))
+
+
 def _insertion_cost(
     spec: ProblemSpecV2,
     route: list[RouteStopV2],
@@ -34,7 +40,9 @@ def _insertion_cost(
     )
     scorer = getattr(policy, "insertion_score", None) if policy is not None else None
     if scorer is None:
-        return delta
+        # Prefer insertions that keep time-window slack when windows exist.
+        due = _finite_due(node)
+        return float(delta) + 0.001 * due
     vehicle_cap = spec.vehicle_types[0].capacity if spec.vehicle_types else 0.0
     # Rough load on route (sum demands of request nodes).
     load = sum(spec.node_map[s.node_id].demand for s in route if s.event != "depot")
@@ -42,8 +50,8 @@ def _insertion_cost(
     return float(
         scorer(
             float(delta),
-            float(node.due_time),
-            float(node.ready_time),
+            _finite_due(node),
+            float(node.ready_time) if node.ready_time == node.ready_time else 0.0,
             float(node.demand),
             float(slack),
         )
@@ -79,16 +87,14 @@ def _customer_order(spec: ProblemSpecV2, rng: random.Random) -> list[str]:
     if spec.capabilities.pickup_delivery and spec.requests:
         # Insert pickups first (deliveries handled as pairs).
         return [req.pickup_id for req in spec.requests]
-    # Time-window aware: earlier due time first, tie-break by id for determinism.
+    # Time-window aware: earlier due time first (finite); infinite dues sort last.
     customers = sorted(
         customers,
-        key=lambda cid: (spec.node_map[cid].due_time, spec.node_map[cid].ready_time, cid),
+        key=lambda cid: (_finite_due(spec.node_map[cid]), spec.node_map[cid].ready_time, cid),
     )
-    # Light deterministic shuffle keyed by rng for diversity across seeds.
     order = list(customers)
     rng.shuffle(order)
-    # Re-sort primarily by due time after shuffle of equal-due groups only:
-    order.sort(key=lambda cid: (spec.node_map[cid].due_time, cid))
+    order.sort(key=lambda cid: (_finite_due(spec.node_map[cid]), cid))
     return order
 
 

@@ -194,11 +194,29 @@ def aggregate(rows: list[PilotRow]) -> list[dict[str, Any]]:
     return table
 
 
-def write_results(rows: list[PilotRow], out_dir: Path) -> dict[str, Path]:
+def _git_head(root: Path) -> str:
+    try:
+        import subprocess
+
+        out = subprocess.check_output(
+            ["git", "rev-parse", "--short", "HEAD"],
+            cwd=root,
+            text=True,
+            stderr=subprocess.DEVNULL,
+        )
+        return out.strip() or "unknown"
+    except Exception:  # noqa: BLE001
+        return "unknown"
+
+
+def write_results(rows: list[PilotRow], out_dir: Path, *, seed: int = 0) -> dict[str, Path]:
     out_dir.mkdir(parents=True, exist_ok=True)
     stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
-    per_path = out_dir / f"pilot_{stamp}.json"
-    csv_path = out_dir / f"pilot_{stamp}.csv"
+    commit = _git_head(ROOT)
+    run_dir = out_dir / f"run_{commit}_seed{seed}_{stamp}"
+    run_dir.mkdir(parents=True, exist_ok=True)
+    per_path = run_dir / "pilot.json"
+    csv_path = run_dir / "pilot.csv"
     summary_path = out_dir / "summary.json"
     latest_path = out_dir / "latest.json"
 
@@ -207,12 +225,15 @@ def write_results(rows: list[PilotRow], out_dir: Path) -> dict[str, Path]:
         "solver": "classical_backbone",
         "llm_calls": 0,
         "created_utc": stamp,
+        "git_commit": commit,
+        "seed": int(seed),
         "rows": [asdict(r) for r in rows],
         "aggregate": aggregate(rows),
     }
     per_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     latest_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     summary_path.write_text(json.dumps(payload["aggregate"], indent=2) + "\n", encoding="utf-8")
+    (run_dir / "summary.json").write_text(json.dumps(payload["aggregate"], indent=2) + "\n", encoding="utf-8")
 
     with csv_path.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(
@@ -259,7 +280,8 @@ def run_classical_pilot(
 ) -> dict[str, Any]:
     panel = development_panel(root)
     rows = [run_one(item, seed) for item in panel]
-    paths = write_results(rows, out_dir or (ROOT / "results" / "v2" / "baselines" / "classical"))
+    base = out_dir or (ROOT / "results" / "v2" / "baselines" / "classical")
+    paths = write_results(rows, base, seed=seed)
     return {
         "rows": rows,
         "aggregate": aggregate(rows),

@@ -84,13 +84,18 @@ def destroy_worst(
     scorer = getattr(policy, "removal_priority", None) if policy is not None else None
     scored = []
     for unit in present:
-        due = sum(spec.node_map[n].due_time for n in unit) / len(unit)
+        from evrptw_autolab.components.interfaces import normalize_due_time
+
+        dues = [normalize_due_time(spec.node_map[n].due_time) for n in unit]
+        due = sum(dues) / len(dues) if dues else 0.0
         share = 1.0 / max(len(present), 1)
         rng_value = rng.random()
         if scorer is not None:
             score = float(scorer(float(due), float(share), float(rng_value)))
         else:
             score = float(due) + 10.0 * share + 0.01 * rng_value
+        if score != score or score in (float("inf"), float("-inf")):
+            score = 10.0 * share + 0.01 * rng_value
         scored.append((score + 1e-9 * (due / total_dist), unit))
     scored.sort(reverse=True)
     k = max(1, min(k, len(scored)))
@@ -133,7 +138,7 @@ def repair_greedy(
                     }
                     if hard & {"PARSE", "DEPOT", "CAPACITY", "WINDOW", "PRECEDENCE"}:
                         continue
-                    score = report.total_distance + 1000 * len(report.violations)
+                    score = _acceptance_score(report)
                     if score < best_score:
                         best_score = score
                         best = trial
@@ -163,7 +168,7 @@ def repair_greedy(
                         }
                         if hard & {"PARSE", "DEPOT", "CAPACITY", "WINDOW", "PRECEDENCE"}:
                             continue
-                        score = report.total_distance + 1000 * len(report.violations)
+                        score = _acceptance_score(report)
                         if score < best_score:
                             best_score = score
                             best = trial
@@ -176,7 +181,12 @@ def repair_greedy(
                 current.vehicle_assignments.append(vehicle_id)
             else:
                 current = best
-    return repair_energy(spec, current, policy=policy)
+    current = repair_energy(spec, current, policy=policy)
+    from evrptw_autolab.backbone.charge_completion import complete_solution_charges
+    from evrptw_autolab.backbone.nonlinear_charge import optimize_solution_partial_charges
+
+    current = complete_solution_charges(spec, current)
+    return optimize_solution_partial_charges(spec, current)
 
 
 def alns_improve(
@@ -232,14 +242,9 @@ def alns_improve(
             accept = True
             weights[destroy_name] += 0.5
         else:
-            # Metropolis step on distance and violation count. The published objective
-            # stays a lexicographic tuple; this score is only an acceptance temperature.
-            cur_score = (0.0 if current_report.feasible else 1e6) + 100.0 * len(
-                current_report.violations
-            ) + current_report.total_distance
-            new_score = (0.0 if cand_report.feasible else 1e6) + 100.0 * len(
-                cand_report.violations
-            ) + cand_report.total_distance
+            # Metropolis on variant objective scalar + normalized violation count.
+            cur_score = _acceptance_score(current_report)
+            new_score = _acceptance_score(cand_report)
             delta = new_score - cur_score
             if delta < 0 or rng.random() < math.exp(-delta / max(temperature, 1e-6)):
                 accept = True
@@ -250,17 +255,44 @@ def alns_improve(
         if accept:
             current = candidate
             current_report = cand_report
+            # Incumbent updates only when strictly better (feasibility-first).
             if is_better(current_report, best_report):
                 best = clone_solution(current)
                 best_report = current_report
         temperature *= cooling
 
     from evrptw_autolab.backbone.charge_completion import complete_solution_charges
+    from evrptw_autolab.backbone.nonlinear_charge import optimize_solution_partial_charges
 
-    best = relocate_improve(spec, best, max_passes=2)
-    best = two_opt_improve(spec, best)
-    best = repair_energy(spec, best, policy=policy)
-    best = complete_solution_charges(spec, best)
+    incumbent = clone_solution(best)
+    incumbent_report = best_report
+    polished = relocate_improve(spec, best, max_passes=2)
+    polished = two_opt_improve(spec, polished)
+    polished = repair_energy(spec, polished, policy=policy)
+    polished = complete_solution_charges(spec, polished)
+    polished = optimize_solution_partial_charges(spec, polished)
+    polished_report = evaluate(spec, polished)
+    if is_better(polished_report, incumbent_report):
+        best = polished
+        best_report = polished_report
+    else:
+        best = incumbent
+        best_report = incumbent_report
     best.metadata["alns_best_feasible"] = bool(best_report.feasible)
     best.metadata["alns_iterations"] = it + 1 if iterations else 0
     return best
+
+
+def _acceptance_score(report) -> float:
+    """Scalar for SA only: feasibility penalty + objective + violation magnitudes."""
+    penalty = 0.0 if report.feasible else 1e6
+    viol = 100.0 * len(report.violations) + sum(float(v.magnitude or 0.0) for v in report.violations)
+    if report.objective_key:
+        obj = 0.0
+        scale = 1.0
+        for value in report.objective_key:
+            obj += float(value) * scale
+            scale *= 1e-3
+    else:
+        obj = float(report.objective) if report.objective is not None else report.total_distance
+    return penalty + viol + obj

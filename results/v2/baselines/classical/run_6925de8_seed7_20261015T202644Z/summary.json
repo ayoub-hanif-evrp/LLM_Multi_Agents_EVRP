@@ -1,0 +1,64 @@
+[
+  {
+    "family": "bezzi",
+    "instances_tested": 3,
+    "feasible": 2,
+    "feasibility_rate": 0.6666666666666666,
+    "mean_objective_feasible": 91.495,
+    "mean_objective_key_feasible": [
+      91.495
+    ],
+    "mean_runtime_s": 3.458416566669863,
+    "note": "objective is the first lexicographic component (vehicles for Schneider/Goeke; recharge cost for Bezzi; duration for Montoya; total cost for Hiermann)"
+  },
+  {
+    "family": "goeke",
+    "instances_tested": 3,
+    "feasible": 2,
+    "feasibility_rate": 0.6666666666666666,
+    "mean_objective_feasible": 2.0,
+    "mean_objective_key_feasible": [
+      2.0,
+      252.8685624327232
+    ],
+    "mean_runtime_s": 0.4773998333257623,
+    "note": "objective is the first lexicographic component (vehicles for Schneider/Goeke; recharge cost for Bezzi; duration for Montoya; total cost for Hiermann)"
+  },
+  {
+    "family": "hiermann",
+    "instances_tested": 1,
+    "feasible": 1,
+    "feasibility_rate": 1.0,
+    "mean_objective_feasible": 4211.732785167464,
+    "mean_objective_key_feasible": [
+      4211.732785167464
+    ],
+    "mean_runtime_s": 29.326487599988468,
+    "note": "objective is the first lexicographic component (vehicles for Schneider/Goeke; recharge cost for Bezzi; duration for Montoya; total cost for Hiermann)"
+  },
+  {
+    "family": "montoya",
+    "instances_tested": 2,
+    "feasible": 2,
+    "feasibility_rate": 1.0,
+    "mean_objective_feasible": 28.502032041883048,
+    "mean_objective_key_feasible": [
+      28.502032041883048
+    ],
+    "mean_runtime_s": 2.6851533000008203,
+    "note": "objective is the first lexicographic component (vehicles for Schneider/Goeke; recharge cost for Bezzi; duration for Montoya; total cost for Hiermann)"
+  },
+  {
+    "family": "schneider",
+    "instances_tested": 5,
+    "feasible": 5,
+    "feasibility_rate": 1.0,
+    "mean_objective_feasible": 2.2,
+    "mean_objective_key_feasible": [
+      2.2,
+      192.83513726213582
+    ],
+    "mean_runtime_s": 0.4996554400073364,
+    "note": "objective is the first lexicographic component (vehicles for Schneider/Goeke; recharge cost for Bezzi; duration for Montoya; total cost for Hiermann)"
+  }
+]

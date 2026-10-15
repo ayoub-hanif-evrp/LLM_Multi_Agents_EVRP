@@ -2,7 +2,9 @@
   "protocol": "classical_baseline_pilot_v1",
   "solver": "classical_backbone",
   "llm_calls": 0,
-  "created_utc": "20261015T200034Z",
+  "created_utc": "20261015T203302Z",
+  "git_commit": "6925de8",
+  "seed": 7,
   "rows": [
     {
       "family": "schneider",
@@ -17,7 +19,7 @@
       "vehicles": 2,
       "distance": 267.3289940850671,
       "duration": 1728.8110030239563,
-      "runtime_s": 0.6210713999753352,
+      "runtime_s": 0.632834299991373,
       "first_fault": "OK: feasible",
       "violation_families": [],
       "unserved": 0,
@@ -139,7 +141,7 @@
       "vehicles": 1,
       "distance": 176.0544331488157,
       "duration": 1131.3796649707008,
-      "runtime_s": 0.5464528999873437,
+      "runtime_s": 0.5455780000193045,
       "first_fault": "OK: feasible",
       "violation_families": [],
       "unserved": 0,
@@ -238,16 +240,16 @@
       "objective": 2.0,
       "objective_key": [
         2.0,
-        137.00776826983545
+        161.25367030278682
       ],
       "vehicles": 2,
-      "distance": 137.00776826983545,
-      "duration": 340.97904768236333,
-      "runtime_s": 0.4874926999909803,
+      "distance": 161.25367030278682,
+      "duration": 418.8239264994131,
+      "runtime_s": 0.5385160000005271,
       "first_fault": "OK: feasible",
       "violation_families": [],
       "unserved": 0,
-      "charging_visits": 1,
+      "charging_visits": 2,
       "routes": [
         [
           {
@@ -267,14 +269,6 @@
             "vehicle_type_id": null
           },
           {
-            "node_id": "C71",
-            "event": "visit",
-            "charge_amount": null,
-            "charge_technology": null,
-            "target_soc": null,
-            "vehicle_type_id": null
-          },
-          {
             "node_id": "S3",
             "event": "charge",
             "charge_amount": null,
@@ -283,18 +277,16 @@
             "vehicle_type_id": "EV"
           },
           {
-            "node_id": "D0",
-            "event": "depot",
+            "node_id": "C71",
+            "event": "visit",
             "charge_amount": null,
             "charge_technology": null,
             "target_soc": null,
-            "vehicle_type_id": "EV"
-          }
-        ],
-        [
+            "vehicle_type_id": null
+          },
           {
-            "node_id": "D0",
-            "event": "depot",
+            "node_id": "S0",
+            "event": "charge",
             "charge_amount": null,
             "charge_technology": null,
             "target_soc": null,
@@ -315,6 +307,24 @@
             "charge_technology": null,
             "target_soc": null,
             "vehicle_type_id": null
+          },
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          }
+        ],
+        [
+          {
+            "node_id": "D0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
           },
           {
             "node_id": "C87",
@@ -340,22 +350,20 @@
       "family": "schneider",
       "instance_id": "r105C5",
       "seed": 7,
-      "feasible": false,
+      "feasible": true,
       "objective": 2.0,
       "objective_key": [
         2.0,
-        194.29201581325643
+        156.08206946417084
       ],
       "vehicles": 2,
-      "distance": 194.29201581325643,
-      "duration": 434.60659806421324,
-      "runtime_s": 0.6610330000112299,
-      "first_fault": "WINDOW: depot return arrival=279.740529 due=230.000000",
-      "violation_families": [
-        "WINDOW"
-      ],
+      "distance": 156.08206946417084,
+      "duration": 364.1906240676553,
+      "runtime_s": 0.4187307999818586,
+      "first_fault": "OK: feasible",
+      "violation_families": [],
       "unserved": 0,
-      "charging_visits": 3,
+      "charging_visits": 1,
       "routes": [
         [
           {
@@ -397,22 +405,6 @@
             "charge_technology": null,
             "target_soc": null,
             "vehicle_type_id": null
-          },
-          {
-            "node_id": "S0",
-            "event": "charge",
-            "charge_amount": null,
-            "charge_technology": null,
-            "target_soc": null,
-            "vehicle_type_id": "EV"
-          },
-          {
-            "node_id": "S13",
-            "event": "charge",
-            "charge_amount": null,
-            "charge_technology": null,
-            "target_soc": null,
-            "vehicle_type_id": "EV"
           },
           {
             "node_id": "D0",
@@ -465,40 +457,24 @@
       "instance_id": "rc105C5",
       "seed": 7,
       "feasible": true,
-      "objective": 3.0,
+      "objective": 2.0,
       "objective_key": [
-        3.0,
-        238.05223158918278
+        2.0,
+        241.29639187672765
       ],
-      "vehicles": 3,
-      "distance": 238.05223158918278,
-      "duration": 417.2470138870242,
-      "runtime_s": 0.6037485999986529,
+      "vehicles": 2,
+      "distance": 241.29639187672765,
+      "duration": 371.2087066017703,
+      "runtime_s": 0.646217000001343,
       "first_fault": "OK: feasible",
       "violation_families": [],
       "unserved": 0,
-      "charging_visits": 1,
+      "charging_visits": 3,
       "routes": [
         [
           {
             "node_id": "D0",
             "event": "depot",
-            "charge_amount": null,
-            "charge_technology": null,
-            "target_soc": null,
-            "vehicle_type_id": "EV"
-          },
-          {
-            "node_id": "C55",
-            "event": "visit",
-            "charge_amount": null,
-            "charge_technology": null,
-            "target_soc": null,
-            "vehicle_type_id": null
-          },
-          {
-            "node_id": "S3",
-            "event": "charge",
             "charge_amount": null,
             "charge_technology": null,
             "target_soc": null,
@@ -513,30 +489,12 @@
             "vehicle_type_id": null
           },
           {
-            "node_id": "D0",
-            "event": "depot",
+            "node_id": "S3",
+            "event": "charge",
             "charge_amount": null,
             "charge_technology": null,
             "target_soc": null,
             "vehicle_type_id": "EV"
-          }
-        ],
-        [
-          {
-            "node_id": "D0",
-            "event": "depot",
-            "charge_amount": null,
-            "charge_technology": null,
-            "target_soc": null,
-            "vehicle_type_id": "EV"
-          },
-          {
-            "node_id": "C11",
-            "event": "visit",
-            "charge_amount": null,
-            "charge_technology": null,
-            "target_soc": null,
-            "vehicle_type_id": null
           },
           {
             "node_id": "C82",
@@ -565,12 +523,44 @@
             "vehicle_type_id": "EV"
           },
           {
+            "node_id": "C55",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "S9",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "C11",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
             "node_id": "C22",
             "event": "visit",
             "charge_amount": null,
             "charge_technology": null,
             "target_soc": null,
             "vehicle_type_id": null
+          },
+          {
+            "node_id": "S15",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
           },
           {
             "node_id": "D0",
@@ -588,22 +578,19 @@
       "family": "montoya",
       "instance_id": "tc0c10s2cf1",
       "seed": 7,
-      "feasible": false,
-      "objective": 19.067079030031493,
+      "feasible": true,
+      "objective": 31.33526935652257,
       "objective_key": [
-        19.067079030031493
+        31.33526935652257
       ],
-      "vehicles": 2,
-      "distance": 513.1916241646372,
-      "duration": 19.067079030031493,
-      "runtime_s": 2.1087794000050053,
-      "first_fault": "BATTERY: battery_arrival=-697.756586 battery_departure=-697.756586",
-      "violation_families": [
-        "BATTERY",
-        "DURATION"
-      ],
+      "vehicles": 5,
+      "distance": 1001.4073892049722,
+      "duration": 31.33526935652257,
+      "runtime_s": 3.217418499989435,
+      "first_fault": "OK: feasible",
+      "violation_families": [],
       "unserved": 0,
-      "charging_visits": 3,
+      "charging_visits": 5,
       "routes": [
         [
           {
@@ -631,23 +618,33 @@
             "vehicle_type_id": null
           },
           {
-            "node_id": "9",
-            "event": "visit",
+            "node_id": "0",
+            "event": "depot",
             "charge_amount": null,
             "charge_technology": null,
             "target_soc": null,
-            "vehicle_type_id": null
-          },
+            "vehicle_type_id": "EV0"
+          }
+        ],
+        [
           {
-            "node_id": "11",
-            "event": "charge",
+            "node_id": "0",
+            "event": "depot",
             "charge_amount": null,
             "charge_technology": null,
             "target_soc": null,
             "vehicle_type_id": "EV0"
           },
           {
-            "node_id": "3",
+            "node_id": "12",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": "fast",
+            "target_soc": 15394.386356097104,
+            "vehicle_type_id": "EV0"
+          },
+          {
+            "node_id": "10",
             "event": "visit",
             "charge_amount": null,
             "charge_technology": null,
@@ -658,33 +655,9 @@
             "node_id": "12",
             "event": "charge",
             "charge_amount": null,
-            "charge_technology": null,
-            "target_soc": null,
+            "charge_technology": "fast",
+            "target_soc": 12026.684524383823,
             "vehicle_type_id": "EV0"
-          },
-          {
-            "node_id": "1",
-            "event": "visit",
-            "charge_amount": null,
-            "charge_technology": null,
-            "target_soc": null,
-            "vehicle_type_id": null
-          },
-          {
-            "node_id": "6",
-            "event": "visit",
-            "charge_amount": null,
-            "charge_technology": null,
-            "target_soc": null,
-            "vehicle_type_id": null
-          },
-          {
-            "node_id": "10",
-            "event": "visit",
-            "charge_amount": null,
-            "charge_technology": null,
-            "target_soc": null,
-            "vehicle_type_id": null
           },
           {
             "node_id": "0",
@@ -713,12 +686,96 @@
             "vehicle_type_id": null
           },
           {
-            "node_id": "11",
-            "event": "charge",
+            "node_id": "3",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "0",
+            "event": "depot",
             "charge_amount": null,
             "charge_technology": null,
             "target_soc": null,
             "vehicle_type_id": "EV0"
+          }
+        ],
+        [
+          {
+            "node_id": "0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV0"
+          },
+          {
+            "node_id": "12",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": "fast",
+            "target_soc": 14916.717396677577,
+            "vehicle_type_id": "EV0"
+          },
+          {
+            "node_id": "1",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "6",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "12",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": "fast",
+            "target_soc": 12026.684524383823,
+            "vehicle_type_id": "EV0"
+          },
+          {
+            "node_id": "0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV0"
+          }
+        ],
+        [
+          {
+            "node_id": "0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV0"
+          },
+          {
+            "node_id": "7",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "9",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
           },
           {
             "node_id": "4",
@@ -729,12 +786,12 @@
             "vehicle_type_id": null
           },
           {
-            "node_id": "7",
-            "event": "visit",
+            "node_id": "11",
+            "event": "charge",
             "charge_amount": null,
-            "charge_technology": null,
-            "target_soc": null,
-            "vehicle_type_id": null
+            "charge_technology": "fast",
+            "target_soc": 8671.651462082831,
+            "vehicle_type_id": "EV0"
           },
           {
             "node_id": "0",
@@ -752,22 +809,19 @@
       "family": "montoya",
       "instance_id": "tc0c10s3cf1",
       "seed": 7,
-      "feasible": false,
-      "objective": 19.067079030031493,
+      "feasible": true,
+      "objective": 31.33526935652257,
       "objective_key": [
-        19.067079030031493
+        31.33526935652257
       ],
-      "vehicles": 2,
-      "distance": 513.1916241646372,
-      "duration": 19.067079030031493,
-      "runtime_s": 1.1170906000188552,
-      "first_fault": "BATTERY: battery_arrival=-697.756586 battery_departure=-697.756586",
-      "violation_families": [
-        "BATTERY",
-        "DURATION"
-      ],
+      "vehicles": 5,
+      "distance": 1001.4073892049722,
+      "duration": 31.33526935652257,
+      "runtime_s": 2.1521227000048384,
+      "first_fault": "OK: feasible",
+      "violation_families": [],
       "unserved": 0,
-      "charging_visits": 3,
+      "charging_visits": 5,
       "routes": [
         [
           {
@@ -795,23 +849,33 @@
             "vehicle_type_id": null
           },
           {
-            "node_id": "9",
-            "event": "visit",
+            "node_id": "0",
+            "event": "depot",
             "charge_amount": null,
             "charge_technology": null,
             "target_soc": null,
-            "vehicle_type_id": null
-          },
+            "vehicle_type_id": "EV0"
+          }
+        ],
+        [
           {
-            "node_id": "11",
-            "event": "charge",
+            "node_id": "0",
+            "event": "depot",
             "charge_amount": null,
             "charge_technology": null,
             "target_soc": null,
             "vehicle_type_id": "EV0"
           },
           {
-            "node_id": "3",
+            "node_id": "12",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": "fast",
+            "target_soc": 15394.386356097104,
+            "vehicle_type_id": "EV0"
+          },
+          {
+            "node_id": "10",
             "event": "visit",
             "charge_amount": null,
             "charge_technology": null,
@@ -822,33 +886,9 @@
             "node_id": "12",
             "event": "charge",
             "charge_amount": null,
-            "charge_technology": null,
-            "target_soc": null,
+            "charge_technology": "fast",
+            "target_soc": 12026.684524383823,
             "vehicle_type_id": "EV0"
-          },
-          {
-            "node_id": "1",
-            "event": "visit",
-            "charge_amount": null,
-            "charge_technology": null,
-            "target_soc": null,
-            "vehicle_type_id": null
-          },
-          {
-            "node_id": "6",
-            "event": "visit",
-            "charge_amount": null,
-            "charge_technology": null,
-            "target_soc": null,
-            "vehicle_type_id": null
-          },
-          {
-            "node_id": "10",
-            "event": "visit",
-            "charge_amount": null,
-            "charge_technology": null,
-            "target_soc": null,
-            "vehicle_type_id": null
           },
           {
             "node_id": "0",
@@ -877,12 +917,96 @@
             "vehicle_type_id": null
           },
           {
-            "node_id": "11",
-            "event": "charge",
+            "node_id": "3",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "0",
+            "event": "depot",
             "charge_amount": null,
             "charge_technology": null,
             "target_soc": null,
             "vehicle_type_id": "EV0"
+          }
+        ],
+        [
+          {
+            "node_id": "0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV0"
+          },
+          {
+            "node_id": "12",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": "fast",
+            "target_soc": 14916.717396677577,
+            "vehicle_type_id": "EV0"
+          },
+          {
+            "node_id": "1",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "6",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "12",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": "fast",
+            "target_soc": 12026.684524383823,
+            "vehicle_type_id": "EV0"
+          },
+          {
+            "node_id": "0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV0"
+          }
+        ],
+        [
+          {
+            "node_id": "0",
+            "event": "depot",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV0"
+          },
+          {
+            "node_id": "7",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "9",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
           },
           {
             "node_id": "4",
@@ -893,12 +1017,12 @@
             "vehicle_type_id": null
           },
           {
-            "node_id": "7",
-            "event": "visit",
+            "node_id": "11",
+            "event": "charge",
             "charge_amount": null,
-            "charge_technology": null,
-            "target_soc": null,
-            "vehicle_type_id": null
+            "charge_technology": "fast",
+            "target_soc": 8671.651462082831,
+            "vehicle_type_id": "EV0"
           },
           {
             "node_id": "0",
@@ -923,12 +1047,12 @@
       ],
       "vehicles": 1,
       "distance": 227.0,
-      "duration": 1197.5014999999999,
-      "runtime_s": 12.20681709999917,
+      "duration": 1197.5015,
+      "runtime_s": 12.395342200004961,
       "first_fault": "OK: feasible",
       "violation_families": [],
       "unserved": 0,
-      "charging_visits": 3,
+      "charging_visits": 4,
       "routes": [
         [
           {
@@ -940,18 +1064,10 @@
             "vehicle_type_id": "type_0"
           },
           {
-            "node_id": "4",
-            "event": "visit",
-            "charge_amount": null,
-            "charge_technology": null,
-            "target_soc": null,
-            "vehicle_type_id": null
-          },
-          {
             "node_id": "5",
             "event": "charge",
-            "charge_amount": 27.0,
-            "charge_technology": "1",
+            "charge_amount": null,
+            "charge_technology": null,
             "target_soc": null,
             "vehicle_type_id": "type_0"
           },
@@ -966,7 +1082,7 @@
           {
             "node_id": "5",
             "event": "charge",
-            "charge_amount": 64.0,
+            "charge_amount": 47.0,
             "charge_technology": "1",
             "target_soc": null,
             "vehicle_type_id": "type_0"
@@ -1004,6 +1120,22 @@
             "vehicle_type_id": null
           },
           {
+            "node_id": "5",
+            "event": "charge",
+            "charge_amount": 44.0,
+            "charge_technology": "1",
+            "target_soc": null,
+            "vehicle_type_id": "type_0"
+          },
+          {
+            "node_id": "4",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
             "node_id": "8",
             "event": "depot",
             "charge_amount": null,
@@ -1019,45 +1151,26 @@
       "family": "bezzi",
       "instance_id": "R105-5",
       "seed": 7,
-      "feasible": false,
-      "objective": 0.0,
+      "feasible": true,
+      "objective": 206.0,
       "objective_key": [
-        0.0
+        206.0
       ],
-      "vehicles": 1,
-      "distance": 160.0,
-      "duration": 210.0,
-      "runtime_s": 1.6401482000073884,
-      "first_fault": "CHARGE_POLICY: missing_charge_decisions",
-      "violation_families": [
-        "BATTERY",
-        "CHARGE_POLICY"
-      ],
+      "vehicles": 2,
+      "distance": 206.0,
+      "duration": 298.14,
+      "runtime_s": 7.4581350999942515,
+      "first_fault": "OK: feasible",
+      "violation_families": [],
       "unserved": 0,
-      "charging_visits": 4,
+      "charging_visits": 3,
       "routes": [
         [
           {
             "node_id": "8",
             "event": "depot",
-            "charge_amount": null,
-            "charge_technology": null,
-            "target_soc": null,
-            "vehicle_type_id": "type_0"
-          },
-          {
-            "node_id": "5",
-            "event": "charge",
-            "charge_amount": null,
-            "charge_technology": null,
-            "target_soc": null,
-            "vehicle_type_id": "type_0"
-          },
-          {
-            "node_id": "5",
-            "event": "charge",
-            "charge_amount": null,
-            "charge_technology": null,
+            "charge_amount": 60.0,
+            "charge_technology": "0",
             "target_soc": null,
             "vehicle_type_id": "type_0"
           },
@@ -1080,13 +1193,21 @@
           {
             "node_id": "6",
             "event": "charge",
-            "charge_amount": null,
-            "charge_technology": null,
+            "charge_amount": 34.0,
+            "charge_technology": "1",
             "target_soc": null,
             "vehicle_type_id": "type_0"
           },
           {
-            "node_id": "2",
+            "node_id": "7",
+            "event": "charge",
+            "charge_amount": 33.0,
+            "charge_technology": "1",
+            "target_soc": null,
+            "vehicle_type_id": "type_0"
+          },
+          {
+            "node_id": "0",
             "event": "visit",
             "charge_amount": null,
             "charge_technology": null,
@@ -1094,10 +1215,20 @@
             "vehicle_type_id": null
           },
           {
-            "node_id": "5",
-            "event": "charge",
+            "node_id": "8",
+            "event": "depot",
             "charge_amount": null,
             "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "type_0"
+          }
+        ],
+        [
+          {
+            "node_id": "8",
+            "event": "depot",
+            "charge_amount": 60.0,
+            "charge_technology": "0",
             "target_soc": null,
             "vehicle_type_id": "type_0"
           },
@@ -1110,7 +1241,15 @@
             "vehicle_type_id": null
           },
           {
-            "node_id": "0",
+            "node_id": "7",
+            "event": "charge",
+            "charge_amount": 19.0,
+            "charge_technology": "1",
+            "target_soc": null,
+            "vehicle_type_id": "type_0"
+          },
+          {
+            "node_id": "2",
             "event": "visit",
             "charge_amount": null,
             "charge_technology": null,
@@ -1134,14 +1273,14 @@
       "instance_id": "10-N10",
       "seed": 7,
       "feasible": true,
-      "objective": 27.79,
+      "objective": 27.592,
       "objective_key": [
-        27.79
+        27.592
       ],
       "vehicles": 4,
-      "distance": 1404.0,
-      "duration": 1549.5,
-      "runtime_s": 12.303016699996078,
+      "distance": 1382.4,
+      "duration": 1524.525,
+      "runtime_s": 12.554055599990534,
       "first_fault": "OK: feasible",
       "violation_families": [],
       "unserved": 0,
@@ -1157,15 +1296,7 @@
             "vehicle_type_id": "type_0"
           },
           {
-            "node_id": "6",
-            "event": "visit",
-            "charge_amount": null,
-            "charge_technology": null,
-            "target_soc": null,
-            "vehicle_type_id": null
-          },
-          {
-            "node_id": "4",
+            "node_id": "0",
             "event": "visit",
             "charge_amount": null,
             "charge_technology": null,
@@ -1175,13 +1306,13 @@
           {
             "node_id": "12",
             "event": "charge",
-            "charge_amount": 40.0,
+            "charge_amount": 4.0,
             "charge_technology": "1",
             "target_soc": null,
             "vehicle_type_id": "type_0"
           },
           {
-            "node_id": "0",
+            "node_id": "4",
             "event": "visit",
             "charge_amount": null,
             "charge_technology": null,
@@ -1207,7 +1338,7 @@
             "vehicle_type_id": "type_0"
           },
           {
-            "node_id": "2",
+            "node_id": "3",
             "event": "visit",
             "charge_amount": null,
             "charge_technology": null,
@@ -1215,7 +1346,7 @@
             "vehicle_type_id": null
           },
           {
-            "node_id": "3",
+            "node_id": "2",
             "event": "visit",
             "charge_amount": null,
             "charge_technology": null,
@@ -1241,7 +1372,23 @@
             "vehicle_type_id": "type_0"
           },
           {
-            "node_id": "8",
+            "node_id": "6",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "10",
+            "event": "charge",
+            "charge_amount": 48.0,
+            "charge_technology": "1",
+            "target_soc": null,
+            "vehicle_type_id": "type_0"
+          },
+          {
+            "node_id": "1",
             "event": "visit",
             "charge_amount": null,
             "charge_technology": null,
@@ -1257,14 +1404,6 @@
             "vehicle_type_id": null
           },
           {
-            "node_id": "14",
-            "event": "charge",
-            "charge_amount": 18.0,
-            "charge_technology": "1",
-            "target_soc": null,
-            "vehicle_type_id": "type_0"
-          },
-          {
             "node_id": "19",
             "event": "depot",
             "charge_amount": null,
@@ -1283,7 +1422,15 @@
             "vehicle_type_id": "type_0"
           },
           {
-            "node_id": "1",
+            "node_id": "11",
+            "event": "charge",
+            "charge_amount": 39.0,
+            "charge_technology": "1",
+            "target_soc": null,
+            "vehicle_type_id": "type_0"
+          },
+          {
+            "node_id": "7",
             "event": "visit",
             "charge_amount": null,
             "charge_technology": null,
@@ -1299,20 +1446,12 @@
             "vehicle_type_id": null
           },
           {
-            "node_id": "7",
+            "node_id": "8",
             "event": "visit",
             "charge_amount": null,
             "charge_technology": null,
             "target_soc": null,
             "vehicle_type_id": null
-          },
-          {
-            "node_id": "11",
-            "event": "charge",
-            "charge_amount": 42.0,
-            "charge_technology": "1",
-            "target_soc": null,
-            "vehicle_type_id": "type_0"
           },
           {
             "node_id": "19",
@@ -1339,7 +1478,7 @@
       "vehicles": 2,
       "distance": 267.3289940850671,
       "duration": 1728.8110030239563,
-      "runtime_s": 0.44791620000614785,
+      "runtime_s": 0.4922126999881584,
       "first_fault": "OK: feasible",
       "violation_families": [],
       "unserved": 0,
@@ -1464,67 +1603,17 @@
       "objective": 2.0,
       "objective_key": [
         2.0,
-        213.02536547545287
+        194.70356700717647
       ],
       "vehicles": 2,
-      "distance": 213.02536547545287,
-      "duration": 348.20428060993856,
-      "runtime_s": 0.42270470000221394,
+      "distance": 194.70356700717647,
+      "duration": 343.86369168971765,
+      "runtime_s": 0.4819460000144318,
       "first_fault": "OK: feasible",
       "violation_families": [],
       "unserved": 0,
       "charging_visits": 3,
       "routes": [
-        [
-          {
-            "node_id": "D0",
-            "event": "depot",
-            "charge_amount": null,
-            "charge_technology": null,
-            "target_soc": null,
-            "vehicle_type_id": "EV"
-          },
-          {
-            "node_id": "C71",
-            "event": "pickup",
-            "charge_amount": null,
-            "charge_technology": null,
-            "target_soc": null,
-            "vehicle_type_id": null
-          },
-          {
-            "node_id": "S3",
-            "event": "charge",
-            "charge_amount": null,
-            "charge_technology": null,
-            "target_soc": null,
-            "vehicle_type_id": "EV"
-          },
-          {
-            "node_id": "S9",
-            "event": "charge",
-            "charge_amount": null,
-            "charge_technology": null,
-            "target_soc": null,
-            "vehicle_type_id": "EV"
-          },
-          {
-            "node_id": "C87",
-            "event": "delivery",
-            "charge_amount": null,
-            "charge_technology": null,
-            "target_soc": null,
-            "vehicle_type_id": null
-          },
-          {
-            "node_id": "D0",
-            "event": "depot",
-            "charge_amount": null,
-            "charge_technology": null,
-            "target_soc": null,
-            "vehicle_type_id": "EV"
-          }
-        ],
         [
           {
             "node_id": "D0",
@@ -1582,31 +1671,7 @@
             "target_soc": null,
             "vehicle_type_id": "EV"
           }
-        ]
-      ],
-      "error": ""
-    },
-    {
-      "family": "goeke",
-      "instance_id": "rc105C6",
-      "seed": 7,
-      "feasible": false,
-      "objective": 3.0,
-      "objective_key": [
-        3.0,
-        259.1910622615038
-      ],
-      "vehicles": 3,
-      "distance": 259.1910622615038,
-      "duration": 413.1910841848244,
-      "runtime_s": 0.7888242999906652,
-      "first_fault": "WINDOW: service_start=157.400980 due=146.000000 lateness=11.400980",
-      "violation_families": [
-        "WINDOW"
-      ],
-      "unserved": 0,
-      "charging_visits": 3,
-      "routes": [
+        ],
         [
           {
             "node_id": "D0",
@@ -1617,20 +1682,20 @@
             "vehicle_type_id": "EV"
           },
           {
+            "node_id": "C71",
+            "event": "pickup",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
             "node_id": "S3",
             "event": "charge",
             "charge_amount": null,
             "charge_technology": null,
             "target_soc": null,
             "vehicle_type_id": "EV"
-          },
-          {
-            "node_id": "C36",
-            "event": "pickup",
-            "charge_amount": null,
-            "charge_technology": null,
-            "target_soc": null,
-            "vehicle_type_id": null
           },
           {
             "node_id": "S0",
@@ -1641,7 +1706,7 @@
             "vehicle_type_id": "EV"
           },
           {
-            "node_id": "C82",
+            "node_id": "C87",
             "event": "delivery",
             "charge_amount": null,
             "charge_technology": null,
@@ -1656,7 +1721,29 @@
             "target_soc": null,
             "vehicle_type_id": "EV"
           }
-        ],
+        ]
+      ],
+      "error": ""
+    },
+    {
+      "family": "goeke",
+      "instance_id": "rc105C6",
+      "seed": 7,
+      "feasible": true,
+      "objective": 2.0,
+      "objective_key": [
+        2.0,
+        241.29639187672765
+      ],
+      "vehicles": 2,
+      "distance": 241.29639187672765,
+      "duration": 371.2087066017703,
+      "runtime_s": 0.6283210999972653,
+      "first_fault": "OK: feasible",
+      "violation_families": [],
+      "unserved": 0,
+      "charging_visits": 3,
+      "routes": [
         [
           {
             "node_id": "D0",
@@ -1667,7 +1754,7 @@
             "vehicle_type_id": "EV"
           },
           {
-            "node_id": "C11",
+            "node_id": "C36",
             "event": "pickup",
             "charge_amount": null,
             "charge_technology": null,
@@ -1675,7 +1762,7 @@
             "vehicle_type_id": null
           },
           {
-            "node_id": "S15",
+            "node_id": "S3",
             "event": "charge",
             "charge_amount": null,
             "charge_technology": null,
@@ -1683,7 +1770,7 @@
             "vehicle_type_id": "EV"
           },
           {
-            "node_id": "C22",
+            "node_id": "C82",
             "event": "delivery",
             "charge_amount": null,
             "charge_technology": null,
@@ -1725,6 +1812,38 @@
             "vehicle_type_id": null
           },
           {
+            "node_id": "S9",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
+            "node_id": "C11",
+            "event": "pickup",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C22",
+            "event": "delivery",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "S15",
+            "event": "charge",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": "EV"
+          },
+          {
             "node_id": "D0",
             "event": "depot",
             "charge_amount": null,
@@ -1741,14 +1860,14 @@
       "instance_id": "c101_21",
       "seed": 7,
       "feasible": true,
-      "objective": 4207.6062738032415,
+      "objective": 4211.732785167464,
       "objective_key": [
-        4207.6062738032415
+        4211.732785167464
       ],
       "vehicles": 20,
-      "distance": 3033.3492412617284,
-      "duration": 24672.47851023562,
-      "runtime_s": 20.662989600008586,
+      "distance": 3030.8757504406935,
+      "duration": 24619.250698238277,
+      "runtime_s": 29.365326500002993,
       "first_fault": "OK: feasible",
       "violation_families": [],
       "unserved": 0,
@@ -2012,14 +2131,6 @@
             "vehicle_type_id": null
           },
           {
-            "node_id": "C65",
-            "event": "visit",
-            "charge_amount": null,
-            "charge_technology": null,
-            "target_soc": null,
-            "vehicle_type_id": null
-          },
-          {
             "node_id": "C79",
             "event": "visit",
             "charge_amount": null,
@@ -2059,7 +2170,7 @@
             "charge_amount": null,
             "charge_technology": null,
             "target_soc": null,
-            "vehicle_type_id": "7"
+            "vehicle_type_id": "1"
           },
           {
             "node_id": "C67",
@@ -2067,7 +2178,7 @@
             "charge_amount": null,
             "charge_technology": null,
             "target_soc": null,
-            "vehicle_type_id": "7"
+            "vehicle_type_id": null
           },
           {
             "node_id": "C74",
@@ -2075,7 +2186,7 @@
             "charge_amount": null,
             "charge_technology": null,
             "target_soc": null,
-            "vehicle_type_id": "7"
+            "vehicle_type_id": null
           },
           {
             "node_id": "C62",
@@ -2083,7 +2194,7 @@
             "charge_amount": null,
             "charge_technology": null,
             "target_soc": null,
-            "vehicle_type_id": "7"
+            "vehicle_type_id": null
           },
           {
             "node_id": "C64",
@@ -2091,7 +2202,7 @@
             "charge_amount": null,
             "charge_technology": null,
             "target_soc": null,
-            "vehicle_type_id": "7"
+            "vehicle_type_id": null
           },
           {
             "node_id": "C68",
@@ -2099,7 +2210,7 @@
             "charge_amount": null,
             "charge_technology": null,
             "target_soc": null,
-            "vehicle_type_id": "7"
+            "vehicle_type_id": null
           },
           {
             "node_id": "D0",
@@ -2107,7 +2218,7 @@
             "charge_amount": null,
             "charge_technology": null,
             "target_soc": null,
-            "vehicle_type_id": "7"
+            "vehicle_type_id": "1"
           }
         ],
         [
@@ -2368,6 +2479,14 @@
             "vehicle_type_id": "1"
           },
           {
+            "node_id": "C65",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
             "node_id": "C69",
             "event": "visit",
             "charge_amount": null,
@@ -2401,14 +2520,6 @@
           },
           {
             "node_id": "C72",
-            "event": "visit",
-            "charge_amount": null,
-            "charge_technology": null,
-            "target_soc": null,
-            "vehicle_type_id": null
-          },
-          {
-            "node_id": "C61",
             "event": "visit",
             "charge_amount": null,
             "charge_technology": null,
@@ -2517,6 +2628,14 @@
           },
           {
             "node_id": "C81",
+            "event": "visit",
+            "charge_amount": null,
+            "charge_technology": null,
+            "target_soc": null,
+            "vehicle_type_id": null
+          },
+          {
+            "node_id": "C61",
             "event": "visit",
             "charge_amount": null,
             "charge_technology": null,
@@ -2922,42 +3041,64 @@
     {
       "family": "bezzi",
       "instances_tested": 3,
-      "feasible": 2,
-      "feasibility_rate": 0.6666666666666666,
-      "mean_objective_feasible": 127.395,
-      "mean_runtime_s": 8.716660666667545
+      "feasible": 3,
+      "feasibility_rate": 1.0,
+      "mean_objective_feasible": 153.53066666666666,
+      "mean_objective_key_feasible": [
+        153.53066666666666
+      ],
+      "mean_runtime_s": 10.802510966663249,
+      "note": "objective is the first lexicographic component (vehicles for Schneider/Goeke; recharge cost for Bezzi; duration for Montoya; total cost for Hiermann)"
     },
     {
       "family": "goeke",
       "instances_tested": 3,
-      "feasible": 2,
-      "feasibility_rate": 0.6666666666666666,
+      "feasible": 3,
+      "feasibility_rate": 1.0,
       "mean_objective_feasible": 2.0,
-      "mean_runtime_s": 0.5531483999996757
+      "mean_objective_key_feasible": [
+        2.0,
+        234.44298432299038
+      ],
+      "mean_runtime_s": 0.5341599333332852,
+      "note": "objective is the first lexicographic component (vehicles for Schneider/Goeke; recharge cost for Bezzi; duration for Montoya; total cost for Hiermann)"
     },
     {
       "family": "hiermann",
       "instances_tested": 1,
       "feasible": 1,
       "feasibility_rate": 1.0,
-      "mean_objective_feasible": 4207.6062738032415,
-      "mean_runtime_s": 20.662989600008586
+      "mean_objective_feasible": 4211.732785167464,
+      "mean_objective_key_feasible": [
+        4211.732785167464
+      ],
+      "mean_runtime_s": 29.365326500002993,
+      "note": "objective is the first lexicographic component (vehicles for Schneider/Goeke; recharge cost for Bezzi; duration for Montoya; total cost for Hiermann)"
     },
     {
       "family": "montoya",
       "instances_tested": 2,
-      "feasible": 0,
-      "feasibility_rate": 0.0,
-      "mean_objective_feasible": null,
-      "mean_runtime_s": 1.6129350000119302
+      "feasible": 2,
+      "feasibility_rate": 1.0,
+      "mean_objective_feasible": 31.33526935652257,
+      "mean_objective_key_feasible": [
+        31.33526935652257
+      ],
+      "mean_runtime_s": 2.6847705999971367,
+      "note": "objective is the first lexicographic component (vehicles for Schneider/Goeke; recharge cost for Bezzi; duration for Montoya; total cost for Hiermann)"
     },
     {
       "family": "schneider",
       "instances_tested": 5,
-      "feasible": 4,
-      "feasibility_rate": 0.8,
-      "mean_objective_feasible": 2.0,
-      "mean_runtime_s": 0.5839597199927085
+      "feasible": 5,
+      "feasibility_rate": 1.0,
+      "mean_objective_feasible": 1.8,
+      "mean_objective_key_feasible": [
+        1.8,
+        200.40311177551362
+      ],
+      "mean_runtime_s": 0.5563752199988812,
+      "note": "objective is the first lexicographic component (vehicles for Schneider/Goeke; recharge cost for Bezzi; duration for Montoya; total cost for Hiermann)"
     }
   ]
 }

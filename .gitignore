@@ -19,3 +19,8 @@ _recover_diag.py
 # IDE
 .idea/
 .vscode/
+
+# Ephemeral v2 smoke/pilot run dirs
+results/v2/runs/
+workspace/components/
+

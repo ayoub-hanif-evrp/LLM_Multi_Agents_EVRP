@@ -299,8 +299,10 @@ def _signature_hint(name: str) -> str:
     }.get(name, "def <name>(...):")
 
 
-def unit_test_functions(source: str) -> dict[str, Any]:
-    """Level-A micro checks: signatures exist; construct/repair/improve/solve shapes."""
+def unit_test_functions(source: str, *, wall_clock_s: float = 5.0) -> dict[str, Any]:
+    """Level-A micro checks via subprocess (never exec generated code in-process)."""
+    from evrptw_autolab.sandbox.safe_exec import run_python_source
+
     result: dict[str, Any] = {
         "ok": False,
         "syntax_ok": False,
@@ -328,58 +330,22 @@ def unit_test_functions(source: str) -> dict[str, Any]:
         result["detail"] = f"missing: {missing}"
         return result
 
-    namespace: dict[str, Any] = {}
-    try:
-        exec(compile(source, "<unit_test>", "exec"), namespace, namespace)  # noqa: S102
-    except Exception as error:  # noqa: BLE001
-        result["detail"] = f"import_exec: {error}"
+    exec_result = run_python_source(source, wall_clock_s=wall_clock_s)
+    if exec_result.timed_out:
+        result["detail"] = "timeout"
         return result
-
-    import random
-
-    instance = micro_g1_one_customer()
-    rng = random.Random(0)
-    try:
-        routes = namespace["construct"](instance, rng)
-        result["construct_ok"] = isinstance(routes, list)
-    except Exception as error:  # noqa: BLE001
-        result["detail"] = f"construct: {error}"
+    if exec_result.scan_errors:
+        result["detail"] = exec_result.error or "; ".join(exec_result.scan_errors[:4])
         return result
-    if not result["construct_ok"]:
-        result["detail"] = "construct did not return list"
+    if exec_result.crashed and not exec_result.payload:
+        result["detail"] = f"subprocess: {exec_result.error}"
         return result
-    try:
-        repaired = namespace["repair"](instance, routes, rng)
-        result["repair_ok"] = isinstance(repaired, list)
-    except Exception as error:  # noqa: BLE001
-        result["detail"] = f"repair: {error}"
-        return result
-    try:
-        improved = namespace["improve"](instance, repaired, rng)
-        result["improve_ok"] = isinstance(improved, list)
-    except Exception as error:  # noqa: BLE001
-        result["detail"] = f"improve: {error}"
-        return result
-    try:
-        sol = namespace["solve"](instance, 0, 1.0)
-        if hasattr(sol, "routes"):
-            result["solve_ok"] = True
-        elif isinstance(sol, dict) and "routes" in sol:
-            result["solve_ok"] = True
-        else:
-            result["detail"] = "solve return shape"
-            return result
-    except Exception as error:  # noqa: BLE001
-        result["detail"] = f"solve: {error}"
-        return result
-    result["ok"] = all(
-        [
-            result["construct_ok"],
-            result["repair_ok"],
-            result["improve_ok"],
-            result["solve_ok"],
-        ]
-    )
+    payload = exec_result.payload or {}
+    for key in ("construct_ok", "repair_ok", "improve_ok", "solve_ok", "ok", "detail", "missing"):
+        if key in payload:
+            result[key] = payload[key]
+    if not result.get("detail") and not result.get("ok"):
+        result["detail"] = payload.get("detail") or exec_result.error or "unit failed"
     return result
 
 

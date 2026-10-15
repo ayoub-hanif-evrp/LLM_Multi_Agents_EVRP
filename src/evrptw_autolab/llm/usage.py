@@ -29,6 +29,10 @@ class LLMUsage:
     repair: bool = False
     model_tag: str | None = None
     reasoning_effort: str | None = None
+    thinking_chars: int = 0
+    content_empty: bool = False
+    ollama_version: str | None = None
+    num_ctx: int | None = None
 
     def as_dict(self) -> dict[str, Any]:
         return asdict(self)

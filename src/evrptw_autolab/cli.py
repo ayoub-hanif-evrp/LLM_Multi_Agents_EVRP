@@ -1,4 +1,4 @@
-"""VoltForge CLI: validate data and list local models."""
+"""VoltForge CLI: validate data, list models, audit datasets."""
 from __future__ import annotations
 
 from pathlib import Path
@@ -13,7 +13,9 @@ from evrptw_autolab.problem.schneider import SCHNEIDER_ROOT, discover_instances
 
 app = typer.Typer(no_args_is_help=True, add_completion=False)
 models_app = typer.Typer(no_args_is_help=True, help="Inspect configured LLM model profiles.")
+datasets_app = typer.Typer(no_args_is_help=True, help="Dataset registry and audit.")
 app.add_typer(models_app, name="models")
+app.add_typer(datasets_app, name="datasets")
 ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -38,6 +40,39 @@ def models_list() -> None:
         status = availability(profile, ollama)
         flag = "SKIPPED_NOT_INSTALLED" if status == SKIPPED_NOT_INSTALLED else status
         typer.echo(f"{profile.id:20s} {profile.model:24s} {flag}")
+
+
+@models_app.command("smoke")
+def models_smoke(
+    model: str = typer.Option(..., "--model", help="Exact Ollama model tag, e.g. qwen3-coder:30b"),
+) -> None:
+    """Fast capability smoke: server up, model installed, /api/show details."""
+    ollama = OllamaBackend()
+    report = ollama.capability_smoke(model)
+    typer.echo(report)
+
+
+@datasets_app.command("audit")
+def datasets_audit(
+    write_manifest: bool = typer.Option(
+        True, "--write-manifest/--no-write-manifest", help="Write results/v2/manifests/dataset_audit.json"
+    ),
+) -> None:
+    """Enumerate and hash all five benchmark families; validate Schneider via legacy loader."""
+    from evrptw_autolab.problem.datasets.registry import audit_all, write_audit_manifest
+
+    audits = audit_all()
+    for audit in audits:
+        typer.echo(
+            f"{audit.family_id:10s} exists={audit.folder_exists} "
+            f"raw={audit.raw_file_count:4d} instances={audit.instance_file_count:4d} "
+            f"status={audit.parse_status} - {audit.parse_note}"
+        )
+        for warning in audit.warnings[:3]:
+            typer.echo(f"  warning: {warning}")
+    if write_manifest:
+        path = write_audit_manifest(audits, ROOT / "results" / "v2" / "manifests" / "dataset_audit.json")
+        typer.echo(f"manifest={path}")
 
 
 def main() -> None:

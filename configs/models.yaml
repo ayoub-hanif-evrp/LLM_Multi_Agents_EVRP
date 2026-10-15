@@ -59,6 +59,22 @@ models:
     timeout_s: 600
     note: Stronger local coding-model anchor — GPT-OSS 20B
 
+  glm_47_flash:
+    enabled: true
+    provider: ollama
+    model: glm-4.7-flash:latest
+    num_ctx: 8192
+    timeout_s: 600
+    note: VoltForge 2.0 primary — GLM-4.7-Flash
+
+  phi4_reasoning_14b:
+    enabled: true
+    provider: ollama
+    model: phi4-reasoning:14b
+    num_ctx: 8192
+    timeout_s: 600
+    note: VoltForge 2.0 optional critic — Phi-4 Reasoning 14B
+
   deepseek_v4_pro:
     enabled: true
     provider: openai_compatible

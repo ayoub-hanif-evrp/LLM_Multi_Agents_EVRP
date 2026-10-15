@@ -1,4 +1,5 @@
 from evrptw_autolab.llm.registry import (
+    SKIPPED_NO_CREDENTIAL,
     SKIPPED_NOT_INSTALLED,
     FakeBackend,
     ModelProfile,
@@ -10,6 +11,7 @@ from evrptw_autolab.llm.registry import (
 from evrptw_autolab.llm.usage import LLMUsage, UsageLog
 
 __all__ = [
+    "SKIPPED_NO_CREDENTIAL",
     "SKIPPED_NOT_INSTALLED",
     "FakeBackend",
     "LLMUsage",

@@ -90,3 +90,27 @@ strong_model_pilot:
   - devstral_small_2_24b
   - qwen3_coder_30b
   - gpt_oss_20b
+structured_synthesis:
+  max_generations: 12
+  archive_size: 8
+  offspring_per_generation: 12
+  max_llm_calls: 400
+  token_ceiling: 2000000
+  max_restarts_per_stage: 0
+  pilot:
+    seeds: [11, 22, 33]
+    profiles:
+      - qwen3_coder_30b
+      - deepseek_v4_pro
+  campaign_profiles:  # after pilot freeze
+      - qwen3_coder_30b
+      - deepseek_v4_pro
+      - gpt6_sol
+      - claude_opus_55
+      - claude_sonnet_55
+      - qwen3_coder_480b_hosted
+  ablations:
+      - full
+      - no_failure_memory
+      - no_population
+      - no_function_by_function

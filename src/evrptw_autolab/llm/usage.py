@@ -28,6 +28,7 @@ class LLMUsage:
     call_index: int | None = None
     repair: bool = False
     model_tag: str | None = None
+    reasoning_effort: str | None = None
 
     def as_dict(self) -> dict[str, Any]:
         return asdict(self)

@@ -1,15 +1,14 @@
-"""Filesystem registry and audit for the five EVRP benchmark families.
-
-Milestone 2 vertical slice: enumerate, hash, classify format. Full mathematical
-parsers land in subsequent milestones; unsupported parse status is explicit.
-"""
+"""Filesystem registry and audit for the five EVRP benchmark families."""
 from __future__ import annotations
 
 import hashlib
 import json
+from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Literal
+
+from evrptw_autolab.problem.v2.types import ProblemSpecV2
 
 ParseStatus = Literal["validated", "inventory_only", "unsupported", "failed"]
 
@@ -49,8 +48,8 @@ DATASET_SPECS: tuple[DatasetSpec, ...] = (
         folder_name="Bezzi & Ceselli EVRP-MRT",
         publication="Bezzi & Ceselli EVRP-MRT",
         expected_format="xml_multitech",
-        instance_glob="**/*.xml",
-        notes="Multiple recharging technologies; XML+PNG pairs.",
+        instance_glob="**/Instances/*.xml",
+        notes="Multiple recharging technologies; Solutions/ excluded from instance audit.",
     ),
     DatasetSpec(
         family_id="goeke",
@@ -66,7 +65,7 @@ DATASET_SPECS: tuple[DatasetSpec, ...] = (
         publication="Hiermann et al. 2016/2017 H2E-FTW set 1",
         expected_format="solomon_het_txt",
         instance_glob="*.txt",
-        notes="Heterogeneous fleet attributes; per-station rechargingrate column.",
+        notes="Heterogeneous ICEV/PHEV/BEV fleet; never collapse to homogeneous EV.",
     ),
 )
 
@@ -88,6 +87,7 @@ class DatasetAudit:
     expected_format: str
     raw_file_count: int = 0
     instance_file_count: int = 0
+    loaded_count: int = 0
     parse_status: ParseStatus = "inventory_only"
     parse_note: str = ""
     warnings: list[str] = field(default_factory=list)
@@ -110,9 +110,57 @@ def _match_instances(folder: Path, pattern: str) -> list[Path]:
     """Match instance candidates; skip obvious non-instance text files."""
     skip_names = {"readme.txt", "manifest.txt", "license.txt"}
     paths = [p for p in folder.glob(pattern) if p.is_file()]
-    return sorted(
-        p for p in paths if p.name.lower() not in skip_names
-    )
+    return sorted(p for p in paths if p.name.lower() not in skip_names)
+
+
+def _loader_for(family_id: str) -> Callable[[Path], ProblemSpecV2] | None:
+    if family_id == "schneider":
+        from evrptw_autolab.problem.datasets.schneider_v2 import load_schneider_v2
+
+        return load_schneider_v2
+    if family_id == "montoya":
+        from evrptw_autolab.problem.datasets.montoya import load_montoya
+
+        return load_montoya
+    if family_id == "bezzi":
+        from evrptw_autolab.problem.datasets.bezzi import load_bezzi
+
+        return load_bezzi
+    if family_id == "goeke":
+        from evrptw_autolab.problem.datasets.goeke import load_goeke
+
+        return load_goeke
+    if family_id == "hiermann":
+        from evrptw_autolab.problem.datasets.hiermann import load_hiermann
+
+        return load_hiermann
+    return None
+
+
+def _validate_with_loader(
+    audit: DatasetAudit,
+    paths: list[Path],
+    loader: Callable[[Path], ProblemSpecV2],
+    *,
+    expected_family: str,
+) -> None:
+    loaded = 0
+    errors: list[str] = []
+    for path in paths:
+        try:
+            spec = loader(path)
+            if spec.family != expected_family:
+                raise ValueError(f"family mismatch {spec.family!r}")
+            if not spec.nodes or not spec.depot_ids:
+                raise ValueError("empty nodes/depots")
+            loaded += 1
+        except Exception as error:  # noqa: BLE001
+            errors.append(f"{path.name}: {error}")
+    audit.loaded_count = loaded
+    audit.parse_status = "validated" if loaded == len(paths) and loaded > 0 else "failed"
+    audit.parse_note = f"parser loaded {loaded}/{len(paths)} instances as ProblemSpecV2"
+    if errors:
+        audit.warnings.extend(errors[:15])
 
 
 def audit_dataset(spec: DatasetSpec, *, dataset_root: Path | None = None) -> DatasetAudit:
@@ -139,11 +187,24 @@ def audit_dataset(spec: DatasetSpec, *, dataset_root: Path | None = None) -> Dat
     audit.extension_counts = dict(sorted(ext_counts.items(), key=lambda kv: (-kv[1], kv[0])))
 
     instances = _match_instances(folder, spec.instance_glob)
+    # Schneider: enforce frozen 92-instance discover contract for validation set.
+    if spec.family_id == "schneider":
+        from evrptw_autolab.problem.schneider import discover_instances
+
+        try:
+            instances = list(discover_instances(folder / "raw_instances"))
+        except Exception as error:  # noqa: BLE001
+            audit.parse_status = "failed"
+            audit.parse_note = f"Schneider discover failed: {error}"
+            return audit
+
     audit.instance_file_count = len(instances)
-    # Hash only instance candidates (bounded cost); still O(n) over instance set.
     records: list[FileRecord] = []
     for path in instances:
-        rel = str(path.relative_to(folder)).replace("\\", "/")
+        try:
+            rel = str(path.relative_to(folder)).replace("\\", "/")
+        except ValueError:
+            rel = path.name
         records.append(
             FileRecord(
                 relative_path=rel,
@@ -154,46 +215,23 @@ def audit_dataset(spec: DatasetSpec, *, dataset_root: Path | None = None) -> Dat
         )
     audit.instance_files = records
 
-    # Milestone-2 slice: Schneider can reuse legacy loader for a validated count.
-    if spec.family_id == "schneider":
-        try:
-            from evrptw_autolab.problem.schneider import discover_instances, load_instance
+    if audit.instance_file_count == 0:
+        audit.parse_status = "failed"
+        audit.parse_note = "no instance files matched glob"
+        audit.warnings.append("zero instance matches")
+        return audit
 
-            raw_root = folder / "raw_instances"
-            # discover_instances enforces the frozen 92-instance contract.
-            paths = discover_instances(raw_root)
-            loaded = 0
-            errors: list[str] = []
-            for path in paths:
-                try:
-                    load_instance(path)
-                    loaded += 1
-                except Exception as error:  # noqa: BLE001
-                    errors.append(f"{path.name}: {error}")
-            audit.parse_status = "validated" if loaded == len(paths) and loaded > 0 else "failed"
-            audit.parse_note = f"legacy Schneider loader: {loaded}/{len(paths)} loaded"
-            if errors:
-                audit.warnings.extend(errors[:10])
-            extra = sorted(
-                p.name for p in raw_root.glob("*.txt") if p.name.lower() != "readme.txt"
-            )
-            if len(extra) != len(paths):
-                audit.warnings.append(
-                    f"raw_instances txt count={len(extra)} vs discover contract={len(paths)}"
-                )
-        except Exception as error:  # noqa: BLE001
-            audit.parse_status = "failed"
-            audit.parse_note = f"Schneider audit error: {error}"
-    else:
-        audit.parse_status = "inventory_only"
-        audit.parse_note = (
-            "files enumerated and hashed; mathematical parser not yet implemented "
-            f"for {spec.family_id} (Milestone 2 continuation)"
-        )
-        if audit.instance_file_count == 0:
-            audit.parse_status = "failed"
-            audit.parse_note = "no instance files matched glob"
-            audit.warnings.append("zero instance matches")
+    loader = _loader_for(spec.family_id)
+    if loader is None:
+        audit.parse_status = "unsupported"
+        audit.parse_note = f"no parser registered for {spec.family_id}"
+        return audit
+
+    try:
+        _validate_with_loader(audit, instances, loader, expected_family=spec.family_id)
+    except Exception as error:  # noqa: BLE001
+        audit.parse_status = "failed"
+        audit.parse_note = f"audit error: {error}"
     return audit
 
 
@@ -214,11 +252,11 @@ def write_audit_manifest(
             a.family_id: {
                 "raw_files": a.raw_file_count,
                 "instance_files": a.instance_file_count,
+                "loaded": a.loaded_count,
                 "parse_status": a.parse_status,
             }
             for a in audits
         },
     }
-    # Drop per-file hashes from the short console summary file variant? Keep full.
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return path

@@ -565,7 +565,8 @@
           "size_bytes": 1053
         }
       ],
-      "parse_note": "legacy Schneider loader: 92/92 loaded",
+      "loaded_count": 92,
+      "parse_note": "parser loaded 92/92 instances as ProblemSpecV2",
       "parse_status": "validated",
       "publication": "Schneider et al. 2014 EVRPTW",
       "raw_file_count": 94,
@@ -1303,8 +1304,9 @@
           "size_bytes": 18817
         }
       ],
-      "parse_note": "files enumerated and hashed; mathematical parser not yet implemented for montoya (Milestone 2 continuation)",
-      "parse_status": "inventory_only",
+      "loaded_count": 120,
+      "parse_note": "parser loaded 120/120 instances as ProblemSpecV2",
+      "parse_status": "validated",
       "publication": "Montoya et al. 2017 E-VRP-NL",
       "raw_file_count": 121,
       "warnings": []
@@ -1319,7 +1321,7 @@
       "family_id": "bezzi",
       "folder_exists": true,
       "folder_name": "Bezzi & Ceselli EVRP-MRT",
-      "instance_file_count": 132,
+      "instance_file_count": 66,
       "instance_files": [
         {
           "extension": ".xml",
@@ -1539,222 +1541,6 @@
         },
         {
           "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-C101-10.xml",
-          "sha256": "ae00fa9e80762373bd23173c8fc1d423360deb0ea116a84994a106d0dc1263c7",
-          "size_bytes": 467
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-C101-5.xml",
-          "sha256": "2b121500006c144739fffa5840c3d3ce347e9b71a8be04e9263f8ddf543222ed",
-          "size_bytes": 324
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-C103-15.xml",
-          "sha256": "315c1f79861312c4ca58fb5095a37e33940fc0b401880c8fac53d90e19a674a4",
-          "size_bytes": 557
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-C103-5.xml",
-          "sha256": "db89edbfeb58ad48ba286cc542ef545d513f5bffa260a9ff0472bf6c9817b77b",
-          "size_bytes": 278
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-C104-10.xml",
-          "sha256": "3deba39ea68be628c6c2f96dfba01c524b9d0070e3b4f809ecb9f2dceb0e83cb",
-          "size_bytes": 466
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-C106-15.xml",
-          "sha256": "642f69ad181cebf139127b23df4ad36ad6c8111962963210456a5ed1741b2bad",
-          "size_bytes": 539
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-C202-10.xml",
-          "sha256": "d8123d0be82cd214fc6845d085aa55850c865682bfaa093f88a4d0627d816366",
-          "size_bytes": 404
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-C202-15.xml",
-          "sha256": "306c2c3914b15a97d70f06d76aee3d04d73d40ecd06c17efc07c313aa4560c25",
-          "size_bytes": 511
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-C205-10.xml",
-          "sha256": "c9e8d6749a698adb0e7d8627c8579cb3186f0a578f5ac92513a23ba305119b46",
-          "size_bytes": 449
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-C206-5.xml",
-          "sha256": "e08cd5c1de655e1c5c03515ffd4f61fe522cd6000b80e73ffdfa3829b6354cbc",
-          "size_bytes": 278
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-C208-15.xml",
-          "sha256": "19bd2fbb0389a07a4803eaa33035df541c499f61ebba615abc4586e56f9c1f79",
-          "size_bytes": 494
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-C208-5.xml",
-          "sha256": "6fdbd1d2ed9b306d7bab9daa74f21276973e71c1d1732d453684bd29d73cdc3d",
-          "size_bytes": 278
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-R102-10.xml",
-          "sha256": "838d1e116692d7a3cfc7083a89e88b75ae646efa177ea90e699fdc63d65a97b6",
-          "size_bytes": 449
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-R102-15.xml",
-          "sha256": "1f9a433044aaf535692ed8ccc4806fc685f3e90955e099035216e0758de82003",
-          "size_bytes": 655
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-R103-10.xml",
-          "sha256": "b100ad8a6b433770863e7fd4fc959791f44b20974836452cb15cbce76b216076",
-          "size_bytes": 448
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-R104-5.xml",
-          "sha256": "b93e590b88e08749519fc1d887a474d52906f1bc1351122de6c87c7b8372b662",
-          "size_bytes": 338
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-R105-15.xml",
-          "sha256": "d7700d8416ebc21737dcff464f82ade19ef3ee485758df0a8bbd8d7de791311a",
-          "size_bytes": 654
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-R105-5.xml",
-          "sha256": "cbc8d4348ee8e775afef0127d1743d341d5f5fc2cb5ce8218e00cca307633d12",
-          "size_bytes": 356
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-R201-10.xml",
-          "sha256": "0f056e9d04e6bf5be467b19f7401b04295f1f2f8ce71099bcb1680dd0846f980",
-          "size_bytes": 386
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-R202-15.xml",
-          "sha256": "a781449b062c9a3e5fd8f0626b74af92a47c772462319daf690a0e89f597d536",
-          "size_bytes": 512
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-R202-5.xml",
-          "sha256": "f19df3569f7ac063307c1ad49ae960ec0362c811c4258703adefa85ddad7c328",
-          "size_bytes": 295
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-R203-10.xml",
-          "sha256": "452295ac8bcebdec5693ddd0f8538267fcdcfd6b186f09136f3b4c310319f667",
-          "size_bytes": 422
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-R203-5.xml",
-          "sha256": "99e09881d0c58f4f4cff59575985d3b07c28036b2c35bc3b98bc99e0f3e97d12",
-          "size_bytes": 295
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-R209-15.xml",
-          "sha256": "47ee3263338197c18eb6433b156ec5d8c168c61a1aad8c8a0d687a2b58cc93e2",
-          "size_bytes": 494
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-RC102-10.xml",
-          "sha256": "1874a3f139e9da61de64df79d22de66dfa6bdcfdf4f90b7e274a4fdb9ce1cb9b",
-          "size_bytes": 567
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-RC103-15.xml",
-          "sha256": "89bf88196cd94799de76ac6fe8160668ab4daf337d15168658c0242060c37bd2",
-          "size_bytes": 657
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-RC105-5.xml",
-          "sha256": "06414f920de3a8bd96ca42d6747489ce08492423ad2ab1a1aee4cee4ebdf919b",
-          "size_bytes": 358
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-RC108-10.xml",
-          "sha256": "171fe3cc5480ba98fd3a339cc90ca949746a1bdbb29b7ceed9aeb03e5f9a690c",
-          "size_bytes": 548
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-RC108-15.xml",
-          "sha256": "e0a3eff1aeb52328fba36229c991222e7b14c7a94995c68e515478e2a0d6fa5f",
-          "size_bytes": 655
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-RC108-5.xml",
-          "sha256": "68c885f06062b46e5b8529396351678194e4c6cf09ded143866f02bd6dc1feaf",
-          "size_bytes": 375
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-RC201-10.xml",
-          "sha256": "abac14f118a969a9faad6a4c677507ffc4722d3590b9850a84272f5d604ad028",
-          "size_bytes": 387
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-RC202-15.xml",
-          "sha256": "4c95942d50aaf2ce6880bb3e29fd974323594a52cfc65c6b915953495f973ece",
-          "size_bytes": 496
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-RC204-15.xml",
-          "sha256": "ef9ca8df6eb3dc723e16ae1c7f4d367593dffe3dd9ee3d9f6942bd18bfb0c1ab",
-          "size_bytes": 514
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-RC204-5.xml",
-          "sha256": "2f244a3106e19e42d1d0356f10cb13032d8b0046e864e2339410882bea123147",
-          "size_bytes": 296
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-RC205-10.xml",
-          "sha256": "e2afaa7d0b082aa50b5aa812732bc13b6ef47ea0c3773fedb63d34848d4edd19",
-          "size_bytes": 468
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_A/Solutions/SOL-RC208-5.xml",
-          "sha256": "0b50b341b0dc5ce70414f76a9de1504b26a1e6d681cc2b765acfef8475e16193",
-          "size_bytes": 279
-        },
-        {
-          "extension": ".xml",
           "relative_path": "Dataset_B/Instances/10-N10.xml",
           "sha256": "2e11761f6e6400fe06789442b72d35c2cd3a86f927a1cd9222fe6b308a25e8f9",
           "size_bytes": 28625
@@ -1875,126 +1661,6 @@
         },
         {
           "extension": ".xml",
-          "relative_path": "Dataset_B/Solutions/SOL-10-N10.xml",
-          "sha256": "ef39a5349faf5ca0f14af7fc4d809b9771d7bcd0d2afc7fdabf078fbd17c40c7",
-          "size_bytes": 616
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_B/Solutions/SOL-11-N10.xml",
-          "sha256": "ca4d01b40119c5a351d607736f9b16c15ebd71cb4e1e748036d433401b119044",
-          "size_bytes": 616
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_B/Solutions/SOL-12-N10.xml",
-          "sha256": "9ae6219ec5262f6bec21f0ef7fa6e40c19a73e18caef2a8ad92d7d973b54561c",
-          "size_bytes": 615
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_B/Solutions/SOL-13-N10.xml",
-          "sha256": "de3a8e1eb6290431f391109db82b10a915b397ea55e72d893dc6a23748eebf72",
-          "size_bytes": 616
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_B/Solutions/SOL-14-N10.xml",
-          "sha256": "0519735d2607378a38baa25769be5de0f8925e2ce0196304a08172c1f71c795a",
-          "size_bytes": 717
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_B/Solutions/SOL-15-N10.xml",
-          "sha256": "bdbe61821e85b5e702909652cfac05b6221b6208242c34e1a3be94e2f481cca5",
-          "size_bytes": 535
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_B/Solutions/SOL-16-N10.xml",
-          "sha256": "ee9e5a7258cd3d78d7f111320ddf3a18a2309736f9f7f7ecc911d79a7bee40df",
-          "size_bytes": 598
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_B/Solutions/SOL-17-N10.xml",
-          "sha256": "1d2861e3a88eb5c6d6c0cfa438bbb412c857dba2cc3f2cc17af685e860995388",
-          "size_bytes": 636
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_B/Solutions/SOL-18-N10.xml",
-          "sha256": "d5b78a15025053fdcfd5f67f52688dddd09044bfec4e4c3f3d3468a5b25fac8b",
-          "size_bytes": 615
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_B/Solutions/SOL-19-N10.xml",
-          "sha256": "4af5dfdc89e3c2d30a4577c50b568dc3975063325b96eccdc7997a137c72b171",
-          "size_bytes": 598
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_B/Solutions/SOL-20-N10.xml",
-          "sha256": "91749353e7619515a85f44198730086fcc3033596b582c379b1d55c30623f91a",
-          "size_bytes": 598
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_B/Solutions/SOL-21-N10.xml",
-          "sha256": "6fd7098b7235714d3c08d473ecd3b571171c42ecb53a8b97f41ac8139264530d",
-          "size_bytes": 536
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_B/Solutions/SOL-22-N10.xml",
-          "sha256": "65c4fcaf297d2ddff06c89931cdbf16e82514d0b51e36155df78b4cd98cd98b4",
-          "size_bytes": 599
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_B/Solutions/SOL-23-N10.xml",
-          "sha256": "754129c83d7f0fb9df2cc6169aa022040d10dc7e2fbbdb2e1dac5830ed21ed45",
-          "size_bytes": 554
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_B/Solutions/SOL-24-N10.xml",
-          "sha256": "f4e71b318b56962f3b2a30d6e284e89f67ed44a04bc7f35ac820ac475ab00da5",
-          "size_bytes": 618
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_B/Solutions/SOL-25-N10.xml",
-          "sha256": "6f37e85acb8f9b59f19aa4943cb28e8de1e5d4cd77e6753fbca7b885e78f2c85",
-          "size_bytes": 555
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_B/Solutions/SOL-26-N10.xml",
-          "sha256": "e99a346417d0331d2078b310d9aa1a7776d8f5aa6b593be8d448ccb9464c1f33",
-          "size_bytes": 599
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_B/Solutions/SOL-27-N10.xml",
-          "sha256": "90690b1ec1c65ee66122679e39053180fd4866410462c7b33b5af223e94aebbf",
-          "size_bytes": 618
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_B/Solutions/SOL-28-N10.xml",
-          "sha256": "4a5828905d961a52e5cab882626ad22a65b1c6d54e2511001c49601d38c7605e",
-          "size_bytes": 618
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_B/Solutions/SOL-29-N10.xml",
-          "sha256": "9606b66bee689a1b31f9c75c4613383e0eb998307578a95fdac16acea181f8f9",
-          "size_bytes": 618
-        },
-        {
-          "extension": ".xml",
           "relative_path": "Dataset_C/Instances/C0-N030.xml",
           "sha256": "a3940b33b783c71795019bc822a71acb0749d8435153d6305d7d42e2e223226b",
           "size_bytes": 86190
@@ -2052,70 +1718,11 @@
           "relative_path": "Dataset_C/Instances/C9-N030.xml",
           "sha256": "a63db592bec33f581062d11fc789f5a28414f0a1f425695c52ac861ee7769333",
           "size_bytes": 86230
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_C/Solutions/SOL-C0-N030.xml",
-          "sha256": "d5f2a29ffae89e3f4b36b40181a8bf31fe11d76eb31e1b5381a6db9519c417f7",
-          "size_bytes": 1202
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_C/Solutions/SOL-C1-N030.xml",
-          "sha256": "39215149ff73d7d8f30fb6800d27aee864ab12c021ab14b43a345887f7c8100c",
-          "size_bytes": 1159
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_C/Solutions/SOL-C2-N030.xml",
-          "sha256": "a70e963fbcd518cd95c2c171bb0db10b55149797a5bb10faa5b0c3309b5920b5",
-          "size_bytes": 1140
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_C/Solutions/SOL-C3-N030.xml",
-          "sha256": "b9ef1015e36489c991e8fec2a516102f4a7600c8f184c974ff54ab3b5d35f73f",
-          "size_bytes": 1159
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_C/Solutions/SOL-C4-N030.xml",
-          "sha256": "50739ff12415a76f1f3d060a404030cdbd4815ed631eceeb7173fc5da2430bb3",
-          "size_bytes": 1221
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_C/Solutions/SOL-C5-N030.xml",
-          "sha256": "1a2849e34ae7ca1c09edaddad510cc68bc70d87dc9d25c27b94d39c2fd5596ff",
-          "size_bytes": 1102
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_C/Solutions/SOL-C6-N030.xml",
-          "sha256": "23b4ec238403d732d6b8ca06de94a66a173aee5bfb302b4c5644f62c12e6eb05",
-          "size_bytes": 1140
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_C/Solutions/SOL-C7-N030.xml",
-          "sha256": "c235c18569b414d276f9d82636060cc3d80a8b79963ab1e6eac3ee2516534b25",
-          "size_bytes": 1102
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_C/Solutions/SOL-C8-N030.xml",
-          "sha256": "5b2a2a08b1ca0b76685f987d236b316a374a1b5e6a1c7128d338c0c2ead562ce",
-          "size_bytes": 1121
-        },
-        {
-          "extension": ".xml",
-          "relative_path": "Dataset_C/Solutions/SOL-C9-N030.xml",
-          "sha256": "16d60152aa99bfe3c46418c4c019275c43d05ed9559f328d01f068a219bdcb8e",
-          "size_bytes": 1121
         }
       ],
-      "parse_note": "files enumerated and hashed; mathematical parser not yet implemented for bezzi (Milestone 2 continuation)",
-      "parse_status": "inventory_only",
+      "loaded_count": 66,
+      "parse_note": "parser loaded 66/66 instances as ProblemSpecV2",
+      "parse_status": "validated",
       "publication": "Bezzi & Ceselli EVRP-MRT",
       "raw_file_count": 265,
       "warnings": []
@@ -2683,8 +2290,9 @@
           "size_bytes": 1451
         }
       ],
-      "parse_note": "files enumerated and hashed; mathematical parser not yet implemented for goeke (Milestone 2 continuation)",
-      "parse_status": "inventory_only",
+      "loaded_count": 92,
+      "parse_note": "parser loaded 92/92 instances as ProblemSpecV2",
+      "parse_status": "validated",
       "publication": "Goeke PDPTW-EV",
       "raw_file_count": 93,
       "warnings": []
@@ -3036,8 +2644,9 @@
           "size_bytes": 6409
         }
       ],
-      "parse_note": "files enumerated and hashed; mathematical parser not yet implemented for hiermann (Milestone 2 continuation)",
-      "parse_status": "inventory_only",
+      "loaded_count": 56,
+      "parse_note": "parser loaded 56/56 instances as ProblemSpecV2",
+      "parse_status": "validated",
       "publication": "Hiermann et al. 2016/2017 H2E-FTW set 1",
       "raw_file_count": 57,
       "warnings": []
@@ -3046,27 +2655,32 @@
   "protocol": "voltforge-v2-dataset-audit",
   "summary": {
     "bezzi": {
-      "instance_files": 132,
-      "parse_status": "inventory_only",
+      "instance_files": 66,
+      "loaded": 66,
+      "parse_status": "validated",
       "raw_files": 265
     },
     "goeke": {
       "instance_files": 92,
-      "parse_status": "inventory_only",
+      "loaded": 92,
+      "parse_status": "validated",
       "raw_files": 93
     },
     "hiermann": {
       "instance_files": 56,
-      "parse_status": "inventory_only",
+      "loaded": 56,
+      "parse_status": "validated",
       "raw_files": 57
     },
     "montoya": {
       "instance_files": 120,
-      "parse_status": "inventory_only",
+      "loaded": 120,
+      "parse_status": "validated",
       "raw_files": 121
     },
     "schneider": {
       "instance_files": 92,
+      "loaded": 92,
       "parse_status": "validated",
       "raw_files": 94
     }

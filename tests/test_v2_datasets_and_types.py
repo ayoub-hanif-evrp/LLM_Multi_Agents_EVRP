@@ -20,20 +20,18 @@ def test_dataset_audit_inventory_counts() -> None:
     audits = {a.family_id: a for a in audit_all()}
     assert audits["schneider"].folder_exists
     assert audits["schneider"].instance_file_count == 92
-    assert audits["schneider"].parse_status == "validated"
     assert audits["montoya"].instance_file_count == 120
-    assert audits["montoya"].parse_status == "inventory_only"
-    assert audits["bezzi"].instance_file_count == 132
-    # Goeke/Hiermann folders include a readme.txt excluded from instance counts.
+    # Bezzi: only Instances/*.xml (Solutions excluded).
+    assert audits["bezzi"].instance_file_count == 66
     assert audits["goeke"].instance_file_count == 92
     assert audits["goeke"].raw_file_count == 93
     assert audits["hiermann"].instance_file_count == 56
     assert audits["hiermann"].raw_file_count == 57
-    # Non-Schneider families must not pretend to be fully parsed yet.
-    for fam in ("montoya", "bezzi", "goeke", "hiermann"):
-        assert audits[fam].parse_status in {"inventory_only", "unsupported", "failed"}
+    for fam in ("schneider", "montoya", "bezzi", "goeke", "hiermann"):
+        assert audits[fam].parse_status == "validated", audits[fam].parse_note
         assert audits[fam].instance_files
         assert audits[fam].instance_files[0].sha256
+        assert audits[fam].loaded_count == audits[fam].instance_file_count
 
 
 def test_schneider_audit_hashes_stable() -> None:

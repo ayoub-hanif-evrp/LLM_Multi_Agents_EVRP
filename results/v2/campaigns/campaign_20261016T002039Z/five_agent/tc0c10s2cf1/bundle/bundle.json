@@ -1,0 +1,10 @@
+{
+  "owners": {
+    "insertion_score": "routing",
+    "station_score": "charging"
+  },
+  "kinds": [
+    "insertion_score",
+    "station_score"
+  ]
+}

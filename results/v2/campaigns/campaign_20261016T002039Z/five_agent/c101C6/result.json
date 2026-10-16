@@ -1,0 +1,219 @@
+{
+  "experiment": "component_synthesis",
+  "family": "goeke",
+  "instance_id": "c101C6",
+  "seed": 7,
+  "model": "qwen3-coder:30b",
+  "feasible": true,
+  "objective": 2.0,
+  "objective_key": [
+    2.0,
+    267.3289940850671
+  ],
+  "vehicles": 2,
+  "distance": 267.3289940850671,
+  "fault_family": "OK",
+  "detail": "feasible",
+  "llm_calls": 5,
+  "llm_tokens": 1881,
+  "http_attempts": 5,
+  "rounds": 1,
+  "critic_verdict": "ACCEPT",
+  "load_errors": [
+    "removal_priority: bind_failed: function body must be a single return"
+  ],
+  "bundle_dir": "C:\\Users\\ayoub\\Desktop\\LLM_Multi_Agents_EVRP-main\\results\\v2\\campaigns\\campaign_20261016T002039Z\\five_agent\\c101C6\\bundle",
+  "routes": [
+    [
+      "D0",
+      "S5",
+      "C12",
+      "C30",
+      "S5",
+      "C101",
+      "C100",
+      "D0"
+    ],
+    [
+      "D0",
+      "C64",
+      "S0",
+      "C85",
+      "D0"
+    ]
+  ],
+  "wall_s": 11.403619799995795,
+  "provenance": [
+    {
+      "role": "architect",
+      "plan": {
+        "summary": "For the classical backbone with GoEke variant capabilities, we need to generate core scoring components that handle time windows, capacity constraints, battery management, and pickup/delivery operations while leveraging Euclidean distances for routing calculations.",
+        "components": [
+          "insertion_score",
+          "station_score",
+          "removal_priority"
+        ],
+        "risks": [
+          "Battery capacity constraints may conflict with time window requirements during insertion decisions",
+          "Partial recharge capabilities could create suboptimal station selection if not properly weighted",
+          "Pickup-delivery operations might increase computational complexity for removal priority calculations"
+        ],
+        "success_criteria": [
+          "feasible on development instance"
+        ],
+        "variant_notes": "The variant supports full and partial recharging with nonlinear charging disabled, which simplifies battery modeling. Time windows and capacity constraints are mandatory, while heterogeneous fleet and hybrid vehicles are excluded. Station revisits are allowed, which impacts insertion scoring logic."
+      }
+    },
+    {
+      "role": "routing",
+      "component": "insertion_score",
+      "valid": true,
+      "detail": "",
+      "proposal": {
+        "component": "insertion_score",
+        "owner_role": "routing",
+        "code": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\\n    \"\"\"Lower is better. due_time is finite (1e6 means no useful window).\"\"\"\\n    # Base distance component\\n    score = delta_distance\\n    \\n    # Time window penalty - penalize if we're too early or too late\\n    if due_time < 1e6:  # If there's a valid time window\\n        time_penalty = max(0, ready_time - due_time)  # Early arrival penalty\\n        score += time_penalty * 10  # Weight the time penalty\\n    \\n    # Demand capacity penalty - penalize if demand exceeds capacity\\n    if demand > capacity_slack:\\n        score += (demand - capacity_slack) * 100  # Heavy penalty for overcapacity\\n    \\n    return score",
+        "rationale": "The function calculates an insertion score that prioritizes routes with minimal additional distance, proper time window adherence, and capacity constraints. Lower scores indicate better insertions. The scoring considers distance as the primary factor, adds penalties for time window violations (especially early arrivals), and heavily penalizes over-capacity insertions.",
+        "mechanism": "The function combines delta_distance with penalties for time window violations and capacity overuse. Time window penalties are applied when due_time is finite, and demand capacity is checked against available slack. All components are weighted to prioritize distance minimization while ensuring feasibility."
+      },
+      "attribution": {
+        "role": "routing",
+        "component": "insertion_score",
+        "model": "qwen3-coder:30b",
+        "generated_code": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\\n    \"\"\"Lower is better. due_time is finite (1e6 means no useful window).\"\"\"\\n    # Base distance component\\n    score = delta_distance\\n    \\n    # Time window penalty - penalize if we're too early or too late\\n    if due_time < 1e6:  # If there's a valid time window\\n        time_penalty = max(0, ready_time - due_time)  # Early arrival penalty\\n        score += time_penalty * 10  # Weight the time penalty\\n    \\n    # Demand capacity penalty - penalize if demand exceeds capacity\\n    if demand > capacity_slack:\\n        score += (demand - capacity_slack) * 100  # Heavy penalty for overcapacity\\n    \\n    return score",
+        "extract_status": "ok",
+        "validation_ok": true,
+        "validation_detail": "",
+        "fallback_reason": "validation:syntax_error: unexpected character after line continuation character (<unknown>, line 1)",
+        "fallback_used": true,
+        "llm_generated": false,
+        "executed_source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    \"\"\"Lower is better. Single arithmetic return for the bounded interpreter.\"\"\"\n    return delta_distance + (0.0 if due_time >= 1000000.0 else (0.01 * due_time + 1.0 / max(due_time - ready_time, 1.0))) + (0.0 if capacity_slack >= demand else 1000000.0)\n",
+        "executed_source_hash": "1e87fb83dd434a35",
+        "is_default_heuristic": true
+      }
+    },
+    {
+      "role": "charging",
+      "component": "station_score",
+      "valid": true,
+      "detail": "",
+      "proposal": {
+        "component": "station_score",
+        "owner_role": "charging",
+        "code": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\\n    \"\"\"Lower is better when choosing a station to insert.\"\"\"\\n    return detour + (1.0 - battery_arrival) * 2.0 + station_rate",
+        "rationale": "The function balances three key factors: detour distance (lower is better), battery arrival level (lower is better, so we penalize high levels), and station rate (lower is better). The formula gives equal weight to each factor with appropriate scaling.",
+        "mechanism": "Weighted sum approach where all components are normalized to contribute positively to the final score, with lower values indicating better station selection."
+      },
+      "attribution": {
+        "role": "charging",
+        "component": "station_score",
+        "model": "qwen3-coder:30b",
+        "generated_code": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\\n    \"\"\"Lower is better when choosing a station to insert.\"\"\"\\n    return detour + (1.0 - battery_arrival) * 2.0 + station_rate",
+        "extract_status": "ok",
+        "validation_ok": true,
+        "validation_detail": "",
+        "fallback_reason": "validation:syntax_error: unexpected character after line continuation character (<unknown>, line 1)",
+        "fallback_used": true,
+        "llm_generated": false,
+        "executed_source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    \"\"\"Lower is better. Prefer reachable stations with short detour.\"\"\"\n    return detour + 0.1 * station_rate + (0.0 if battery_arrival > 0.0 else 1000.0)\n",
+        "executed_source_hash": "bd521b1497c17535",
+        "is_default_heuristic": true
+      }
+    },
+    {
+      "role": "search",
+      "component": "removal_priority",
+      "valid": true,
+      "detail": "",
+      "proposal": {
+        "component": "removal_priority",
+        "owner_role": "search",
+        "code": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    # Normalize due_time to [0,1] range where 0 is earliest and 1 is latest\n    # If no time window (due_time = 1e6), set to 0.5 (middle priority)\n    if due_time >= 1e6:\n        normalized_due_time = 0.5\n    else:\n        normalized_due_time = due_time / 1e6\n    \n    # Combine criteria with weights: due_time (0.4), distance_share (0.4), random (0.2)\n    # Lower due_time means earlier deadline, so higher priority for removal\n    # Higher route_distance_share means more central to routes, so lower priority for removal\n    score = 0.4 * (1 - normalized_due_time) + 0.4 * (1 - route_distance_share) + 0.2 * rng_value\n    \n    return score",
+        "rationale": "The function prioritizes removal of customers based on three factors: time sensitivity (earlier deadlines removed first), route centrality (customers more central to routes kept longer), and randomization for diversification. The scoring system ensures that customers with tight time windows and those less critical to route structure are removed earlier, while maintaining some randomness to avoid getting stuck in local optima.",
+        "mechanism": "The function computes a weighted score combining normalized due time (inverted so earlier deadlines get higher scores), route distance share (inverted so more central customers get lower scores), and a random factor. The final score determines removal priority where higher values mean sooner removal."
+      },
+      "attribution": {
+        "role": "search",
+        "component": "removal_priority",
+        "model": "qwen3-coder:30b",
+        "generated_code": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    # Normalize due_time to [0,1] range where 0 is earliest and 1 is latest\n    # If no time window (due_time = 1e6), set to 0.5 (middle priority)\n    if due_time >= 1e6:\n        normalized_due_time = 0.5\n    else:\n        normalized_due_time = due_time / 1e6\n    \n    # Combine criteria with weights: due_time (0.4), distance_share (0.4), random (0.2)\n    # Lower due_time means earlier deadline, so higher priority for removal\n    # Higher route_distance_share means more central to routes, so lower priority for removal\n    score = 0.4 * (1 - normalized_due_time) + 0.4 * (1 - route_distance_share) + 0.2 * rng_value\n    \n    return score",
+        "extract_status": "ok",
+        "validation_ok": true,
+        "validation_detail": "",
+        "fallback_reason": "",
+        "fallback_used": false,
+        "llm_generated": true,
+        "executed_source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    # Normalize due_time to [0,1] range where 0 is earliest and 1 is latest\n    # If no time window (due_time = 1e6), set to 0.5 (middle priority)\n    if due_time >= 1e6:\n        normalized_due_time = 0.5\n    else:\n        normalized_due_time = due_time / 1e6\n    \n    # Combine criteria with weights: due_time (0.4), distance_share (0.4), random (0.2)\n    # Lower due_time means earlier deadline, so higher priority for removal\n    # Higher route_distance_share means more central to routes, so lower priority for removal\n    score = 0.4 * (1 - normalized_due_time) + 0.4 * (1 - route_distance_share) + 0.2 * rng_value\n    \n    return score",
+        "executed_source_hash": "77b798f471098244",
+        "is_default_heuristic": false
+      }
+    }
+  ],
+  "component_attribution": [
+    {
+      "role": "routing",
+      "component": "insertion_score",
+      "model": "qwen3-coder:30b",
+      "generated_code": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\\n    \"\"\"Lower is better. due_time is finite (1e6 means no useful window).\"\"\"\\n    # Base distance component\\n    score = delta_distance\\n    \\n    # Time window penalty - penalize if we're too early or too late\\n    if due_time < 1e6:  # If there's a valid time window\\n        time_penalty = max(0, ready_time - due_time)  # Early arrival penalty\\n        score += time_penalty * 10  # Weight the time penalty\\n    \\n    # Demand capacity penalty - penalize if demand exceeds capacity\\n    if demand > capacity_slack:\\n        score += (demand - capacity_slack) * 100  # Heavy penalty for overcapacity\\n    \\n    return score",
+      "extract_status": "ok",
+      "validation_ok": true,
+      "validation_detail": "",
+      "fallback_reason": "validation:syntax_error: unexpected character after line continuation character (<unknown>, line 1)",
+      "fallback_used": true,
+      "llm_generated": false,
+      "executed_source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    \"\"\"Lower is better. Single arithmetic return for the bounded interpreter.\"\"\"\n    return delta_distance + (0.0 if due_time >= 1000000.0 else (0.01 * due_time + 1.0 / max(due_time - ready_time, 1.0))) + (0.0 if capacity_slack >= demand else 1000000.0)\n",
+      "executed_source_hash": "1e87fb83dd434a35",
+      "is_default_heuristic": true
+    },
+    {
+      "role": "charging",
+      "component": "station_score",
+      "model": "qwen3-coder:30b",
+      "generated_code": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\\n    \"\"\"Lower is better when choosing a station to insert.\"\"\"\\n    return detour + (1.0 - battery_arrival) * 2.0 + station_rate",
+      "extract_status": "ok",
+      "validation_ok": true,
+      "validation_detail": "",
+      "fallback_reason": "validation:syntax_error: unexpected character after line continuation character (<unknown>, line 1)",
+      "fallback_used": true,
+      "llm_generated": false,
+      "executed_source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    \"\"\"Lower is better. Prefer reachable stations with short detour.\"\"\"\n    return detour + 0.1 * station_rate + (0.0 if battery_arrival > 0.0 else 1000.0)\n",
+      "executed_source_hash": "bd521b1497c17535",
+      "is_default_heuristic": true
+    },
+    {
+      "role": "search",
+      "component": "removal_priority",
+      "model": "qwen3-coder:30b",
+      "generated_code": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    # Normalize due_time to [0,1] range where 0 is earliest and 1 is latest\n    # If no time window (due_time = 1e6), set to 0.5 (middle priority)\n    if due_time >= 1e6:\n        normalized_due_time = 0.5\n    else:\n        normalized_due_time = due_time / 1e6\n    \n    # Combine criteria with weights: due_time (0.4), distance_share (0.4), random (0.2)\n    # Lower due_time means earlier deadline, so higher priority for removal\n    # Higher route_distance_share means more central to routes, so lower priority for removal\n    score = 0.4 * (1 - normalized_due_time) + 0.4 * (1 - route_distance_share) + 0.2 * rng_value\n    \n    return score",
+      "extract_status": "ok",
+      "validation_ok": true,
+      "validation_detail": "",
+      "fallback_reason": "",
+      "fallback_used": false,
+      "llm_generated": true,
+      "executed_source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    # Normalize due_time to [0,1] range where 0 is earliest and 1 is latest\n    # If no time window (due_time = 1e6), set to 0.5 (middle priority)\n    if due_time >= 1e6:\n        normalized_due_time = 0.5\n    else:\n        normalized_due_time = due_time / 1e6\n    \n    # Combine criteria with weights: due_time (0.4), distance_share (0.4), random (0.2)\n    # Lower due_time means earlier deadline, so higher priority for removal\n    # Higher route_distance_share means more central to routes, so lower priority for removal\n    score = 0.4 * (1 - normalized_due_time) + 0.4 * (1 - route_distance_share) + 0.2 * rng_value\n    \n    return score",
+      "executed_source_hash": "77b798f471098244",
+      "is_default_heuristic": false
+    }
+  ],
+  "genuine_llm_components": 1,
+  "default_heuristic_count": 2,
+  "plan": {
+    "summary": "For the classical backbone with GoEke variant capabilities, we need to generate core scoring components that handle time windows, capacity constraints, battery management, and pickup/delivery operations while leveraging Euclidean distances for routing calculations.",
+    "components": [
+      "insertion_score",
+      "station_score",
+      "removal_priority"
+    ],
+    "risks": [
+      "Battery capacity constraints may conflict with time window requirements during insertion decisions",
+      "Partial recharge capabilities could create suboptimal station selection if not properly weighted",
+      "Pickup-delivery operations might increase computational complexity for removal priority calculations"
+    ],
+    "success_criteria": [
+      "feasible on development instance"
+    ],
+    "variant_notes": "The variant supports full and partial recharging with nonlinear charging disabled, which simplifies battery modeling. Time windows and capacity constraints are mandatory, while heterogeneous fleet and hybrid vehicles are excluded. Station revisits are allowed, which impacts insertion scoring logic."
+  },
+  "note": "Human-authored classical backbone + LLM-generated scoring components. Evaluator alone decides feasibility. Default heuristics are never counted as successful LLM discoveries."
+}

@@ -474,10 +474,17 @@ def run_research_campaign(cfg: CampaignConfig | None = None) -> dict[str, Any]:
         "rows": all_rows,
         "wall_s": time.monotonic() - started,
         "disclaimer": (
-            "FakeBackend arms are plumbing checks, not research claims. "
-            "Live Ollama runs with --ollama are required for model comparisons. "
-            "Development panel only; held-out never used."
-        ),
+            (
+                "FakeBackend arms are plumbing checks, not research claims. "
+                "Use --ollama for live open-weight comparisons. "
+            )
+            if cfg.fake
+            else (
+                "Live Ollama campaign. Report only measured rows; "
+                "fallback/default heuristics are not LLM discoveries. "
+            )
+        )
+        + "Development panel only; held-out never used.",
     }
     (out / "campaign.json").write_text(json.dumps(payload, indent=2, default=str), encoding="utf-8")
     # Also keep a compact CSV-like JSONL for table generation.

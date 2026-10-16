@@ -1,0 +1,255 @@
+{
+  "capacity": 10,
+  "llm_calls": 4,
+  "llm_tokens": 0,
+  "wall_s": 1.3058933999855071,
+  "members": [
+    {
+      "candidate_id": "g0_42450",
+      "sources": {
+        "insertion_score": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    \"\"\"Lower is better. Single arithmetic return for the bounded interpreter.\"\"\"\n    return delta_distance + (0.0 if due_time >= 1000000.0 else (0.01 * due_time + 1.0 / max(due_time - ready_time, 1.0))) + (0.0 if capacity_slack >= demand else 1000000.0)\n",
+        "station_score": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    \"\"\"Lower is better. Prefer reachable stations with short detour.\"\"\"\n    return detour + 0.1 * station_rate + (0.0 if battery_arrival > 0.0 else 1000.0)\n",
+        "removal_priority": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    \"\"\"Higher means remove sooner. Ignore sentinel dues (1e6).\"\"\"\n    return (0.0 if due_time >= 1000000.0 else due_time) + 10.0 * route_distance_share + 0.01 * rng_value\n"
+      },
+      "owners": {
+        "insertion_score": "routing",
+        "station_score": "charging",
+        "removal_priority": "search"
+      },
+      "generation": 0,
+      "parent_ids": [
+        "g0_default"
+      ],
+      "panel": {
+        "instances_tested": 1,
+        "instances_feasible": 1,
+        "feasibility_rate": 1.0,
+        "fully_feasible_on_panel": true,
+        "total_runtime_s": 0.37049760000081733,
+        "validation_ok": true,
+        "per_instance": [
+          {
+            "family": "schneider",
+            "instance_id": "c101C5",
+            "seed": 0,
+            "feasible": true,
+            "objective_key": [
+              2.0,
+              267.3289940850671
+            ],
+            "runtime_s": 0.37049760000081733,
+            "fault_family": "OK",
+            "fault_detail": "feasible",
+            "vehicles": 2,
+            "distance": 267.3289940850671
+          }
+        ],
+        "per_variant": {
+          "schneider": {
+            "instances_tested": 1,
+            "instances_feasible": 1,
+            "feasibility_rate": 1.0,
+            "fully_feasible": true,
+            "feasible_objective_keys": [
+              [
+                2.0,
+                267.3289940850671
+              ]
+            ]
+          }
+        }
+      },
+      "instances_tested": 1,
+      "instances_feasible": 1,
+      "feasibility_rate": 1.0,
+      "fully_feasible_on_panel": true,
+      "candidate_validation_status": "ok",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "runtime_s": 0.37049760000081733,
+      "fitness": -Infinity,
+      "llm_generated": false,
+      "genuine_llm_components": 0,
+      "attribution_category": "pure_classical",
+      "model": "fake",
+      "tokens": 0,
+      "source_hashes": {
+        "insertion_score": "1e87fb83dd434a35",
+        "station_score": "bd521b1497c17535",
+        "removal_priority": "a7dd4341ff0bc613"
+      },
+      "component_attribution": [
+        {
+          "kind": "insertion_score",
+          "agent_role": "routing",
+          "model": "fake",
+          "generated_source_hash": "1e87fb83dd434a35",
+          "executed_source_hash": "1e87fb83dd434a35",
+          "mutation_accepted": true,
+          "fallback_applied": false,
+          "human_default_used": true,
+          "successful_repair": false,
+          "llm_generated": true,
+          "extract_status": "ok"
+        },
+        {
+          "kind": "station_score",
+          "agent_role": "charging",
+          "model": "fake",
+          "generated_source_hash": "bd521b1497c17535",
+          "executed_source_hash": "bd521b1497c17535",
+          "mutation_accepted": true,
+          "fallback_applied": false,
+          "human_default_used": true,
+          "successful_repair": false,
+          "llm_generated": true,
+          "extract_status": "ok"
+        },
+        {
+          "kind": "removal_priority",
+          "agent_role": "search",
+          "model": "fake",
+          "generated_source_hash": "a7dd4341ff0bc613",
+          "executed_source_hash": "a7dd4341ff0bc613",
+          "mutation_accepted": true,
+          "fallback_applied": false,
+          "human_default_used": true,
+          "successful_repair": false,
+          "llm_generated": true,
+          "extract_status": "ok"
+        }
+      ],
+      "lineage": {
+        "insertion_score": {
+          "kind": "insertion_score",
+          "origin_candidate_id": "g0_42450",
+          "origin_generation": 0,
+          "inherited_from": null,
+          "executed_source_hash": "1e87fb83dd434a35",
+          "llm_generated": true,
+          "human_default_used": true,
+          "fallback_applied": false,
+          "agent_role": "routing",
+          "model": "fake",
+          "mutation_accepted": true,
+          "successful_repair": false
+        },
+        "station_score": {
+          "kind": "station_score",
+          "origin_candidate_id": "g0_42450",
+          "origin_generation": 0,
+          "inherited_from": null,
+          "executed_source_hash": "bd521b1497c17535",
+          "llm_generated": true,
+          "human_default_used": true,
+          "fallback_applied": false,
+          "agent_role": "charging",
+          "model": "fake",
+          "mutation_accepted": true,
+          "successful_repair": false
+        },
+        "removal_priority": {
+          "kind": "removal_priority",
+          "origin_candidate_id": "g0_42450",
+          "origin_generation": 0,
+          "inherited_from": null,
+          "executed_source_hash": "a7dd4341ff0bc613",
+          "llm_generated": true,
+          "human_default_used": true,
+          "fallback_applied": false,
+          "agent_role": "search",
+          "model": "fake",
+          "mutation_accepted": true,
+          "successful_repair": false
+        }
+      },
+      "metadata": {
+        "causal": [
+          {
+            "step": "architect",
+            "plan": {
+              "summary": "campaign",
+              "components": [
+                "insertion_score",
+                "station_score",
+                "removal_priority"
+              ],
+              "hypothesis": "",
+              "llm_ok": true
+            }
+          },
+          {
+            "step": "mutate_accept",
+            "component": "insertion_score",
+            "attribution": {
+              "kind": "insertion_score",
+              "agent_role": "routing",
+              "model": "fake",
+              "generated_source_hash": "1e87fb83dd434a35",
+              "executed_source_hash": "1e87fb83dd434a35",
+              "mutation_accepted": true,
+              "fallback_applied": false,
+              "human_default_used": true,
+              "successful_repair": false,
+              "llm_generated": true,
+              "extract_status": "ok"
+            }
+          },
+          {
+            "step": "mutate_accept",
+            "component": "station_score",
+            "attribution": {
+              "kind": "station_score",
+              "agent_role": "charging",
+              "model": "fake",
+              "generated_source_hash": "bd521b1497c17535",
+              "executed_source_hash": "bd521b1497c17535",
+              "mutation_accepted": true,
+              "fallback_applied": false,
+              "human_default_used": true,
+              "successful_repair": false,
+              "llm_generated": true,
+              "extract_status": "ok"
+            }
+          },
+          {
+            "step": "mutate_accept",
+            "component": "removal_priority",
+            "attribution": {
+              "kind": "removal_priority",
+              "agent_role": "search",
+              "model": "fake",
+              "generated_source_hash": "a7dd4341ff0bc613",
+              "executed_source_hash": "a7dd4341ff0bc613",
+              "mutation_accepted": true,
+              "fallback_applied": false,
+              "human_default_used": true,
+              "successful_repair": false,
+              "llm_generated": true,
+              "extract_status": "ok"
+            }
+          },
+          {
+            "step": "evaluate",
+            "panel": {
+              "instances_feasible": 1,
+              "instances_tested": 1,
+              "fully_feasible_on_panel": true
+            }
+          }
+        ],
+        "source_families": [
+          "schneider"
+        ],
+        "load_errors": [],
+        "panel_seeds": [
+          0
+        ],
+        "transfer_n": 0
+      }
+    }
+  ]
+}

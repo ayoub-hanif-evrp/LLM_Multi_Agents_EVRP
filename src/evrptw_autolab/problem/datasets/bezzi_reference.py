@@ -68,7 +68,7 @@ def load_published_bezzi_solution(
     )
     reconstructed = False
     if reconstruct_charges:
-        solution = complete_solution_charges(spec, solution)
+        solution = complete_solution_charges(spec, solution, drop_idle_stations=False)
         reconstructed = True
         solution.metadata["published_solution"] = str(path)
         solution.metadata["validation_only"] = True

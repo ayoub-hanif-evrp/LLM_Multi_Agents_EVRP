@@ -85,23 +85,31 @@ def resolve_charge(
 
     energy = max(0.0, target - battery_arrival)
     tech = stop.charge_technology
+    explicit_amount = stop.charge_amount is not None or stop.target_soc is not None
+    if (
+        caps.multiple_charge_technologies
+        and station.kind == "station"
+        and not explicit_amount
+    ):
+        # A station stop without an amount is missing data. Zero is an explicit no-op.
+        errors.append("missing_charge_decision")
 
-    # Technology compatibility (Bezzi / Montoya station types).
+    duration = 0.0
+    if energy <= EPSILON:
+        # Explicit zero recharge does not consume a technology.
+        return ChargeResult(0.0, 0.0, battery_arrival, None, tuple(errors))
+
+    # Technology compatibility applies only when energy is actually taken.
     if caps.multiple_charge_technologies or station.charge_technologies:
         allowed = set(station.charge_technologies)
         if allowed:
             if tech is None:
-                # Default to the station's sole technology when unambiguous.
                 if len(allowed) == 1:
                     tech = next(iter(allowed))
                 else:
                     errors.append("missing_charge_technology")
             elif str(tech) not in allowed:
                 errors.append(f"incompatible_technology:{tech}")
-
-    duration = 0.0
-    if energy <= EPSILON:
-        return ChargeResult(0.0, 0.0, battery_arrival, tech, tuple(errors))
 
     if caps.nonlinear_charging:
         funcs: dict[str, Any] = {}

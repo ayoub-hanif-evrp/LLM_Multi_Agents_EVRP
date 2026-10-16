@@ -140,7 +140,7 @@ class ClassicalSolver:
 
     def solve(self, spec: ProblemSpecV2) -> SolutionV2:
         if not self.hard_timeout:
-            return self._solve_body(spec, box=None)
+            return self._solve_body(spec, box={})
         return _solve_in_process(self, spec)
 
     def _publish(
@@ -169,16 +169,17 @@ class ClassicalSolver:
         spec: ProblemSpecV2,
         box: dict[str, Any] | None,
     ) -> SolutionV2:
+        tracker: dict[str, Any] = box if box is not None else {}
         started = time.monotonic()
         deadline = started + float(self.time_limit_s)
         rng = random.Random(int(self.seed))
         solution = construct_greedy(spec, rng, policy=self.policy)
-        self._publish(box, spec, solution)
+        self._publish(tracker, spec, solution)
         solution = repair_feasibility(spec, solution, policy=self.policy, deadline=deadline)
-        self._publish(box, spec, solution)
+        self._publish(tracker, spec, solution)
         if time.monotonic() < deadline:
             solution = two_opt_improve(spec, solution, deadline=deadline)
-            self._publish(box, spec, solution)
+            self._publish(tracker, spec, solution)
         remaining = _deadline_remaining(started, self.time_limit_s)
         if self.use_alns and remaining > 0.2:
             solution = alns_improve(
@@ -190,10 +191,10 @@ class ClassicalSolver:
                 policy=self.policy,
                 deadline=deadline,
             )
-            self._publish(box, spec, solution)
+            self._publish(tracker, spec, solution)
         if time.monotonic() < deadline:
             solution = _maybe_merge(spec, solution, deadline=deadline, max_passes=3)
-            self._publish(box, spec, solution)
+            self._publish(tracker, spec, solution)
             # Always refresh charge annotations; keep only if not worse.
             polished = remove_redundant_stations(spec, solution)
             polished = complete_solution_charges(spec, polished)
@@ -218,8 +219,18 @@ class ClassicalSolver:
             if time.monotonic() < deadline:
                 solution = _maybe_merge(spec, solution, deadline=deadline, max_passes=2)
                 solution = complete_solution_charges(spec, solution)
-            self._publish(box, spec, solution)
+            self._publish(tracker, spec, solution)
         report = evaluate(spec, solution)
+        published = tracker.get("incumbent")
+        published_report = tracker.get("report")
+        # Exploratory moves may be infeasible. Never return one over a verified feasible incumbent.
+        if (
+            isinstance(published, SolutionV2)
+            and published_report is not None
+            and is_better(published_report, report)
+        ):
+            solution = clone_solution(published)
+            report = published_report
         elapsed = time.monotonic() - started
         solution.metadata.update(
             {
@@ -234,9 +245,11 @@ class ClassicalSolver:
                 "time_limit_s": float(self.time_limit_s),
                 "deadline_exceeded": elapsed > float(self.time_limit_s) + 0.05,
                 "first_fault": report.first_fault.as_dict() if report.first_fault else None,
+                "incumbent_class": "feasible" if report.feasible else "no_feasible_incumbent",
+                "policy_applied": self.policy is not None,
             }
         )
-        self._publish(box, spec, solution)
+        self._publish(tracker, spec, solution)
         return solution
 
 
@@ -294,16 +307,37 @@ def _solver_process_main(spec: ProblemSpecV2, config: dict[str, Any], incumbent_
     solver._solve_body(spec, {"sink": sink})
 
 
-def _mark_timeout(solution: SolutionV2, *, seed: int, limit: float, wall: float) -> SolutionV2:
+def _finalize_process_result(
+    solution: SolutionV2,
+    spec: ProblemSpecV2,
+    *,
+    seed: int,
+    limit: float,
+    wall: float,
+    timed_out: bool,
+    status: str,
+) -> SolutionV2:
+    """Re-check a worker snapshot in the parent. Incomplete timeouts are not successes."""
+    report = evaluate(spec, solution)
     solution.metadata.update(
         {
             "solver": "classical_backbone",
             "seed": int(seed),
             "time_limit_s": float(limit),
             "runtime_s": wall,
-            "deadline_exceeded": True,
-            "hard_timeout": True,
-            "terminated": True,
+            "deadline_exceeded": bool(timed_out) or wall > float(limit) + 0.05,
+            "hard_timeout": bool(timed_out),
+            "terminated": bool(timed_out),
+            "return_status": status,
+            "parent_validated": True,
+            "feasible": bool(report.feasible),
+            "objective": report.objective,
+            "objective_key": list(report.objective_key),
+            "vehicles": report.vehicles,
+            "distance": report.total_distance,
+            "first_fault": report.first_fault.as_dict() if report.first_fault else None,
+            "incumbent_class": "feasible" if report.feasible else "no_feasible_incumbent",
+            "solver_success": bool(report.feasible) and status == "feasible_incumbent",
         }
     )
     return solution
@@ -346,13 +380,23 @@ def _solve_in_process(solver: ClassicalSolver, spec: ProblemSpecV2) -> SolutionV
     if latest is None:
         vid = spec.vehicle_types[0].type_id if spec.vehicle_types else None
         latest = SolutionV2(routes=[empty_route(spec, vid)], vehicle_assignments=[vid or ""])
-        return _mark_timeout(latest, seed=solver.seed, limit=limit, wall=wall)
+        if timed_out:
+            status = "timeout_no_snapshot"
+        elif proc.exitcode not in (0, None):
+            status = "worker_crash"
+        else:
+            status = "worker_no_snapshot"
+        return _finalize_process_result(
+            latest, spec, seed=solver.seed, limit=limit, wall=wall, timed_out=timed_out, status=status
+        )
+    checked = evaluate(spec, latest)
     if timed_out:
-        return _mark_timeout(latest, seed=solver.seed, limit=limit, wall=wall)
-    latest.metadata["runtime_s"] = wall
-    latest.metadata["hard_timeout"] = False
-    latest.metadata["terminated"] = False
-    return latest
+        status = "timeout_with_feasible_incumbent" if checked.feasible else "timeout_no_feasible_incumbent"
+    else:
+        status = "feasible_incumbent" if checked.feasible else "no_feasible_incumbent"
+    return _finalize_process_result(
+        latest, spec, seed=solver.seed, limit=limit, wall=wall, timed_out=timed_out, status=status
+    )
 
 
 def solve_classical(

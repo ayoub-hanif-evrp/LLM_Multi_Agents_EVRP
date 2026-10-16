@@ -113,6 +113,58 @@ def test_infeasible_cannot_be_official_best_feasible() -> None:
     assert best.fully_feasible_on_panel is True
 
 
+def test_shorter_infeasible_policy_cannot_replace_feasible_incumbent() -> None:
+    """A lower nominal objective must not enter the archive when it drops feasibility."""
+    archive = CandidateArchive(capacity=4)
+    feasible = BundleCandidate(
+        candidate_id="classical",
+        sources={"insertion_score": "delta_distance"},
+        owners={},
+        generation=0,
+    )
+    apply_panel(
+        feasible,
+        build_panel_evaluation(
+            [
+                _row(
+                    family="montoya",
+                    instance_id="tc0c10s2cf1",
+                    feasible=True,
+                    objective_key=(32.115,),
+                )
+            ]
+        ),
+        validation_status="ok",
+    )
+    archive.add(feasible)
+    shorter_infeasible = BundleCandidate(
+        candidate_id="energy_infeasible_shortcut",
+        sources={"insertion_score": "-delta_distance"},
+        owners={},
+        generation=1,
+        llm_generated=True,
+    )
+    apply_panel(
+        shorter_infeasible,
+        build_panel_evaluation(
+            [
+                _row(
+                    family="montoya",
+                    instance_id="tc0c10s2cf1",
+                    feasible=False,
+                    objective_key=(17.618,),
+                )
+            ]
+        ),
+        validation_status="ok",
+    )
+    assert archive.add(shorter_infeasible) is False
+    assert shorter_infeasible.metadata["archive_decision"] == "rejected_feasibility_regression"
+    assert [member.candidate_id for member in archive.members] == ["classical"]
+    assert archive.best() is not None
+    assert archive.best().candidate_id == "classical"
+
+
 def test_panel_ranking_deterministic() -> None:
     a = build_panel_evaluation(
         [

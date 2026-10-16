@@ -21,6 +21,7 @@ def complete_route_charges(
     stops: list[RouteStopV2],
     *,
     vehicle_type_id: str | None = None,
+    drop_idle_stations: bool = False,
 ) -> list[RouteStopV2] | None:
     """Return stops with explicit charge amounts, or None if no feasible plan exists."""
     if not route_needs_charge_completion(spec, stops):
@@ -32,35 +33,48 @@ def complete_route_charges(
         vehicle = spec.vehicle_types[0]
     if vehicle is None:
         return None
-    return plan_bezzi_recharges(spec, stops, vehicle)
+    return plan_bezzi_recharges(spec, stops, vehicle, drop_idle_stations=drop_idle_stations)
 
 
-def complete_solution_charges(spec: ProblemSpecV2, solution: SolutionV2) -> SolutionV2:
+def complete_solution_charges(
+    spec: ProblemSpecV2,
+    solution: SolutionV2,
+    *,
+    drop_idle_stations: bool = True,
+) -> SolutionV2:
     """Annotate every Bezzi route with a fresh recharge plan. No-op for other families.
 
     Always clears prior charge annotations before planning so structural edits
     (station insert/removal, ALNS) cannot leave stale amounts/technologies.
+    A route the DP cannot charge is left unspecified and listed in
+    ``metadata['charge_completion_failed_routes']``. That is not a successful plan.
     """
     if not spec.capabilities.multiple_charge_technologies:
         return solution
     out = clone_solution(solution)
+    failed: list[int] = []
     for index, route in enumerate(out.routes):
         try:
             vehicle = vehicle_for_route(spec, out, index)
         except ValueError:
+            failed.append(index)
             continue
         cleared = [
             RouteStopV2(
                 node_id=stop.node_id,
                 vehicle_type_id=stop.vehicle_type_id,
-                event=stop.event,
+                event="visit" if stop.event == "charge" else stop.event,
             )
             for stop in route
         ]
-        planned = plan_bezzi_recharges(spec, cleared, vehicle)
-        if planned is not None:
-            out.routes[index] = planned
-        else:
+        planned = plan_bezzi_recharges(
+            spec, cleared, vehicle, drop_idle_stations=drop_idle_stations
+        )
+        if planned is None:
+            failed.append(index)
             out.routes[index] = cleared
-    out.metadata["charge_completion"] = "bezzi_dp"
+        else:
+            out.routes[index] = planned
+    out.metadata["charge_completion_failed_routes"] = failed
+    out.metadata["charge_completion"] = "bezzi_dp_failed" if failed else "bezzi_dp"
     return out

@@ -107,6 +107,13 @@ class BundleCandidate:
         )
 
 
+def _feasibility_anchor(members: list[BundleCandidate]) -> BundleCandidate | None:
+    """Member that currently covers the most instances. Regressions against it are rejected."""
+    if not members:
+        return None
+    return max(members, key=lambda member: member.instances_feasible)
+
+
 def apply_panel(candidate: BundleCandidate, panel: PanelEvaluation, *, validation_status: str) -> None:
     candidate.panel = panel.as_dict()
     candidate.instances_tested = panel.instances_tested
@@ -250,6 +257,10 @@ class CandidateArchive:
         return best
 
     def add(self, candidate: BundleCandidate) -> bool:
+        anchor = _feasibility_anchor(self.members)
+        if anchor is not None and candidate.instances_feasible < anchor.instances_feasible:
+            candidate.metadata["archive_decision"] = "rejected_feasibility_regression"
+            return False
         fp = candidate.fingerprint()
         for i, member in enumerate(self.members):
             if member.fingerprint() == fp:

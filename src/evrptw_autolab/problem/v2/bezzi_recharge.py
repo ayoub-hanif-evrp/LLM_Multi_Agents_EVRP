@@ -16,6 +16,7 @@ maximum route duration.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Literal
 
 from evrptw_autolab.problem.v2.transport import energy_required, travel_time
 from evrptw_autolab.problem.v2.types import ProblemSpecV2, RouteStopV2, VehicleTypeV2
@@ -41,12 +42,90 @@ def _pareto(labels: list[_Label]) -> list[_Label]:
     return kept
 
 
+def _bare_stop(stop: RouteStopV2) -> RouteStopV2:
+    """Drop charge annotations so the DP can choose a fresh plan for this node."""
+    event = "visit" if stop.event == "charge" else stop.event
+    return RouteStopV2(node_id=stop.node_id, vehicle_type_id=stop.vehicle_type_id, event=event)
+
+
+def _canonicalize(stop: RouteStopV2, *, kind: str, index: int, tech: str | None, delta: int) -> RouteStopV2:
+    """Write an explicit charge decision. A zero amount is a no-op, not a missing plan."""
+    if delta > 0:
+        event: Literal["visit", "pickup", "delivery", "charge", "depot"] = (
+            "depot" if kind == "depot" or stop.event == "depot" else "charge"
+        )
+        return RouteStopV2(
+            node_id=stop.node_id,
+            vehicle_type_id=stop.vehicle_type_id,
+            event=event,
+            charge_amount=float(delta),
+            charge_technology=tech,
+        )
+    if kind == "station":
+        return RouteStopV2(
+            node_id=stop.node_id,
+            vehicle_type_id=stop.vehicle_type_id,
+            event="visit",
+            charge_amount=0.0,
+        )
+    if kind == "depot" and index == 0:
+        return RouteStopV2(
+            node_id=stop.node_id,
+            vehicle_type_id=stop.vehicle_type_id,
+            event="depot",
+            charge_amount=0.0,
+        )
+    return RouteStopV2(
+        node_id=stop.node_id,
+        vehicle_type_id=stop.vehicle_type_id,
+        event="depot" if kind == "depot" else stop.event,
+    )
+
+
 def plan_bezzi_recharges(
     spec: ProblemSpecV2,
     stops: list[RouteStopV2],
     vehicle: VehicleTypeV2,
+    *,
+    drop_idle_stations: bool = False,
 ) -> list[RouteStopV2] | None:
-    """Return stops annotated with charge amounts, or None if no feasible plan exists."""
+    """Return a fully specified route, or None if no feasible recharge plan exists.
+
+    Every retained station has an explicit ``charge_amount`` (zero means the
+    vehicle visits and does not recharge). When ``drop_idle_stations`` is set,
+    a zero-recharge station is removed only if the shortened route still has a
+    feasible plan whose recharge cost is no higher.
+    """
+    planned = _plan_fixed_sequence(spec, stops, vehicle)
+    if planned is None or not drop_idle_stations:
+        return None if planned is None else planned[0]
+    current, cost = planned
+    for _ in range(len(current)):
+        idle = [
+            index
+            for index, stop in enumerate(current)
+            if spec.node_map[stop.node_id].kind == "station" and float(stop.charge_amount or 0.0) <= 0.0
+        ]
+        removed = False
+        for index in idle:
+            reduced = [_bare_stop(stop) for pos, stop in enumerate(current) if pos != index]
+            trial = _plan_fixed_sequence(spec, reduced, vehicle)
+            if trial is None or trial[1] > cost + 1e-6:
+                continue
+            current, cost = trial
+            removed = True
+            break
+        if not removed:
+            break
+    return current
+
+
+def _plan_fixed_sequence(
+    spec: ProblemSpecV2,
+    stops: list[RouteStopV2],
+    vehicle: VehicleTypeV2,
+) -> tuple[list[RouteStopV2], float] | None:
+    """Optimal recharge plan for one fixed node sequence."""
     battery_cap = vehicle.battery_capacity
     if battery_cap is None:
         return None
@@ -150,19 +229,15 @@ def plan_bezzi_recharges(
         return None
 
     annotated: list[RouteStopV2] = []
-    for stop, decision in zip(stops, best.plan, strict=True):
+    for index, (stop, decision) in enumerate(zip(stops, best.plan, strict=True)):
         plan_tech, delta = decision
-        if delta <= 0:
-            annotated.append(stop)
-            continue
         annotated.append(
-            RouteStopV2(
-                node_id=stop.node_id,
-                vehicle_type_id=stop.vehicle_type_id,
-                event="charge" if stop.event == "visit" else stop.event,
-                charge_amount=float(delta),
-                charge_technology=plan_tech,
-                target_soc=None,
+            _canonicalize(
+                stop,
+                kind=nodes[stop.node_id].kind,
+                index=index,
+                tech=plan_tech,
+                delta=delta,
             )
         )
-    return annotated
+    return annotated, best.cost

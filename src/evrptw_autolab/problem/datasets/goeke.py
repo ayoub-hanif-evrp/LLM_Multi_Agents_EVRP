@@ -177,7 +177,9 @@ def load_goeke(path: Path | str) -> ProblemSpecV2:
         depot_ids=tuple(depot_ids),
         requests=tuple(requests),
         fleet_availability={"EV": 10**9},
-        objective="minimize_distance",
+        # Goeke (EJOR 2019): minimize fleet size, then travel distance.
+        # The string matches evaluator objective_key (vehicles, distance).
+        objective="minimize_vehicles_then_distance",
         metadata={
             "source_path": str(path),
             "source_sha256": sha256_file(path),

@@ -28,11 +28,16 @@ class AlgorithmPlan(BaseModel):
 
 
 class ComponentProposal(BaseModel):
-    """One agent's proposed pure scoring function."""
+    """One agent's proposed scoring rule.
+
+    Prefer ``expression`` (wrapped by the controller). ``code`` remains for
+    legacy full-function replies and is normalized before validation.
+    """
 
     component: ComponentKind
     owner_role: Literal["architect", "routing", "charging", "search", "critic"]
-    code: str
+    code: str = ""
+    expression: str = ""
     rationale: str = ""
     mechanism: str = ""
 

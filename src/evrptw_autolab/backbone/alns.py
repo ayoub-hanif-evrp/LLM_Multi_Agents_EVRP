@@ -14,6 +14,7 @@ from evrptw_autolab.backbone.util import (
     evaluate,
     is_better,
     make_customer_stop,
+    note_scorer_call,
     served_request_nodes,
 )
 from evrptw_autolab.problem.v2.types import ProblemSpecV2, SolutionV2
@@ -91,6 +92,7 @@ def destroy_worst(
         share = 1.0 / max(len(present), 1)
         rng_value = rng.random()
         if scorer is not None:
+            note_scorer_call(policy, "removal_priority")
             score = float(scorer(float(due), float(share), float(rng_value)))
         else:
             score = float(due) + 10.0 * share + 0.01 * rng_value

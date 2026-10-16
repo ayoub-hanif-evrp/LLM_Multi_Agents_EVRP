@@ -798,6 +798,8 @@ def run_evolution(
         "best_instances_tested": best.instances_tested if best else 0,
         "best_candidate_id": best.candidate_id if best else None,
         "best_attribution_category": best.attribution_category if best else None,
+        "best_panel": best.panel if best else {},
+        "best_genuine_llm_components": best.genuine_llm_components if best else 0,
         "frozen_bundle": str(frozen_dir) if best else "",
         "checkpoint": str(checkpoint),
         "history": history,

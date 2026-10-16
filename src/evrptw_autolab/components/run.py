@@ -14,6 +14,7 @@ from typing import Any, Literal, cast
 from evrptw_autolab.agents.base import extract_json, extract_python_source
 from evrptw_autolab.backbone.solver import solve_classical
 from evrptw_autolab.backbone.util import evaluate
+from evrptw_autolab.components.expressions import materialize_component, repair_prompt
 from evrptw_autolab.components.interfaces import DEFAULT_SOURCES, SIGNATURES, ComponentKind
 from evrptw_autolab.components.loader import load_bundle, validate_component_source, write_bundle
 from evrptw_autolab.components.schemas import (
@@ -66,14 +67,14 @@ def _source_hash(code: str) -> str:
 
 
 def _extract_code(payload: dict[str, Any], kind: ComponentKind) -> tuple[str, str]:
-    """Return (code, extraction_status)."""
-    code = str(payload.get("code") or "")
-    if f"def {kind}" not in code:
-        recovered = extract_python_source(code) if code else ""
-        if f"def {kind}" in recovered:
-            return recovered, "recovered_from_markdown"
-        return DEFAULT_SOURCES[kind], "fallback_missing_def"
-    return code, "ok"
+    """Return (code, extraction_status). Empty code means the caller must fallback."""
+    source, status = materialize_component(kind, payload)
+    if source and f"def {kind}" in source:
+        return source, status
+    recovered = extract_python_source(str(payload.get("code") or ""))
+    if f"def {kind}" in recovered:
+        return recovered, "recovered_from_markdown"
+    return "", status or "fallback_missing_def"
 
 
 def synthesize_components(
@@ -121,40 +122,66 @@ def synthesize_components(
             model=model,
             collector=collector,
         )
-        generated_raw = str(payload.get("code") or "")
+        generated_raw = str(payload.get("expression") or payload.get("code") or "")
         fallback_reason = ""
         llm_generated = True
         try:
             proposal = ComponentProposal.model_validate({**payload, "component": kind, "owner_role": role})
             code, extract_status = _extract_code(proposal.model_dump(), kind)
-            if extract_status.startswith("fallback"):
-                fallback_reason = extract_status
-                llm_generated = False
-                logger.warning(
-                    "component %s: replacing invalid/missing LLM code with DEFAULT_SOURCES (%s)",
-                    kind,
-                    extract_status,
-                )
         except Exception as error:  # noqa: BLE001
-            code = DEFAULT_SOURCES[kind]
+            code = ""
             extract_status = "fallback_parse_error"
             fallback_reason = f"parse_error:{error}"
             llm_generated = False
             proposal = ComponentProposal(
-                component=kind, owner_role=role, code=code, rationale="fallback_default"
+                component=kind, owner_role=role, code="", rationale="fallback_default"
             )
-            logger.warning("component %s: parse failed; using DEFAULT_SOURCES (%s)", kind, error)
-        check = validate_component_source(kind, code)
+            logger.warning("component %s: parse failed (%s)", kind, error)
+        check = validate_component_source(kind, code) if code else {"ok": False, "detail": extract_status}
         if not check.get("ok"):
-            logger.warning(
-                "component %s: validation failed (%s); using DEFAULT_SOURCES",
-                kind,
-                check.get("detail"),
+            repair = _call_json(
+                backend,
+                role=role,
+                prompt=repair_prompt(kind, str(check.get("detail") or extract_status)),
+                model=model,
+                collector=collector,
             )
-            fallback_reason = f"validation:{check.get('detail')}"
-            code = DEFAULT_SOURCES[kind]
-            llm_generated = False
-            check = validate_component_source(kind, code)
+            repaired, repair_status = _extract_code({**repair, "component": kind}, kind)
+            repair_check = (
+                validate_component_source(kind, repaired) if repaired else {"ok": False, "detail": repair_status}
+            )
+            provenance.append(
+                {
+                    "role": role,
+                    "component": kind,
+                    "repair_attempt": True,
+                    "prior_status": extract_status,
+                    "prior_error": check.get("detail"),
+                    "repair_status": repair_status,
+                    "repair_ok": bool(repair_check.get("ok")),
+                }
+            )
+            if repair_check.get("ok"):
+                code = repaired
+                extract_status = repair_status
+                check = repair_check
+                generated_raw = str(repair.get("expression") or repair.get("code") or generated_raw)
+            else:
+                logger.warning(
+                    "component %s invalid (%s); using DEFAULT_SOURCES after one repair",
+                    kind,
+                    check.get("detail"),
+                )
+                fallback_reason = f"validation:{check.get('detail')};repair:{repair_check.get('detail')}"
+                code = DEFAULT_SOURCES[kind]
+                llm_generated = False
+                check = validate_component_source(kind, code)
+        if extract_status.startswith("fallback") or extract_status.startswith("expression_rejected"):
+            if not fallback_reason:
+                fallback_reason = extract_status
+                code = DEFAULT_SOURCES[kind]
+                llm_generated = False
+                check = validate_component_source(kind, code)
         sources[kind] = code
         owners[kind] = role
         attr = {

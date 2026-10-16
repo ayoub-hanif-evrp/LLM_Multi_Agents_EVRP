@@ -231,19 +231,28 @@ def _run_single_agent(
     backend: Any,
     model: str,
     work: Path,
-) -> list[dict[str, Any]]:
-    """One LLM role (routing) only; other components stay default heuristics."""
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """One model, one unified call, same three component slots as the five-agent arm."""
+    from evrptw_autolab.agents.base import extract_json
+    from evrptw_autolab.components.expressions import materialize_component, repair_prompt
     from evrptw_autolab.components.interfaces import ComponentKind
     from evrptw_autolab.components.loader import load_bundle, validate_component_source
     from evrptw_autolab.llm.usage import UsageCollector as UC
 
+    kinds: tuple[ComponentKind, ...] = ("insertion_score", "station_score", "removal_priority")
     rows: list[dict[str, Any]] = []
+    runs: list[dict[str, Any]] = []
     for item, spec in panel:
         started = time.monotonic()
         collector = UC(max_calls=cfg.max_llm_calls, max_tokens=cfg.max_llm_tokens)
         prompt = (
-            "Return JSON with component insertion_score code.\n"
-            f"Signature insertion_score.\nFamily={spec.family}"
+            "You are one unified heuristic designer. Return JSON with an arithmetic "
+            "expression for each component: insertion_score, station_score, removal_priority. "
+            "No function definitions. "
+            f"Family={spec.family}. "
+            '{"components":[{"component":"insertion_score","expression":"delta_distance"},'
+            '{"component":"station_score","expression":"detour"},'
+            '{"component":"removal_priority","expression":"due_time"}]}'
         )
         try:
             raw = collector.complete(
@@ -256,30 +265,53 @@ def _run_single_agent(
                     "family": spec.family,
                     "instance_id": spec.instance_id,
                     "seed": cfg.seed,
-                    "feasible": False,
+                    "status": "LLM_ERROR",
+                    "feasible": None,
                     "error": str(err),
-                    "llm_calls": collector.logical_calls,
-                    "llm_tokens": collector.total_tokens,
                 }
             )
             continue
-        from evrptw_autolab.agents.base import extract_json, extract_python_source
-
         payload = extract_json(raw)
-        code = str(payload.get("code") or "")
-        if "def insertion_score" not in code:
-            code = extract_python_source(code) or DEFAULT_SOURCES["insertion_score"]
-        llm_ok = bool(validate_component_source("insertion_score", code).get("ok"))
-        sources: dict[ComponentKind, str] = {
-            "insertion_score": code if llm_ok else DEFAULT_SOURCES["insertion_score"],
-            "station_score": DEFAULT_SOURCES["station_score"],
-            "removal_priority": DEFAULT_SOURCES["removal_priority"],
-        }
-        owners: dict[ComponentKind, str] = {
-            "insertion_score": "routing",
-            "station_score": "default",
-            "removal_priority": "default",
-        }
+        by_kind: dict[str, dict[str, Any]] = {}
+        listed = payload.get("components")
+        if isinstance(listed, list):
+            for entry in listed:
+                if isinstance(entry, dict) and entry.get("component"):
+                    by_kind[str(entry["component"])] = entry
+        elif payload.get("component"):
+            by_kind[str(payload["component"])] = payload
+        sources: dict[ComponentKind, str] = {}
+        owners: dict[ComponentKind, str] = {}
+        attribution: list[dict[str, Any]] = []
+        for kind in kinds:
+            piece = by_kind.get(kind, {})
+            code, status = materialize_component(kind, piece)
+            ok = bool(code) and bool(validate_component_source(kind, code).get("ok"))
+            if not ok:
+                repair_raw = collector.complete(
+                    backend,
+                    prompt=repair_prompt(kind, status),
+                    role="routing",
+                    temperature=0.0,
+                    model=model,
+                    json_mode=True,
+                )
+                repaired = extract_json(repair_raw)
+                code, status = materialize_component(kind, repaired)
+                ok = bool(code) and bool(validate_component_source(kind, code).get("ok"))
+            used_default = not ok or code.strip() == DEFAULT_SOURCES[kind].strip()
+            if not ok:
+                code = DEFAULT_SOURCES[kind]
+            sources[kind] = code
+            owners[kind] = "unified" if not used_default else "default"
+            attribution.append(
+                {
+                    "component": kind,
+                    "status": status if ok else f"fallback:{status}",
+                    "llm_generated": not used_default,
+                    "is_default_heuristic": code.strip() == DEFAULT_SOURCES[kind].strip(),
+                }
+            )
         bundle, _ = load_bundle(sources, owners)
         sol = solve_classical(
             spec,
@@ -289,6 +321,7 @@ def _run_single_agent(
             policy=bundle,
         )
         report = evaluate(spec, sol)
+        genuine = sum(1 for a in attribution if a["llm_generated"])
         rows.append(
             _row_from_solution(
                 arm="single_agent",
@@ -300,21 +333,25 @@ def _run_single_agent(
                 wall_s=time.monotonic() - started,
                 extra={
                     "model": model,
-                    "llm_calls": collector.logical_calls,
-                    "llm_tokens": collector.total_tokens,
-                    "genuine_llm_components": 1 if llm_ok and code != DEFAULT_SOURCES["insertion_score"] else 0,
-                    "attribution": [
-                        {
-                            "component": "insertion_score",
-                            "llm_generated": bool(llm_ok),
-                            "is_default_heuristic": code == DEFAULT_SOURCES["insertion_score"],
-                        }
-                    ],
+                    "genuine_llm_components": genuine,
+                    "attribution": attribution,
+                    "component_slots": list(kinds),
                     "work_dir": str(work / "single_agent" / spec.instance_id),
                 },
             )
         )
-    return rows
+        runs.append(
+            {
+                "arm": "single_agent",
+                "instance_id": spec.instance_id,
+                "model": model,
+                "seed": cfg.seed,
+                "llm_calls": collector.logical_calls,
+                "llm_tokens": collector.total_tokens,
+                "usage_scope": "instance",
+            }
+        )
+    return rows, runs
 
 
 def _run_five_agent(
@@ -323,8 +360,9 @@ def _run_five_agent(
     backend: Any,
     model: str,
     work: Path,
-) -> list[dict[str, Any]]:
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     rows: list[dict[str, Any]] = []
+    runs: list[dict[str, Any]] = []
     for item, spec in panel:
         out = work / "five_agent" / spec.instance_id
         result = synthesize_components(
@@ -355,6 +393,77 @@ def _run_five_agent(
                 "critic_verdict": result.get("critic_verdict"),
             }
         )
+        runs.append(
+            {
+                "arm": "five_agent",
+                "instance_id": spec.instance_id,
+                "model": model,
+                "seed": cfg.seed,
+                "llm_calls": result.get("llm_calls"),
+                "llm_tokens": result.get("llm_tokens"),
+                "usage_scope": "instance",
+            }
+        )
+    return rows, runs
+
+
+def _evolution_instance_rows(
+    result: dict[str, Any],
+    specs: list[ProblemSpecV2],
+    *,
+    seed: int,
+    model: str,
+) -> list[dict[str, Any]]:
+    """One row per frozen evaluation. Never copy run-level tokens onto each row."""
+    panel = result.get("best_panel") or {}
+    recorded = {
+        (str(row.get("family")), str(row.get("instance_id")), int(row.get("seed") or seed)): row
+        for row in (panel.get("per_instance") or [])
+        if isinstance(row, dict)
+    }
+    attribution = str(result.get("best_attribution_category") or "")
+    genuine = int(result.get("best_genuine_llm_components") or 0)
+    winner = "NO_LLM_WINNER" if genuine <= 0 or attribution == "pure_classical" else "LLM_CANDIDATE"
+    rows: list[dict[str, Any]] = []
+    for spec in specs:
+        key = (spec.family, spec.instance_id, int(seed))
+        src = recorded.get(key)
+        if src is None:
+            rows.append(
+                {
+                    "arm": "five_agent_evolution",
+                    "family": spec.family,
+                    "instance_id": spec.instance_id,
+                    "seed": seed,
+                    "status": "NOT_EVALUATED",
+                    "feasible": None,
+                    "winner_status": winner,
+                    "best_candidate_id": result.get("best_candidate_id"),
+                    "model": model,
+                }
+            )
+            continue
+        rows.append(
+            {
+                "arm": "five_agent_evolution",
+                "family": src.get("family"),
+                "instance_id": src.get("instance_id"),
+                "seed": src.get("seed"),
+                "status": "EVALUATED",
+                "feasible": src.get("feasible"),
+                "objective": (src.get("objective_key") or [None])[0],
+                "objective_key": src.get("objective_key"),
+                "vehicles": src.get("vehicles"),
+                "distance": src.get("distance"),
+                "duration": src.get("duration"),
+                "runtime_s": src.get("runtime_s"),
+                "fault_family": src.get("fault_family"),
+                "winner_status": winner,
+                "attribution_category": attribution,
+                "best_candidate_id": result.get("best_candidate_id"),
+                "model": model,
+            }
+        )
     return rows
 
 
@@ -364,7 +473,7 @@ def _run_evolution(
     backend: Any,
     model: str,
     work: Path,
-) -> list[dict[str, Any]]:
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     specs = [spec for _, spec in panel]
     evo_cfg = EvolutionConfig(
         generations=cfg.evolution_generations,
@@ -383,55 +492,46 @@ def _run_evolution(
     started = time.monotonic()
     result = run_evolution(specs, backend, evo_cfg)
     wall = time.monotonic() - started
-    rows: list[dict[str, Any]] = []
-    # Emit one row per panel instance; feasibility uses archive re-eval summary.
-    n_feas = int(result.get("best_instances_feasible") or 0)
-    n_test = int(result.get("best_instances_tested") or len(specs))
-    for idx, spec in enumerate(specs):
-        rows.append(
-            {
-                "arm": "five_agent_evolution",
-                "family": spec.family,
-                "instance_id": spec.instance_id,
-                "seed": cfg.seed,
-                # Per-instance detail lives in evolution checkpoint; mark panel-feasible
-                # when the frozen best covers the whole panel.
-                "feasible": bool(result.get("best_fully_feasible_on_panel"))
-                if n_test == len(specs)
-                else (idx < n_feas),
-                "wall_s": wall / max(len(specs), 1),
-                "llm_calls": result.get("llm_calls"),
-                "llm_tokens": result.get("llm_tokens"),
-                "attribution_category": result.get("best_attribution_category"),
-                "model": model,
-                "generations": cfg.evolution_generations,
-                "best_candidate_id": result.get("best_candidate_id"),
-                "frozen_bundle": result.get("frozen_bundle"),
-                "panel_feasible_count": n_feas,
-                "panel_tested_count": n_test,
-            }
-        )
+    rows = _evolution_instance_rows(result, specs, seed=cfg.seed, model=model)
+    runs = [
+        {
+            "arm": "five_agent_evolution",
+            "model": model,
+            "seed": cfg.seed,
+            "llm_calls": result.get("llm_calls"),
+            "llm_tokens": result.get("llm_tokens"),
+            "http_attempts": result.get("http_attempts"),
+            "development_wall_s": wall,
+            "usage_scope": "run",
+            "best_candidate_id": result.get("best_candidate_id"),
+            "attribution_category": result.get("best_attribution_category"),
+        }
+    ]
     (work / "evolution_result.json").write_text(
         json.dumps(result, indent=2, default=str), encoding="utf-8"
     )
-    return rows
+    return rows, runs
 
 
-def _aggregate(rows: list[dict[str, Any]]) -> dict[str, Any]:
+def _aggregate(rows: list[dict[str, Any]], runs: list[dict[str, Any]]) -> dict[str, Any]:
     by_arm: dict[str, list[dict[str, Any]]] = {}
     for row in rows:
         by_arm.setdefault(str(row.get("arm")), []).append(row)
+    tokens_by_arm: dict[str, int] = {}
+    for run in runs:
+        arm = str(run.get("arm"))
+        tokens_by_arm[arm] = tokens_by_arm.get(arm, 0) + int(run.get("llm_tokens") or 0)
     summary: dict[str, Any] = {}
     for arm, arm_rows in by_arm.items():
-        feas = [bool(r.get("feasible")) for r in arm_rows if "feasible" in r]
+        feas = [bool(r.get("feasible")) for r in arm_rows if r.get("feasible") is not None]
         walls = [float(r["wall_s"]) for r in arm_rows if r.get("wall_s") is not None]
-        tokens = [int(r.get("llm_tokens") or 0) for r in arm_rows]
         summary[arm] = {
             "n": len(arm_rows),
             "feasible_count": sum(feas),
             "feasible_rate": (sum(feas) / len(feas)) if feas else None,
             "mean_wall_s": statistics.fmean(walls) if walls else None,
-            "total_llm_tokens": sum(tokens),
+            "total_llm_tokens": tokens_by_arm.get(arm, 0),
+            "token_accounting": "run_level_not_summed_across_instances",
         }
     return summary
 
@@ -445,20 +545,37 @@ def run_research_campaign(cfg: CampaignConfig | None = None) -> dict[str, Any]:
     panel = _load_panel(cfg)
     backend, model = _make_backend(cfg)
     all_rows: list[dict[str, Any]] = []
+    runs: list[dict[str, Any]] = []
     started = time.monotonic()
 
     if "classical" in cfg.arms:
         all_rows.extend(_run_classical(panel, cfg))
+        runs.append(
+            {
+                "arm": "classical",
+                "model": "none",
+                "seed": cfg.seed,
+                "llm_calls": 0,
+                "llm_tokens": 0,
+                "usage_scope": "run",
+            }
+        )
     need_llm = any(a in cfg.arms for a in ("single_agent", "five_agent", "five_agent_evolution"))
     if need_llm:
         if "single_agent" in cfg.arms:
-            all_rows.extend(_run_single_agent(panel, cfg, backend, model, out))
+            inst_rows, inst_runs = _run_single_agent(panel, cfg, backend, model, out)
+            all_rows.extend(inst_rows)
+            runs.extend(inst_runs)
         if "five_agent" in cfg.arms:
-            all_rows.extend(_run_five_agent(panel, cfg, backend, model, out))
+            inst_rows, inst_runs = _run_five_agent(panel, cfg, backend, model, out)
+            all_rows.extend(inst_rows)
+            runs.extend(inst_runs)
         if "five_agent_evolution" in cfg.arms:
-            all_rows.extend(_run_evolution(panel, cfg, backend, model, out))
+            inst_rows, inst_runs = _run_evolution(panel, cfg, backend, model, out)
+            all_rows.extend(inst_rows)
+            runs.extend(inst_runs)
 
-    aggregate = _aggregate(all_rows)
+    aggregate = _aggregate(all_rows, runs)
     payload = {
         "experiment": "voltforge_research_campaign",
         "created_utc": stamp,
@@ -471,6 +588,7 @@ def run_research_campaign(cfg: CampaignConfig | None = None) -> dict[str, Any]:
             ],
         },
         "aggregate": aggregate,
+        "runs": runs,
         "rows": all_rows,
         "wall_s": time.monotonic() - started,
         "disclaimer": (
@@ -487,8 +605,13 @@ def run_research_campaign(cfg: CampaignConfig | None = None) -> dict[str, Any]:
         + "Development panel only; held-out never used.",
     }
     (out / "campaign.json").write_text(json.dumps(payload, indent=2, default=str), encoding="utf-8")
-    # Also keep a compact CSV-like JSONL for table generation.
     with (out / "rows.jsonl").open("w", encoding="utf-8") as handle:
+        for row in all_rows:
+            handle.write(json.dumps(row, default=str) + "\n")
+    with (out / "runs.jsonl").open("w", encoding="utf-8") as handle:
+        for run in runs:
+            handle.write(json.dumps(run, default=str) + "\n")
+    with (out / "instance_results.jsonl").open("w", encoding="utf-8") as handle:
         for row in all_rows:
             handle.write(json.dumps(row, default=str) + "\n")
     return payload

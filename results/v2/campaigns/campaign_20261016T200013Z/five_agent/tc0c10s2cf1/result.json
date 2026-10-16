@@ -1,0 +1,234 @@
+{
+  "experiment": "component_synthesis",
+  "family": "montoya",
+  "instance_id": "tc0c10s2cf1",
+  "seed": 7,
+  "model": "qwen3-coder:30b",
+  "feasible": true,
+  "objective": 32.1145472796293,
+  "objective_key": [
+    32.1145472796293
+  ],
+  "vehicles": 4,
+  "distance": 1022.2636809739929,
+  "fault_family": "OK",
+  "detail": "feasible",
+  "llm_calls": 5,
+  "llm_tokens": 1477,
+  "http_attempts": 5,
+  "rounds": 1,
+  "critic_verdict": "ACCEPT",
+  "load_errors": [],
+  "bundle_dir": "C:\\Users\\ayoub\\Desktop\\LLM_Multi_Agents_EVRP-main\\results\\v2\\campaigns\\campaign_20261016T200013Z\\five_agent\\tc0c10s2cf1\\bundle",
+  "routes": [
+    [
+      "0",
+      "2",
+      "5",
+      "11",
+      "3",
+      "8",
+      "0"
+    ],
+    [
+      "0",
+      "12",
+      "10",
+      "12",
+      "0"
+    ],
+    [
+      "0",
+      "12",
+      "1",
+      "6",
+      "12",
+      "0"
+    ],
+    [
+      "0",
+      "7",
+      "9",
+      "4",
+      "11",
+      "0"
+    ]
+  ],
+  "wall_s": 10.910479099984514,
+  "provenance": [
+    {
+      "role": "architect",
+      "plan": {
+        "summary": "For the Montoya variant with battery constraints and nonlinear charging, we need to develop scoring components that prioritize efficient battery utilization while managing charging station assignments. The insertion score will evaluate route feasibility considering battery constraints, station_score will assess charging station suitability based on battery state and charging characteristics, and removal_priority will identify segments for optimization based on energy efficiency.",
+        "components": [
+          "insertion_score",
+          "station_score",
+          "removal_priority"
+        ],
+        "risks": [
+          "Nonlinear charging models may require complex lookup tables or interpolation functions",
+          "Battery state estimation accuracy could impact insertion decisions",
+          "Station revisits may create circular dependency issues in scoring calculations"
+        ],
+        "success_criteria": [
+          "feasible on development instance"
+        ],
+        "variant_notes": "The nonlinear_charging=True flag requires special attention to charging curve modeling. The partial_recharge=True capability means scoring must account for optimal charging completion levels rather than full charges. Battery constraints are primary, so insertion_score must prioritize energy-efficient route segments."
+      }
+    },
+    {
+      "role": "routing",
+      "component": "insertion_score",
+      "valid": true,
+      "detail": "",
+      "proposal": {
+        "component": "insertion_score",
+        "owner_role": "routing",
+        "code": "",
+        "expression": "delta_distance + 0.01 * max(0, due_time - ready_time) + 0.1 * demand / max(1, capacity_slack)",
+        "rationale": "This expression balances three key factors: delta_distance penalizes longer routes, the time window penalty rewards early arrivals (due_time - ready_time) to avoid tardiness, and the demand-to-capacity ratio ensures we don't overload vehicles while maintaining reasonable insertion costs",
+        "mechanism": "expression"
+      },
+      "attribution": {
+        "role": "routing",
+        "component": "insertion_score",
+        "model": "qwen3-coder:30b",
+        "generated_code": "delta_distance + 0.01 * max(0, due_time - ready_time) + 0.1 * demand / max(1, capacity_slack)",
+        "extract_status": "expression_wrapped",
+        "validation_ok": true,
+        "validation_detail": "",
+        "fallback_reason": "",
+        "fallback_used": false,
+        "llm_generated": true,
+        "executed_source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance + 0.01 * max(0, due_time - ready_time) + 0.1 * demand / max(1, capacity_slack)\n",
+        "executed_source_hash": "db46db08993207a0",
+        "is_default_heuristic": false
+      }
+    },
+    {
+      "role": "charging",
+      "component": "station_score",
+      "valid": true,
+      "detail": "",
+      "proposal": {
+        "component": "station_score",
+        "owner_role": "charging",
+        "code": "",
+        "expression": "detour + 0.5 * battery_arrival + station_rate",
+        "rationale": "This expression balances three key factors: detour distance (lower is better), battery arrival level (higher is better, so we weight it positively but less than detour), and station rate (lower is better). The weights reflect that detour is the primary concern, followed by battery state, with station rate being a secondary factor.",
+        "mechanism": "expression"
+      },
+      "attribution": {
+        "role": "charging",
+        "component": "station_score",
+        "model": "qwen3-coder:30b",
+        "generated_code": "detour + 0.5 * battery_arrival + station_rate",
+        "extract_status": "expression_wrapped",
+        "validation_ok": true,
+        "validation_detail": "",
+        "fallback_reason": "",
+        "fallback_used": false,
+        "llm_generated": true,
+        "executed_source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return detour + 0.5 * battery_arrival + station_rate\n",
+        "executed_source_hash": "152f8329e2aa11b6",
+        "is_default_heuristic": false
+      }
+    },
+    {
+      "role": "search",
+      "component": "removal_priority",
+      "valid": true,
+      "detail": "",
+      "proposal": {
+        "component": "removal_priority",
+        "owner_role": "search",
+        "code": "",
+        "expression": "due_time + 10.0 * route_distance_share + 0.01 * rng_value",
+        "rationale": "The expression prioritizes removal based on due time (higher is sooner), with additional weighting for route distance share to favor shorter routes, and a small random component to break ties. Since due_time of 1000000 means no useful window, it will be removed last unless other factors are more critical.",
+        "mechanism": "expression"
+      },
+      "attribution": {
+        "role": "search",
+        "component": "removal_priority",
+        "model": "qwen3-coder:30b",
+        "generated_code": "due_time + 10.0 * route_distance_share + 0.01 * rng_value",
+        "extract_status": "expression_wrapped",
+        "validation_ok": true,
+        "validation_detail": "",
+        "fallback_reason": "",
+        "fallback_used": false,
+        "llm_generated": true,
+        "executed_source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return due_time + 10.0 * route_distance_share + 0.01 * rng_value\n",
+        "executed_source_hash": "85b859deb826d83e",
+        "is_default_heuristic": false
+      }
+    }
+  ],
+  "component_attribution": [
+    {
+      "role": "routing",
+      "component": "insertion_score",
+      "model": "qwen3-coder:30b",
+      "generated_code": "delta_distance + 0.01 * max(0, due_time - ready_time) + 0.1 * demand / max(1, capacity_slack)",
+      "extract_status": "expression_wrapped",
+      "validation_ok": true,
+      "validation_detail": "",
+      "fallback_reason": "",
+      "fallback_used": false,
+      "llm_generated": true,
+      "executed_source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance + 0.01 * max(0, due_time - ready_time) + 0.1 * demand / max(1, capacity_slack)\n",
+      "executed_source_hash": "db46db08993207a0",
+      "is_default_heuristic": false
+    },
+    {
+      "role": "charging",
+      "component": "station_score",
+      "model": "qwen3-coder:30b",
+      "generated_code": "detour + 0.5 * battery_arrival + station_rate",
+      "extract_status": "expression_wrapped",
+      "validation_ok": true,
+      "validation_detail": "",
+      "fallback_reason": "",
+      "fallback_used": false,
+      "llm_generated": true,
+      "executed_source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return detour + 0.5 * battery_arrival + station_rate\n",
+      "executed_source_hash": "152f8329e2aa11b6",
+      "is_default_heuristic": false
+    },
+    {
+      "role": "search",
+      "component": "removal_priority",
+      "model": "qwen3-coder:30b",
+      "generated_code": "due_time + 10.0 * route_distance_share + 0.01 * rng_value",
+      "extract_status": "expression_wrapped",
+      "validation_ok": true,
+      "validation_detail": "",
+      "fallback_reason": "",
+      "fallback_used": false,
+      "llm_generated": true,
+      "executed_source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return due_time + 10.0 * route_distance_share + 0.01 * rng_value\n",
+      "executed_source_hash": "85b859deb826d83e",
+      "is_default_heuristic": false
+    }
+  ],
+  "genuine_llm_components": 3,
+  "default_heuristic_count": 0,
+  "plan": {
+    "summary": "For the Montoya variant with battery constraints and nonlinear charging, we need to develop scoring components that prioritize efficient battery utilization while managing charging station assignments. The insertion score will evaluate route feasibility considering battery constraints, station_score will assess charging station suitability based on battery state and charging characteristics, and removal_priority will identify segments for optimization based on energy efficiency.",
+    "components": [
+      "insertion_score",
+      "station_score",
+      "removal_priority"
+    ],
+    "risks": [
+      "Nonlinear charging models may require complex lookup tables or interpolation functions",
+      "Battery state estimation accuracy could impact insertion decisions",
+      "Station revisits may create circular dependency issues in scoring calculations"
+    ],
+    "success_criteria": [
+      "feasible on development instance"
+    ],
+    "variant_notes": "The nonlinear_charging=True flag requires special attention to charging curve modeling. The partial_recharge=True capability means scoring must account for optimal charging completion levels rather than full charges. Battery constraints are primary, so insertion_score must prioritize energy-efficient route segments."
+  },
+  "note": "Human-authored classical backbone + LLM-generated scoring components. Evaluator alone decides feasibility. Default heuristics are never counted as successful LLM discoveries."
+}

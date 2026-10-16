@@ -1,0 +1,11 @@
+{"arm": "classical", "model": "none", "seed": 7, "llm_calls": 0, "llm_tokens": 0, "usage_scope": "run"}
+{"arm": "single_agent", "instance_id": "c101C5", "model": "qwen3-coder:30b", "seed": 7, "llm_calls": 4, "llm_tokens": 754, "usage_scope": "instance"}
+{"arm": "single_agent", "instance_id": "tc0c10s2cf1", "model": "qwen3-coder:30b", "seed": 7, "llm_calls": 4, "llm_tokens": 761, "usage_scope": "instance"}
+{"arm": "single_agent", "instance_id": "C101-5", "model": "qwen3-coder:30b", "seed": 7, "llm_calls": 4, "llm_tokens": 761, "usage_scope": "instance"}
+{"arm": "single_agent", "instance_id": "c101C6", "model": "qwen3-coder:30b", "seed": 7, "llm_calls": 4, "llm_tokens": 762, "usage_scope": "instance"}
+{"arm": "single_agent", "instance_id": "c101_21", "model": "qwen3-coder:30b", "seed": 7, "llm_calls": 4, "llm_tokens": 761, "usage_scope": "instance"}
+{"arm": "five_agent", "instance_id": "c101C5", "model": "qwen3-coder:30b", "seed": 7, "llm_calls": 5, "llm_tokens": 1484, "usage_scope": "instance"}
+{"arm": "five_agent", "instance_id": "tc0c10s2cf1", "model": "qwen3-coder:30b", "seed": 7, "llm_calls": 5, "llm_tokens": 1477, "usage_scope": "instance"}
+{"arm": "five_agent", "instance_id": "C101-5", "model": "qwen3-coder:30b", "seed": 7, "llm_calls": 5, "llm_tokens": 1429, "usage_scope": "instance"}
+{"arm": "five_agent", "instance_id": "c101C6", "model": "qwen3-coder:30b", "seed": 7, "llm_calls": 5, "llm_tokens": 1444, "usage_scope": "instance"}
+{"arm": "five_agent", "instance_id": "c101_21", "model": "qwen3-coder:30b", "seed": 7, "llm_calls": 5, "llm_tokens": 1468, "usage_scope": "instance"}

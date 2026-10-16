@@ -10,6 +10,7 @@ from evrptw_autolab.backbone.util import (
     empty_route,
     evaluate,
     make_customer_stop,
+    note_scorer_call,
     served_request_nodes,
 )
 from evrptw_autolab.problem.v2.transport import travel_distance
@@ -43,6 +44,7 @@ def _insertion_cost(
         # Prefer insertions that keep time-window slack when windows exist.
         due = _finite_due(node)
         return float(delta) + 0.001 * due
+    note_scorer_call(policy, "insertion_score")
     vehicle_cap = spec.vehicle_types[0].capacity if spec.vehicle_types else 0.0
     # Rough load on route (sum demands of request nodes).
     load = sum(spec.node_map[s.node_id].demand for s in route if s.event != "depot")

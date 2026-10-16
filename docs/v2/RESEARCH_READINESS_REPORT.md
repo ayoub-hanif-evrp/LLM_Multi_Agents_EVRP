@@ -17,8 +17,8 @@
 | Component lineage / repair attribution | Lineage across crossover; repair success after panel eval |
 | Quality-focused Critic | Invoked on stagnation / regression, not only infeasibility |
 | Cross-variant transfer | Capability-aware retrieve + accept/reject effect logging |
-| Real LLM synthesis | Bounded Qwen smoke only; not a research claim |
-| Multi-agent causal contribution | **Not demonstrated** — campaign CLI exists; live Ollama run pending |
+| Real LLM synthesis | Qwen expressions validate; they do not improve objectives |
+| Multi-agent causal contribution | **Not demonstrated** — matched run `campaign_20261016T200013Z` |
 | Held-out generalization | **Not run** |
 | Publication readiness | **Not ready** for an algorithm-design claim |
 
@@ -137,7 +137,11 @@ uv run voltforge experiments campaign --ollama --profile qwen3_coder_30b --max-i
 Arms: `classical`, `single_agent`, `five_agent`, `five_agent_evolution`.  
 Outputs: `results/v2/campaigns/campaign_<utc>/campaign.json` + `rows.jsonl` with feasibility, objectives, attribution, tokens, wall time.
 
-**Live Qwen campaign:** run via `voltforge experiments campaign --ollama --profile qwen3_coder_30b` (family-balanced panel). Commit raw `campaign.json` / `rows.jsonl` only after the run finishes; do not invent numbers. FakeBackend rows remain plumbing-only.
+**Live Qwen, expression contract, 2026-10-16:** `results/v2/campaigns/campaign_20261016T200013Z`. Model `qwen3-coder:30b`, seed 7, 5 development instances, 5-second process kill. Arms: classical, single agent, five agents. No evolution arm. Tokens are run-level: single agent 3,799 (5 instance runs), five agents 7,302 (5 instance runs). Every generated component was an accepted expression (`genuine_llm_components=3`), not a default fallback.
+
+No feasible objective improved on classical. Schneider `c101C5` and Goeke `c101C6`: classical and five-agent `(2, 267.329)`; single agent `(2, 270.986)`. Montoya `tc0c10s2cf1`: classical and five-agent duration `32.115` (4 vehicles, feasible); single agent duration `17.618` but infeasible. Bezzi `C101-5`: all three arms recharge cost `233`. Hiermann `c101_21`: all three arms infeasible. The solver was killed at 5.9s and returned an empty route (1 vehicle, distance 0, penalty objective 153, fault `VISIT: never served`). That 153 is not a solved Hiermann cost. Earlier feasible Hiermann runs exceeded this budget.
+
+FakeBackend rows remain plumbing-only. Do not sum tokens by repeating a run total on every instance row.
 
 ## 9. Attribution of gains
 

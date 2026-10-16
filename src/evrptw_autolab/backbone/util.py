@@ -97,6 +97,15 @@ def is_better(a: EvaluationReportV2, b: EvaluationReportV2) -> bool:
     return tuple(a.objective_key) < tuple(b.objective_key)
 
 
+def note_scorer_call(policy: object | None, name: str) -> None:
+    """Count scorer invocations when the policy exposes a ``call_counts`` dict."""
+    if policy is None:
+        return
+    counts = getattr(policy, "call_counts", None)
+    if isinstance(counts, dict):
+        counts[name] = int(counts.get(name, 0)) + 1
+
+
 def served_request_nodes(spec: ProblemSpecV2) -> list[str]:
     if spec.capabilities.pickup_delivery and spec.requests:
         out: list[str] = []

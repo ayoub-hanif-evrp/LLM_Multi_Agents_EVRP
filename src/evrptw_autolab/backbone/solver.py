@@ -1,11 +1,14 @@
 """Classical non-LLM solver entry point."""
 from __future__ import annotations
 
+import multiprocessing as mp
+import os
+import pickle
 import random
+import tempfile
 import time
-from concurrent.futures import ThreadPoolExecutor
-from concurrent.futures import TimeoutError as FuturesTimeout
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 from evrptw_autolab.backbone.alns import alns_improve
@@ -19,7 +22,13 @@ from evrptw_autolab.backbone.local_search import (
 )
 from evrptw_autolab.backbone.nonlinear_charge import optimize_solution_partial_charges
 from evrptw_autolab.backbone.route_split import split_infeasible_routes
-from evrptw_autolab.backbone.util import candidate_vehicle_ids, clone_solution, evaluate, is_better
+from evrptw_autolab.backbone.util import (
+    candidate_vehicle_ids,
+    clone_solution,
+    empty_route,
+    evaluate,
+    is_better,
+)
 from evrptw_autolab.problem.v2.types import ProblemSpecV2, RouteStopV2, SolutionV2
 
 
@@ -127,41 +136,12 @@ class ClassicalSolver:
     use_alns: bool = True
     policy: object | None = None
     hard_timeout: bool = True
+    debug_sleep_s: float = 0.0
 
     def solve(self, spec: ProblemSpecV2) -> SolutionV2:
         if not self.hard_timeout:
             return self._solve_body(spec, box=None)
-        box: dict[str, Any] = {"incumbent": None, "report": None, "spec": spec}
-        # Grace lets cooperative deadline finish; hard cut only for true runaway work.
-        grace = max(1.0, 0.15 * float(self.time_limit_s))
-        with ThreadPoolExecutor(max_workers=1) as pool:
-            future = pool.submit(self._solve_body, spec, box)
-            try:
-                return future.result(timeout=float(self.time_limit_s) + grace)
-            except FuturesTimeout:
-                incumbent = box.get("incumbent")
-                if isinstance(incumbent, SolutionV2):
-                    out = clone_solution(incumbent)
-                    out.metadata["deadline_exceeded"] = True
-                    out.metadata["hard_timeout"] = True
-                    out.metadata["runtime_s"] = float(self.time_limit_s) + grace
-                    out.metadata.setdefault("solver", "classical_backbone")
-                    out.metadata.setdefault("seed", int(self.seed))
-                    out.metadata.setdefault("time_limit_s", float(self.time_limit_s))
-                    return out
-                rng = random.Random(int(self.seed))
-                fallback = construct_greedy(spec, rng, policy=self.policy)
-                fallback.metadata.update(
-                    {
-                        "solver": "classical_backbone",
-                        "seed": int(self.seed),
-                        "deadline_exceeded": True,
-                        "hard_timeout": True,
-                        "runtime_s": float(self.time_limit_s) + grace,
-                        "time_limit_s": float(self.time_limit_s),
-                    }
-                )
-                return fallback
+        return _solve_in_process(self, spec)
 
     def _publish(
         self,
@@ -174,8 +154,15 @@ class ClassicalSolver:
         report = evaluate(spec, solution)
         prev_report = box.get("report")
         if prev_report is None or is_better(report, prev_report):
-            box["incumbent"] = clone_solution(solution)
+            snapshot = clone_solution(solution)
+            box["incumbent"] = snapshot
             box["report"] = report
+            sink = box.get("sink")
+            if sink is not None:
+                try:
+                    sink.put(snapshot, timeout=0.2)
+                except Exception:  # noqa: BLE001 — a full queue must not stall the solver
+                    pass
 
     def _solve_body(
         self,
@@ -251,6 +238,121 @@ class ClassicalSolver:
         )
         self._publish(box, spec, solution)
         return solution
+
+
+class _FileSink:
+    """Parent-readable incumbent slot. Writes are replaced atomically."""
+
+    def __init__(self, path: str) -> None:
+        self.path = path
+
+    def put(self, solution: SolutionV2, timeout: float = 0.2) -> None:
+        del timeout
+        _write_incumbent(self.path, solution)
+
+
+def _write_incumbent(path: str, solution: SolutionV2) -> None:
+    target = Path(path)
+    tmp = target.with_name(target.name + ".tmp")
+    tmp.write_bytes(pickle.dumps(solution, protocol=pickle.HIGHEST_PROTOCOL))
+    tmp.replace(target)
+
+
+def _read_incumbent(path: str) -> SolutionV2 | None:
+    target = Path(path)
+    if not target.exists():
+        return None
+    try:
+        loaded = pickle.loads(target.read_bytes())  # noqa: S301 — local solver snapshot
+    except (OSError, pickle.UnpicklingError, EOFError):
+        return None
+    return loaded if isinstance(loaded, SolutionV2) else None
+
+
+def _solver_process_main(spec: ProblemSpecV2, config: dict[str, Any], incumbent_path: str) -> None:
+    """Child process. The parent joins with a timeout and may terminate this process."""
+    policy = None
+    sources = config.get("sources") or {}
+    if sources:
+        from evrptw_autolab.components.loader import load_bundle
+
+        policy, _errors = load_bundle(sources, config.get("owners"))
+    solver = ClassicalSolver(
+        seed=int(config["seed"]),
+        time_limit_s=float(config["time_limit_s"]),
+        alns_iterations=int(config["alns_iterations"]),
+        use_alns=bool(config["use_alns"]),
+        policy=policy,
+        hard_timeout=False,
+    )
+    sink = _FileSink(incumbent_path)
+    if float(config.get("debug_sleep_s") or 0) > 0:
+        rng = random.Random(int(config["seed"]))
+        sink.put(construct_greedy(spec, rng, policy=policy))
+        time.sleep(float(config["debug_sleep_s"]))
+        return
+    solver._solve_body(spec, {"sink": sink})
+
+
+def _mark_timeout(solution: SolutionV2, *, seed: int, limit: float, wall: float) -> SolutionV2:
+    solution.metadata.update(
+        {
+            "solver": "classical_backbone",
+            "seed": int(seed),
+            "time_limit_s": float(limit),
+            "runtime_s": wall,
+            "deadline_exceeded": True,
+            "hard_timeout": True,
+            "terminated": True,
+        }
+    )
+    return solution
+
+
+def _solve_in_process(solver: ClassicalSolver, spec: ProblemSpecV2) -> SolutionV2:
+    """Run the solver in a child process and terminate it when the budget expires."""
+    ctx = mp.get_context("spawn")
+    config = {
+        "seed": int(solver.seed),
+        "time_limit_s": float(solver.time_limit_s),
+        "alns_iterations": int(solver.alns_iterations),
+        "use_alns": bool(solver.use_alns),
+        "debug_sleep_s": float(solver.debug_sleep_s),
+        "sources": dict(getattr(solver.policy, "sources", {}) or {}),
+        "owners": dict(getattr(solver.policy, "owners", {}) or {}),
+    }
+    fd, incumbent_path = tempfile.mkstemp(prefix="voltforge-incumbent-", suffix=".pkl")
+    os.close(fd)
+    proc = ctx.Process(
+        target=_solver_process_main,
+        args=(spec, config, incumbent_path),
+        daemon=True,
+    )
+    started = time.monotonic()
+    limit = float(solver.time_limit_s)
+    proc.start()
+    proc.join(limit)
+    timed_out = proc.is_alive()
+    if timed_out:
+        proc.terminate()
+        proc.join(2)
+        if proc.is_alive():
+            proc.kill()
+            proc.join(1)
+    wall = time.monotonic() - started
+    latest = _read_incumbent(incumbent_path)
+    Path(incumbent_path).unlink(missing_ok=True)
+    Path(incumbent_path + ".tmp").unlink(missing_ok=True)
+    if latest is None:
+        vid = spec.vehicle_types[0].type_id if spec.vehicle_types else None
+        latest = SolutionV2(routes=[empty_route(spec, vid)], vehicle_assignments=[vid or ""])
+        return _mark_timeout(latest, seed=solver.seed, limit=limit, wall=wall)
+    if timed_out:
+        return _mark_timeout(latest, seed=solver.seed, limit=limit, wall=wall)
+    latest.metadata["runtime_s"] = wall
+    latest.metadata["hard_timeout"] = False
+    latest.metadata["terminated"] = False
+    return latest
 
 
 def solve_classical(

@@ -26,6 +26,45 @@ app.add_typer(experiments_app, name="experiments")
 ROOT = Path(__file__).resolve().parents[2]
 
 
+@experiments_app.command("expressions")
+def experiments_expressions(
+    fake: bool = typer.Option(True, "--fake/--ollama"),
+    profile: str = typer.Option("qwen3_coder_30b", "--profile"),
+) -> None:
+    """Ask for one expression per component and report validation, without a campaign."""
+    from evrptw_autolab.experiments.expression_probe import probe_expressions, write_probe
+    from evrptw_autolab.llm.registry import FakeBackend
+
+    if fake:
+        backend = FakeBackend(
+            {
+                "routing": json.dumps(
+                    {"component": "insertion_score", "expression": "delta_distance + 0.01 * due_time"}
+                ),
+                "charging": json.dumps({"component": "station_score", "expression": "detour"}),
+                "search": json.dumps(
+                    {"component": "removal_priority", "expression": "due_time + route_distance_share"}
+                ),
+            }
+        )
+        model = "fake"
+    else:
+        from evrptw_autolab.llm.ollama import OllamaBackend
+        from evrptw_autolab.llm.registry import availability, make_backend, resolve_profile
+
+        ollama = OllamaBackend()
+        prof = resolve_profile(profile)
+        if availability(prof, ollama) != "installed":
+            typer.echo(f"SKIPPED profile {profile}")
+            raise typer.Exit(code=0)
+        backend = make_backend(prof, ollama_host=ollama.host)
+        model = prof.model
+    report = probe_expressions(backend, model=model)
+    out = ROOT / "results" / "v2" / "probes" / f"expressions_{profile if not fake else 'fake'}.json"
+    write_probe(report, out)
+    typer.echo(json.dumps({**report, "path": str(out)}, indent=2))
+
+
 @experiments_app.command("campaign")
 def experiments_campaign(
     fake: bool = typer.Option(True, "--fake/--ollama", help="FakeBackend (default) or local Ollama"),

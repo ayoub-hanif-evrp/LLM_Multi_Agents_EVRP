@@ -1,0 +1,33 @@
+{
+  "model": "fake",
+  "n": 3,
+  "validated": 3,
+  "nondefault": 3,
+  "fallback": 0,
+  "rows": [
+    {
+      "component": "insertion_score",
+      "status": "expression_wrapped",
+      "validated": true,
+      "repaired": false,
+      "nondefault": true,
+      "fallback": false
+    },
+    {
+      "component": "station_score",
+      "status": "expression_wrapped",
+      "validated": true,
+      "repaired": false,
+      "nondefault": true,
+      "fallback": false
+    },
+    {
+      "component": "removal_priority",
+      "status": "expression_wrapped",
+      "validated": true,
+      "repaired": false,
+      "nondefault": true,
+      "fallback": false
+    }
+  ]
+}

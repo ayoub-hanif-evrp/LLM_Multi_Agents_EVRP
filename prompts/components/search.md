@@ -1,10 +1,12 @@
-You are the Search Engineer. Write ONE pure Python function:
+You are the Search Engineer. Propose ONE arithmetic expression for removal priority.
 
-def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:
+Arguments: due_time, route_distance_share, rng_value.
+Higher means remove sooner. due_time of 1000000 means no useful window.
 
-Rules:
-- Higher score means remove that customer/request sooner in destroy operators.
-- No imports, no I/O.
+Accepted language: a single expression using + - * /, comparisons, and abs/min/max.
+Do NOT return a Python function or escaped newlines.
+
+Example expression: due_time + 10.0 * route_distance_share
 
 Return ONLY JSON:
-{"component":"removal_priority","owner_role":"search","code":"def removal_priority(...):\\n    ...","rationale":"...","mechanism":"..."}
+{"component":"removal_priority","owner_role":"search","expression":"due_time + 10.0 * route_distance_share + 0.01 * rng_value","rationale":"...","mechanism":"expression"}

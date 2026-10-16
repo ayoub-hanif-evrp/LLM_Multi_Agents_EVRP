@@ -7,6 +7,7 @@ from evrptw_autolab.backbone.charge_completion import complete_solution_charges
 from evrptw_autolab.backbone.util import (
     clone_solution,
     evaluate,
+    note_scorer_call,
     vehicle_for_route,
 )
 from evrptw_autolab.problem.v2.route_simulator import simulate_route
@@ -50,7 +51,11 @@ def _best_station_between(
             continue
         detour = travel_distance(spec, left, station) + travel_distance(spec, station, right)
         rate = float(station.recharging_rate or 0.0)
-        cost = float(scorer(detour, battery_arrival, rate)) if scorer is not None else float(detour)
+        if scorer is not None:
+            note_scorer_call(policy, "station_score")
+            cost = float(scorer(detour, battery_arrival, rate))
+        else:
+            cost = float(detour)
         if cost < best_cost:
             best_cost = cost
             best = sid

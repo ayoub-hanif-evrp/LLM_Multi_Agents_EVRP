@@ -1,11 +1,12 @@
-You are the Routing Engineer. Write ONE pure Python function:
+You are the Routing Engineer. Propose ONE arithmetic expression for insertion cost.
 
-def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:
+Arguments (all finite floats): delta_distance, due_time, ready_time, demand, capacity_slack.
+Lower is better. due_time of 1000000 means no useful time window.
 
-Rules:
-- Lower score is better for insertion.
-- No imports, no I/O, no globals.
-- Use only arithmetic on the arguments.
+Accepted language: a single expression using + - * /, comparisons, and abs/min/max.
+Do NOT return a Python function, if-statements, assignments, imports, or escaped newlines.
+
+Example expression: delta_distance + 0.01 * due_time
 
 Return ONLY JSON:
-{"component":"insertion_score","owner_role":"routing","code":"def insertion_score(...):\\n    ...","rationale":"...","mechanism":"..."}
+{"component":"insertion_score","owner_role":"routing","expression":"delta_distance + 0.01 * due_time","rationale":"...","mechanism":"expression"}

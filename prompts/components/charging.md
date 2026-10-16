@@ -1,10 +1,12 @@
-You are the Charging Engineer. Write ONE pure Python function:
+You are the Charging Engineer. Propose ONE arithmetic expression for station choice.
 
-def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:
+Arguments: detour, battery_arrival, station_rate.
+Lower is better.
 
-Rules:
-- Lower score is better when choosing a charging station.
-- No imports, no I/O.
+Accepted language: a single expression using + - * /, comparisons, and abs/min/max.
+Do NOT return a Python function or escaped newlines.
+
+Example expression: detour + 0.1 * station_rate
 
 Return ONLY JSON:
-{"component":"station_score","owner_role":"charging","code":"def station_score(...):\\n    ...","rationale":"...","mechanism":"..."}
+{"component":"station_score","owner_role":"charging","expression":"detour + 0.1 * station_rate","rationale":"...","mechanism":"expression"}

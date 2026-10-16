@@ -18,11 +18,21 @@ from evrptw_autolab.components.evolution.archive import (
     apply_panel,
     classify_attribution,
     hash_sources,
+    inherit_lineage_entry,
+    lineage_from_mutation,
     source_hash,
 )
 from evrptw_autolab.components.evolution.fitness import (
     build_panel_evaluation,
     instance_eval_from_report,
+    panel_is_better,
+)
+from evrptw_autolab.components.evolution.transfer import (
+    apply_transfer,
+    component_compatible,
+    evaluate_transfer_effect,
+    retrieve_transferable_components,
+    write_transfer_report,
 )
 from evrptw_autolab.components.interfaces import DEFAULT_SOURCES, SIGNATURES, ComponentKind
 from evrptw_autolab.components.loader import load_bundle, validate_component_source, write_bundle
@@ -281,14 +291,50 @@ def _architect_plan(
         }
 
 
-def _crossover(a: BundleCandidate, b: BundleCandidate, rng: random.Random) -> dict[str, str]:
+def _crossover(
+    a: BundleCandidate,
+    b: BundleCandidate,
+    rng: random.Random,
+) -> tuple[dict[str, str], dict[str, dict[str, Any]]]:
+    """Uniform crossover returning sources and inherited lineage."""
     child: dict[str, str] = {}
+    lineage: dict[str, dict[str, Any]] = {}
     for key in KINDS:
-        left = a.sources.get(key)
-        right = b.sources.get(key)
-        pick = left if rng.random() < 0.5 else right
-        child[key] = pick or DEFAULT_SOURCES[key]
-    return child
+        donor = a if rng.random() < 0.5 else b
+        other = b if donor is a else a
+        pick = donor.sources.get(key) or other.sources.get(key) or DEFAULT_SOURCES[key]
+        child[key] = pick
+        lineage[key] = inherit_lineage_entry(donor if key in donor.sources else other, key, source=pick)
+    return child, lineage
+
+
+def _needs_quality_critic(
+    panel_eval: Any,
+    incumbent: BundleCandidate | None,
+) -> tuple[bool, str]:
+    """Invoke Critic for infeasibility **or** quality stagnation / regressions."""
+    if not panel_eval.fully_feasible_on_panel:
+        return True, "infeasible_on_panel"
+    if incumbent is None:
+        return False, ""
+    inc_panel = incumbent.panel_evaluation()
+    if inc_panel is None:
+        return False, ""
+    if panel_is_better(inc_panel, panel_eval):
+        return True, "regressed_vs_incumbent"
+    # Excessive fleet vs incumbent on Schneider/Goeke-style keys.
+    for row, irow in zip(panel_eval.per_instance, inc_panel.per_instance, strict=False):
+        if (
+            row.feasible
+            and irow.feasible
+            and row.family == irow.family
+            and row.instance_id == irow.instance_id
+            and row.objective_key
+            and irow.objective_key
+            and row.objective_key[0] > irow.objective_key[0] + 0.5
+        ):
+            return True, "excessive_primary_objective"
+    return False, ""
 
 
 def run_evolution(
@@ -363,7 +409,19 @@ def run_evolution(
                 }
                 for k in KINDS
             ],
-            metadata={"seed_type": "default", "load_errors": load_errors},
+            lineage={
+                k: {
+                    "kind": k,
+                    "origin_candidate_id": "g0_default",
+                    "origin_generation": 0,
+                    "llm_generated": False,
+                    "human_default_used": True,
+                    "fallback_applied": False,
+                    "executed_source_hash": source_hash(DEFAULT_SOURCES[k]),
+                }
+                for k in KINDS
+            },
+            metadata={"seed_type": "default", "load_errors": load_errors, "source_families": families},
         )
         apply_panel(cand, panel_eval, validation_status="ok" if not load_errors else "invalid")
         archive.add(cand)
@@ -393,9 +451,10 @@ def run_evolution(
             logger.warning("budget exhausted before architect: %s", error)
             break
 
-        child_sources = _crossover(parent_a, parent_b, rng)
+        child_sources, child_lineage = _crossover(parent_a, parent_b, rng)
         attr_rows: list[dict[str, Any]] = []
         causal: list[dict[str, Any]] = [{"step": "architect", "plan": plan}]
+        incumbent = archive.best() or archive.best_overall()
 
         # Specialist mutations for components selected by Architect.
         for kind_name in plan["components"]:
@@ -418,16 +477,43 @@ def run_evolution(
             except BudgetExhausted as error:
                 logger.warning("budget exhausted during mutation: %s", error)
                 break
-            child_sources[kind] = attr["executed_source"]
             attr_rows.append(attr)
-            causal.append({"step": "mutate", "component": kind, "attribution": {
-                k: attr[k] for k in attr if k != "executed_source"
-            }})
+            if attr.get("mutation_accepted") or attr.get("llm_generated"):
+                child_sources[kind] = attr["executed_source"]
+                child_lineage[kind] = lineage_from_mutation(
+                    kind=kind, attr=attr, candidate_id=child_id, generation=gen
+                )
+                causal.append(
+                    {
+                        "step": "mutate_accept",
+                        "component": kind,
+                        "attribution": {k: attr[k] for k in attr if k != "executed_source"},
+                    }
+                )
+            else:
+                # Keep inherited crossover source/lineage; do not erase parent LLM components.
+                causal.append(
+                    {
+                        "step": "mutate_reject_keep_inherited",
+                        "component": kind,
+                        "attribution": {k: attr[k] for k in attr if k != "executed_source"},
+                        "kept_hash": child_lineage.get(kind, {}).get("executed_source_hash"),
+                    }
+                )
 
         # Ensure all three kinds exist.
         for kind in KINDS:
             if kind not in child_sources:
                 child_sources[kind] = DEFAULT_SOURCES[kind]
+                child_lineage[kind] = {
+                    "kind": kind,
+                    "llm_generated": False,
+                    "human_default_used": True,
+                    "fallback_applied": True,
+                    "executed_source_hash": source_hash(DEFAULT_SOURCES[kind]),
+                    "origin_candidate_id": child_id,
+                    "origin_generation": gen,
+                }
                 attr_rows.append(
                     {
                         "kind": kind,
@@ -456,14 +542,22 @@ def run_evolution(
             "fully_feasible_on_panel": panel_eval.fully_feasible_on_panel,
         }})
 
-        # Real Critic-agent call grounded in evaluator summary.
-        if cfg.use_critic and not panel_eval.fully_feasible_on_panel:
+        # Critic for infeasibility OR quality stagnation / regression vs incumbent.
+        need_critic, critic_reason = _needs_quality_critic(panel_eval, incumbent)
+        if cfg.use_critic and need_critic:
             summary = {
+                "reason": critic_reason,
                 "per_variant": panel_eval.per_variant,
                 "faults": [
                     {"family": r.fault_family, "detail": r.fault_detail, "instance": r.instance_id}
                     for r in panel_eval.per_instance
                     if not r.feasible
+                ][:12],
+                "incumbent_id": incumbent.candidate_id if incumbent else None,
+                "feasible_objectives": [
+                    {"instance": r.instance_id, "key": list(r.objective_key), "vehicles": r.vehicles}
+                    for r in panel_eval.per_instance
+                    if r.feasible
                 ][:12],
             }
             try:
@@ -478,9 +572,10 @@ def run_evolution(
             except BudgetExhausted as error:
                 logger.warning("budget exhausted during critic: %s", error)
                 diagnosis = {"verdict": "STOP", "reason": str(error), "next_component": "none", "llm_ok": False}
-            causal.append({"step": "critic", "diagnosis": diagnosis})
+            causal.append({"step": "critic", "diagnosis": diagnosis, "trigger": critic_reason})
             target = diagnosis.get("next_component")
-            if target in KINDS and diagnosis.get("verdict") == "REVISE":
+            if target in KINDS and diagnosis.get("verdict") in {"REVISE", "IMPROVE"}:
+                before_repair = panel_eval
                 repair_attr: dict[str, Any] | None
                 try:
                     repair_attr = _generate_component(
@@ -490,6 +585,7 @@ def run_evolution(
                         model=cfg.model,
                         extra=(
                             f"\nCritic diagnosis: {diagnosis.get('reason')}\n"
+                            f"Trigger: {critic_reason}\n"
                             f"Hypothesis: {diagnosis.get('hypothesis')}\n"
                             f"Fault families: {diagnosis.get('fault_families')}"
                         ),
@@ -499,10 +595,7 @@ def run_evolution(
                 except BudgetExhausted:
                     repair_attr = None
                 if repair_attr is not None:
-                    attr = repair_attr
-                    attr["successful_repair"] = attr.get("llm_generated", False)
-                    child_sources[target] = attr["executed_source"]
-                    attr_rows.append(attr)
+                    child_sources[target] = repair_attr["executed_source"]
                     panel_eval, errors = evaluate_candidate_on_panel(
                         child_sources,
                         owners,
@@ -513,27 +606,81 @@ def run_evolution(
                     )
                     if errors:
                         panel_eval.validation_ok = False
-                    causal.append({"step": "repair_eval", "component": target, "feasible": panel_eval.fully_feasible_on_panel})
-
-        # Cross-variant memory: log transfer attempts from parent components of other families.
-        if cfg.use_cross_variant_memory and parent_a.metadata.get("source_families"):
-            with transfer_log.open("a", encoding="utf-8") as handle:
-                handle.write(
-                    json.dumps(
+                    # Repair success = panel improvement, not merely valid code.
+                    repair_attr["successful_repair"] = panel_is_better(panel_eval, before_repair)
+                    child_lineage[target] = lineage_from_mutation(
+                        kind=str(target),
+                        attr=repair_attr,
+                        candidate_id=child_id,
+                        generation=gen,
+                    )
+                    attr_rows.append(repair_attr)
+                    causal.append(
                         {
-                            "generation": gen,
-                            "child_id": child_id,
-                            "source_families": parent_a.metadata.get("source_families"),
-                            "target_families": families,
-                            "before_feasible": parent_a.instances_feasible,
-                            "after_feasible": panel_eval.instances_feasible,
-                            "fingerprint": hash_sources(child_sources),
+                            "step": "repair_eval",
+                            "component": target,
+                            "successful_repair": repair_attr["successful_repair"],
+                            "fully_feasible": panel_eval.fully_feasible_on_panel,
                         }
                     )
-                    + "\n"
-                )
 
-        category, genuine = classify_attribution(attr_rows, child_sources)
+        # Controlled cross-variant transfer: retrieve foreign LLM components and measure effect.
+        transfer_records: list[Any] = []
+        if cfg.use_cross_variant_memory:
+            donors = retrieve_transferable_components(
+                archive.members,
+                target_families=set(families),
+                target_specs=panel,
+            )
+            rng.shuffle(donors)
+            for donor, xfer_kind, source_family in donors[:2]:
+                if not any(component_compatible(xfer_kind, spec) for spec in panel):
+                    transfer_records.append(
+                        evaluate_transfer_effect(
+                            kind=xfer_kind,
+                            source_family=source_family,
+                            target_family=families[0] if families else "",
+                            donor=donor,
+                            before=panel_eval,
+                            after=panel_eval,
+                            compatible=False,
+                        )
+                    )
+                    continue
+                trial_sources = apply_transfer(child_sources, donor, xfer_kind)
+                after_panel, _terr = evaluate_candidate_on_panel(
+                    trial_sources,
+                    owners,
+                    panel,
+                    seeds=panel_seeds,
+                    time_limit_s=cfg.time_limit_s,
+                    alns_iterations=cfg.alns_iterations,
+                )
+                rec = evaluate_transfer_effect(
+                    kind=xfer_kind,
+                    source_family=source_family,
+                    target_family=",".join(families),
+                    donor=donor,
+                    before=panel_eval,
+                    after=after_panel,
+                    compatible=True,
+                )
+                transfer_records.append(rec)
+                with transfer_log.open("a", encoding="utf-8") as handle:
+                    handle.write(json.dumps(rec.as_dict()) + "\n")
+                if rec.improved and not rec.worsened:
+                    child_sources = trial_sources
+                    panel_eval = after_panel
+                    child_lineage[xfer_kind] = inherit_lineage_entry(
+                        donor, xfer_kind, source=child_sources[xfer_kind]
+                    )
+                    causal.append({"step": "transfer_accept", "record": rec.as_dict()})
+                else:
+                    causal.append({"step": "transfer_reject", "record": rec.as_dict()})
+            if transfer_records:
+                write_transfer_report(work / "transfer_report.json", transfer_records)
+
+        category, genuine = classify_attribution(attr_rows, child_sources, lineage=child_lineage)
         child = BundleCandidate(
             candidate_id=child_id,
             sources=child_sources,
@@ -547,11 +694,13 @@ def run_evolution(
             tokens=collector.total_tokens,
             source_hashes=hash_sources(child_sources),
             component_attribution=[{k: v for k, v in row.items() if k != "executed_source"} for row in attr_rows],
+            lineage=child_lineage,
             metadata={
                 "causal": causal,
                 "source_families": families,
                 "load_errors": errors,
                 "panel_seeds": panel_seeds,
+                "transfer_n": len(transfer_records),
             },
         )
         apply_panel(child, panel_eval, validation_status="ok" if not errors else "invalid")

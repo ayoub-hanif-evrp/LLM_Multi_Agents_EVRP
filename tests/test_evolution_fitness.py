@@ -129,3 +129,69 @@ def test_panel_ranking_deterministic() -> None:
     assert compare_panel(a, b) == compare_panel(a, b)
     assert compare_panel(a, b) < 0
     assert compare_panel(a, a) == 0
+
+
+def test_first_instance_win_does_not_override_panel_majority() -> None:
+    """Candidate A narrowly wins instance 1 but loses badly on 2 and 3 → B ranks better.
+
+    Guards against early-exit ranking that only inspects the first ordered instance.
+    """
+    from evrptw_autolab.components.evolution.fitness import pairwise_panel_score
+
+    # Instance order: a, b, c — A wins only on "a".
+    cand_a = build_panel_evaluation(
+        [
+            _row(family="schneider", instance_id="a", feasible=True, objective_key=(2.0, 100.0)),
+            _row(family="schneider", instance_id="b", feasible=True, objective_key=(3.0, 500.0)),
+            _row(family="schneider", instance_id="c", feasible=True, objective_key=(3.0, 500.0)),
+        ]
+    )
+    cand_b = build_panel_evaluation(
+        [
+            _row(family="schneider", instance_id="a", feasible=True, objective_key=(2.0, 101.0)),
+            _row(family="schneider", instance_id="b", feasible=True, objective_key=(2.0, 150.0)),
+            _row(family="schneider", instance_id="c", feasible=True, objective_key=(2.0, 150.0)),
+        ]
+    )
+    score = pairwise_panel_score(cand_a, cand_b)
+    assert score.wins_b == 2
+    assert score.wins_a == 1
+    assert panel_is_better(cand_b, cand_a)
+    assert compare_panel(cand_b, cand_a) < 0
+
+
+def test_inherited_llm_lineage_counts_after_failed_mutation() -> None:
+    from evrptw_autolab.components.evolution.archive import classify_attribution
+
+    lineage = {
+        "insertion_score": {
+            "llm_generated": True,
+            "human_default_used": False,
+            "fallback_applied": False,
+            "origin_candidate_id": "parent_llm",
+        },
+        "station_score": {"llm_generated": False, "human_default_used": True},
+        "removal_priority": {"llm_generated": False, "human_default_used": True},
+    }
+    # Current generation mutation failed → attr_rows only show fallbacks.
+    attr_rows = [
+        {
+            "kind": "insertion_score",
+            "llm_generated": False,
+            "fallback_applied": True,
+            "human_default_used": True,
+        }
+    ]
+    # Executed sources still carry the inherited LLM insertion code (non-default text).
+    sources = {
+        "insertion_score": "def insertion_score(a,b,c,d,e):\n    return a + 0.5\n",
+        "station_score": __import__(
+            "evrptw_autolab.components.interfaces", fromlist=["DEFAULT_SOURCES"]
+        ).DEFAULT_SOURCES["station_score"],
+        "removal_priority": __import__(
+            "evrptw_autolab.components.interfaces", fromlist=["DEFAULT_SOURCES"]
+        ).DEFAULT_SOURCES["removal_priority"],
+    }
+    category, genuine = classify_attribution(attr_rows, sources, lineage=lineage)
+    assert category == "hybrid_llm"
+    assert genuine >= 1

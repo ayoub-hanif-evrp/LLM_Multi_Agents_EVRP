@@ -3,6 +3,21 @@
 Never compress lexicographic objectives into a weighted scalar that can
 prefer more vehicles with shorter distance. Comparisons use tuples /
 lexicographic keys and feasibility-first panel logic.
+
+Multi-instance aggregation (documented)
+---------------------------------------
+After feasibility-first gates, jointly covered instances are scored with
+**paired win / tie / loss** under each instance's native lexicographic
+``objective_key`` (minimization). The first differing objective component
+decides the instance; later instances are never ignored.
+
+When win counts tie, we break ties with the sum of **per-instance relative
+gaps** on the deciding component only:
+
+    gap = (worse[i] - better[i]) / max(|worse[i]|, 1.0)
+
+Gaps are never averaged across unrelated absolute units (distance vs cost vs
+duration) as a primary score — they only refine equal win/loss tallies.
 """
 from __future__ import annotations
 
@@ -68,6 +83,30 @@ class PanelEvaluation:
         }
 
 
+@dataclass(frozen=True, slots=True)
+class PairwisePanelScore:
+    """Paired comparison tallies between two panel evaluations."""
+
+    wins_a: int
+    wins_b: int
+    ties: int
+    gap_a: float
+    gap_b: float
+    coverage_penalty_a: int
+    coverage_penalty_b: int
+
+    def as_dict(self) -> dict[str, Any]:
+        return {
+            "wins_a": self.wins_a,
+            "wins_b": self.wins_b,
+            "ties": self.ties,
+            "gap_a": self.gap_a,
+            "gap_b": self.gap_b,
+            "coverage_penalty_a": self.coverage_penalty_a,
+            "coverage_penalty_b": self.coverage_penalty_b,
+        }
+
+
 def instance_eval_from_report(
     *,
     family: str,
@@ -104,7 +143,6 @@ def build_panel_evaluation(rows: list[InstanceEval], *, validation_ok: bool = Tr
             "instances_feasible": len(feasible),
             "feasibility_rate": (len(feasible) / len(group)) if group else 0.0,
             "fully_feasible": len(feasible) == len(group) and bool(group),
-            # Keep objective keys only for feasible instances; never mix infeasible scores.
             "feasible_objective_keys": [list(r.objective_key) for r in feasible],
         }
     n = len(rows)
@@ -126,6 +164,66 @@ def _lex_better(a: tuple[float, ...], b: tuple[float, ...]) -> bool:
     return a < b
 
 
+def _deciding_relative_gap(better: tuple[float, ...], worse: tuple[float, ...]) -> float:
+    """Relative gap on the first differing lexicographic component (better vs worse)."""
+    n = min(len(better), len(worse))
+    for i in range(n):
+        if abs(better[i] - worse[i]) > 1e-12:
+            denom = max(abs(worse[i]), 1.0)
+            return max(0.0, (worse[i] - better[i]) / denom)
+    if len(better) != len(worse):
+        return 0.0
+    return 0.0
+
+
+def pairwise_panel_score(a: PanelEvaluation, b: PanelEvaluation) -> PairwisePanelScore:
+    """Paired win/tie/loss + deciding-component gaps over jointly keyed instances."""
+    a_map = {(r.family, r.instance_id, r.seed): r for r in a.per_instance}
+    b_map = {(r.family, r.instance_id, r.seed): r for r in b.per_instance}
+    keys = sorted(set(a_map) | set(b_map))
+    wins_a = wins_b = ties = 0
+    gap_a = gap_b = 0.0
+    miss_a = miss_b = 0
+    for key in keys:
+        ra = a_map.get(key)
+        rb = b_map.get(key)
+        if ra is None and rb is None:
+            continue
+        if ra is None:
+            miss_a += 1
+            wins_b += 1
+            continue
+        if rb is None:
+            miss_b += 1
+            wins_a += 1
+            continue
+        if ra.feasible and rb.feasible:
+            if _lex_better(ra.objective_key, rb.objective_key):
+                wins_a += 1
+                gap_a += _deciding_relative_gap(ra.objective_key, rb.objective_key)
+            elif _lex_better(rb.objective_key, ra.objective_key):
+                wins_b += 1
+                gap_b += _deciding_relative_gap(rb.objective_key, ra.objective_key)
+            else:
+                ties += 1
+        elif ra.feasible != rb.feasible:
+            if ra.feasible:
+                wins_a += 1
+            else:
+                wins_b += 1
+        else:
+            ties += 1
+    return PairwisePanelScore(
+        wins_a=wins_a,
+        wins_b=wins_b,
+        ties=ties,
+        gap_a=gap_a,
+        gap_b=gap_b,
+        coverage_penalty_a=miss_a,
+        coverage_penalty_b=miss_b,
+    )
+
+
 def compare_panel(a: PanelEvaluation, b: PanelEvaluation) -> int:
     """Return -1 if a ranks better, 1 if b ranks better, 0 if tied.
 
@@ -133,8 +231,10 @@ def compare_panel(a: PanelEvaluation, b: PanelEvaluation) -> int:
     1. component validation_ok
     2. instances_feasible (count)
     3. fully_feasible_on_panel
-    4. per-instance lex objective among jointly feasible rows (fixed order)
-    5. lower total runtime
+    4. paired win/loss counts across **all** jointly covered instances
+       (lexicographic per instance — not first-instance early exit)
+    5. sum of deciding-component relative gaps (tie-break only)
+    6. lower total runtime
     """
     if a.validation_ok != b.validation_ok:
         return -1 if a.validation_ok else 1
@@ -143,24 +243,11 @@ def compare_panel(a: PanelEvaluation, b: PanelEvaluation) -> int:
     if a.fully_feasible_on_panel != b.fully_feasible_on_panel:
         return -1 if a.fully_feasible_on_panel else 1
 
-    a_map = {(r.family, r.instance_id, r.seed): r for r in a.per_instance}
-    b_map = {(r.family, r.instance_id, r.seed): r for r in b.per_instance}
-    keys = sorted(set(a_map) | set(b_map))
-    for key in keys:
-        ra = a_map.get(key)
-        rb = b_map.get(key)
-        if ra is None or rb is None:
-            # Incomplete panel coverage ranks worse.
-            if ra is None and rb is None:
-                continue
-            return 1 if ra is None else -1
-        if ra.feasible and rb.feasible:
-            if _lex_better(ra.objective_key, rb.objective_key):
-                return -1
-            if _lex_better(rb.objective_key, ra.objective_key):
-                return 1
-        elif ra.feasible != rb.feasible:
-            return -1 if ra.feasible else 1
+    score = pairwise_panel_score(a, b)
+    if score.wins_a != score.wins_b:
+        return -1 if score.wins_a > score.wins_b else 1
+    if abs(score.gap_a - score.gap_b) > 1e-12:
+        return -1 if score.gap_a > score.gap_b else 1
 
     if a.total_runtime_s + 1e-12 < b.total_runtime_s:
         return -1
@@ -183,19 +270,14 @@ def fitness_from_report(report: EvaluationReportV2, runtime_s: float) -> float:
     if not report.feasible:
         viol = len(report.violations) + sum(float(v.magnitude or 0.0) for v in report.violations)
         return -1_000_000.0 - 100.0 * viol - runtime_s
-    # Encode only the primary lexicographic component at full weight; secondary
-    # components must not overturn it. Remaining components use tiny epsilons for
-    # tie-breaking only when the primary matches exactly in float space.
     if not report.objective_key:
         return 1_000_000.0 - float(report.objective or 0.0) - 0.01 * runtime_s
     primary = float(report.objective_key[0])
     score = 1_000_000.0 - primary
-    # Secondary terms are bounded so they cannot overcome a primary difference of 1.
     remainder = 0.0
     scale = 1e-6
     for value in report.objective_key[1:]:
         remainder += float(value) * scale
         scale *= 1e-3
-    # Clamp remainder into (-0.5, 0.5) so vehicle+1 can never lose to distance.
     remainder = max(-0.49, min(0.49, remainder))
     return score - remainder - 0.01 * runtime_s

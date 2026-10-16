@@ -17,11 +17,53 @@ models_app = typer.Typer(no_args_is_help=True, help="Inspect configured LLM mode
 datasets_app = typer.Typer(no_args_is_help=True, help="Dataset registry and audit.")
 components_app = typer.Typer(no_args_is_help=True, help="Component synthesis smoke (Track 2).")
 baselines_app = typer.Typer(no_args_is_help=True, help="Classical and LLM baseline pilots.")
+experiments_app = typer.Typer(no_args_is_help=True, help="Matched research campaigns.")
 app.add_typer(models_app, name="models")
 app.add_typer(datasets_app, name="datasets")
 app.add_typer(components_app, name="components")
 app.add_typer(baselines_app, name="baselines")
+app.add_typer(experiments_app, name="experiments")
 ROOT = Path(__file__).resolve().parents[2]
+
+
+@experiments_app.command("campaign")
+def experiments_campaign(
+    fake: bool = typer.Option(True, "--fake/--ollama", help="FakeBackend (default) or local Ollama"),
+    profile: str = typer.Option("qwen3_coder_30b", "--profile"),
+    seed: int = typer.Option(7, "--seed"),
+    max_instances: int = typer.Option(3, "--max-instances", help="Dev-panel cap; 0 = full panel"),
+    time_limit_s: float = typer.Option(5.0, "--time-limit"),
+    generations: int = typer.Option(2, "--generations"),
+) -> None:
+    """Matched classical vs single-agent vs five-agent vs evolution on the development panel.
+
+    FakeBackend validates plumbing. Use --ollama for a real open-weight comparison.
+    Never loads held-out instances.
+    """
+    from evrptw_autolab.experiments.campaign import CampaignConfig, run_research_campaign
+
+    cfg = CampaignConfig(
+        seed=seed,
+        profile=profile,
+        fake=fake,
+        max_instances=None if max_instances <= 0 else max_instances,
+        time_limit_s=time_limit_s,
+        evolution_generations=generations,
+    )
+    payload = run_research_campaign(cfg)
+    out = Path(str(payload["out_dir"]))
+    typer.echo(
+        json.dumps(
+            {
+                "out": str(out),
+                "aggregate": payload["aggregate"],
+                "wall_s": payload["wall_s"],
+                "disclaimer": payload["disclaimer"],
+                "paths": {"campaign": str(out / "campaign.json"), "rows": str(out / "rows.jsonl")},
+            },
+            indent=2,
+        )
+    )
 
 
 @baselines_app.command("pilot")

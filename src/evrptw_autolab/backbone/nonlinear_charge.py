@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from evrptw_autolab.backbone.util import clone_solution, vehicle_for_route
 from evrptw_autolab.problem.v2.charging import nonlinear_charge_duration
+from evrptw_autolab.problem.v2.route_simulator import simulate_route
 from evrptw_autolab.problem.v2.transport import EPSILON, energy_required
 from evrptw_autolab.problem.v2.types import ProblemSpecV2, RouteStopV2, SolutionV2, VehicleTypeV2
 
@@ -83,7 +84,52 @@ def optimize_route_partial_charges(
             battery = float(target)
         else:
             out.append(stop)
-    return out
+    return _refine_partial_targets(spec, out, vehicle)
+
+
+def _route_duration_ok(
+    spec: ProblemSpecV2, route: list[RouteStopV2], vehicle: VehicleTypeV2
+) -> tuple[bool, float]:
+    traj, errors = simulate_route(spec, route, vehicle)
+    if errors:
+        return False, float("inf")
+    ok = all(s.battery_arrival >= -EPSILON and s.battery_departure >= -EPSILON for s in traj)
+    return ok, (traj[-1].departure_time if traj else float("inf"))
+
+
+def _refine_partial_targets(
+    spec: ProblemSpecV2,
+    route: list[RouteStopV2],
+    vehicle: VehicleTypeV2,
+) -> list[RouteStopV2]:
+    """Try a few higher SoC targets; keep only if route duration improves."""
+    cap = float(vehicle.battery_capacity or 0.0)
+    funcs = spec.metadata.get("charging_functions") or vehicle.metadata.get("charging_functions") or {}
+    best = route
+    best_ok, best_dur = _route_duration_ok(spec, route, vehicle)
+    station_idxs = [i for i, s in enumerate(route) if spec.node_map[s.node_id].kind == "station"]
+    for s_idx in station_idxs:
+        stop = best[s_idx]
+        base = float(stop.target_soc or 0.0)
+        tech = stop.charge_technology
+        hi = cap
+        if tech and tech in funcs:
+            hi = min(hi, float(funcs[tech][-1]["battery_level"]))
+        for cand in (base, min(hi, base + 0.1 * cap), min(hi, 0.5 * (base + hi)), hi):
+            trial = list(best)
+            trial[s_idx] = RouteStopV2(
+                node_id=stop.node_id,
+                vehicle_type_id=stop.vehicle_type_id,
+                event="charge",
+                target_soc=float(cand),
+                charge_technology=tech,
+            )
+            ok, dur = _route_duration_ok(spec, trial, vehicle)
+            if (ok and not best_ok) or (ok == best_ok and dur + 1e-9 < best_dur):
+                best = trial
+                best_ok, best_dur = ok, dur
+                stop = best[s_idx]
+    return best
 
 
 def optimize_solution_partial_charges(spec: ProblemSpecV2, solution: SolutionV2) -> SolutionV2:

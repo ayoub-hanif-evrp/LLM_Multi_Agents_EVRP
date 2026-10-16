@@ -197,11 +197,15 @@ def alns_improve(
     time_limit_s: float = 5.0,
     iterations: int = 80,
     policy: object | None = None,
+    deadline: float | None = None,
 ) -> SolutionV2:
     """ALNS with random/worst destroy + greedy repair + SA acceptance."""
     start = time.monotonic()
+    end_by = start + float(time_limit_s)
+    if deadline is not None:
+        end_by = min(end_by, float(deadline))
     current = clone_solution(solution)
-    current = repair_energy(spec, current, policy=policy)
+    current = repair_energy(spec, current, policy=policy, deadline=end_by)
     current_report = evaluate(spec, current)
     best = clone_solution(current)
     best_report = current_report
@@ -209,9 +213,10 @@ def alns_improve(
     weights = {"random": 1.0, "worst": 1.0}
     temperature = 1.0
     cooling = 0.95
+    it = -1
 
     for it in range(iterations):
-        if time.monotonic() - start > time_limit_s:
+        if time.monotonic() > end_by:
             break
         n_units = len(_request_units(spec))
         k = max(1, min(3, n_units // 3 or 1))
@@ -233,8 +238,8 @@ def alns_improve(
             continue
         candidate = repair_greedy(spec, destroyed, removed, rng, policy=policy)
         if it % 5 == 0:
-            candidate = relocate_improve(spec, candidate, max_passes=1)
-            candidate = two_opt_improve(spec, candidate)
+            candidate = relocate_improve(spec, candidate, max_passes=1, deadline=end_by)
+            candidate = two_opt_improve(spec, candidate, deadline=end_by)
         cand_report = evaluate(spec, candidate)
 
         accept = False
@@ -266,15 +271,19 @@ def alns_improve(
 
     incumbent = clone_solution(best)
     incumbent_report = best_report
-    polished = relocate_improve(spec, best, max_passes=2)
-    polished = two_opt_improve(spec, polished)
-    polished = repair_energy(spec, polished, policy=policy)
-    polished = complete_solution_charges(spec, polished)
-    polished = optimize_solution_partial_charges(spec, polished)
-    polished_report = evaluate(spec, polished)
-    if is_better(polished_report, incumbent_report):
-        best = polished
-        best_report = polished_report
+    if time.monotonic() < end_by:
+        polished = relocate_improve(spec, best, max_passes=2, deadline=end_by)
+        polished = two_opt_improve(spec, polished, deadline=end_by)
+        polished = repair_energy(spec, polished, policy=policy, deadline=end_by)
+        polished = complete_solution_charges(spec, polished)
+        polished = optimize_solution_partial_charges(spec, polished)
+        polished_report = evaluate(spec, polished)
+        if is_better(polished_report, incumbent_report):
+            best = polished
+            best_report = polished_report
+        else:
+            best = incumbent
+            best_report = incumbent_report
     else:
         best = incumbent
         best_report = incumbent_report

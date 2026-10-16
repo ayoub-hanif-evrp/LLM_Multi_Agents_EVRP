@@ -1,6 +1,6 @@
 # VoltForge 2.0 — Research Readiness Report
 
-**Date:** 2026-10-15  
+**Date:** 2026-10-16  
 **Pushed repair commit:** `d18fe0edd6f8` (14/14 classical pilot)  
 **This document tracks subsequent integrity work on top of that commit.**
 
@@ -12,10 +12,12 @@
 | Engineering tests / CI | Ruff + pytest + mypy required green |
 | Classical solver feasibility (seed-7, 14-dev panel) | **14/14** at `d18fe0e` — one seed only |
 | Classical objective quality | Feasible but not BKS-competitive (esp. Montoya/Hiermann) |
-| Evolution fitness scientific validity | Panel-comparable lex ranking + attribution (Milestone 1) |
+| Evolution fitness scientific validity | **Paired win/tie/loss + normalized gaps** across panel instances |
+| Component lineage / repair attribution | Lineage across crossover; repair success after panel eval |
+| Quality-focused Critic | Invoked on stagnation / regression, not only infeasibility |
+| Cross-variant transfer | Capability-aware retrieve + accept/reject effect logging |
 | Real LLM synthesis | Bounded Qwen smoke only; not a research claim |
-| Multi-agent causal contribution | **Not demonstrated** with fair ablations yet |
-| Cross-variant transfer | Logging scaffold; negative-transfer study pending |
+| Multi-agent causal contribution | **Not demonstrated** — campaign CLI exists; live Ollama run pending |
 | Held-out generalization | **Not run** |
 | Publication readiness | **Not ready** for an algorithm-design claim |
 
@@ -121,7 +123,20 @@ uv run voltforge components smoke --ollama --profile qwen3_coder_30b --seed 0
 
 Measured: feasible micro_g2; `llm_calls=5`; `wall_s≈29.4`; `genuine_llm_components=1`; `default_heuristic_count=2` (insertion/station fell back after syntax errors in model output — correctly attributed, not counted as LLM discoveries).
 
-**No multi-hour ablation campaign was launched.** Approve before classical vs 1-agent vs 5-agent vs evolution runs.
+**Matched campaign CLI (FakeBackend by default — plumbing only):**
+
+```bash
+# Cheap fake plumbing check (not a paper result)
+uv run voltforge experiments campaign --fake --max-instances 3 --seed 7
+
+# Live open-weight comparison (requires local Ollama + profile installed)
+uv run voltforge experiments campaign --ollama --profile qwen3_coder_30b --max-instances 0 --seed 7 --time-limit 8 --generations 2
+```
+
+Arms: `classical`, `single_agent`, `five_agent`, `five_agent_evolution`.  
+Outputs: `results/v2/campaigns/campaign_<utc>/campaign.json` + `rows.jsonl` with feasibility, objectives, attribution, tokens, wall time.
+
+**No committed live Qwen ablation table yet.** FakeBackend campaign rows must not be cited as model performance.
 
 ## 9. Attribution of gains
 
@@ -131,7 +146,8 @@ No LLM component discovery is credited for the pilot improvement.
 ## 10. Remaining limitations
 
 - Development panel still includes `rc105C5` (RC family leakage risk vs older Schneider protocol); a new frozen split is still required before model selection.
-- Ablation table (classical / 1-agent / 5-agent / evolution ± critic ± memory) not yet measured with real LLM budgets.
+- Ablation table (classical / 1-agent / 5-agent / evolution ± critic ± memory) not yet measured with **live** LLM budgets (CLI ready; results not committed).
+- Classical quality gaps remain (Montoya duration/fleet, Bezzi recharge cost vs calibrated references, Hiermann cost/fleet); solver now has cooperative + hard outer deadlines with incumbent preserve.
 - Paper figures/CSV for gaps vs published BKS not regenerated for the 14/14 run beyond pilot JSON.
 
 ## 11. Reproducibility commands

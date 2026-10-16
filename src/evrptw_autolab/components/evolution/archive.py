@@ -63,6 +63,8 @@ class BundleCandidate:
     tokens: int = 0
     source_hashes: dict[str, str] = field(default_factory=dict)
     component_attribution: list[dict[str, Any]] = field(default_factory=list)
+    # Per-kind lineage surviving crossover: origin candidate, LLM flag, hashes.
+    lineage: dict[str, dict[str, Any]] = field(default_factory=dict)
     metadata: dict[str, Any] = field(default_factory=dict)
 
     def fingerprint(self) -> str:
@@ -125,15 +127,32 @@ def apply_panel(candidate: BundleCandidate, panel: PanelEvaluation, *, validatio
             candidate.objective_key = list(panel.per_instance[0].objective_key)
 
 
-def classify_attribution(attr_rows: list[dict[str, Any]], sources: dict[str, str]) -> tuple[str, int]:
-    """Return (category, genuine_llm_component_count)."""
-    genuine = 0
+def classify_attribution(
+    attr_rows: list[dict[str, Any]],
+    sources: dict[str, str],
+    *,
+    lineage: dict[str, dict[str, Any]] | None = None,
+) -> tuple[str, int]:
+    """Return (category, genuine_llm_component_count).
+
+    Counts genuine LLM components from **executed lineage** (including inherited
+    parent components), not only mutations attempted in the current generation.
+    """
+    lineage = lineage or {}
+    genuine_kinds: set[str] = set()
     any_fallback = False
+    for kind, meta in lineage.items():
+        if meta.get("llm_generated") and not meta.get("human_default_used"):
+            genuine_kinds.add(str(kind))
+        if meta.get("fallback_applied") or meta.get("human_default_used"):
+            any_fallback = True
     for row in attr_rows:
+        kind = str(row.get("kind") or "")
         if row.get("llm_generated") and not row.get("human_default_used") and not row.get("fallback_applied"):
-            genuine += 1
+            genuine_kinds.add(kind)
         if row.get("fallback_applied") or row.get("human_default_used"):
             any_fallback = True
+    genuine = len(genuine_kinds)
     if genuine == 0 and all(
         sources.get(str(k), "").strip() == DEFAULT_SOURCES[k].strip() for k in DEFAULT_SOURCES
     ):
@@ -143,6 +162,53 @@ def classify_attribution(attr_rows: list[dict[str, Any]], sources: dict[str, str
     if genuine == 0:
         return "failed_generation", 0
     return "hybrid_llm", genuine
+
+
+def inherit_lineage_entry(
+    parent: BundleCandidate,
+    kind: str,
+    *,
+    source: str,
+) -> dict[str, Any]:
+    """Build a lineage record for a component taken from a parent (crossover)."""
+    prior = dict(parent.lineage.get(kind) or {})
+    is_default = source.strip() == DEFAULT_SOURCES[kind].strip() if kind in DEFAULT_SOURCES else False
+    llm_flag = bool(prior.get("llm_generated")) and not is_default
+    return {
+        "kind": kind,
+        "origin_candidate_id": prior.get("origin_candidate_id") or parent.candidate_id,
+        "origin_generation": prior.get("origin_generation", parent.generation),
+        "inherited_from": parent.candidate_id,
+        "executed_source_hash": source_hash(source),
+        "llm_generated": llm_flag,
+        "human_default_used": is_default,
+        "fallback_applied": bool(prior.get("fallback_applied")) and not llm_flag,
+        "agent_role": prior.get("agent_role") or "",
+        "model": prior.get("model") or parent.model,
+    }
+
+
+def lineage_from_mutation(
+    *,
+    kind: str,
+    attr: dict[str, Any],
+    candidate_id: str,
+    generation: int,
+) -> dict[str, Any]:
+    return {
+        "kind": kind,
+        "origin_candidate_id": candidate_id,
+        "origin_generation": generation,
+        "inherited_from": None,
+        "executed_source_hash": attr.get("executed_source_hash") or source_hash(attr.get("executed_source") or ""),
+        "llm_generated": bool(attr.get("llm_generated")),
+        "human_default_used": bool(attr.get("human_default_used")),
+        "fallback_applied": bool(attr.get("fallback_applied")),
+        "agent_role": attr.get("agent_role") or "",
+        "model": attr.get("model") or "",
+        "mutation_accepted": bool(attr.get("mutation_accepted")),
+        "successful_repair": bool(attr.get("successful_repair")),
+    }
 
 
 @dataclass

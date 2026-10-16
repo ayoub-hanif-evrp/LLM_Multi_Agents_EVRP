@@ -1,6 +1,8 @@
 """Charging-station insertion repair for energy-infeasible routes."""
 from __future__ import annotations
 
+import time
+
 from evrptw_autolab.backbone.charge_completion import complete_solution_charges
 from evrptw_autolab.backbone.util import (
     clone_solution,
@@ -61,6 +63,7 @@ def repair_energy(
     *,
     max_inserts: int = 40,
     policy: object | None = None,
+    deadline: float | None = None,
 ) -> SolutionV2:
     """Insert stations until battery-feasible or inserts exhausted.
 
@@ -74,6 +77,8 @@ def repair_energy(
     current = complete_solution_charges(spec, clone_solution(solution))
     inserts = 0
     while inserts < max_inserts:
+        if deadline is not None and time.monotonic() > deadline:
+            break
         current = complete_solution_charges(spec, current)
         report = evaluate(spec, current)
         hard_energy = any(v.family in {"BATTERY", "CHARGE_POLICY"} for v in report.violations)
@@ -95,6 +100,8 @@ def repair_energy(
                 continue
             candidates = _find_station_insertions(spec, route, vehicle, traj, policy=policy)
             for insert_pos, station_id in candidates:
+                if deadline is not None and time.monotonic() > deadline:
+                    return current
                 if insert_pos > 0 and route[insert_pos - 1].node_id == station_id:
                     continue
                 trial = clone_solution(current)

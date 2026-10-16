@@ -3,7 +3,11 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from evrptw_autolab.experiments.campaign import CampaignConfig, run_research_campaign
+from evrptw_autolab.experiments.campaign import (
+    CampaignConfig,
+    _select_panel_items,
+    run_research_campaign,
+)
 
 
 def test_fake_campaign_runs_all_arms(tmp_path: Path) -> None:
@@ -23,3 +27,10 @@ def test_fake_campaign_runs_all_arms(tmp_path: Path) -> None:
     assert arms >= {"classical", "single_agent", "five_agent", "five_agent_evolution"}
     assert (tmp_path / "camp" / "campaign.json").exists()
     assert payload["aggregate"]["classical"]["n"] == 1
+
+
+def test_panel_cap_spans_families() -> None:
+    items = _select_panel_items(CampaignConfig(max_instances=5, fake=True))
+    families = {i.family for i in items}
+    assert len(items) == 5
+    assert len(families) >= 4

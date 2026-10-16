@@ -53,10 +53,38 @@ class CampaignConfig:
     out_dir: Path | None = None
 
 
-def _load_panel(cfg: CampaignConfig) -> list[tuple[PilotInstance, ProblemSpecV2]]:
+def _select_panel_items(cfg: CampaignConfig) -> list[PilotInstance]:
+    """Prefer one instance per family when capping, for fair multi-variant coverage."""
     items = development_panel()
-    if cfg.max_instances is not None:
-        items = items[: max(1, int(cfg.max_instances))]
+    if cfg.max_instances is None:
+        return items
+    cap = max(1, int(cfg.max_instances))
+    if cap >= len(items):
+        return items
+    # Round-robin across families so a 5-cap is not Schneider-only.
+    by_family: dict[str, list[PilotInstance]] = {}
+    for item in items:
+        by_family.setdefault(item.family, []).append(item)
+    selected: list[PilotInstance] = []
+    families = list(by_family.keys())
+    idx = 0
+    while len(selected) < cap:
+        progressed = False
+        for fam in families:
+            bucket = by_family[fam]
+            if idx < len(bucket):
+                selected.append(bucket[idx])
+                progressed = True
+                if len(selected) >= cap:
+                    break
+        if not progressed:
+            break
+        idx += 1
+    return selected
+
+
+def _load_panel(cfg: CampaignConfig) -> list[tuple[PilotInstance, ProblemSpecV2]]:
+    items = _select_panel_items(cfg)
     out: list[tuple[PilotInstance, ProblemSpecV2]] = []
     for item in items:
         out.append((item, item.loader(item.path)))

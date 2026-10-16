@@ -1,0 +1,385 @@
+{
+  "n": 42,
+  "within_budget": 38,
+  "max_overshoot_s": 1.0506858000007924,
+  "rows": [
+    {
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "time_limit_s": 8.0,
+      "runtime_s": 0.9695965000137221,
+      "overshoot_s": 0.0,
+      "within_budget": true
+    },
+    {
+      "family": "schneider",
+      "instance_id": "c103C5",
+      "seed": 7,
+      "time_limit_s": 8.0,
+      "runtime_s": 0.5994065999984741,
+      "overshoot_s": 0.0,
+      "within_budget": true
+    },
+    {
+      "family": "schneider",
+      "instance_id": "r104C5",
+      "seed": 7,
+      "time_limit_s": 8.0,
+      "runtime_s": 0.597640499996487,
+      "overshoot_s": 0.0,
+      "within_budget": true
+    },
+    {
+      "family": "schneider",
+      "instance_id": "r105C5",
+      "seed": 7,
+      "time_limit_s": 8.0,
+      "runtime_s": 0.4786426000064239,
+      "overshoot_s": 0.0,
+      "within_budget": true
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc105C5",
+      "seed": 7,
+      "time_limit_s": 8.0,
+      "runtime_s": 0.7126179999904707,
+      "overshoot_s": 0.0,
+      "within_budget": true
+    },
+    {
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 7,
+      "time_limit_s": 10.0,
+      "runtime_s": 3.835242400004063,
+      "overshoot_s": 0.0,
+      "within_budget": true
+    },
+    {
+      "family": "montoya",
+      "instance_id": "tc0c10s3cf1",
+      "seed": 7,
+      "time_limit_s": 10.0,
+      "runtime_s": 4.437096600013319,
+      "overshoot_s": 0.0,
+      "within_budget": true
+    },
+    {
+      "family": "bezzi",
+      "instance_id": "C101-5",
+      "seed": 7,
+      "time_limit_s": 12.0,
+      "runtime_s": 12.083810699987225,
+      "overshoot_s": 0.08381069998722523,
+      "within_budget": true
+    },
+    {
+      "family": "bezzi",
+      "instance_id": "R105-5",
+      "seed": 7,
+      "time_limit_s": 12.0,
+      "runtime_s": 5.065881599992281,
+      "overshoot_s": 0.0,
+      "within_budget": true
+    },
+    {
+      "family": "bezzi",
+      "instance_id": "10-N10",
+      "seed": 7,
+      "time_limit_s": 12.0,
+      "runtime_s": 12.21210949998931,
+      "overshoot_s": 0.21210949998931028,
+      "within_budget": true
+    },
+    {
+      "family": "goeke",
+      "instance_id": "c101C6",
+      "seed": 7,
+      "time_limit_s": 10.0,
+      "runtime_s": 0.5139598999812733,
+      "overshoot_s": 0.0,
+      "within_budget": true
+    },
+    {
+      "family": "goeke",
+      "instance_id": "r104C6",
+      "seed": 7,
+      "time_limit_s": 10.0,
+      "runtime_s": 0.9654693999909796,
+      "overshoot_s": 0.0,
+      "within_budget": true
+    },
+    {
+      "family": "goeke",
+      "instance_id": "rc105C6",
+      "seed": 7,
+      "time_limit_s": 10.0,
+      "runtime_s": 1.320620099984808,
+      "overshoot_s": 0.0,
+      "within_budget": true
+    },
+    {
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "time_limit_s": 15.0,
+      "runtime_s": 15.022178800019901,
+      "overshoot_s": 0.022178800019901246,
+      "within_budget": true
+    },
+    {
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 11,
+      "time_limit_s": 8.0,
+      "runtime_s": 0.6715142999892123,
+      "overshoot_s": 0.0,
+      "within_budget": true
+    },
+    {
+      "family": "schneider",
+      "instance_id": "c103C5",
+      "seed": 11,
+      "time_limit_s": 8.0,
+      "runtime_s": 0.5609889999905135,
+      "overshoot_s": 0.0,
+      "within_budget": true
+    },
+    {
+      "family": "schneider",
+      "instance_id": "r104C5",
+      "seed": 11,
+      "time_limit_s": 8.0,
+      "runtime_s": 0.5622578999900725,
+      "overshoot_s": 0.0,
+      "within_budget": true
+    },
+    {
+      "family": "schneider",
+      "instance_id": "r105C5",
+      "seed": 11,
+      "time_limit_s": 8.0,
+      "runtime_s": 0.4390340000099968,
+      "overshoot_s": 0.0,
+      "within_budget": true
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc105C5",
+      "seed": 11,
+      "time_limit_s": 8.0,
+      "runtime_s": 0.38614030001917854,
+      "overshoot_s": 0.0,
+      "within_budget": true
+    },
+    {
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 11,
+      "time_limit_s": 10.0,
+      "runtime_s": 4.060691899998346,
+      "overshoot_s": 0.0,
+      "within_budget": true
+    },
+    {
+      "family": "montoya",
+      "instance_id": "tc0c10s3cf1",
+      "seed": 11,
+      "time_limit_s": 10.0,
+      "runtime_s": 2.4620432000083383,
+      "overshoot_s": 0.0,
+      "within_budget": true
+    },
+    {
+      "family": "bezzi",
+      "instance_id": "C101-5",
+      "seed": 11,
+      "time_limit_s": 12.0,
+      "runtime_s": 12.176902099978179,
+      "overshoot_s": 0.17690209997817874,
+      "within_budget": true
+    },
+    {
+      "family": "bezzi",
+      "instance_id": "R105-5",
+      "seed": 11,
+      "time_limit_s": 12.0,
+      "runtime_s": 10.286084899998968,
+      "overshoot_s": 0.0,
+      "within_budget": true
+    },
+    {
+      "family": "bezzi",
+      "instance_id": "10-N10",
+      "seed": 11,
+      "time_limit_s": 12.0,
+      "runtime_s": 12.710606600012397,
+      "overshoot_s": 0.7106066000123974,
+      "within_budget": false
+    },
+    {
+      "family": "goeke",
+      "instance_id": "c101C6",
+      "seed": 11,
+      "time_limit_s": 10.0,
+      "runtime_s": 1.0223237000172958,
+      "overshoot_s": 0.0,
+      "within_budget": true
+    },
+    {
+      "family": "goeke",
+      "instance_id": "r104C6",
+      "seed": 11,
+      "time_limit_s": 10.0,
+      "runtime_s": 0.9534199000045191,
+      "overshoot_s": 0.0,
+      "within_budget": true
+    },
+    {
+      "family": "goeke",
+      "instance_id": "rc105C6",
+      "seed": 11,
+      "time_limit_s": 10.0,
+      "runtime_s": 1.228306800010614,
+      "overshoot_s": 0.0,
+      "within_budget": true
+    },
+    {
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 11,
+      "time_limit_s": 15.0,
+      "runtime_s": 15.53285709998454,
+      "overshoot_s": 0.5328570999845397,
+      "within_budget": false
+    },
+    {
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 22,
+      "time_limit_s": 8.0,
+      "runtime_s": 0.7018815000192262,
+      "overshoot_s": 0.0,
+      "within_budget": true
+    },
+    {
+      "family": "schneider",
+      "instance_id": "c103C5",
+      "seed": 22,
+      "time_limit_s": 8.0,
+      "runtime_s": 0.5574850999983028,
+      "overshoot_s": 0.0,
+      "within_budget": true
+    },
+    {
+      "family": "schneider",
+      "instance_id": "r104C5",
+      "seed": 22,
+      "time_limit_s": 8.0,
+      "runtime_s": 0.597661000007065,
+      "overshoot_s": 0.0,
+      "within_budget": true
+    },
+    {
+      "family": "schneider",
+      "instance_id": "r105C5",
+      "seed": 22,
+      "time_limit_s": 8.0,
+      "runtime_s": 0.49252749999868684,
+      "overshoot_s": 0.0,
+      "within_budget": true
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc105C5",
+      "seed": 22,
+      "time_limit_s": 8.0,
+      "runtime_s": 0.709284500015201,
+      "overshoot_s": 0.0,
+      "within_budget": true
+    },
+    {
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 22,
+      "time_limit_s": 10.0,
+      "runtime_s": 4.437725900002988,
+      "overshoot_s": 0.0,
+      "within_budget": true
+    },
+    {
+      "family": "montoya",
+      "instance_id": "tc0c10s3cf1",
+      "seed": 22,
+      "time_limit_s": 10.0,
+      "runtime_s": 4.740525700006401,
+      "overshoot_s": 0.0,
+      "within_budget": true
+    },
+    {
+      "family": "bezzi",
+      "instance_id": "C101-5",
+      "seed": 22,
+      "time_limit_s": 12.0,
+      "runtime_s": 12.355133099976229,
+      "overshoot_s": 0.35513309997622855,
+      "within_budget": false
+    },
+    {
+      "family": "bezzi",
+      "instance_id": "R105-5",
+      "seed": 22,
+      "time_limit_s": 12.0,
+      "runtime_s": 5.165256900014356,
+      "overshoot_s": 0.0,
+      "within_budget": true
+    },
+    {
+      "family": "bezzi",
+      "instance_id": "10-N10",
+      "seed": 22,
+      "time_limit_s": 12.0,
+      "runtime_s": 12.009394500026247,
+      "overshoot_s": 0.009394500026246533,
+      "within_budget": true
+    },
+    {
+      "family": "goeke",
+      "instance_id": "c101C6",
+      "seed": 22,
+      "time_limit_s": 10.0,
+      "runtime_s": 0.9764365000010002,
+      "overshoot_s": 0.0,
+      "within_budget": true
+    },
+    {
+      "family": "goeke",
+      "instance_id": "r104C6",
+      "seed": 22,
+      "time_limit_s": 10.0,
+      "runtime_s": 0.9285772000148427,
+      "overshoot_s": 0.0,
+      "within_budget": true
+    },
+    {
+      "family": "goeke",
+      "instance_id": "rc105C6",
+      "seed": 22,
+      "time_limit_s": 10.0,
+      "runtime_s": 1.2245279000198934,
+      "overshoot_s": 0.0,
+      "within_budget": true
+    },
+    {
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 22,
+      "time_limit_s": 15.0,
+      "runtime_s": 16.050685800000792,
+      "overshoot_s": 1.0506858000007924,
+      "within_budget": false
+    }
+  ]
+}

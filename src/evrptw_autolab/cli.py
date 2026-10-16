@@ -34,6 +34,8 @@ def experiments_campaign(
     max_instances: int = typer.Option(3, "--max-instances", help="Dev-panel cap; 0 = full panel"),
     time_limit_s: float = typer.Option(5.0, "--time-limit"),
     generations: int = typer.Option(2, "--generations"),
+    max_llm_calls: int = typer.Option(24, "--max-llm-calls"),
+    max_wall_s: float = typer.Option(600.0, "--max-wall"),
 ) -> None:
     """Matched classical vs single-agent vs five-agent vs evolution on the development panel.
 
@@ -49,6 +51,8 @@ def experiments_campaign(
         max_instances=None if max_instances <= 0 else max_instances,
         time_limit_s=time_limit_s,
         evolution_generations=generations,
+        max_llm_calls=max_llm_calls,
+        max_wall_s=max_wall_s,
     )
     payload = run_research_campaign(cfg)
     out = Path(str(payload["out_dir"]))
@@ -69,12 +73,32 @@ def experiments_campaign(
 @baselines_app.command("pilot")
 def baselines_pilot(
     seed: int = typer.Option(7, "--seed"),
+    seeds: str = typer.Option(
+        "",
+        "--seeds",
+        help="Comma-separated seeds (overrides --seed), e.g. 7,11,22",
+    ),
 ) -> None:
     """Run the human-authored classical solver on the five-family development panel."""
     from evrptw_autolab.baselines.classical_pilot import run_classical_pilot
 
-    result = run_classical_pilot(seed=seed, out_dir=ROOT / "results" / "v2" / "baselines" / "classical")
-    typer.echo(json.dumps({"n": result["n"], "aggregate": result["aggregate"], "paths": result["paths"]}, indent=2))
+    seed_list = [int(x.strip()) for x in seeds.split(",") if x.strip()] if seeds else None
+    result = run_classical_pilot(
+        seed=seed,
+        seeds=seed_list,
+        out_dir=ROOT / "results" / "v2" / "baselines" / "classical",
+    )
+    typer.echo(
+        json.dumps(
+            {
+                "n": result["n"],
+                "seeds": result.get("seeds"),
+                "aggregate": result["aggregate"],
+                "paths": result["paths"],
+            },
+            indent=2,
+        )
+    )
 
 
 @app.command("validate-v2")

@@ -10,8 +10,9 @@
 |---|---|
 | Mathematical formulation validation | Prior Bezzi/objective work; not reopened here |
 | Engineering tests / CI | Ruff + pytest + mypy required green |
-| Classical solver feasibility (seed-7, 14-dev panel) | **14/14** at `d18fe0e` — one seed only |
-| Classical objective quality | Feasible but not BKS-competitive (esp. Montoya/Hiermann) |
+| Classical solver feasibility (seed-7, 14-dev panel) | **14/14** at `d18fe0e`; **42/42** on seeds 7/11/22 at `200bb9f` |
+| Classical objective quality | Improved Montoya on seeds 11/22 (~25.4 vs 31.3); Bezzi/Hiermann gaps remain |
+| Solver budgets | Multi-seed deadline report: 38/42 within +0.25s; max overshoot ≈1.05s (was ~29s on Hiermann) |
 | Evolution fitness scientific validity | **Paired win/tie/loss + normalized gaps** across panel instances |
 | Component lineage / repair attribution | Lineage across crossover; repair success after panel eval |
 | Quality-focused Critic | Invoked on stagnation / regression, not only infeasibility |
@@ -136,7 +137,7 @@ uv run voltforge experiments campaign --ollama --profile qwen3_coder_30b --max-i
 Arms: `classical`, `single_agent`, `five_agent`, `five_agent_evolution`.  
 Outputs: `results/v2/campaigns/campaign_<utc>/campaign.json` + `rows.jsonl` with feasibility, objectives, attribution, tokens, wall time.
 
-**No committed live Qwen ablation table yet.** FakeBackend campaign rows must not be cited as model performance.
+**Live Qwen campaign:** run via `voltforge experiments campaign --ollama --profile qwen3_coder_30b` (family-balanced panel). Commit raw `campaign.json` / `rows.jsonl` only after the run finishes; do not invent numbers. FakeBackend rows remain plumbing-only.
 
 ## 9. Attribution of gains
 

@@ -272,19 +272,92 @@ def write_results(rows: list[PilotRow], out_dir: Path, *, seed: int = 0) -> dict
     return {"json": per_path, "csv": csv_path, "summary": summary_path, "latest": latest_path}
 
 
+def freeze_development_panel(root: Path | None = None, out_path: Path | None = None) -> Path:
+    """Write the frozen five-family development panel (never held-out)."""
+    panel = development_panel(root)
+    base = root or ROOT
+    path = out_path or (base / "results" / "v2" / "manifests" / "development_panel.json")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "protocol": "voltforge_v2_development_panel",
+        "note": (
+            "Development/tuning instances only. Held-out Schneider RC2 and any "
+            "confirmation splits must not be used for model selection."
+        ),
+        "git_commit": _git_head(base),
+        "instances": [
+            {
+                "family": item.family,
+                "instance_id": item.instance_id,
+                "path": str(item.path.relative_to(base)) if item.path.is_relative_to(base) else str(item.path),
+                "time_limit_s": item.time_limit_s,
+                "alns_iterations": item.alns_iterations,
+            }
+            for item in panel
+        ],
+    }
+    path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    return path
+
+
 def run_classical_pilot(
     *,
     seed: int = 7,
+    seeds: list[int] | None = None,
     out_dir: Path | None = None,
     root: Path | None = None,
 ) -> dict[str, Any]:
     panel = development_panel(root)
-    rows = [run_one(item, seed) for item in panel]
+    seed_list = list(seeds) if seeds else [int(seed)]
+    rows: list[PilotRow] = []
+    for s in seed_list:
+        rows.extend(run_one(item, int(s)) for item in panel)
     base = out_dir or (ROOT / "results" / "v2" / "baselines" / "classical")
-    paths = write_results(rows, base, seed=seed)
+    # Tag multi-seed runs in the directory name via first seed; payload stores all.
+    paths = write_results(rows, base, seed=seed_list[0])
+    # Deadline compliance summary for paper fairness claims.
+    deadline_rows: list[dict[str, Any]] = []
+    overshoots: list[float] = []
+    for row in rows:
+        # Reconstruct limit from panel metadata.
+        limit = next(
+            (p.time_limit_s for p in panel if p.family == row.family and p.instance_id == row.instance_id),
+            None,
+        )
+        if limit is None:
+            continue
+        overshoot = max(0.0, float(row.runtime_s) - float(limit))
+        overshoots.append(overshoot)
+        deadline_rows.append(
+            {
+                "family": row.family,
+                "instance_id": row.instance_id,
+                "seed": row.seed,
+                "time_limit_s": float(limit),
+                "runtime_s": float(row.runtime_s),
+                "overshoot_s": overshoot,
+                "within_budget": overshoot <= 0.25,
+            }
+        )
+    deadline_path = Path(paths["json"]).parent / "deadline_compliance.json"
+    deadline_path.write_text(
+        json.dumps(
+            {
+                "n": len(deadline_rows),
+                "within_budget": sum(1 for r in deadline_rows if r["within_budget"]),
+                "max_overshoot_s": max(overshoots) if overshoots else 0.0,
+                "rows": deadline_rows,
+            },
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    freeze_development_panel(root)
     return {
         "rows": rows,
         "aggregate": aggregate(rows),
-        "paths": {k: str(v) for k, v in paths.items()},
+        "paths": {k: str(v) for k, v in paths.items()} | {"deadline": str(deadline_path)},
         "n": len(rows),
+        "seeds": seed_list,
     }

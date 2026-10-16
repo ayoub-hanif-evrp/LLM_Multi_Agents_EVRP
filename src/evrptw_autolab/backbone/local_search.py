@@ -10,6 +10,7 @@ from evrptw_autolab.backbone.util import (
     is_better,
     make_customer_stop,
 )
+from evrptw_autolab.problem.v2.transport import travel_distance
 from evrptw_autolab.problem.v2.types import ProblemSpecV2, RouteStopV2, SolutionV2
 
 
@@ -273,11 +274,31 @@ def merge_routes_improve(
                     else fallback
                 )
                 depot = current.routes[a_idx][0].node_id
-                for order_ids in (
+                # Concatenation seeds + greedy best-position reinsertion of B into A.
+                sequences = [
                     customers_a + customers_b,
                     customers_b + customers_a,
                     customers_a + list(reversed(customers_b)),
-                ):
+                ]
+                # Best-insertion rebuild: keep A order, insert each B customer greedily.
+                greedy_ids = list(customers_a)
+                for nid in customers_b:
+                    best_pos = len(greedy_ids)
+                    best_delta = float("inf")
+                    for pos in range(len(greedy_ids) + 1):
+                        left = greedy_ids[pos - 1] if pos else depot
+                        right = greedy_ids[pos] if pos < len(greedy_ids) else depot
+                        delta = (
+                            travel_distance(spec, spec.node_map[left], spec.node_map[nid])
+                            + travel_distance(spec, spec.node_map[nid], spec.node_map[right])
+                            - travel_distance(spec, spec.node_map[left], spec.node_map[right])
+                        )
+                        if delta < best_delta:
+                            best_delta = delta
+                            best_pos = pos
+                    greedy_ids.insert(best_pos, nid)
+                sequences.append(greedy_ids)
+                for order_ids in sequences:
                     trial = clone_solution(current)
                     merged = [
                         RouteStopV2(depot, vehicle_type_id=assign, event="depot"),

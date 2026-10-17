@@ -1,0 +1,127 @@
+[
+  {
+    "variant": "default",
+    "seed": 7,
+    "time_limit_s": 10.0,
+    "load_errors": [],
+    "feasible": true,
+    "objective_key": [
+      32.1145472796293
+    ],
+    "vehicles": 4,
+    "distance": 1022.2636809739929,
+    "duration": 32.1145472796293,
+    "first_fault": "OK: feasible",
+    "route_changed": false,
+    "paired_outcome": "baseline",
+    "scorer_calls": {
+      "insertion_score": 60,
+      "station_score": 107,
+      "removal_priority": 220
+    },
+    "completed_within_budget": true,
+    "budget_overrun": false,
+    "solution_feasible": true,
+    "n_routes": 4
+  },
+  {
+    "variant": "insertion_only",
+    "seed": 7,
+    "time_limit_s": 10.0,
+    "load_errors": [],
+    "feasible": true,
+    "objective_key": [
+      32.1145472796293
+    ],
+    "vehicles": 4,
+    "distance": 1022.2636809739929,
+    "duration": 32.1145472796293,
+    "first_fault": "OK: feasible",
+    "route_changed": false,
+    "paired_outcome": "tie",
+    "scorer_calls": {
+      "insertion_score": 60,
+      "station_score": 107,
+      "removal_priority": 220
+    },
+    "completed_within_budget": true,
+    "budget_overrun": false,
+    "solution_feasible": true,
+    "n_routes": 4
+  },
+  {
+    "variant": "station_only",
+    "seed": 7,
+    "time_limit_s": 10.0,
+    "load_errors": [],
+    "feasible": false,
+    "objective_key": [
+      17.575563962650733
+    ],
+    "vehicles": 2,
+    "distance": 473.1035628601362,
+    "duration": 17.575563962650733,
+    "first_fault": "BATTERY: battery_arrival=-697.756586 battery_departure=-697.756586",
+    "route_changed": true,
+    "paired_outcome": "baseline",
+    "scorer_calls": {
+      "insertion_score": 60,
+      "station_score": 288,
+      "removal_priority": 150
+    },
+    "completed_within_budget": true,
+    "budget_overrun": false,
+    "solution_feasible": false,
+    "n_routes": 2
+  },
+  {
+    "variant": "removal_only",
+    "seed": 7,
+    "time_limit_s": 10.0,
+    "load_errors": [],
+    "feasible": true,
+    "objective_key": [
+      25.466450038921884
+    ],
+    "vehicles": 3,
+    "distance": 767.9241144823676,
+    "duration": 25.466450038921884,
+    "first_fault": "OK: feasible",
+    "route_changed": true,
+    "paired_outcome": "candidate",
+    "scorer_calls": {
+      "insertion_score": 60,
+      "station_score": 70,
+      "removal_priority": 460
+    },
+    "completed_within_budget": true,
+    "budget_overrun": false,
+    "solution_feasible": true,
+    "n_routes": 3
+  },
+  {
+    "variant": "all_three",
+    "seed": 7,
+    "time_limit_s": 10.0,
+    "load_errors": [],
+    "feasible": false,
+    "objective_key": [
+      22.768123800204513
+    ],
+    "vehicles": 1,
+    "distance": 646.0016473047507,
+    "duration": 22.768123800204513,
+    "first_fault": "DURATION: route_duration=22.768124 max_travel_time=10.000000",
+    "route_changed": true,
+    "paired_outcome": "baseline",
+    "scorer_calls": {
+      "insertion_score": 60,
+      "station_score": 256,
+      "removal_priority": 290
+    },
+    "completed_within_budget": true,
+    "budget_overrun": false,
+    "solution_feasible": false,
+    "n_routes": 1
+  }
+]

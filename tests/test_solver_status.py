@@ -72,6 +72,34 @@ def _guard() -> ProblemSpecV2:
     )
 
 
+def test_budget_compliance_uses_wall_clock_not_only_exit() -> None:
+    from evrptw_autolab.backbone.solver import _within_budget
+
+    assert _within_budget(
+        worker_wait_s=0.8, limit=1.0, timed_out=False, crashed=False, incumbent_available=True
+    )
+    assert not _within_budget(
+        worker_wait_s=1.2, limit=1.0, timed_out=False, crashed=False, incumbent_available=True
+    )
+
+
+def test_startup_delay_overrun_keeps_feasible_incumbent_outside_budget() -> None:
+    sol = ClassicalSolver(
+        seed=1,
+        time_limit_s=1.0,
+        alns_iterations=1,
+        use_alns=False,
+        debug_parent_delay_s=1.5,
+    ).solve(_easy())
+    assert sol.metadata["solution_feasible"] is True
+    assert sol.metadata["completed_within_budget"] is False
+    assert sol.metadata["budget_overrun"] is True
+    assert sol.metadata["return_status"] == "budget_overrun_with_feasible_incumbent"
+    assert float(sol.metadata["worker_wait_s"]) > 1.0
+    assert float(sol.metadata["wall_clock_s"]) >= float(sol.metadata["worker_wait_s"])
+    assert evaluate(_easy(), sol).feasible
+
+
 def test_feasible_solution_returned_normally() -> None:
     sol = ClassicalSolver(seed=1, time_limit_s=8.0, alns_iterations=1, use_alns=False).solve(_easy())
     assert sol.metadata["solution_feasible"] is True

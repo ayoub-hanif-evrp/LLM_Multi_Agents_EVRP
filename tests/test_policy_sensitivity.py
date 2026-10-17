@@ -92,3 +92,11 @@ def test_removal_priority_changes_destroy_choice(tmp_path: Path) -> None:
     assert removed_early != removed_late
     assert early.call_counts["removal_priority"] > 0
     assert vehicle_for_route(spec, sol, 0).type_id
+
+
+def test_infeasible_objective_does_not_beat_feasible_baseline() -> None:
+    from evrptw_autolab.experiments.policy_sensitivity import paired_feasible_outcome
+
+    assert paired_feasible_outcome(True, (32.115,), False, (22.768,)) == "baseline"
+    assert paired_feasible_outcome(True, (2.0, 270.0), True, (2.0, 267.0)) == "candidate"
+    assert paired_feasible_outcome(False, (1.0,), False, (0.0,)) == "tie_infeasible"

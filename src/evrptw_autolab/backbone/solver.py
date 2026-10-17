@@ -140,6 +140,7 @@ class ClassicalSolver:
     debug_publish_before_sleep: bool = True
     debug_crash: bool = False
     debug_invalid_snapshot: bool = False
+    debug_parent_delay_s: float = 0.0
 
     def solve(self, spec: ProblemSpecV2) -> SolutionV2:
         if not self.hard_timeout:
@@ -254,7 +255,11 @@ class ClassicalSolver:
                     "llm_policy_search" if self.policy is not None else "classical_baseline"
                 ),
                 "solution_feasible": bool(report.feasible),
-                "completed_within_budget": elapsed <= float(self.time_limit_s) + 0.05,
+                "completed_within_budget": elapsed <= float(self.time_limit_s) + _BUDGET_TOLERANCE_S,
+                "budget_overrun": elapsed > float(self.time_limit_s) + _BUDGET_TOLERANCE_S,
+                "worker_wait_s": elapsed,
+                "wall_clock_s": elapsed,
+                "cleanup_s": 0.0,
                 "hard_timeout_triggered": False,
                 "worker_terminated": False,
                 "incumbent_available": True,
@@ -263,6 +268,12 @@ class ClassicalSolver:
                 "scorer_calls": dict(getattr(self.policy, "call_counts", {}) or {}),
             }
         )
+        published = tracker.get("incumbent")
+        if isinstance(published, SolutionV2):
+            published.metadata["scorer_calls"] = dict(solution.metadata["scorer_calls"])
+            sink = tracker.get("sink")
+            if sink is not None:
+                sink.put(published)
         self._publish(tracker, spec, solution)
         return solution
 
@@ -330,6 +341,15 @@ def _solver_process_main(spec: ProblemSpecV2, config: dict[str, Any], incumbent_
     solver._solve_body(spec, {"sink": sink})
 
 
+_BUDGET_TOLERANCE_S = 0.05
+
+
+def _within_budget(*, worker_wait_s: float, limit: float, timed_out: bool, crashed: bool, incumbent_available: bool) -> bool:
+    """End-to-end wait, not merely a normal process exit, decides budget compliance."""
+    overrun = worker_wait_s > float(limit) + _BUDGET_TOLERANCE_S
+    return (not timed_out) and (not crashed) and incumbent_available and (not overrun)
+
+
 def _execution_metadata(
     *,
     solution_feasible: bool,
@@ -363,6 +383,7 @@ def _finalize_process_result(
     seed: int,
     limit: float,
     wall: float,
+    worker_wait_s: float,
     timed_out: bool,
     crashed: bool,
     snapshot_status: str,
@@ -379,7 +400,13 @@ def _finalize_process_result(
             report = None
     incumbent_available = snapshot_status == "ok" and report is not None
     solution_feasible = bool(report.feasible) if report is not None else False
-    completed = (not timed_out) and (not crashed) and incumbent_available
+    completed = _within_budget(
+        worker_wait_s=worker_wait_s,
+        limit=limit,
+        timed_out=timed_out,
+        crashed=crashed,
+        incumbent_available=incumbent_available,
+    )
     fields = _execution_metadata(
         solution_feasible=solution_feasible,
         completed_within_budget=completed,
@@ -395,6 +422,10 @@ def _finalize_process_result(
             "seed": int(seed),
             "time_limit_s": float(limit),
             "runtime_s": wall,
+            "worker_wait_s": worker_wait_s,
+            "wall_clock_s": wall,
+            "cleanup_s": max(0.0, wall - worker_wait_s),
+            "budget_overrun": worker_wait_s > float(limit) + _BUDGET_TOLERANCE_S,
             "snapshot_status": snapshot_status,
             "feasible": solution_feasible,
             "objective": None if report is None else report.objective,
@@ -433,9 +464,17 @@ def _solve_in_process(solver: ClassicalSolver, spec: ProblemSpecV2) -> SolutionV
     )
     started = time.monotonic()
     limit = float(solver.time_limit_s)
+    deadline = started + limit
     proc.start()
-    proc.join(limit)
-    timed_out = proc.is_alive()
+    if solver.debug_parent_delay_s > 0:
+        time.sleep(solver.debug_parent_delay_s)
+    remaining = deadline - time.monotonic()
+    if remaining <= 0:
+        timed_out = proc.is_alive()
+    else:
+        proc.join(remaining)
+        timed_out = proc.is_alive()
+    worker_wait_s = time.monotonic() - started
     if timed_out:
         proc.terminate()
         proc.join(2)
@@ -465,6 +504,7 @@ def _solve_in_process(solver: ClassicalSolver, spec: ProblemSpecV2) -> SolutionV
             seed=solver.seed,
             limit=limit,
             wall=wall,
+            worker_wait_s=worker_wait_s,
             timed_out=timed_out,
             crashed=crashed,
             snapshot_status=snapshot_status,
@@ -480,14 +520,22 @@ def _solve_in_process(solver: ClassicalSolver, spec: ProblemSpecV2) -> SolutionV
             seed=solver.seed,
             limit=limit,
             wall=wall,
+            worker_wait_s=worker_wait_s,
             timed_out=timed_out,
             crashed=crashed,
             snapshot_status="invalid",
             status="invalid_snapshot",
             method_attribution=attribution,
         )
+    overrun = worker_wait_s > limit + _BUDGET_TOLERANCE_S
     if timed_out:
         status = "timeout_with_feasible_incumbent" if preview.feasible else "timeout_no_feasible_incumbent"
+    elif overrun:
+        status = (
+            "budget_overrun_with_feasible_incumbent"
+            if preview.feasible
+            else "budget_overrun_no_feasible_incumbent"
+        )
     else:
         status = "feasible_incumbent" if preview.feasible else "no_feasible_incumbent"
     return _finalize_process_result(
@@ -496,6 +544,7 @@ def _solve_in_process(solver: ClassicalSolver, spec: ProblemSpecV2) -> SolutionV
         seed=solver.seed,
         limit=limit,
         wall=wall,
+        worker_wait_s=worker_wait_s,
         timed_out=timed_out,
         crashed=crashed,
         snapshot_status="ok",

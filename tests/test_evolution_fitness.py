@@ -165,6 +165,30 @@ def test_shorter_infeasible_policy_cannot_replace_feasible_incumbent() -> None:
     assert archive.best().candidate_id == "classical"
 
 
+def test_newer_worse_feasible_candidate_does_not_replace_incumbent() -> None:
+    archive = CandidateArchive(capacity=1)
+    better = BundleCandidate(candidate_id="better", sources={"a": "keep"}, owners={}, generation=0)
+    apply_panel(
+        better,
+        build_panel_evaluation(
+            [_row(family="schneider", instance_id="c101C5", feasible=True, objective_key=(2.0, 100.0))]
+        ),
+        validation_status="ok",
+    )
+    archive.add(better)
+    newer = BundleCandidate(candidate_id="newer", sources={"a": "replace"}, owners={}, generation=3)
+    apply_panel(
+        newer,
+        build_panel_evaluation(
+            [_row(family="schneider", instance_id="c101C5", feasible=True, objective_key=(2.0, 180.0))]
+        ),
+        validation_status="ok",
+    )
+    assert archive.add(newer) is False
+    assert archive.members[0].candidate_id == "better"
+    assert archive.best() is not None and archive.best().candidate_id == "better"
+
+
 def test_panel_ranking_deterministic() -> None:
     a = build_panel_evaluation(
         [

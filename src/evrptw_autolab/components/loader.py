@@ -135,6 +135,7 @@ class PolicyBundle:
     removal_priority: Callable[..., float] | None = None
     sources: dict[str, str] = field(default_factory=dict)
     owners: dict[str, str] = field(default_factory=dict)
+    call_counts: dict[str, int] = field(default_factory=dict)
 
     def set(self, kind: ComponentKind, fn: Callable[..., float], source: str, owner: str) -> None:
         setattr(self, kind, fn)

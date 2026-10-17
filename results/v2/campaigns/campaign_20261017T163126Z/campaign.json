@@ -1,0 +1,962 @@
+{
+  "experiment": "voltforge_research_campaign",
+  "created_utc": "20261017T163126Z",
+  "out_dir": "C:\\Users\\ayoub\\Desktop\\LLM_Multi_Agents_EVRP-main\\results\\v2\\campaigns\\campaign_20261017T163126Z",
+  "config": {
+    "seed": 7,
+    "profile": "qwen3_coder_30b",
+    "fake": false,
+    "arms": [
+      "classical",
+      "single_agent",
+      "five_agent"
+    ],
+    "max_instances": 5,
+    "time_limit_s": 5.0,
+    "alns_iterations": 40,
+    "evolution_generations": 2,
+    "max_llm_calls": 80,
+    "max_llm_tokens": 80000,
+    "max_wall_s": 2400.0,
+    "out_dir": null,
+    "model": "qwen3-coder:30b",
+    "panel": [
+      {
+        "family": "schneider",
+        "instance_id": "c101C5"
+      },
+      {
+        "family": "montoya",
+        "instance_id": "tc0c10s2cf1"
+      },
+      {
+        "family": "bezzi",
+        "instance_id": "C101-5"
+      },
+      {
+        "family": "goeke",
+        "instance_id": "c101C6"
+      },
+      {
+        "family": "hiermann",
+        "instance_id": "c101_21"
+      }
+    ]
+  },
+  "aggregate": {
+    "classical": {
+      "n": 5,
+      "feasible_count": 4,
+      "feasible_rate": 0.8,
+      "mean_wall_s": 3.375406359997578,
+      "total_llm_tokens": 0,
+      "token_accounting": "run_level_not_summed_across_instances"
+    },
+    "single_agent": {
+      "n": 5,
+      "feasible_count": 3,
+      "feasible_rate": 0.6,
+      "mean_wall_s": 10.636300060001668,
+      "total_llm_tokens": 3430,
+      "token_accounting": "run_level_not_summed_across_instances"
+    },
+    "five_agent": {
+      "n": 5,
+      "feasible_count": 4,
+      "feasible_rate": 0.8,
+      "mean_wall_s": 10.566121679986827,
+      "total_llm_tokens": 7349,
+      "token_accounting": "run_level_not_summed_across_instances"
+    }
+  },
+  "runs": [
+    {
+      "arm": "classical",
+      "model": "none",
+      "seed": 7,
+      "llm_calls": 0,
+      "llm_tokens": 0,
+      "usage_scope": "run"
+    },
+    {
+      "arm": "single_agent",
+      "instance_id": "c101C5",
+      "model": "qwen3-coder:30b",
+      "seed": 7,
+      "llm_calls": 4,
+      "llm_tokens": 673,
+      "usage_scope": "instance"
+    },
+    {
+      "arm": "single_agent",
+      "instance_id": "tc0c10s2cf1",
+      "model": "qwen3-coder:30b",
+      "seed": 7,
+      "llm_calls": 4,
+      "llm_tokens": 689,
+      "usage_scope": "instance"
+    },
+    {
+      "arm": "single_agent",
+      "instance_id": "C101-5",
+      "model": "qwen3-coder:30b",
+      "seed": 7,
+      "llm_calls": 4,
+      "llm_tokens": 689,
+      "usage_scope": "instance"
+    },
+    {
+      "arm": "single_agent",
+      "instance_id": "c101C6",
+      "model": "qwen3-coder:30b",
+      "seed": 7,
+      "llm_calls": 4,
+      "llm_tokens": 690,
+      "usage_scope": "instance"
+    },
+    {
+      "arm": "single_agent",
+      "instance_id": "c101_21",
+      "model": "qwen3-coder:30b",
+      "seed": 7,
+      "llm_calls": 4,
+      "llm_tokens": 689,
+      "usage_scope": "instance"
+    },
+    {
+      "arm": "five_agent",
+      "instance_id": "c101C5",
+      "model": "qwen3-coder:30b",
+      "seed": 7,
+      "llm_calls": 5,
+      "llm_tokens": 1461,
+      "usage_scope": "instance"
+    },
+    {
+      "arm": "five_agent",
+      "instance_id": "tc0c10s2cf1",
+      "model": "qwen3-coder:30b",
+      "seed": 7,
+      "llm_calls": 5,
+      "llm_tokens": 1486,
+      "usage_scope": "instance"
+    },
+    {
+      "arm": "five_agent",
+      "instance_id": "C101-5",
+      "model": "qwen3-coder:30b",
+      "seed": 7,
+      "llm_calls": 5,
+      "llm_tokens": 1476,
+      "usage_scope": "instance"
+    },
+    {
+      "arm": "five_agent",
+      "instance_id": "c101C6",
+      "model": "qwen3-coder:30b",
+      "seed": 7,
+      "llm_calls": 5,
+      "llm_tokens": 1466,
+      "usage_scope": "instance"
+    },
+    {
+      "arm": "five_agent",
+      "instance_id": "c101_21",
+      "model": "qwen3-coder:30b",
+      "seed": 7,
+      "llm_calls": 5,
+      "llm_tokens": 1460,
+      "usage_scope": "instance"
+    }
+  ],
+  "rows": [
+    {
+      "arm": "classical",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "feasible": true,
+      "solution_feasible": true,
+      "completed_within_budget": true,
+      "hard_timeout_triggered": false,
+      "worker_terminated": false,
+      "incumbent_available": true,
+      "parent_validated": true,
+      "objective": 2.0,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "duration": 1728.8110030239563,
+      "runtime_s": 1.4593153999885544,
+      "wall_s": 1.4704305999912322,
+      "deadline_exceeded": false,
+      "solver_time_limit_s": 5.0,
+      "first_fault": "OK: feasible",
+      "llm_calls": 0,
+      "llm_tokens": 0,
+      "genuine_llm_components": 0,
+      "attribution": [],
+      "source": "human_backbone",
+      "model": "none"
+    },
+    {
+      "arm": "classical",
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 7,
+      "feasible": true,
+      "solution_feasible": true,
+      "completed_within_budget": true,
+      "hard_timeout_triggered": false,
+      "worker_terminated": false,
+      "incumbent_available": true,
+      "parent_validated": true,
+      "objective": 32.1145472796293,
+      "objective_key": [
+        32.1145472796293
+      ],
+      "vehicles": 4,
+      "distance": 1022.2636809739929,
+      "duration": 32.1145472796293,
+      "runtime_s": 3.79597570002079,
+      "wall_s": 3.814304900006391,
+      "deadline_exceeded": false,
+      "solver_time_limit_s": 5.0,
+      "first_fault": "OK: feasible",
+      "llm_calls": 0,
+      "llm_tokens": 0,
+      "genuine_llm_components": 0,
+      "attribution": [],
+      "source": "human_backbone",
+      "model": "none"
+    },
+    {
+      "arm": "classical",
+      "family": "bezzi",
+      "instance_id": "C101-5",
+      "seed": 7,
+      "feasible": true,
+      "solution_feasible": true,
+      "completed_within_budget": true,
+      "hard_timeout_triggered": false,
+      "worker_terminated": false,
+      "incumbent_available": true,
+      "parent_validated": true,
+      "objective": 227.0,
+      "objective_key": [
+        227.0
+      ],
+      "vehicles": 1,
+      "distance": 227.0,
+      "duration": 1197.5015,
+      "runtime_s": 3.5361871999921277,
+      "wall_s": 3.5890144999721088,
+      "deadline_exceeded": false,
+      "solver_time_limit_s": 5.0,
+      "first_fault": "OK: feasible",
+      "llm_calls": 0,
+      "llm_tokens": 0,
+      "genuine_llm_components": 0,
+      "attribution": [],
+      "source": "human_backbone",
+      "model": "none"
+    },
+    {
+      "arm": "classical",
+      "family": "goeke",
+      "instance_id": "c101C6",
+      "seed": 7,
+      "feasible": true,
+      "solution_feasible": true,
+      "completed_within_budget": true,
+      "hard_timeout_triggered": false,
+      "worker_terminated": false,
+      "incumbent_available": true,
+      "parent_validated": true,
+      "objective": 2.0,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "duration": 1728.8110030239563,
+      "runtime_s": 1.837104799982626,
+      "wall_s": 1.8649814000236802,
+      "deadline_exceeded": false,
+      "solver_time_limit_s": 5.0,
+      "first_fault": "OK: feasible",
+      "llm_calls": 0,
+      "llm_tokens": 0,
+      "genuine_llm_components": 0,
+      "attribution": [],
+      "source": "human_backbone",
+      "model": "none"
+    },
+    {
+      "arm": "classical",
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "feasible": false,
+      "solution_feasible": false,
+      "completed_within_budget": false,
+      "hard_timeout_triggered": true,
+      "worker_terminated": true,
+      "incumbent_available": false,
+      "parent_validated": false,
+      "objective": 153.0,
+      "objective_key": [
+        153.0
+      ],
+      "vehicles": 1,
+      "distance": 0.0,
+      "duration": 0.0,
+      "runtime_s": 6.134494600002654,
+      "wall_s": 6.138300399994478,
+      "deadline_exceeded": true,
+      "solver_time_limit_s": 5.0,
+      "first_fault": "VISIT: never served",
+      "llm_calls": 0,
+      "llm_tokens": 0,
+      "genuine_llm_components": 0,
+      "attribution": [],
+      "source": "human_backbone",
+      "model": "none"
+    },
+    {
+      "arm": "single_agent",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "feasible": true,
+      "solution_feasible": true,
+      "completed_within_budget": true,
+      "hard_timeout_triggered": false,
+      "worker_terminated": false,
+      "incumbent_available": true,
+      "parent_validated": true,
+      "objective": 2.0,
+      "objective_key": [
+        2.0,
+        270.9864386050047
+      ],
+      "vehicles": 2,
+      "distance": 270.9864386050047,
+      "duration": 1728.8110030239563,
+      "runtime_s": 1.5399592000176199,
+      "wall_s": 26.099872299993876,
+      "deadline_exceeded": false,
+      "solver_time_limit_s": 5.0,
+      "first_fault": "OK: feasible",
+      "llm_calls": 0,
+      "llm_tokens": 0,
+      "genuine_llm_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "is_default_heuristic": false,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance + 0.01 * due_time\n"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "is_default_heuristic": false,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return max(0, min(1, (battery_arrival - 0.2) * 5))\n"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "is_default_heuristic": false,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return max(0.0, due_time - route_distance_share * 5.0 + rng_value * 0.1)\n"
+        }
+      ],
+      "model": "qwen3-coder:30b",
+      "component_slots": [
+        "insertion_score",
+        "station_score",
+        "removal_priority"
+      ],
+      "work_dir": "C:\\Users\\ayoub\\Desktop\\LLM_Multi_Agents_EVRP-main\\results\\v2\\campaigns\\campaign_20261017T163126Z\\single_agent\\c101C5",
+      "scorer_calls": {}
+    },
+    {
+      "arm": "single_agent",
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 7,
+      "feasible": false,
+      "solution_feasible": false,
+      "completed_within_budget": true,
+      "hard_timeout_triggered": false,
+      "worker_terminated": false,
+      "incumbent_available": true,
+      "parent_validated": true,
+      "objective": 22.768123800204513,
+      "objective_key": [
+        22.768123800204513
+      ],
+      "vehicles": 1,
+      "distance": 646.0016473047507,
+      "duration": 22.768123800204513,
+      "runtime_s": 2.6129047999856994,
+      "wall_s": 6.184154200018384,
+      "deadline_exceeded": false,
+      "solver_time_limit_s": 5.0,
+      "first_fault": "DURATION: route_duration=22.768124 max_travel_time=10.000000",
+      "llm_calls": 0,
+      "llm_tokens": 0,
+      "genuine_llm_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "is_default_heuristic": false,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance + 0.01 * due_time\n"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "is_default_heuristic": false,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return max(0, min(1, (battery_arrival - 0.2) * 5))\n"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "is_default_heuristic": false,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return max(0.0, due_time - route_distance_share * 5.0 + float(rng_value > 0.5))\n"
+        }
+      ],
+      "model": "qwen3-coder:30b",
+      "component_slots": [
+        "insertion_score",
+        "station_score",
+        "removal_priority"
+      ],
+      "work_dir": "C:\\Users\\ayoub\\Desktop\\LLM_Multi_Agents_EVRP-main\\results\\v2\\campaigns\\campaign_20261017T163126Z\\single_agent\\tc0c10s2cf1",
+      "scorer_calls": {}
+    },
+    {
+      "arm": "single_agent",
+      "family": "bezzi",
+      "instance_id": "C101-5",
+      "seed": 7,
+      "feasible": true,
+      "solution_feasible": true,
+      "completed_within_budget": true,
+      "hard_timeout_triggered": false,
+      "worker_terminated": false,
+      "incumbent_available": true,
+      "parent_validated": true,
+      "objective": 227.0,
+      "objective_key": [
+        227.0
+      ],
+      "vehicles": 1,
+      "distance": 227.0,
+      "duration": 1197.5014999999999,
+      "runtime_s": 2.7683633000124246,
+      "wall_s": 6.434440899989568,
+      "deadline_exceeded": false,
+      "solver_time_limit_s": 5.0,
+      "first_fault": "OK: feasible",
+      "llm_calls": 0,
+      "llm_tokens": 0,
+      "genuine_llm_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "is_default_heuristic": false,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance + 0.01 * due_time\n"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "is_default_heuristic": false,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return max(0, min(1, (battery_arrival - 0.2) * 5))\n"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "is_default_heuristic": false,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return max(0.0, due_time - route_distance_share * 5.0 + float(rng_value > 0.5))\n"
+        }
+      ],
+      "model": "qwen3-coder:30b",
+      "component_slots": [
+        "insertion_score",
+        "station_score",
+        "removal_priority"
+      ],
+      "work_dir": "C:\\Users\\ayoub\\Desktop\\LLM_Multi_Agents_EVRP-main\\results\\v2\\campaigns\\campaign_20261017T163126Z\\single_agent\\C101-5",
+      "scorer_calls": {}
+    },
+    {
+      "arm": "single_agent",
+      "family": "goeke",
+      "instance_id": "c101C6",
+      "seed": 7,
+      "feasible": true,
+      "solution_feasible": true,
+      "completed_within_budget": true,
+      "hard_timeout_triggered": false,
+      "worker_terminated": false,
+      "incumbent_available": true,
+      "parent_validated": true,
+      "objective": 2.0,
+      "objective_key": [
+        2.0,
+        270.9864386050047
+      ],
+      "vehicles": 2,
+      "distance": 270.9864386050047,
+      "duration": 1728.8110030239563,
+      "runtime_s": 1.6119128999998793,
+      "wall_s": 5.178095199982636,
+      "deadline_exceeded": false,
+      "solver_time_limit_s": 5.0,
+      "first_fault": "OK: feasible",
+      "llm_calls": 0,
+      "llm_tokens": 0,
+      "genuine_llm_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "is_default_heuristic": false,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance + 0.01 * due_time\n"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "is_default_heuristic": false,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return max(0, min(1, (battery_arrival - 0.2) * 5))\n"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "is_default_heuristic": false,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return max(0.0, due_time - route_distance_share * 5.0 + float(rng_value > 0.5))\n"
+        }
+      ],
+      "model": "qwen3-coder:30b",
+      "component_slots": [
+        "insertion_score",
+        "station_score",
+        "removal_priority"
+      ],
+      "work_dir": "C:\\Users\\ayoub\\Desktop\\LLM_Multi_Agents_EVRP-main\\results\\v2\\campaigns\\campaign_20261017T163126Z\\single_agent\\c101C6",
+      "scorer_calls": {}
+    },
+    {
+      "arm": "single_agent",
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "feasible": false,
+      "solution_feasible": false,
+      "completed_within_budget": false,
+      "hard_timeout_triggered": true,
+      "worker_terminated": true,
+      "incumbent_available": false,
+      "parent_validated": false,
+      "objective": 153.0,
+      "objective_key": [
+        153.0
+      ],
+      "vehicles": 1,
+      "distance": 0.0,
+      "duration": 0.0,
+      "runtime_s": 5.74408420000691,
+      "wall_s": 9.284937700023875,
+      "deadline_exceeded": true,
+      "solver_time_limit_s": 5.0,
+      "first_fault": "VISIT: never served",
+      "llm_calls": 0,
+      "llm_tokens": 0,
+      "genuine_llm_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "is_default_heuristic": false,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance + 0.01 * due_time\n"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "is_default_heuristic": false,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return max(0, min(1, (battery_arrival - 0.2) * 5))\n"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "is_default_heuristic": false,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return max(0.0, due_time - route_distance_share * 5.0 + float(rng_value > 0.5))\n"
+        }
+      ],
+      "model": "qwen3-coder:30b",
+      "component_slots": [
+        "insertion_score",
+        "station_score",
+        "removal_priority"
+      ],
+      "work_dir": "C:\\Users\\ayoub\\Desktop\\LLM_Multi_Agents_EVRP-main\\results\\v2\\campaigns\\campaign_20261017T163126Z\\single_agent\\c101_21",
+      "scorer_calls": {}
+    },
+    {
+      "arm": "five_agent",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "feasible": true,
+      "objective": 2.0,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "wall_s": 9.298126699985005,
+      "llm_calls": 5,
+      "llm_tokens": 1461,
+      "genuine_llm_components": 3,
+      "attribution": [
+        {
+          "role": "routing",
+          "component": "insertion_score",
+          "model": "qwen3-coder:30b",
+          "generated_code": "delta_distance + 0.01 * max(0, due_time - ready_time) + 0.1 * demand / max(1, capacity_slack)",
+          "extract_status": "expression_wrapped",
+          "validation_ok": true,
+          "validation_detail": "",
+          "fallback_reason": "",
+          "fallback_used": false,
+          "llm_generated": true,
+          "executed_source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance + 0.01 * max(0, due_time - ready_time) + 0.1 * demand / max(1, capacity_slack)\n",
+          "executed_source_hash": "db46db08993207a0",
+          "is_default_heuristic": false
+        },
+        {
+          "role": "charging",
+          "component": "station_score",
+          "model": "qwen3-coder:30b",
+          "generated_code": "detour + 0.5 * battery_arrival + station_rate",
+          "extract_status": "expression_wrapped",
+          "validation_ok": true,
+          "validation_detail": "",
+          "fallback_reason": "",
+          "fallback_used": false,
+          "llm_generated": true,
+          "executed_source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return detour + 0.5 * battery_arrival + station_rate\n",
+          "executed_source_hash": "152f8329e2aa11b6",
+          "is_default_heuristic": false
+        },
+        {
+          "role": "search",
+          "component": "removal_priority",
+          "model": "qwen3-coder:30b",
+          "generated_code": "due_time + 10.0 * route_distance_share + 0.01 * rng_value",
+          "extract_status": "expression_wrapped",
+          "validation_ok": true,
+          "validation_detail": "",
+          "fallback_reason": "",
+          "fallback_used": false,
+          "llm_generated": true,
+          "executed_source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return due_time + 10.0 * route_distance_share + 0.01 * rng_value\n",
+          "executed_source_hash": "85b859deb826d83e",
+          "is_default_heuristic": false
+        }
+      ],
+      "model": "qwen3-coder:30b",
+      "critic_verdict": "ACCEPT"
+    },
+    {
+      "arm": "five_agent",
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 7,
+      "feasible": true,
+      "objective": 32.1145472796293,
+      "objective_key": [
+        32.1145472796293
+      ],
+      "vehicles": 4,
+      "distance": 1022.2636809739929,
+      "wall_s": 11.34466559998691,
+      "llm_calls": 5,
+      "llm_tokens": 1486,
+      "genuine_llm_components": 3,
+      "attribution": [
+        {
+          "role": "routing",
+          "component": "insertion_score",
+          "model": "qwen3-coder:30b",
+          "generated_code": "delta_distance + 0.01 * max(0, due_time - ready_time) + 0.1 * demand / max(1, capacity_slack)",
+          "extract_status": "expression_wrapped",
+          "validation_ok": true,
+          "validation_detail": "",
+          "fallback_reason": "",
+          "fallback_used": false,
+          "llm_generated": true,
+          "executed_source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance + 0.01 * max(0, due_time - ready_time) + 0.1 * demand / max(1, capacity_slack)\n",
+          "executed_source_hash": "db46db08993207a0",
+          "is_default_heuristic": false
+        },
+        {
+          "role": "charging",
+          "component": "station_score",
+          "model": "qwen3-coder:30b",
+          "generated_code": "detour + 0.5 * battery_arrival + station_rate",
+          "extract_status": "expression_wrapped",
+          "validation_ok": true,
+          "validation_detail": "",
+          "fallback_reason": "",
+          "fallback_used": false,
+          "llm_generated": true,
+          "executed_source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return detour + 0.5 * battery_arrival + station_rate\n",
+          "executed_source_hash": "152f8329e2aa11b6",
+          "is_default_heuristic": false
+        },
+        {
+          "role": "search",
+          "component": "removal_priority",
+          "model": "qwen3-coder:30b",
+          "generated_code": "due_time + 10.0 * route_distance_share + 0.01 * rng_value",
+          "extract_status": "expression_wrapped",
+          "validation_ok": true,
+          "validation_detail": "",
+          "fallback_reason": "",
+          "fallback_used": false,
+          "llm_generated": true,
+          "executed_source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return due_time + 10.0 * route_distance_share + 0.01 * rng_value\n",
+          "executed_source_hash": "85b859deb826d83e",
+          "is_default_heuristic": false
+        }
+      ],
+      "model": "qwen3-coder:30b",
+      "critic_verdict": "ACCEPT"
+    },
+    {
+      "arm": "five_agent",
+      "family": "bezzi",
+      "instance_id": "C101-5",
+      "seed": 7,
+      "feasible": true,
+      "objective": 227.0,
+      "objective_key": [
+        227.0
+      ],
+      "vehicles": 1,
+      "distance": 227.0,
+      "wall_s": 11.085002600040752,
+      "llm_calls": 5,
+      "llm_tokens": 1476,
+      "genuine_llm_components": 3,
+      "attribution": [
+        {
+          "role": "routing",
+          "component": "insertion_score",
+          "model": "qwen3-coder:30b",
+          "generated_code": "delta_distance + 0.01 * max(0, due_time - ready_time) + 0.1 * demand / (capacity_slack + 1)",
+          "extract_status": "expression_wrapped",
+          "validation_ok": true,
+          "validation_detail": "",
+          "fallback_reason": "",
+          "fallback_used": false,
+          "llm_generated": true,
+          "executed_source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance + 0.01 * max(0, due_time - ready_time) + 0.1 * demand / (capacity_slack + 1)\n",
+          "executed_source_hash": "3056f8085defa810",
+          "is_default_heuristic": false
+        },
+        {
+          "role": "charging",
+          "component": "station_score",
+          "model": "qwen3-coder:30b",
+          "generated_code": "detour + 0.5 * battery_arrival + station_rate",
+          "extract_status": "expression_wrapped",
+          "validation_ok": true,
+          "validation_detail": "",
+          "fallback_reason": "",
+          "fallback_used": false,
+          "llm_generated": true,
+          "executed_source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return detour + 0.5 * battery_arrival + station_rate\n",
+          "executed_source_hash": "152f8329e2aa11b6",
+          "is_default_heuristic": false
+        },
+        {
+          "role": "search",
+          "component": "removal_priority",
+          "model": "qwen3-coder:30b",
+          "generated_code": "due_time - 1000000.0 * (1.0 - min(1.0, route_distance_share)) + 1000.0 * rng_value",
+          "extract_status": "expression_wrapped",
+          "validation_ok": true,
+          "validation_detail": "",
+          "fallback_reason": "",
+          "fallback_used": false,
+          "llm_generated": true,
+          "executed_source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return due_time - 1000000.0 * (1.0 - min(1.0, route_distance_share)) + 1000.0 * rng_value\n",
+          "executed_source_hash": "345917f501fd5d6d",
+          "is_default_heuristic": false
+        }
+      ],
+      "model": "qwen3-coder:30b",
+      "critic_verdict": "ACCEPT"
+    },
+    {
+      "arm": "five_agent",
+      "family": "goeke",
+      "instance_id": "c101C6",
+      "seed": 7,
+      "feasible": true,
+      "objective": 2.0,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "wall_s": 9.05291709996527,
+      "llm_calls": 5,
+      "llm_tokens": 1466,
+      "genuine_llm_components": 3,
+      "attribution": [
+        {
+          "role": "routing",
+          "component": "insertion_score",
+          "model": "qwen3-coder:30b",
+          "generated_code": "delta_distance + 0.01 * max(0, due_time - ready_time) + 0.1 * demand / max(1, capacity_slack)",
+          "extract_status": "expression_wrapped",
+          "validation_ok": true,
+          "validation_detail": "",
+          "fallback_reason": "",
+          "fallback_used": false,
+          "llm_generated": true,
+          "executed_source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance + 0.01 * max(0, due_time - ready_time) + 0.1 * demand / max(1, capacity_slack)\n",
+          "executed_source_hash": "db46db08993207a0",
+          "is_default_heuristic": false
+        },
+        {
+          "role": "charging",
+          "component": "station_score",
+          "model": "qwen3-coder:30b",
+          "generated_code": "detour + 0.5 * battery_arrival + station_rate",
+          "extract_status": "expression_wrapped",
+          "validation_ok": true,
+          "validation_detail": "",
+          "fallback_reason": "",
+          "fallback_used": false,
+          "llm_generated": true,
+          "executed_source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return detour + 0.5 * battery_arrival + station_rate\n",
+          "executed_source_hash": "152f8329e2aa11b6",
+          "is_default_heuristic": false
+        },
+        {
+          "role": "search",
+          "component": "removal_priority",
+          "model": "qwen3-coder:30b",
+          "generated_code": "due_time + 10.0 * route_distance_share + 0.01 * rng_value",
+          "extract_status": "expression_wrapped",
+          "validation_ok": true,
+          "validation_detail": "",
+          "fallback_reason": "",
+          "fallback_used": false,
+          "llm_generated": true,
+          "executed_source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return due_time + 10.0 * route_distance_share + 0.01 * rng_value\n",
+          "executed_source_hash": "85b859deb826d83e",
+          "is_default_heuristic": false
+        }
+      ],
+      "model": "qwen3-coder:30b",
+      "critic_verdict": "ACCEPT"
+    },
+    {
+      "arm": "five_agent",
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "feasible": false,
+      "objective": 153.0,
+      "objective_key": [
+        153.0
+      ],
+      "vehicles": 1,
+      "distance": 0.0,
+      "wall_s": 12.049896399956197,
+      "llm_calls": 5,
+      "llm_tokens": 1460,
+      "genuine_llm_components": 3,
+      "attribution": [
+        {
+          "role": "routing",
+          "component": "insertion_score",
+          "model": "qwen3-coder:30b",
+          "generated_code": "delta_distance + 0.01 * max(0, due_time - ready_time) + 0.1 * demand / max(1, capacity_slack)",
+          "extract_status": "expression_wrapped",
+          "validation_ok": true,
+          "validation_detail": "",
+          "fallback_reason": "",
+          "fallback_used": false,
+          "llm_generated": true,
+          "executed_source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance + 0.01 * max(0, due_time - ready_time) + 0.1 * demand / max(1, capacity_slack)\n",
+          "executed_source_hash": "db46db08993207a0",
+          "is_default_heuristic": false
+        },
+        {
+          "role": "charging",
+          "component": "station_score",
+          "model": "qwen3-coder:30b",
+          "generated_code": "detour + 0.5 * battery_arrival + station_rate",
+          "extract_status": "expression_wrapped",
+          "validation_ok": true,
+          "validation_detail": "",
+          "fallback_reason": "",
+          "fallback_used": false,
+          "llm_generated": true,
+          "executed_source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return detour + 0.5 * battery_arrival + station_rate\n",
+          "executed_source_hash": "152f8329e2aa11b6",
+          "is_default_heuristic": false
+        },
+        {
+          "role": "search",
+          "component": "removal_priority",
+          "model": "qwen3-coder:30b",
+          "generated_code": "due_time + 10.0 * route_distance_share + 0.01 * rng_value",
+          "extract_status": "expression_wrapped",
+          "validation_ok": true,
+          "validation_detail": "",
+          "fallback_reason": "",
+          "fallback_used": false,
+          "llm_generated": true,
+          "executed_source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return due_time + 10.0 * route_distance_share + 0.01 * rng_value\n",
+          "executed_source_hash": "85b859deb826d83e",
+          "is_default_heuristic": false
+        }
+      ],
+      "model": "qwen3-coder:30b",
+      "critic_verdict": "REJECT"
+    }
+  ],
+  "wall_s": 122.8986644000397,
+  "disclaimer": "Live Ollama campaign. Report only measured rows; fallback/default heuristics are not LLM discoveries. Development panel only; held-out never used."
+}

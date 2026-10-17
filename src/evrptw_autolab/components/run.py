@@ -340,6 +340,14 @@ def synthesize_components(
         "provenance": provenance,
         "component_attribution": component_attribution,
         "genuine_llm_components": genuine_llm_components,
+        "solution_feasible": bool(report.feasible),
+        "completed_within_budget": solution.metadata.get("completed_within_budget"),
+        "hard_timeout_triggered": solution.metadata.get("hard_timeout_triggered"),
+        "worker_terminated": solution.metadata.get("worker_terminated"),
+        "incumbent_available": solution.metadata.get("incumbent_available"),
+        "parent_validated": solution.metadata.get("parent_validated"),
+        "return_status": solution.metadata.get("return_status"),
+        "scorer_calls": solution.metadata.get("scorer_calls") or {},
         "default_heuristic_count": sum(
             1 for a in component_attribution if a.get("is_default_heuristic")
         ),

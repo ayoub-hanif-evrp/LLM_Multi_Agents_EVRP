@@ -172,6 +172,12 @@ def _row_from_solution(
         "instance_id": instance_id,
         "seed": seed,
         "feasible": bool(report.feasible),
+        "solution_feasible": bool(report.feasible),
+        "completed_within_budget": solution.metadata.get("completed_within_budget"),
+        "hard_timeout_triggered": bool(solution.metadata.get("hard_timeout_triggered")),
+        "worker_terminated": bool(solution.metadata.get("worker_terminated")),
+        "incumbent_available": solution.metadata.get("incumbent_available"),
+        "parent_validated": bool(solution.metadata.get("parent_validated")),
         "objective": report.objective,
         "objective_key": list(report.objective_key),
         "vehicles": report.vehicles,
@@ -310,6 +316,7 @@ def _run_single_agent(
                     "status": status if ok else f"fallback:{status}",
                     "llm_generated": not used_default,
                     "is_default_heuristic": code.strip() == DEFAULT_SOURCES[kind].strip(),
+                    "source": code,
                 }
             )
         bundle, _ = load_bundle(sources, owners)
@@ -337,6 +344,7 @@ def _run_single_agent(
                     "attribution": attribution,
                     "component_slots": list(kinds),
                     "work_dir": str(work / "single_agent" / spec.instance_id),
+                    "scorer_calls": dict(sol.metadata.get("scorer_calls") or {}),
                 },
             )
         )
@@ -391,6 +399,19 @@ def _run_five_agent(
                 "attribution": result.get("component_attribution") or result.get("attribution"),
                 "model": model,
                 "critic_verdict": result.get("critic_verdict"),
+                "solution_feasible": result.get("solution_feasible"),
+                "completed_within_budget": result.get("completed_within_budget"),
+                "hard_timeout_triggered": result.get("hard_timeout_triggered"),
+                "worker_terminated": result.get("worker_terminated"),
+                "incumbent_available": result.get("incumbent_available"),
+                "parent_validated": result.get("parent_validated"),
+                "return_status": result.get("return_status"),
+                "first_fault": (
+                    f"{result.get('fault_family')}: {result.get('detail')}"
+                    if result.get("fault_family")
+                    else ""
+                ),
+                "scorer_calls": result.get("scorer_calls") or {},
             }
         )
         runs.append(

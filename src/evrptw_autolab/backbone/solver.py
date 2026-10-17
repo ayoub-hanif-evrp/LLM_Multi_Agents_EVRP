@@ -137,6 +137,9 @@ class ClassicalSolver:
     policy: object | None = None
     hard_timeout: bool = True
     debug_sleep_s: float = 0.0
+    debug_publish_before_sleep: bool = True
+    debug_crash: bool = False
+    debug_invalid_snapshot: bool = False
 
     def solve(self, spec: ProblemSpecV2) -> SolutionV2:
         if not self.hard_timeout:
@@ -247,6 +250,17 @@ class ClassicalSolver:
                 "first_fault": report.first_fault.as_dict() if report.first_fault else None,
                 "incumbent_class": "feasible" if report.feasible else "no_feasible_incumbent",
                 "policy_applied": self.policy is not None,
+                "method_attribution": (
+                    "llm_policy_search" if self.policy is not None else "classical_baseline"
+                ),
+                "solution_feasible": bool(report.feasible),
+                "completed_within_budget": elapsed <= float(self.time_limit_s) + 0.05,
+                "hard_timeout_triggered": False,
+                "worker_terminated": False,
+                "incumbent_available": True,
+                "parent_validated": False,
+                "inprocess_validated": True,
+                "scorer_calls": dict(getattr(self.policy, "call_counts", {}) or {}),
             }
         )
         self._publish(tracker, spec, solution)
@@ -271,15 +285,18 @@ def _write_incumbent(path: str, solution: SolutionV2) -> None:
     tmp.replace(target)
 
 
-def _read_incumbent(path: str) -> SolutionV2 | None:
+def _read_snapshot(path: str) -> tuple[SolutionV2 | None, str]:
+    """Load a local worker snapshot. Returns ``(solution, status)`` with status ok/missing/invalid."""
     target = Path(path)
-    if not target.exists():
-        return None
+    if not target.exists() or target.stat().st_size == 0:
+        return None, "missing"
     try:
         loaded = pickle.loads(target.read_bytes())  # noqa: S301 — local solver snapshot
-    except (OSError, pickle.UnpicklingError, EOFError):
-        return None
-    return loaded if isinstance(loaded, SolutionV2) else None
+    except (OSError, pickle.UnpicklingError, EOFError, ValueError):
+        return None, "invalid"
+    if not isinstance(loaded, SolutionV2):
+        return None, "invalid"
+    return loaded, "ok"
 
 
 def _solver_process_main(spec: ProblemSpecV2, config: dict[str, Any], incumbent_path: str) -> None:
@@ -299,12 +316,44 @@ def _solver_process_main(spec: ProblemSpecV2, config: dict[str, Any], incumbent_
         hard_timeout=False,
     )
     sink = _FileSink(incumbent_path)
+    if config.get("debug_crash"):
+        raise RuntimeError("injected worker crash")
+    if config.get("debug_invalid_snapshot"):
+        Path(incumbent_path).write_bytes(b"\x80not-a-voltforge-snapshot")
+        return
     if float(config.get("debug_sleep_s") or 0) > 0:
-        rng = random.Random(int(config["seed"]))
-        sink.put(construct_greedy(spec, rng, policy=policy))
+        if config.get("debug_publish_before_sleep", True):
+            rng = random.Random(int(config["seed"]))
+            sink.put(construct_greedy(spec, rng, policy=policy))
         time.sleep(float(config["debug_sleep_s"]))
         return
     solver._solve_body(spec, {"sink": sink})
+
+
+def _execution_metadata(
+    *,
+    solution_feasible: bool,
+    completed_within_budget: bool,
+    hard_timeout_triggered: bool,
+    worker_terminated: bool,
+    incumbent_available: bool,
+    parent_validated: bool,
+    status: str,
+) -> dict[str, Any]:
+    """Feasibility and budget compliance are separate facts."""
+    return {
+        "solution_feasible": solution_feasible,
+        "completed_within_budget": completed_within_budget,
+        "hard_timeout_triggered": hard_timeout_triggered,
+        "worker_terminated": worker_terminated,
+        "incumbent_available": incumbent_available,
+        "parent_validated": parent_validated,
+        "return_status": status,
+        "hard_timeout": hard_timeout_triggered,
+        "terminated": worker_terminated,
+        "deadline_exceeded": hard_timeout_triggered or not completed_within_budget,
+        "incumbent_class": "feasible" if solution_feasible else "no_feasible_incumbent",
+    }
 
 
 def _finalize_process_result(
@@ -315,29 +364,46 @@ def _finalize_process_result(
     limit: float,
     wall: float,
     timed_out: bool,
+    crashed: bool,
+    snapshot_status: str,
     status: str,
+    method_attribution: str,
 ) -> SolutionV2:
-    """Re-check a worker snapshot in the parent. Incomplete timeouts are not successes."""
-    report = evaluate(spec, solution)
+    """Re-check a worker snapshot in the parent. A timeout can still carry a feasible incumbent."""
+    report = None
+    if snapshot_status == "ok":
+        try:
+            report = evaluate(spec, solution)
+        except (KeyError, ValueError):
+            snapshot_status = "invalid"
+            report = None
+    incumbent_available = snapshot_status == "ok" and report is not None
+    solution_feasible = bool(report.feasible) if report is not None else False
+    completed = (not timed_out) and (not crashed) and incumbent_available
+    fields = _execution_metadata(
+        solution_feasible=solution_feasible,
+        completed_within_budget=completed,
+        hard_timeout_triggered=timed_out,
+        worker_terminated=timed_out or crashed,
+        incumbent_available=incumbent_available,
+        parent_validated=report is not None,
+        status=status,
+    )
     solution.metadata.update(
         {
             "solver": "classical_backbone",
             "seed": int(seed),
             "time_limit_s": float(limit),
             "runtime_s": wall,
-            "deadline_exceeded": bool(timed_out) or wall > float(limit) + 0.05,
-            "hard_timeout": bool(timed_out),
-            "terminated": bool(timed_out),
-            "return_status": status,
-            "parent_validated": True,
-            "feasible": bool(report.feasible),
-            "objective": report.objective,
-            "objective_key": list(report.objective_key),
-            "vehicles": report.vehicles,
-            "distance": report.total_distance,
-            "first_fault": report.first_fault.as_dict() if report.first_fault else None,
-            "incumbent_class": "feasible" if report.feasible else "no_feasible_incumbent",
-            "solver_success": bool(report.feasible) and status == "feasible_incumbent",
+            "snapshot_status": snapshot_status,
+            "feasible": solution_feasible,
+            "objective": None if report is None else report.objective,
+            "objective_key": [] if report is None else list(report.objective_key),
+            "vehicles": 0 if report is None else report.vehicles,
+            "distance": 0.0 if report is None else report.total_distance,
+            "first_fault": report.first_fault.as_dict() if report is not None and report.first_fault else None,
+            "method_attribution": method_attribution,
+            **fields,
         }
     )
     return solution
@@ -352,6 +418,9 @@ def _solve_in_process(solver: ClassicalSolver, spec: ProblemSpecV2) -> SolutionV
         "alns_iterations": int(solver.alns_iterations),
         "use_alns": bool(solver.use_alns),
         "debug_sleep_s": float(solver.debug_sleep_s),
+        "debug_publish_before_sleep": bool(solver.debug_publish_before_sleep),
+        "debug_crash": bool(solver.debug_crash),
+        "debug_invalid_snapshot": bool(solver.debug_invalid_snapshot),
         "sources": dict(getattr(solver.policy, "sources", {}) or {}),
         "owners": dict(getattr(solver.policy, "owners", {}) or {}),
     }
@@ -374,28 +443,64 @@ def _solve_in_process(solver: ClassicalSolver, spec: ProblemSpecV2) -> SolutionV
             proc.kill()
             proc.join(1)
     wall = time.monotonic() - started
-    latest = _read_incumbent(incumbent_path)
+    latest, snapshot_status = _read_snapshot(incumbent_path)
     Path(incumbent_path).unlink(missing_ok=True)
     Path(incumbent_path + ".tmp").unlink(missing_ok=True)
+    crashed = proc.exitcode not in (0, None) and not timed_out
+    attribution = "llm_policy_search" if solver.policy is not None else "classical_baseline"
     if latest is None:
         vid = spec.vehicle_types[0].type_id if spec.vehicle_types else None
         latest = SolutionV2(routes=[empty_route(spec, vid)], vehicle_assignments=[vid or ""])
-        if timed_out:
+        if snapshot_status == "invalid":
+            status = "invalid_snapshot"
+        elif timed_out:
             status = "timeout_no_snapshot"
-        elif proc.exitcode not in (0, None):
+        elif crashed:
             status = "worker_crash"
         else:
             status = "worker_no_snapshot"
         return _finalize_process_result(
-            latest, spec, seed=solver.seed, limit=limit, wall=wall, timed_out=timed_out, status=status
+            latest,
+            spec,
+            seed=solver.seed,
+            limit=limit,
+            wall=wall,
+            timed_out=timed_out,
+            crashed=crashed,
+            snapshot_status=snapshot_status,
+            status=status,
+            method_attribution=attribution,
         )
-    checked = evaluate(spec, latest)
+    try:
+        preview = evaluate(spec, latest)
+    except (KeyError, ValueError):
+        return _finalize_process_result(
+            latest,
+            spec,
+            seed=solver.seed,
+            limit=limit,
+            wall=wall,
+            timed_out=timed_out,
+            crashed=crashed,
+            snapshot_status="invalid",
+            status="invalid_snapshot",
+            method_attribution=attribution,
+        )
     if timed_out:
-        status = "timeout_with_feasible_incumbent" if checked.feasible else "timeout_no_feasible_incumbent"
+        status = "timeout_with_feasible_incumbent" if preview.feasible else "timeout_no_feasible_incumbent"
     else:
-        status = "feasible_incumbent" if checked.feasible else "no_feasible_incumbent"
+        status = "feasible_incumbent" if preview.feasible else "no_feasible_incumbent"
     return _finalize_process_result(
-        latest, spec, seed=solver.seed, limit=limit, wall=wall, timed_out=timed_out, status=status
+        latest,
+        spec,
+        seed=solver.seed,
+        limit=limit,
+        wall=wall,
+        timed_out=timed_out,
+        crashed=crashed,
+        snapshot_status="ok",
+        status=status,
+        method_attribution=attribution,
     )
 
 

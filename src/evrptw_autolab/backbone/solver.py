@@ -199,9 +199,19 @@ class ClassicalSolver:
         tracker: dict[str, Any] = box if box is not None else {}
         started = time.monotonic()
         deadline = started + float(self.time_limit_s)
+        if spec.capabilities.heterogeneous_fleet:
+            # Parent wall clock includes process spawn. Leave that margin so a
+            # finished Hiermann run is budget-compliant, not a killed worker.
+            deadline = min(deadline, started + max(0.5, float(self.time_limit_s) - 2.0))
         rng = random.Random(int(self.seed))
+        construct_started = time.monotonic()
         solution = construct_greedy(spec, rng, policy=self.policy)
+        construction_s = time.monotonic() - construct_started
+        first_feasible_s: float | None = None
         self._publish(tracker, spec, solution)
+        early = tracker.get("report")
+        if early is not None and early.feasible:
+            first_feasible_s = time.monotonic() - started
         solution = repair_feasibility(
             spec,
             solution,
@@ -210,7 +220,11 @@ class ClassicalSolver:
             optimize_partial_charges=self.optimize_partial_charges and self.partial_charges_in_search,
         )
         self._publish(tracker, spec, solution)
-        if time.monotonic() < deadline:
+        if first_feasible_s is None:
+            repaired = tracker.get("report")
+            if repaired is not None and repaired.feasible:
+                first_feasible_s = time.monotonic() - started
+        if time.monotonic() < deadline and not spec.capabilities.heterogeneous_fleet:
             solution = two_opt_improve(spec, solution, deadline=deadline)
             self._publish(tracker, spec, solution)
         remaining = _deadline_remaining(started, self.time_limit_s)
@@ -225,6 +239,7 @@ class ClassicalSolver:
                 deadline=deadline,
                 optimize_partial_charges=self.optimize_partial_charges and self.partial_charges_in_search,
                 adaptive_destroy=self.adaptive_destroy,
+                heavy_local=not spec.capabilities.heterogeneous_fleet,
             )
             self._publish(tracker, spec, solution)
         if time.monotonic() < deadline:
@@ -317,6 +332,8 @@ class ClassicalSolver:
                 "station_battery_argument_max": getattr(
                     self.policy, "observed_battery_argument_max", None
                 ),
+                "stage_construction_s": construction_s,
+                "time_to_first_feasible_s": first_feasible_s,
             }
         )
         published = tracker.get("incumbent")
@@ -326,6 +343,8 @@ class ClassicalSolver:
             published.metadata["station_battery_argument_max"] = solution.metadata[
                 "station_battery_argument_max"
             ]
+            published.metadata["stage_construction_s"] = solution.metadata["stage_construction_s"]
+            published.metadata["time_to_first_feasible_s"] = solution.metadata["time_to_first_feasible_s"]
             sink = tracker.get("sink")
             if sink is not None:
                 sink.put(published)

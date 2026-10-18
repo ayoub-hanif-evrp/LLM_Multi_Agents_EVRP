@@ -124,6 +124,14 @@ def judge_gate(measured: list[dict[str, Any]], frozen_rows: list[dict[str, Any]]
                     "reason": "feasibility_flag_mismatch",
                 }
             )
+        if base.get("completed_within_budget") is True and row.get("completed_within_budget") is False:
+            failures.append(
+                {
+                    "instance_id": row["instance_id"],
+                    "reason": "budget_compliance_regression",
+                    "measured_feasible": row.get("feasible"),
+                }
+            )
     return {"ok": not failures, "failures": failures, "n_rows": len(measured)}
 
 
@@ -143,7 +151,10 @@ def write_baseline(rows: list[dict[str, Any]], path: Path | None = None) -> Path
             "Seed 7 development gate under the wall-clock solver. One instance per family. "
             "Montoya tc0c10s3cf1 is excluded because it duplicates tc0c10s2cf1. "
             "Partial charge targets are a final guarded polish; they are not applied inside ALNS. "
-            "Hiermann c101_21 did not return a feasible incumbent inside its 15 second budget. "
+            "Hiermann c101_21 is feasible inside 15 seconds after route-local construction. "
+            "The previous gate row was the empty-route fallback, objective 153, VISIT, over budget. "
+            "A feasible result that misses the hard deadline is a compliance regression when the "
+            "frozen row completed within budget. "
             "A later run regresses when a feasible row becomes infeasible or its "
             "lexicographic objective gets worse. A better feasible objective is allowed."
         ),

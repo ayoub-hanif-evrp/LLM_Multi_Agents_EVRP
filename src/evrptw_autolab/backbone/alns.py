@@ -5,6 +5,7 @@ import math
 import random
 import time
 
+from evrptw_autolab.backbone.construct import insert_customer_fast
 from evrptw_autolab.backbone.energy_repair import repair_energy
 from evrptw_autolab.backbone.local_search import relocate_improve, two_opt_improve
 from evrptw_autolab.backbone.util import (
@@ -128,6 +129,9 @@ def repair_greedy(
         best_score = float("inf")
         if len(unit) == 1:
             node_id = unit[0]
+            if spec.capabilities.heterogeneous_fleet:
+                current = insert_customer_fast(spec, current, node_id, policy=policy)
+                continue
             for r_idx, route in enumerate(current.routes):
                 for pos in range(1, len(route)):
                     trial = clone_solution(current)
@@ -206,6 +210,7 @@ def alns_improve(
     deadline: float | None = None,
     optimize_partial_charges: bool = True,
     adaptive_destroy: bool = True,
+    heavy_local: bool = True,
 ) -> SolutionV2:
     """ALNS with random/worst destroy + greedy repair + SA acceptance."""
     start = time.monotonic()
@@ -252,7 +257,7 @@ def alns_improve(
             policy=policy,
             optimize_partial_charges=optimize_partial_charges,
         )
-        if it % 5 == 0:
+        if it % 5 == 0 and heavy_local:
             candidate = relocate_improve(spec, candidate, max_passes=1, deadline=end_by)
             candidate = two_opt_improve(spec, candidate, deadline=end_by)
         cand_report = evaluate(spec, candidate)
@@ -288,7 +293,7 @@ def alns_improve(
 
     incumbent = clone_solution(best)
     incumbent_report = best_report
-    if time.monotonic() < end_by:
+    if time.monotonic() < end_by and heavy_local:
         polished = relocate_improve(spec, best, max_passes=2, deadline=end_by)
         polished = two_opt_improve(spec, polished, deadline=end_by)
         polished = repair_energy(spec, polished, policy=policy, deadline=end_by)

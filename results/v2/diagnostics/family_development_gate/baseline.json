@@ -1,5 +1,5 @@
 {
-  "description": "Seed 7 development gate under the wall-clock solver. One instance per family. Montoya tc0c10s3cf1 is excluded because it duplicates tc0c10s2cf1. Partial charge targets are a final guarded polish; they are not applied inside ALNS. Hiermann c101_21 did not return a feasible incumbent inside its 15 second budget. A later run regresses when a feasible row becomes infeasible or its lexicographic objective gets worse. A better feasible objective is allowed.",
+  "description": "Seed 7 development gate under the wall-clock solver. One instance per family. Montoya tc0c10s3cf1 is excluded because it duplicates tc0c10s2cf1. Partial charge targets are a final guarded polish; they are not applied inside ALNS. Hiermann c101_21 is feasible inside 15 seconds after route-local construction. The previous gate row was the empty-route fallback, objective 153, VISIT, over budget. A feasible result that misses the hard deadline is a compliance regression when the frozen row completed within budget. A later run regresses when a feasible row becomes infeasible or its lexicographic objective gets worse. A better feasible objective is allowed.",
   "seed": 7,
   "rows": [
     {
@@ -82,17 +82,17 @@
       "seed": 7,
       "time_limit_s": 15.0,
       "alns_iterations": 40,
-      "feasible": false,
-      "objective": 153.0,
+      "feasible": true,
+      "objective": 4150.872544094683,
       "objective_key": [
-        153.0
+        4150.872544094683
       ],
-      "vehicles": 1,
-      "distance": 0.0,
+      "vehicles": 20,
+      "distance": 2904.746852635555,
       "duration": 0.0,
-      "first_fault_family": "VISIT",
-      "solution_feasible": false,
-      "completed_within_budget": false
+      "first_fault_family": "OK",
+      "solution_feasible": true,
+      "completed_within_budget": true
     }
   ]
 }

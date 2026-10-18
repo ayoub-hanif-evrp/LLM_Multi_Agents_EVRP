@@ -57,6 +57,28 @@ def test_judge_allows_a_better_feasible_objective_and_ignores_infeasible_nominal
     assert judge_gate(measured, frozen)["ok"]
 
 
+def test_over_budget_feasible_result_is_a_compliance_regression() -> None:
+    frozen = [
+        {
+            "instance_id": "c101_21",
+            "feasible": True,
+            "objective_key": [4200.0],
+            "completed_within_budget": True,
+        }
+    ]
+    measured = [
+        {
+            "instance_id": "c101_21",
+            "feasible": True,
+            "objective_key": [4100.0],
+            "solution_feasible": True,
+            "completed_within_budget": False,
+        }
+    ]
+    reasons = {item["reason"] for item in judge_gate(measured, frozen)["failures"]}
+    assert "budget_compliance_regression" in reasons
+
+
 def test_development_gate_matches_frozen_baseline() -> None:
     frozen = load_baseline()
     measured = measure_gate()

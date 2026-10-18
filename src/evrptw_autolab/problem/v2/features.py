@@ -8,6 +8,7 @@ the raw arguments below.
 from __future__ import annotations
 
 FEATURE_SCHEMA_VERSION = "2026-10-18.v1"
+FEATURE_SCHEMA_V2 = "2026-10-18.v2"
 
 # battery_arrival is vehicle energy, the same unit as VehicleTypeV2.battery_capacity.
 # On Montoya tc0c10s2cf1 that capacity is 16000 Wh, not a fraction in [0, 1].
@@ -43,3 +44,100 @@ STATION_FEATURES_V1: dict[str, dict[str, str]] = {
         "passed_to_scorer": "false",
     },
 }
+
+# v2 is opt-in. Historical expressions stay on v1 physical battery_arrival.
+STATION_FEATURES_V2: dict[str, dict[str, str]] = {
+    "detour": {
+        "unit": "distance",
+        "scale": "raw station detour",
+        "range": "[0, inf)",
+    },
+    "battery_arrival_ratio": {
+        "unit": "1",
+        "scale": "battery_at_station / battery_capacity",
+        "range": "[0, 1]",
+    },
+    "energy_slack_ratio": {
+        "unit": "1",
+        "scale": "(battery_capacity - energy_to_next) / battery_capacity after the chosen charge",
+        "range": "(-inf, 1]",
+    },
+    "route_duration_slack": {
+        "unit": "1",
+        "scale": "(max_travel_time - projected_completion) / max_travel_time",
+        "range": "(-inf, 1]",
+    },
+    "travel_time_detour": {
+        "unit": "time",
+        "scale": "detour travel time minus the direct arc",
+        "range": "(-inf, inf)",
+    },
+    "charge_time": {
+        "unit": "time",
+        "scale": "duration of the candidate charge",
+        "range": "[0, inf)",
+    },
+    "station_technology": {
+        "unit": "label",
+        "scale": "station charge technology id, empty if none",
+        "range": "text",
+    },
+    "incremental_objective_time": {
+        "unit": "time",
+        "scale": "added travel time plus charge time versus the direct arc",
+        "range": "(-inf, inf)",
+    },
+}
+
+
+def battery_argument_for_schema(schema: str, battery_arrival: float, battery_capacity: float) -> float:
+    """Map physical energy to the value a scorer of this schema expects.
+
+    v1 returns physical energy. v2 returns a ratio in [0, 1]. Callers must not
+    apply v2 to an expression that was generated against v1.
+    """
+    if schema == FEATURE_SCHEMA_V2:
+        if battery_capacity <= 0.0:
+            return 0.0
+        ratio = float(battery_arrival) / float(battery_capacity)
+        return max(0.0, min(1.0, ratio))
+    if schema != FEATURE_SCHEMA_VERSION:
+        raise ValueError(f"unknown station feature schema {schema}")
+    return float(battery_arrival)
+
+
+def station_feature_record(
+    *,
+    detour: float,
+    battery_at_station: float,
+    battery_capacity: float,
+    energy_to_next: float,
+    direct_travel_time: float,
+    detour_travel_time: float,
+    charge_time: float,
+    projected_completion: float | None,
+    max_travel_time: float | None,
+    technology: str = "",
+) -> dict[str, float | str | None]:
+    """Explicit v2 features. None means the instance has no route-duration limit."""
+    cap = float(battery_capacity)
+    arrival_ratio = 0.0 if cap <= 0.0 else max(0.0, min(1.0, float(battery_at_station) / cap))
+    slack_energy = cap - float(energy_to_next)
+    energy_slack_ratio = 0.0 if cap <= 0.0 else slack_energy / cap
+    duration_slack: float | None
+    if max_travel_time is None or max_travel_time <= 0.0 or projected_completion is None:
+        duration_slack = None
+    else:
+        duration_slack = (float(max_travel_time) - float(projected_completion)) / float(max_travel_time)
+    travel_delta = float(detour_travel_time) - float(direct_travel_time)
+    return {
+        "schema": FEATURE_SCHEMA_V2,
+        "detour": float(detour),
+        "battery_arrival_ratio": arrival_ratio,
+        "energy_slack_ratio": energy_slack_ratio,
+        "route_duration_slack": duration_slack,
+        "travel_time_detour": travel_delta,
+        "charge_time": float(charge_time),
+        "station_technology": technology,
+        "incremental_objective_time": travel_delta + float(charge_time),
+    }

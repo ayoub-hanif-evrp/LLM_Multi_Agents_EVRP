@@ -5,7 +5,7 @@ from dataclasses import dataclass, replace
 
 from evrptw_autolab.backbone.util import note_scorer_call
 from evrptw_autolab.problem.v2.charging import resolve_charge
-from evrptw_autolab.problem.v2.features import FEATURE_SCHEMA_VERSION
+from evrptw_autolab.problem.v2.features import FEATURE_SCHEMA_VERSION, battery_argument_for_schema
 from evrptw_autolab.problem.v2.transport import (
     EPSILON,
     energy_required,
@@ -87,10 +87,13 @@ def rank_station_candidates(
     survivors = [item for item in decisions if item.accepted]
     scored: list[StationChoice] = []
     scorer = getattr(policy, "station_score", None) if policy is not None else None
+    schema = str(getattr(policy, "feature_schema", FEATURE_SCHEMA_VERSION) or FEATURE_SCHEMA_VERSION)
+    cap = float(vehicle.battery_capacity or 0.0)
     for item in survivors:
         if scorer is not None:
             note_scorer_call(policy, "station_score")
-            value = float(scorer(item.detour, item.battery_at_station, _rate(spec, item.station_id)))
+            battery_arg = battery_argument_for_schema(schema, item.battery_at_station, cap)
+            value = float(scorer(item.detour, battery_arg, _rate(spec, item.station_id)))
         else:
             value = float(item.detour)
         scored.append(
@@ -106,6 +109,7 @@ def rank_station_candidates(
                 charge_duration=item.charge_duration,
                 charge_amount=item.charge_amount,
                 score=value,
+                feature_schema=schema,
             )
         )
     scored.sort(

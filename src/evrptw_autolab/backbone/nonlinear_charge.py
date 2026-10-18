@@ -91,10 +91,15 @@ def _route_duration_ok(
     spec: ProblemSpecV2, route: list[RouteStopV2], vehicle: VehicleTypeV2
 ) -> tuple[bool, float]:
     traj, errors = simulate_route(spec, route, vehicle)
-    if errors:
+    if errors or not traj:
         return False, float("inf")
     ok = all(s.battery_arrival >= -EPSILON and s.battery_departure >= -EPSILON for s in traj)
-    return ok, (traj[-1].departure_time if traj else float("inf"))
+    end = traj[-1].departure_time
+    if ok and spec.capabilities.max_route_duration:
+        limit = vehicle.metadata.get("max_travel_time", spec.metadata.get("max_travel_time"))
+        if limit is not None and end > float(limit) + EPSILON:
+            ok = False
+    return ok, end
 
 
 def _refine_partial_targets(

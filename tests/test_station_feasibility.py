@@ -2,11 +2,19 @@
 from __future__ import annotations
 
 from evrptw_autolab.backbone.local_search import merge_routes_improve
+from evrptw_autolab.backbone.nonlinear_charge import optimize_route_partial_charges
 from evrptw_autolab.backbone.station_filter import rank_station_candidates
 from evrptw_autolab.backbone.util import evaluate
 from evrptw_autolab.components.expressions import wrap_expression
 from evrptw_autolab.components.loader import load_bundle
-from evrptw_autolab.problem.v2.features import FEATURE_SCHEMA_VERSION, STATION_FEATURES_V1
+from evrptw_autolab.problem.v2.features import (
+    FEATURE_SCHEMA_V2,
+    FEATURE_SCHEMA_VERSION,
+    STATION_FEATURES_V1,
+    STATION_FEATURES_V2,
+    battery_argument_for_schema,
+    station_feature_record,
+)
 from evrptw_autolab.problem.v2.types import (
     CapabilityFlags,
     NodeV2,
@@ -220,3 +228,119 @@ def test_merged_route_over_max_duration_does_not_replace_a_feasible_incumbent() 
     assert after.feasible
     assert len(kept.routes) == 2
     assert vehicle.type_id == "EV"
+
+
+def test_feature_scales_keep_v1_physical_and_v2_normalized() -> None:
+    physical = battery_argument_for_schema(FEATURE_SCHEMA_VERSION, 8000.0, 16000.0)
+    ratio = battery_argument_for_schema(FEATURE_SCHEMA_V2, 8000.0, 16000.0)
+    assert physical == 8000.0
+    assert ratio == 0.5
+    record = station_feature_record(
+        detour=10.0,
+        battery_at_station=8000.0,
+        battery_capacity=16000.0,
+        energy_to_next=4000.0,
+        direct_travel_time=1.0,
+        detour_travel_time=1.4,
+        charge_time=0.2,
+        projected_completion=8.0,
+        max_travel_time=10.0,
+        technology="fast",
+    )
+    assert record["schema"] == FEATURE_SCHEMA_V2
+    assert record["battery_arrival_ratio"] == 0.5
+    assert record["energy_slack_ratio"] == 0.75
+    assert record["route_duration_slack"] == 0.2
+    assert abs(float(record["travel_time_detour"]) - 0.4) < 1e-9
+    assert record["charge_time"] == 0.2
+    assert record["station_technology"] == "fast"
+    assert abs(float(record["incremental_objective_time"]) - 0.6) < 1e-9
+    assert set(STATION_FEATURES_V2) >= {
+        "battery_arrival_ratio",
+        "energy_slack_ratio",
+        "route_duration_slack",
+        "travel_time_detour",
+        "charge_time",
+        "station_technology",
+        "incremental_objective_time",
+    }
+    assert STATION_FEATURES_V1["battery_arrival"]["passed_to_scorer"] == "true"
+
+
+def test_v2_schema_is_opt_in_and_does_not_rescale_v1() -> None:
+    nodes = [
+        NodeV2("D", "depot", 0.0, 0.0),
+        NodeV2("S", "station", 1.0, 0.0, recharging_rate=1.0, charge_technologies=("fast",)),
+        NodeV2("C", "customer", 2.0, 0.0, due_time=1.0e6),
+    ]
+    spec, vehicle = _spec(nodes, battery=16000.0, partial=False)
+    seen: list[float] = []
+
+    class _Policy:
+        def __init__(self, schema: str) -> None:
+            self.feature_schema = schema
+            self.call_counts: dict[str, int] = {}
+
+        def station_score(self, detour: float, battery_arrival: float, station_rate: float) -> float:
+            seen.append(battery_arrival)
+            return detour
+
+    rank_station_candidates(spec, "D", "C", vehicle, battery_arrival=16000.0, policy=_Policy(FEATURE_SCHEMA_VERSION))
+    assert seen[-1] > 1000.0
+    rank_station_candidates(spec, "D", "C", vehicle, battery_arrival=16000.0, policy=_Policy(FEATURE_SCHEMA_V2))
+    assert 0.0 <= seen[-1] <= 1.0
+
+
+def test_fixed_route_partial_charge_beats_full_when_full_breaks_duration() -> None:
+    curve = [
+        {"battery_level": 0.0, "charging_time": 0.0},
+        {"battery_level": 50.0, "charging_time": 1.0},
+        {"battery_level": 100.0, "charging_time": 10.0},
+    ]
+    spec = ProblemSpecV2(
+        instance_id="partial-vs-full",
+        family="montoya",
+        capabilities=CapabilityFlags(
+            battery=True,
+            nonlinear_charging=True,
+            partial_recharge=True,
+            euclidean_distances=True,
+            max_route_duration=True,
+        ),
+        nodes=(
+            NodeV2("D", "depot", 0, 0),
+            NodeV2("S", "station", 50, 0, charge_technologies=("fast",)),
+            NodeV2("C", "customer", 70, 0),
+        ),
+        vehicle_types=(
+            VehicleTypeV2(
+                "EV",
+                capacity=0.0,
+                battery_capacity=100.0,
+                consumption_rate=1.0,
+                velocity=1.0,
+                metadata={"charging_functions": {"fast": curve}, "max_travel_time": 148.0},
+            ),
+        ),
+        depot_ids=("D",),
+        metadata={"charging_functions": {"fast": curve}, "max_travel_time": 148.0},
+    )
+    bare = [
+        RouteStopV2("D", event="depot"),
+        RouteStopV2("S", event="charge", charge_technology="fast"),
+        RouteStopV2("C", event="visit"),
+        RouteStopV2("D", event="depot"),
+    ]
+    full = [
+        RouteStopV2("D", event="depot"),
+        RouteStopV2("S", event="charge", charge_technology="fast", target_soc=100.0),
+        RouteStopV2("C", event="visit"),
+        RouteStopV2("D", event="depot"),
+    ]
+    optimized = optimize_route_partial_charges(spec, bare, spec.vehicle_types[0])
+    opt_report = evaluate(spec, SolutionV2(routes=[optimized], vehicle_assignments=["EV"]))
+    full_report = evaluate(spec, SolutionV2(routes=[full], vehicle_assignments=["EV"]))
+    assert opt_report.feasible, opt_report.violations
+    assert not full_report.feasible
+    assert opt_report.total_duration < full_report.total_duration
+    assert float(optimized[1].target_soc or 0.0) < 100.0

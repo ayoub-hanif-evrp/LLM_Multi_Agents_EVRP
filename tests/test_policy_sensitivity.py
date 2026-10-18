@@ -94,6 +94,53 @@ def test_removal_priority_changes_destroy_choice(tmp_path: Path) -> None:
     assert vehicle_for_route(spec, sol, 0).type_id
 
 
+def test_recorded_montoya_removal_source_is_linked_but_not_fully_proven() -> None:
+    from evrptw_autolab.experiments.montoya_attribution import provenance_manifest
+
+    manifest = provenance_manifest()
+    removal = manifest["components"]["removal_priority"]
+    assert "due_time - route_distance_share * 5.0 + float(rng_value > 0.5)" in removal["executed_source"]
+    assert manifest["model_digest"] is None
+    assert manifest["original_model_response"] is None
+    assert manifest["classification"] == "promising_policy_ablation_incomplete_generation_provenance"
+    assert manifest["original_bundle_feasible"] is False
+    assert manifest["instance_sha256"]
+
+
+def _pair(instance: str, seed: int, outcome: str, default_duration: float, removal_duration: float) -> list[dict]:
+    common = {
+        "instance_id": instance,
+        "seed": seed,
+        "vehicles": 3,
+        "first_fault": "OK: feasible",
+        "feasible": True,
+    }
+    return [
+        {**common, "variant": "default", "duration": default_duration, "paired_outcome": "baseline"},
+        {**common, "variant": "removal_only", "duration": removal_duration, "paired_outcome": outcome},
+    ]
+
+
+def test_replication_summary_does_not_treat_one_seed_as_general() -> None:
+    from evrptw_autolab.experiments.montoya_attribution import (
+        DEPLOYMENT_SEEDS,
+        DEVELOPMENT_INSTANCES,
+        summarize_replication,
+    )
+
+    assert DEVELOPMENT_INSTANCES == ("tc0c10s2cf1", "tc0c10s3cf1")
+    assert DEPLOYMENT_SEEDS == (7, 11, 22)
+    rows = _pair("tc0c10s2cf1", 7, "candidate", 32.0, 25.0)
+    rows += _pair("tc0c10s2cf1", 11, "baseline", 25.0, 32.0)
+    summary = summarize_replication(rows)
+    assert summary["wins"] == 1
+    assert summary["losses"] == 1
+    assert summary["classification"] == "specialized_not_universally_superior"
+    tied = _pair("tc0c10s2cf1", 11, "tie", 25.4, 25.4)
+    mixed = summarize_replication(rows[:2] + tied)
+    assert mixed["classification"] == "improves_a_subset_of_development_pairs"
+
+
 def test_infeasible_objective_does_not_beat_feasible_baseline() -> None:
     from evrptw_autolab.experiments.policy_sensitivity import paired_feasible_outcome
 

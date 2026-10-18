@@ -4,14 +4,14 @@ from __future__ import annotations
 import time
 
 from evrptw_autolab.backbone.charge_completion import complete_solution_charges
+from evrptw_autolab.backbone.station_filter import rank_station_candidates
 from evrptw_autolab.backbone.util import (
     clone_solution,
     evaluate,
-    note_scorer_call,
     vehicle_for_route,
 )
 from evrptw_autolab.problem.v2.route_simulator import simulate_route
-from evrptw_autolab.problem.v2.transport import EPSILON, energy_required, travel_distance
+from evrptw_autolab.problem.v2.transport import EPSILON, energy_required
 from evrptw_autolab.problem.v2.types import ProblemSpecV2, RouteStopV2, SolutionV2
 
 
@@ -27,39 +27,21 @@ def _best_station_between(
     *,
     battery_arrival: float = 0.0,
     policy: object | None = None,
+    time_at_left: float = 0.0,
+    suffix_ids: list[str] | None = None,
 ) -> str | None:
-    """Pick a reachable station; never choose one the vehicle cannot reach from left."""
-    stations = _stations(spec)
-    if not stations:
-        return None
-    left = spec.node_map[left_id]
-    right = spec.node_map[right_id]
-    scorer = getattr(policy, "station_score", None) if policy is not None else None
-    best = None
-    best_cost = float("inf")
-    for sid in stations:
-        station = spec.node_map[sid]
-        try:
-            to_station = energy_required(spec, left, station, vehicle)
-            from_station = energy_required(spec, station, right, vehicle)
-        except ValueError:
-            continue
-        if battery_arrival + EPSILON < to_station:
-            continue
-        # Skip depot-colocated / zero-progress stations (Bezzi station 5 sits on the depot).
-        if to_station <= EPSILON and from_station >= energy_required(spec, left, right, vehicle) - EPSILON:
-            continue
-        detour = travel_distance(spec, left, station) + travel_distance(spec, station, right)
-        rate = float(station.recharging_rate or 0.0)
-        if scorer is not None:
-            note_scorer_call(policy, "station_score")
-            cost = float(scorer(detour, battery_arrival, rate))
-        else:
-            cost = float(detour)
-        if cost < best_cost:
-            best_cost = cost
-            best = sid
-    return best
+    """Rank stations that survive trusted resource checks. The score is not a checker."""
+    choice, _decisions = rank_station_candidates(
+        spec,
+        left_id,
+        right_id,
+        vehicle,
+        battery_arrival=battery_arrival,
+        policy=policy,
+        time_at_left=time_at_left,
+        suffix_ids=suffix_ids,
+    )
+    return None if choice is None else choice.station_id
 
 
 def repair_energy(
@@ -104,7 +86,7 @@ def repair_energy(
             except (KeyError, ValueError):
                 continue
             candidates = _find_station_insertions(spec, route, vehicle, traj, policy=policy)
-            for insert_pos, station_id in candidates:
+            for insert_pos, station_id, charge_amount in candidates:
                 if deadline is not None and time.monotonic() > deadline:
                     return current
                 if insert_pos > 0 and route[insert_pos - 1].node_id == station_id:
@@ -112,7 +94,12 @@ def repair_energy(
                 trial = clone_solution(current)
                 trial.routes[r_idx].insert(
                     insert_pos,
-                    RouteStopV2(station_id, vehicle_type_id=vehicle.type_id, event="charge"),
+                    RouteStopV2(
+                        station_id,
+                        vehicle_type_id=vehicle.type_id,
+                        event="charge",
+                        charge_amount=charge_amount,
+                    ),
                 )
                 if spec.capabilities.multiple_charge_technologies:
                     trial.routes[r_idx] = [
@@ -210,23 +197,6 @@ def _soc_at_index(spec: ProblemSpecV2, route: list[RouteStopV2], vehicle, index:
     return soc
 
 
-def _station_enables_progress(
-    spec: ProblemSpecV2,
-    station_id: str,
-    right_id: str,
-    vehicle,
-) -> bool:
-    """After a full charge, the vehicle must be able to leave toward the next stop."""
-    station = spec.node_map[station_id]
-    right = spec.node_map[right_id]
-    cap = float(vehicle.battery_capacity or 0.0)
-    try:
-        leave = energy_required(spec, station, right, vehicle)
-    except ValueError:
-        return False
-    return leave <= cap + EPSILON
-
-
 def _find_station_insertions(
     spec: ProblemSpecV2,
     route: list[RouteStopV2],
@@ -234,7 +204,7 @@ def _find_station_insertions(
     traj,
     *,
     policy: object | None = None,
-) -> list[tuple[int, str]]:
+) -> list[tuple[int, str, float | None]]:
     """Ranked station insertion candidates for an energy-infeasible route."""
     cap = float(vehicle.battery_capacity or 0.0)
     if cap <= EPSILON:
@@ -242,24 +212,29 @@ def _find_station_insertions(
 
     def _candidate(
         left_id: str, right_id: str, battery_arrival: float, insert_pos: int
-    ) -> tuple[int, str] | None:
-        station_id = _best_station_between(
+    ) -> tuple[int, str, float | None] | None:
+        suffix = [stop.node_id for stop in route[insert_pos:]]
+        clock = 0.0
+        if traj is not None and insert_pos > 0 and insert_pos - 1 < len(traj):
+            clock = float(traj[insert_pos - 1].departure_time)
+        choice, _decisions = rank_station_candidates(
             spec,
             left_id,
             right_id,
             vehicle,
             battery_arrival=max(0.0, battery_arrival),
             policy=policy,
+            time_at_left=clock,
+            suffix_ids=suffix or [right_id],
         )
-        if station_id is None:
+        if choice is None:
             return None
+        station_id = choice.station_id
         if insert_pos > 0 and route[insert_pos - 1].node_id == station_id:
             return None
         if insert_pos < len(route) and route[insert_pos].node_id == station_id:
             return None
-        if not _station_enables_progress(spec, station_id, right_id, vehicle):
-            return None
-        return insert_pos, station_id
+        return insert_pos, station_id, choice.charge_amount
 
     battery = cap
     fail_at: int | None = None
@@ -292,13 +267,16 @@ def _find_station_insertions(
         if fail_at is None:
             return []
 
-    ordered: list[tuple[int, str]] = []
+    ordered: list[tuple[int, str, float | None]] = []
     seen: set[tuple[int, str]] = set()
 
-    def _push(hit: tuple[int, str] | None) -> None:
-        if hit is None or hit in seen:
+    def _push(hit: tuple[int, str, float | None] | None) -> None:
+        if hit is None:
             return
-        seen.add(hit)
+        key = (hit[0], hit[1])
+        if key in seen:
+            return
+        seen.add(key)
         ordered.append(hit)
 
     # 1) Failing hop.

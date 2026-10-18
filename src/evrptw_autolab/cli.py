@@ -65,6 +65,36 @@ def experiments_expressions(
     typer.echo(json.dumps({**report, "path": str(out)}, indent=2))
 
 
+@experiments_app.command("montoya-attribution")
+def experiments_montoya_attribution() -> None:
+    """Reproduce the recorded Montoya removal ablation and all eight subsets."""
+    from evrptw_autolab.experiments.montoya_attribution import write_factorial
+
+    out = write_factorial()
+    summary = json.loads((out / "summary.json").read_text(encoding="utf-8"))
+    typer.echo(json.dumps({"out": str(out), "summary": summary}, indent=2))
+
+
+@experiments_app.command("montoya-removal-replication")
+def experiments_montoya_removal_replication() -> None:
+    """Repeat the recorded removal policy on both development instances and seeds 7, 11, and 22."""
+    from evrptw_autolab.experiments.montoya_attribution import write_removal_replication
+
+    out = write_removal_replication()
+    summary = json.loads((out / "removal_replication_summary.json").read_text(encoding="utf-8"))
+    typer.echo(json.dumps({"out": str(out), "summary": summary}, indent=2))
+
+
+@experiments_app.command("montoya-bundle-selection")
+def experiments_montoya_bundle_selection() -> None:
+    """Add recorded or random components only when no development pair gets worse."""
+    from evrptw_autolab.experiments.bundle_selection import write_bundle_selection
+
+    out = write_bundle_selection()
+    summary = json.loads((out / "bundle_selection_summary.json").read_text(encoding="utf-8"))
+    typer.echo(json.dumps({"out": str(out), "summary": summary}, indent=2))
+
+
 @experiments_app.command("campaign")
 def experiments_campaign(
     fake: bool = typer.Option(True, "--fake/--ollama", help="FakeBackend (default) or local Ollama"),

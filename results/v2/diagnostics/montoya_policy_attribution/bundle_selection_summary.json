@@ -1,0 +1,91 @@
+{
+  "selected_bundle": "default",
+  "selected_components": [],
+  "approach_b_learned_portfolio": "not_adopted",
+  "recorded": {
+    "insertion_only": {
+      "accepted": false,
+      "reason": "no_strict_improvement",
+      "wins": 0,
+      "losses": 0,
+      "ties": 6,
+      "tie_infeasible": 0,
+      "n_pairs": 6
+    },
+    "station_only": {
+      "accepted": false,
+      "reason": "no_strict_improvement",
+      "wins": 0,
+      "losses": 0,
+      "ties": 6,
+      "tie_infeasible": 0,
+      "n_pairs": 6
+    },
+    "removal_only": {
+      "accepted": false,
+      "reason": "objective_regression",
+      "wins": 2,
+      "losses": 4,
+      "ties": 0,
+      "tie_infeasible": 0,
+      "n_pairs": 6
+    }
+  },
+  "random_accepted_indices": [],
+  "random_decisions": [
+    {
+      "index": 0,
+      "expression": "route_distance_share - 0.01 * rng_value + 1.0 * rng_value",
+      "decision": {
+        "accepted": false,
+        "reason": "no_strict_improvement",
+        "wins": 0,
+        "losses": 0,
+        "ties": 6,
+        "tie_infeasible": 0,
+        "n_pairs": 6
+      }
+    },
+    {
+      "index": 1,
+      "expression": "max(0.0, route_distance_share - 5.0 * rng_value)",
+      "decision": {
+        "accepted": false,
+        "reason": "objective_regression",
+        "wins": 0,
+        "losses": 4,
+        "ties": 2,
+        "tie_infeasible": 0,
+        "n_pairs": 6
+      }
+    },
+    {
+      "index": 2,
+      "expression": "rng_value + 1.0 * due_time",
+      "decision": {
+        "accepted": false,
+        "reason": "no_strict_improvement",
+        "wins": 0,
+        "losses": 0,
+        "ties": 6,
+        "tie_infeasible": 0,
+        "n_pairs": 6
+      }
+    },
+    {
+      "index": 3,
+      "expression": "max(0.0, rng_value - 10.0 * route_distance_share)",
+      "decision": {
+        "accepted": false,
+        "reason": "objective_regression",
+        "wins": 0,
+        "losses": 4,
+        "ties": 2,
+        "tie_infeasible": 0,
+        "n_pairs": 6
+      }
+    }
+  ],
+  "new_solver_evaluations": 36,
+  "deployment_solves_per_instance": 1
+}

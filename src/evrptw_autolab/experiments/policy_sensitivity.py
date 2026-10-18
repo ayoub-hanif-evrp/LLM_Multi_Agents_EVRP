@@ -87,10 +87,32 @@ def ablate_components(
                 "routes": routes,
                 "route_changed": routes != baseline_routes,
                 "paired_outcome": outcome,
+                "objective_components": dict(report.objective_components),
+                "charging_visits": report.charging_visits,
+                "unserved": list(report.unserved),
+                "violations": [item.as_dict() for item in report.violations],
+                "trajectories": [
+                    [
+                        {
+                            "node_id": state.node_id,
+                            "arrival_time": state.arrival_time,
+                            "departure_time": state.departure_time,
+                            "battery_arrival": state.battery_arrival,
+                            "battery_departure": state.battery_departure,
+                            "energy_charged": state.energy_charged,
+                            "charge_technology": state.charge_technology,
+                        }
+                        for state in route
+                    ]
+                    for route in report.trajectories
+                ],
                 "scorer_calls": dict(solution.metadata.get("scorer_calls") or {}),
                 "completed_within_budget": solution.metadata.get("completed_within_budget"),
+                "worker_wait_s": solution.metadata.get("worker_wait_s"),
+                "wall_clock_s": solution.metadata.get("wall_clock_s"),
                 "budget_overrun": solution.metadata.get("budget_overrun"),
                 "solution_feasible": solution.metadata.get("solution_feasible"),
+                "parent_validated": solution.metadata.get("parent_validated"),
             }
         )
     return rows

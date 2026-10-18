@@ -1,0 +1,146 @@
+[
+  {
+    "variant": "default",
+    "feasible": true,
+    "objective_key": [
+      32.1145472796293
+    ],
+    "vehicles": 4,
+    "duration": 32.1145472796293,
+    "paired_outcome": "baseline",
+    "route_changed": false,
+    "first_fault": "OK: feasible",
+    "scorer_calls": {
+      "insertion_score": 60,
+      "station_score": 107,
+      "removal_priority": 220
+    },
+    "completed_within_budget": true
+  },
+  {
+    "variant": "insertion_only",
+    "feasible": true,
+    "objective_key": [
+      32.1145472796293
+    ],
+    "vehicles": 4,
+    "duration": 32.1145472796293,
+    "paired_outcome": "tie",
+    "route_changed": false,
+    "first_fault": "OK: feasible",
+    "scorer_calls": {
+      "insertion_score": 60,
+      "station_score": 107,
+      "removal_priority": 220
+    },
+    "completed_within_budget": true
+  },
+  {
+    "variant": "station_only",
+    "feasible": false,
+    "objective_key": [
+      17.575563962650733
+    ],
+    "vehicles": 2,
+    "duration": 17.575563962650733,
+    "paired_outcome": "baseline",
+    "route_changed": true,
+    "first_fault": "BATTERY: battery_arrival=-697.756586 battery_departure=-697.756586",
+    "scorer_calls": {
+      "insertion_score": 60,
+      "station_score": 288,
+      "removal_priority": 150
+    },
+    "completed_within_budget": true
+  },
+  {
+    "variant": "removal_only",
+    "feasible": true,
+    "objective_key": [
+      25.466450038921884
+    ],
+    "vehicles": 3,
+    "duration": 25.466450038921884,
+    "paired_outcome": "candidate",
+    "route_changed": true,
+    "first_fault": "OK: feasible",
+    "scorer_calls": {
+      "insertion_score": 60,
+      "station_score": 70,
+      "removal_priority": 460
+    },
+    "completed_within_budget": true
+  },
+  {
+    "variant": "insertion_station",
+    "feasible": false,
+    "objective_key": [
+      17.575563962650733
+    ],
+    "vehicles": 2,
+    "duration": 17.575563962650733,
+    "paired_outcome": "baseline",
+    "route_changed": true,
+    "first_fault": "BATTERY: battery_arrival=-697.756586 battery_departure=-697.756586",
+    "scorer_calls": {
+      "insertion_score": 60,
+      "station_score": 288,
+      "removal_priority": 150
+    },
+    "completed_within_budget": true
+  },
+  {
+    "variant": "insertion_removal",
+    "feasible": true,
+    "objective_key": [
+      25.466450038921884
+    ],
+    "vehicles": 3,
+    "duration": 25.466450038921884,
+    "paired_outcome": "candidate",
+    "route_changed": true,
+    "first_fault": "OK: feasible",
+    "scorer_calls": {
+      "insertion_score": 60,
+      "station_score": 70,
+      "removal_priority": 460
+    },
+    "completed_within_budget": true
+  },
+  {
+    "variant": "station_removal",
+    "feasible": false,
+    "objective_key": [
+      22.768123800204513
+    ],
+    "vehicles": 1,
+    "duration": 22.768123800204513,
+    "paired_outcome": "baseline",
+    "route_changed": true,
+    "first_fault": "DURATION: route_duration=22.768124 max_travel_time=10.000000",
+    "scorer_calls": {
+      "insertion_score": 60,
+      "station_score": 256,
+      "removal_priority": 290
+    },
+    "completed_within_budget": true
+  },
+  {
+    "variant": "all_three",
+    "feasible": false,
+    "objective_key": [
+      22.768123800204513
+    ],
+    "vehicles": 1,
+    "duration": 22.768123800204513,
+    "paired_outcome": "baseline",
+    "route_changed": true,
+    "first_fault": "DURATION: route_duration=22.768124 max_travel_time=10.000000",
+    "scorer_calls": {
+      "insertion_score": 60,
+      "station_score": 256,
+      "removal_priority": 290
+    },
+    "completed_within_budget": true
+  }
+]

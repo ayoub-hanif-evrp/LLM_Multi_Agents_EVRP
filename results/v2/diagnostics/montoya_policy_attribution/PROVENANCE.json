@@ -1,0 +1,50 @@
+{
+  "classification": "promising_policy_ablation_incomplete_generation_provenance",
+  "reason": "The executed removal source is byte-linked to the single-agent row of campaign_20261017T163126Z. That full bundle was infeasible. The feasible duration gain appears only when this removal source is paired with the default insertion and station scores. The raw model response and model digest were not saved.",
+  "campaign_id": "campaign_20261017T163126Z",
+  "campaign_path": "C:\\Users\\ayoub\\Desktop\\LLM_Multi_Agents_EVRP-main\\results\\v2\\campaigns\\campaign_20261017T163126Z\\campaign.json",
+  "arm": "single_agent",
+  "agent_role": "routing",
+  "agent_description": "unified single-agent designer, not the five-agent search role",
+  "instance_id": "tc0c10s2cf1",
+  "family": "montoya",
+  "model_tag": "qwen3-coder:30b",
+  "model_digest": null,
+  "generation_temperature": 0.2,
+  "generation_json_mode": true,
+  "original_model_response": null,
+  "original_bundle_feasible": false,
+  "original_bundle_objective_key": [
+    22.768123800204513
+  ],
+  "original_bundle_first_fault": "DURATION: route_duration=22.768124 max_travel_time=10.000000",
+  "components": {
+    "insertion_score": {
+      "executed_source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance + 0.01 * due_time\n",
+      "sha256": "b5737bceeaf6ea8bf75308184fcf6d0f626cb15e7305676e031ec0011f0f9581",
+      "is_default": false
+    },
+    "station_score": {
+      "executed_source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return max(0, min(1, (battery_arrival - 0.2) * 5))\n",
+      "sha256": "87afbce21f04125aaae728036586d22ff5c1c0ee3dbd281ca112b91532740f31",
+      "is_default": false
+    },
+    "removal_priority": {
+      "executed_source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return max(0.0, due_time - route_distance_share * 5.0 + float(rng_value > 0.5))\n",
+      "sha256": "25a5a8b5f5ccec063248bca7c9b6c8b5793688f3b016b5417dd03effda1a9d0c",
+      "is_default": false
+    }
+  },
+  "five_agent_same_instance_removal_is_different": true,
+  "solver_reproduction": {
+    "seed": 7,
+    "time_limit_s": 10.0,
+    "alns_iterations": 60,
+    "hard_timeout": true,
+    "note": "These are the ablation settings, not the 5-second campaign settings."
+  },
+  "instance_path": "C:\\Users\\ayoub\\Desktop\\LLM_Multi_Agents_EVRP-main\\dataset\\montoya-et-al-2017\\tc0c10s2cf1.xml",
+  "instance_sha256": "7f42c642fcb4b2eee638a10afddc8ffc715ee8b5e5b11a51b42eca148a38dee4",
+  "git_head": "2fa9686e4bf52f51749e36fd41137d6a487e27e1",
+  "reproduce_command": "uv run voltforge experiments montoya-attribution"
+}

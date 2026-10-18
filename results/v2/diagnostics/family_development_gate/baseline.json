@@ -1,0 +1,98 @@
+{
+  "description": "Seed 7 development gate under the wall-clock solver. One instance per family. Montoya tc0c10s3cf1 is excluded because it duplicates tc0c10s2cf1. Partial charge targets are a final guarded polish; they are not applied inside ALNS. Hiermann c101_21 did not return a feasible incumbent inside its 15 second budget. A later run regresses when a feasible row becomes infeasible or its lexicographic objective gets worse. A better feasible objective is allowed.",
+  "seed": 7,
+  "rows": [
+    {
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "time_limit_s": 8.0,
+      "alns_iterations": 80,
+      "feasible": true,
+      "objective": 2.0,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "duration": 1728.8110030239563,
+      "first_fault_family": "OK",
+      "solution_feasible": true,
+      "completed_within_budget": true
+    },
+    {
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 7,
+      "time_limit_s": 10.0,
+      "alns_iterations": 60,
+      "feasible": true,
+      "objective": 25.285322313276744,
+      "objective_key": [
+        25.285322313276744
+      ],
+      "vehicles": 3,
+      "distance": 760.5111182174095,
+      "duration": 25.285322313276744,
+      "first_fault_family": "OK",
+      "solution_feasible": true,
+      "completed_within_budget": true
+    },
+    {
+      "family": "bezzi",
+      "instance_id": "C101-5",
+      "seed": 7,
+      "time_limit_s": 12.0,
+      "alns_iterations": 60,
+      "feasible": true,
+      "objective": 227.0,
+      "objective_key": [
+        227.0
+      ],
+      "vehicles": 1,
+      "distance": 227.0,
+      "duration": 1197.5015,
+      "first_fault_family": "OK",
+      "solution_feasible": true,
+      "completed_within_budget": true
+    },
+    {
+      "family": "goeke",
+      "instance_id": "c101C6",
+      "seed": 7,
+      "time_limit_s": 10.0,
+      "alns_iterations": 60,
+      "feasible": true,
+      "objective": 2.0,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "duration": 1728.8110030239563,
+      "first_fault_family": "OK",
+      "solution_feasible": true,
+      "completed_within_budget": true
+    },
+    {
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "time_limit_s": 15.0,
+      "alns_iterations": 40,
+      "feasible": false,
+      "objective": 153.0,
+      "objective_key": [
+        153.0
+      ],
+      "vehicles": 1,
+      "distance": 0.0,
+      "duration": 0.0,
+      "first_fault_family": "VISIT",
+      "solution_feasible": false,
+      "completed_within_budget": false
+    }
+  ]
+}

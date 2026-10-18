@@ -112,6 +112,8 @@ def repair_greedy(
     removed: list[tuple[str, ...]],
     rng: random.Random,
     policy: object | None = None,
+    *,
+    optimize_partial_charges: bool = True,
 ) -> SolutionV2:
     current = clone_solution(solution)
     vehicle_id = default_vehicle_id(spec)
@@ -188,6 +190,8 @@ def repair_greedy(
     from evrptw_autolab.backbone.nonlinear_charge import optimize_solution_partial_charges
 
     current = complete_solution_charges(spec, current)
+    if not optimize_partial_charges:
+        return current
     return optimize_solution_partial_charges(spec, current)
 
 
@@ -200,6 +204,8 @@ def alns_improve(
     iterations: int = 80,
     policy: object | None = None,
     deadline: float | None = None,
+    optimize_partial_charges: bool = True,
+    adaptive_destroy: bool = True,
 ) -> SolutionV2:
     """ALNS with random/worst destroy + greedy repair + SA acceptance."""
     start = time.monotonic()
@@ -238,7 +244,14 @@ def alns_improve(
             destroyed, removed = destroy_random(spec, current, rng, k)
         if not removed:
             continue
-        candidate = repair_greedy(spec, destroyed, removed, rng, policy=policy)
+        candidate = repair_greedy(
+            spec,
+            destroyed,
+            removed,
+            rng,
+            policy=policy,
+            optimize_partial_charges=optimize_partial_charges,
+        )
         if it % 5 == 0:
             candidate = relocate_improve(spec, candidate, max_passes=1, deadline=end_by)
             candidate = two_opt_improve(spec, candidate, deadline=end_by)
@@ -247,7 +260,8 @@ def alns_improve(
         accept = False
         if is_better(cand_report, current_report):
             accept = True
-            weights[destroy_name] += 0.5
+            if adaptive_destroy:
+                weights[destroy_name] += 0.5
         else:
             # Metropolis on variant objective scalar + normalized violation count.
             cur_score = _acceptance_score(current_report)
@@ -255,8 +269,9 @@ def alns_improve(
             delta = new_score - cur_score
             if delta < 0 or rng.random() < math.exp(-delta / max(temperature, 1e-6)):
                 accept = True
-                weights[destroy_name] += 0.1
-            else:
+                if adaptive_destroy:
+                    weights[destroy_name] += 0.1
+            elif adaptive_destroy:
                 weights[destroy_name] = max(0.2, weights[destroy_name] * 0.95)
 
         if accept:
@@ -278,7 +293,8 @@ def alns_improve(
         polished = two_opt_improve(spec, polished, deadline=end_by)
         polished = repair_energy(spec, polished, policy=policy, deadline=end_by)
         polished = complete_solution_charges(spec, polished)
-        polished = optimize_solution_partial_charges(spec, polished)
+        if optimize_partial_charges:
+            polished = optimize_solution_partial_charges(spec, polished)
         polished_report = evaluate(spec, polished)
         if is_better(polished_report, incumbent_report):
             best = polished

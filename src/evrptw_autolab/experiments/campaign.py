@@ -244,6 +244,11 @@ def _run_single_agent(
     from evrptw_autolab.components.interfaces import ComponentKind
     from evrptw_autolab.components.loader import load_bundle, validate_component_source
     from evrptw_autolab.llm.usage import UsageCollector as UC
+    from evrptw_autolab.problem.v2.features import (
+        FEATURE_SCHEMA_VERSION,
+        feature_schema_prompt,
+        normalize_feature_schema,
+    )
 
     kinds: tuple[ComponentKind, ...] = ("insertion_score", "station_score", "removal_priority")
     rows: list[dict[str, Any]] = []
@@ -256,7 +261,10 @@ def _run_single_agent(
             "expression for each component: insertion_score, station_score, removal_priority. "
             "No function definitions. "
             f"Family={spec.family}. "
-            '{"components":[{"component":"insertion_score","expression":"delta_distance"},'
+            + feature_schema_prompt()
+            + "\n"
+            '{"feature_schema":"2026-10-18.v1",'
+            '"components":[{"component":"insertion_score","expression":"delta_distance"},'
             '{"component":"station_score","expression":"detour"},'
             '{"component":"removal_priority","expression":"due_time"}]}'
         )
@@ -319,7 +327,15 @@ def _run_single_agent(
                     "source": code,
                 }
             )
-        bundle, _ = load_bundle(sources, owners)
+        station_piece = by_kind.get("station_score", {})
+        station_generated = any(
+            item["component"] == "station_score" and item["llm_generated"] for item in attribution
+        )
+        raw_schema = payload.get("feature_schema") or station_piece.get("feature_schema")
+        schema = normalize_feature_schema(raw_schema)
+        if schema != FEATURE_SCHEMA_VERSION and not station_generated:
+            schema = FEATURE_SCHEMA_VERSION
+        bundle, _ = load_bundle(sources, owners, feature_schema=schema)
         sol = solve_classical(
             spec,
             seed=cfg.seed,
@@ -343,6 +359,7 @@ def _run_single_agent(
                     "genuine_llm_components": genuine,
                     "attribution": attribution,
                     "component_slots": list(kinds),
+                    "feature_schema": bundle.feature_schema,
                     "work_dir": str(work / "single_agent" / spec.instance_id),
                     "scorer_calls": dict(sol.metadata.get("scorer_calls") or {}),
                 },

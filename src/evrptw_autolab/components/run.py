@@ -24,6 +24,7 @@ from evrptw_autolab.components.schemas import (
     ExperimentFeedback,
 )
 from evrptw_autolab.llm.usage import UsageCollector
+from evrptw_autolab.problem.v2.features import FEATURE_SCHEMA_VERSION, normalize_feature_schema
 from evrptw_autolab.problem.v2.types import ProblemSpecV2
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -111,6 +112,7 @@ def synthesize_components(
     owners: dict[ComponentKind, str] = {}
     provenance: list[dict[str, Any]] = [{"role": "architect", "plan": plan.model_dump()}]
     component_attribution: list[dict[str, Any]] = []
+    feature_schema = FEATURE_SCHEMA_VERSION
 
     for kind in wanted:
         role = ROLE_FOR[kind]
@@ -123,6 +125,10 @@ def synthesize_components(
             collector=collector,
         )
         generated_raw = str(payload.get("expression") or payload.get("code") or "")
+        if kind == "station_score":
+            declared = normalize_feature_schema(payload.get("feature_schema"))
+        else:
+            declared = feature_schema
         fallback_reason = ""
         llm_generated = True
         try:
@@ -199,6 +205,10 @@ def synthesize_components(
             "executed_source_hash": _source_hash(code),
             "is_default_heuristic": code.strip() == DEFAULT_SOURCES[kind].strip(),
         }
+        if kind == "station_score":
+            generated_station = bool(attr["llm_generated"]) and not attr["is_default_heuristic"]
+            feature_schema = declared if generated_station else FEATURE_SCHEMA_VERSION
+            attr["feature_schema"] = feature_schema
         component_attribution.append(attr)
         provenance.append(
             {
@@ -211,7 +221,7 @@ def synthesize_components(
             }
         )
 
-    bundle, errors = load_bundle(sources, owners)
+    bundle, errors = load_bundle(sources, owners, feature_schema=feature_schema)
     write_bundle(bundle, work / "bundle")
 
     solution = solve_classical(
@@ -272,6 +282,8 @@ def synthesize_components(
             if validate_component_source(kind, code).get("ok") and llm_generated:
                 sources[kind] = code
                 owners[kind] = role
+                if kind == "station_score":
+                    feature_schema = normalize_feature_schema(payload.get("feature_schema"))
                 component_attribution.append(
                     {
                         "role": role,
@@ -283,6 +295,7 @@ def synthesize_components(
                         "executed_source_hash": _source_hash(code),
                         "fallback_used": False,
                         "is_default_heuristic": False,
+                        "feature_schema": feature_schema if kind == "station_score" else "",
                     }
                 )
             else:
@@ -291,7 +304,7 @@ def synthesize_components(
                     kind,
                     extract_status,
                 )
-            bundle, errors = load_bundle(sources, owners)
+            bundle, errors = load_bundle(sources, owners, feature_schema=feature_schema)
             write_bundle(bundle, work / "bundle")
             solution = solve_classical(
                 spec, seed=seed, time_limit_s=time_limit_s, alns_iterations=40, policy=bundle
@@ -335,6 +348,7 @@ def synthesize_components(
         "critic_verdict": final_verdict,
         "load_errors": errors,
         "bundle_dir": str(work / "bundle"),
+        "feature_schema": bundle.feature_schema,
         "routes": [[s.node_id for s in route] for route in solution.routes],
         "wall_s": time.monotonic() - started,
         "provenance": provenance,

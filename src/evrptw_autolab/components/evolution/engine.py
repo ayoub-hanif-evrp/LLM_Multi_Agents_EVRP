@@ -37,6 +37,7 @@ from evrptw_autolab.components.evolution.transfer import (
 from evrptw_autolab.components.interfaces import DEFAULT_SOURCES, SIGNATURES, ComponentKind
 from evrptw_autolab.components.loader import load_bundle, validate_component_source, write_bundle
 from evrptw_autolab.llm.usage import BudgetExhausted, UsageCollector
+from evrptw_autolab.problem.v2.features import FEATURE_SCHEMA_VERSION, normalize_feature_schema
 from evrptw_autolab.problem.v2.types import ProblemSpecV2
 
 logger = logging.getLogger(__name__)
@@ -83,6 +84,20 @@ def _typed_sources(sources: dict[str, str]) -> dict[ComponentKind, str]:
     return out
 
 
+def _station_schema(
+    parent_a: BundleCandidate,
+    parent_b: BundleCandidate,
+    sources: dict[str, str],
+) -> str:
+    """Keep the schema that belongs to the inherited station source."""
+    station = sources.get("station_score", "")
+    if station and station == parent_a.sources.get("station_score"):
+        return parent_a.feature_schema
+    if station and station == parent_b.sources.get("station_score"):
+        return parent_b.feature_schema
+    return FEATURE_SCHEMA_VERSION
+
+
 def evaluate_candidate_on_panel(
     sources: dict[str, str],
     owners: dict[str, str],
@@ -92,11 +107,12 @@ def evaluate_candidate_on_panel(
     time_limit_s: float,
     alns_iterations: int,
     validation_ok: bool = True,
+    feature_schema: str | None = None,
 ) -> Any:
     """Evaluate one candidate on a frozen panel under matched budgets."""
     typed = _typed_sources(sources)
     typed_owners = {k: owners.get(k, ROLE_FOR[k]) for k in typed}
-    bundle, errors = load_bundle(typed, typed_owners)
+    bundle, errors = load_bundle(typed, typed_owners, feature_schema=feature_schema)
     rows = []
     for spec in panel:
         for seed in seeds:
@@ -138,6 +154,7 @@ def _generate_component(
     extract_status = "fallback_no_call"
     llm_generated = False
     fallback = True
+    schema_declared = FEATURE_SCHEMA_VERSION
     try:
         raw = collector.complete(
             backend,
@@ -150,6 +167,8 @@ def _generate_component(
             generation=generation,
         )
         payload = extract_json(raw)
+        if kind == "station_score":
+            schema_declared = normalize_feature_schema(payload.get("feature_schema"))
         generated = str(payload.get("code") or "")
         code = generated
         if f"def {kind}" not in code:
@@ -195,6 +214,7 @@ def _generate_component(
         "llm_generated": llm_generated and not fallback,
         "extract_status": extract_status,
         "executed_source": executed,
+        "feature_schema": schema_declared if (llm_generated and not fallback) else FEATURE_SCHEMA_VERSION,
     }
 
 
@@ -452,6 +472,7 @@ def run_evolution(
             break
 
         child_sources, child_lineage = _crossover(parent_a, parent_b, rng)
+        child_schema = _station_schema(parent_a, parent_b, child_sources)
         attr_rows: list[dict[str, Any]] = []
         causal: list[dict[str, Any]] = [{"step": "architect", "plan": plan}]
         incumbent = archive.best() or archive.best_overall()
@@ -480,6 +501,8 @@ def run_evolution(
             attr_rows.append(attr)
             if attr.get("mutation_accepted") or attr.get("llm_generated"):
                 child_sources[kind] = attr["executed_source"]
+                if kind == "station_score":
+                    child_schema = str(attr.get("feature_schema") or FEATURE_SCHEMA_VERSION)
                 child_lineage[kind] = lineage_from_mutation(
                     kind=kind, attr=attr, candidate_id=child_id, generation=gen
                 )
@@ -533,6 +556,7 @@ def run_evolution(
             seeds=panel_seeds,
             time_limit_s=cfg.time_limit_s,
             alns_iterations=cfg.alns_iterations,
+            feature_schema=child_schema,
         )
         if errors:
             panel_eval.validation_ok = False
@@ -596,6 +620,8 @@ def run_evolution(
                     repair_attr = None
                 if repair_attr is not None:
                     child_sources[target] = repair_attr["executed_source"]
+                    if target == "station_score":
+                        child_schema = str(repair_attr.get("feature_schema") or FEATURE_SCHEMA_VERSION)
                     panel_eval, errors = evaluate_candidate_on_panel(
                         child_sources,
                         owners,
@@ -603,6 +629,7 @@ def run_evolution(
                         seeds=panel_seeds,
                         time_limit_s=cfg.time_limit_s,
                         alns_iterations=cfg.alns_iterations,
+                        feature_schema=child_schema,
                     )
                     if errors:
                         panel_eval.validation_ok = False
@@ -648,6 +675,7 @@ def run_evolution(
                     )
                     continue
                 trial_sources = apply_transfer(child_sources, donor, xfer_kind)
+                trial_schema = donor.feature_schema if xfer_kind == "station_score" else child_schema
                 after_panel, _terr = evaluate_candidate_on_panel(
                     trial_sources,
                     owners,
@@ -655,6 +683,7 @@ def run_evolution(
                     seeds=panel_seeds,
                     time_limit_s=cfg.time_limit_s,
                     alns_iterations=cfg.alns_iterations,
+                    feature_schema=trial_schema,
                 )
                 rec = evaluate_transfer_effect(
                     kind=xfer_kind,
@@ -670,6 +699,7 @@ def run_evolution(
                     handle.write(json.dumps(rec.as_dict()) + "\n")
                 if rec.improved and not rec.worsened:
                     child_sources = trial_sources
+                    child_schema = trial_schema
                     panel_eval = after_panel
                     child_lineage[xfer_kind] = inherit_lineage_entry(
                         donor, xfer_kind, source=child_sources[xfer_kind]
@@ -695,6 +725,7 @@ def run_evolution(
             source_hashes=hash_sources(child_sources),
             component_attribution=[{k: v for k, v in row.items() if k != "executed_source"} for row in attr_rows],
             lineage=child_lineage,
+            feature_schema=child_schema,
             metadata={
                 "causal": causal,
                 "source_families": families,
@@ -741,12 +772,13 @@ def run_evolution(
             seeds=panel_seeds,
             time_limit_s=cfg.time_limit_s,
             alns_iterations=cfg.alns_iterations,
+            feature_schema=best.feature_schema,
         )
         apply_panel(best, panel_eval, validation_status="ok" if not errors else "invalid")
         if best.fully_feasible_on_panel:
             typed = _typed_sources(best.sources)
             typed_owners = {k: best.owners.get(k, ROLE_FOR[k]) for k in typed}
-            bundle, _ = load_bundle(typed, typed_owners)
+            bundle, _ = load_bundle(typed, typed_owners, feature_schema=best.feature_schema)
             write_bundle(bundle, frozen_dir)
             (work / "frozen_meta.json").write_text(
                 json.dumps(
@@ -761,6 +793,7 @@ def run_evolution(
                         "attribution_category": best.attribution_category,
                         "genuine_llm_components": best.genuine_llm_components,
                         "model": best.model,
+                        "feature_schema": best.feature_schema,
                         "deployment_llm_calls": 0,
                     },
                     indent=2,

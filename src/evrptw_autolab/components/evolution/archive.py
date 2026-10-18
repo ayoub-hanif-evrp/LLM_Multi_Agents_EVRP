@@ -14,6 +14,7 @@ from evrptw_autolab.components.evolution.fitness import (
     panel_is_better,
 )
 from evrptw_autolab.components.interfaces import DEFAULT_SOURCES
+from evrptw_autolab.problem.v2.features import FEATURE_SCHEMA_VERSION
 
 
 @dataclass
@@ -66,9 +67,16 @@ class BundleCandidate:
     # Per-kind lineage surviving crossover: origin candidate, LLM flag, hashes.
     lineage: dict[str, dict[str, Any]] = field(default_factory=dict)
     metadata: dict[str, Any] = field(default_factory=dict)
+    feature_schema: str = FEATURE_SCHEMA_VERSION
 
     def fingerprint(self) -> str:
-        payload = json.dumps(self.sources, sort_keys=True)
+        if self.feature_schema == FEATURE_SCHEMA_VERSION:
+            payload = json.dumps(self.sources, sort_keys=True)
+        else:
+            payload = json.dumps(
+                {"feature_schema": self.feature_schema, "sources": self.sources},
+                sort_keys=True,
+            )
         return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:12]
 
     def panel_evaluation(self) -> PanelEvaluation | None:

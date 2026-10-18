@@ -16,6 +16,7 @@ class AlgorithmPlan(BaseModel):
     risks: list[str] = Field(default_factory=list)
     success_criteria: list[str] = Field(default_factory=list)
     variant_notes: str = ""
+    station_feature_schema: str = ""
 
     @field_validator("components", mode="before")
     @classmethod
@@ -40,6 +41,7 @@ class ComponentProposal(BaseModel):
     expression: str = ""
     rationale: str = ""
     mechanism: str = ""
+    feature_schema: str = ""
 
 
 class FailureDiagnosis(BaseModel):

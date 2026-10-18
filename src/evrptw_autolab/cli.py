@@ -95,6 +95,49 @@ def experiments_montoya_bundle_selection() -> None:
     typer.echo(json.dumps({"out": str(out), "summary": summary}, indent=2))
 
 
+@experiments_app.command("family-development-gate")
+def experiments_family_development_gate(
+    write_baseline: bool = typer.Option(False, "--write-baseline"),
+) -> None:
+    """Solve one development instance per family and compare with the frozen gate."""
+    from evrptw_autolab.experiments.family_gate import judge_gate, load_baseline, measure_gate
+    from evrptw_autolab.experiments.family_gate import write_baseline as save_baseline
+
+    rows = measure_gate()
+    if write_baseline:
+        path = save_baseline(rows)
+        typer.echo(json.dumps({"wrote": str(path), "rows": rows}, indent=2))
+        return
+    verdict = judge_gate(rows, load_baseline()["rows"])
+    typer.echo(json.dumps({"verdict": verdict, "rows": rows}, indent=2))
+    if not verdict["ok"]:
+        raise typer.Exit(code=1)
+
+
+@experiments_app.command("backbone-ablation")
+def experiments_backbone_ablation() -> None:
+    """Compare partial charging, route merge, and adaptive destroy on the development gate."""
+    from evrptw_autolab.experiments.backbone_ablation import write_ablation
+
+    path = write_ablation()
+    summary = json.loads(path.read_text(encoding="utf-8"))
+    brief = {
+        "path": str(path),
+        "adopted_variant": summary["adopted_variant"],
+        "accepted_variants": summary["accepted_variants"],
+        "decisions": {
+            name: {
+                "accepted": item["accepted"],
+                "reason": item["reason"],
+                "wins": item["wins"],
+                "losses": item["losses"],
+            }
+            for name, item in summary["decisions"].items()
+        },
+    }
+    typer.echo(json.dumps(brief, indent=2))
+
+
 @experiments_app.command("campaign")
 def experiments_campaign(
     fake: bool = typer.Option(True, "--fake/--ollama", help="FakeBackend (default) or local Ollama"),

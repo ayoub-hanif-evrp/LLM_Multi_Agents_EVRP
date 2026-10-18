@@ -93,6 +93,10 @@ def rank_station_candidates(
         if scorer is not None:
             note_scorer_call(policy, "station_score")
             battery_arg = battery_argument_for_schema(schema, item.battery_at_station, cap)
+            previous = getattr(policy, "observed_battery_argument_max", None)
+            if previous is None or float(battery_arg) > float(previous):
+                assert policy is not None
+                policy.observed_battery_argument_max = float(battery_arg)  # type: ignore[attr-defined]
             value = float(scorer(item.detour, battery_arg, _rate(spec, item.station_id)))
         else:
             value = float(item.detour)

@@ -29,6 +29,7 @@ from evrptw_autolab.backbone.util import (
     evaluate,
     is_better,
 )
+from evrptw_autolab.problem.v2.features import FEATURE_SCHEMA_VERSION
 from evrptw_autolab.problem.v2.types import ProblemSpecV2, RouteStopV2, SolutionV2
 
 
@@ -80,12 +81,24 @@ def _reassign_vehicles(
     return current
 
 
+def _apply_partial_charges(
+    spec: ProblemSpecV2,
+    solution: SolutionV2,
+    *,
+    enabled: bool,
+) -> SolutionV2:
+    if not enabled:
+        return solution
+    return optimize_solution_partial_charges(spec, solution)
+
+
 def repair_feasibility(
     spec: ProblemSpecV2,
     solution: SolutionV2,
     *,
     policy: object | None = None,
     deadline: float | None = None,
+    optimize_partial_charges: bool = True,
 ) -> SolutionV2:
     """Unified repair: energy → charges → partial charge → route splits → local search."""
     current = clone_solution(solution)
@@ -93,20 +106,20 @@ def repair_feasibility(
         return current
     current = repair_energy(spec, current, policy=policy, deadline=deadline)
     current = complete_solution_charges(spec, current)
-    current = optimize_solution_partial_charges(spec, current)
+    current = _apply_partial_charges(spec, current, enabled=optimize_partial_charges)
     report = evaluate(spec, current)
     if report.feasible:
         return current
     if deadline is not None and time.monotonic() > deadline:
         return current
     current = split_infeasible_routes(spec, current, policy=policy)
-    current = optimize_solution_partial_charges(spec, current)
+    current = _apply_partial_charges(spec, current, enabled=optimize_partial_charges)
     if deadline is not None and time.monotonic() > deadline:
         return current
     current = relocate_improve(spec, current, max_passes=2, deadline=deadline)
     current = repair_energy(spec, current, policy=policy, deadline=deadline)
     current = complete_solution_charges(spec, current)
-    current = optimize_solution_partial_charges(spec, current)
+    current = _apply_partial_charges(spec, current, enabled=optimize_partial_charges)
     return current
 
 
@@ -116,8 +129,11 @@ def _maybe_merge(
     *,
     deadline: float | None,
     max_passes: int = 2,
+    enabled: bool = True,
 ) -> SolutionV2:
     """Apply route merge only when the lexicographic objective improves."""
+    if not enabled:
+        return solution
     if deadline is not None and time.monotonic() > deadline:
         return solution
     before = evaluate(spec, solution)
@@ -141,6 +157,13 @@ class ClassicalSolver:
     debug_crash: bool = False
     debug_invalid_snapshot: bool = False
     debug_parent_delay_s: float = 0.0
+    optimize_partial_charges: bool = True
+    # Partial targets inside ALNS change which duration-feasible moves are accepted.
+    # On Montoya tc0c10s2cf1 that search-time rewrite was worse at seeds 7, 11, and 22.
+    # The final guarded polish still runs and cannot replace a better incumbent.
+    partial_charges_in_search: bool = False
+    merge_routes: bool = True
+    adaptive_destroy: bool = True
 
     def solve(self, spec: ProblemSpecV2) -> SolutionV2:
         if not self.hard_timeout:
@@ -179,7 +202,13 @@ class ClassicalSolver:
         rng = random.Random(int(self.seed))
         solution = construct_greedy(spec, rng, policy=self.policy)
         self._publish(tracker, spec, solution)
-        solution = repair_feasibility(spec, solution, policy=self.policy, deadline=deadline)
+        solution = repair_feasibility(
+            spec,
+            solution,
+            policy=self.policy,
+            deadline=deadline,
+            optimize_partial_charges=self.optimize_partial_charges and self.partial_charges_in_search,
+        )
         self._publish(tracker, spec, solution)
         if time.monotonic() < deadline:
             solution = two_opt_improve(spec, solution, deadline=deadline)
@@ -194,15 +223,21 @@ class ClassicalSolver:
                 iterations=self.alns_iterations,
                 policy=self.policy,
                 deadline=deadline,
+                optimize_partial_charges=self.optimize_partial_charges and self.partial_charges_in_search,
+                adaptive_destroy=self.adaptive_destroy,
             )
             self._publish(tracker, spec, solution)
         if time.monotonic() < deadline:
-            solution = _maybe_merge(spec, solution, deadline=deadline, max_passes=3)
+            solution = _maybe_merge(
+                spec, solution, deadline=deadline, max_passes=3, enabled=self.merge_routes
+            )
             self._publish(tracker, spec, solution)
             # Always refresh charge annotations; keep only if not worse.
             polished = remove_redundant_stations(spec, solution)
             polished = complete_solution_charges(spec, polished)
-            polished = optimize_solution_partial_charges(spec, polished)
+            polished = _apply_partial_charges(
+                spec, polished, enabled=self.optimize_partial_charges
+            )
             polished_report = evaluate(spec, polished)
             current_report = evaluate(spec, solution)
             if is_better(polished_report, current_report) or (
@@ -214,14 +249,24 @@ class ClassicalSolver:
                 solution = polished
             # Feasibility repair only if currently infeasible.
             if not evaluate(spec, solution).feasible:
-                solution = repair_feasibility(spec, solution, policy=self.policy, deadline=deadline)
+                solution = repair_feasibility(
+                    spec,
+                    solution,
+                    policy=self.policy,
+                    deadline=deadline,
+                    optimize_partial_charges=self.optimize_partial_charges and self.partial_charges_in_search,
+                )
             else:
                 # Feasible incumbents still need Bezzi charge completion after structural edits.
                 solution = complete_solution_charges(spec, solution)
-                solution = optimize_solution_partial_charges(spec, solution)
+                solution = _apply_partial_charges(
+                    spec, solution, enabled=self.optimize_partial_charges
+                )
             solution = _reassign_vehicles(spec, solution, deadline=deadline)
             if time.monotonic() < deadline:
-                solution = _maybe_merge(spec, solution, deadline=deadline, max_passes=2)
+                solution = _maybe_merge(
+                    spec, solution, deadline=deadline, max_passes=2, enabled=self.merge_routes
+                )
                 solution = complete_solution_charges(spec, solution)
             self._publish(tracker, spec, solution)
         report = evaluate(spec, solution)
@@ -266,11 +311,21 @@ class ClassicalSolver:
                 "parent_validated": False,
                 "inprocess_validated": True,
                 "scorer_calls": dict(getattr(self.policy, "call_counts", {}) or {}),
+                "feature_schema": str(
+                    getattr(self.policy, "feature_schema", FEATURE_SCHEMA_VERSION) or FEATURE_SCHEMA_VERSION
+                ),
+                "station_battery_argument_max": getattr(
+                    self.policy, "observed_battery_argument_max", None
+                ),
             }
         )
         published = tracker.get("incumbent")
         if isinstance(published, SolutionV2):
             published.metadata["scorer_calls"] = dict(solution.metadata["scorer_calls"])
+            published.metadata["feature_schema"] = solution.metadata["feature_schema"]
+            published.metadata["station_battery_argument_max"] = solution.metadata[
+                "station_battery_argument_max"
+            ]
             sink = tracker.get("sink")
             if sink is not None:
                 sink.put(published)
@@ -317,7 +372,11 @@ def _solver_process_main(spec: ProblemSpecV2, config: dict[str, Any], incumbent_
     if sources:
         from evrptw_autolab.components.loader import load_bundle
 
-        policy, _errors = load_bundle(sources, config.get("owners"))
+        policy, _errors = load_bundle(
+            sources,
+            config.get("owners"),
+            feature_schema=config.get("feature_schema"),
+        )
     solver = ClassicalSolver(
         seed=int(config["seed"]),
         time_limit_s=float(config["time_limit_s"]),
@@ -325,6 +384,10 @@ def _solver_process_main(spec: ProblemSpecV2, config: dict[str, Any], incumbent_
         use_alns=bool(config["use_alns"]),
         policy=policy,
         hard_timeout=False,
+        optimize_partial_charges=bool(config.get("optimize_partial_charges", True)),
+        partial_charges_in_search=bool(config.get("partial_charges_in_search", False)),
+        merge_routes=bool(config.get("merge_routes", True)),
+        adaptive_destroy=bool(config.get("adaptive_destroy", True)),
     )
     sink = _FileSink(incumbent_path)
     if config.get("debug_crash"):
@@ -454,6 +517,13 @@ def _solve_in_process(solver: ClassicalSolver, spec: ProblemSpecV2) -> SolutionV
         "debug_invalid_snapshot": bool(solver.debug_invalid_snapshot),
         "sources": dict(getattr(solver.policy, "sources", {}) or {}),
         "owners": dict(getattr(solver.policy, "owners", {}) or {}),
+        "feature_schema": str(
+            getattr(solver.policy, "feature_schema", FEATURE_SCHEMA_VERSION) or FEATURE_SCHEMA_VERSION
+        ),
+        "optimize_partial_charges": bool(solver.optimize_partial_charges),
+        "partial_charges_in_search": bool(solver.partial_charges_in_search),
+        "merge_routes": bool(solver.merge_routes),
+        "adaptive_destroy": bool(solver.adaptive_destroy),
     }
     fd, incumbent_path = tempfile.mkstemp(prefix="voltforge-incumbent-", suffix=".pkl")
     os.close(fd)
@@ -562,6 +632,10 @@ def solve_classical(
     use_alns: bool = True,
     policy: object | None = None,
     hard_timeout: bool = True,
+    optimize_partial_charges: bool = True,
+    partial_charges_in_search: bool = False,
+    merge_routes: bool = True,
+    adaptive_destroy: bool = True,
 ) -> SolutionV2:
     return ClassicalSolver(
         seed=seed,
@@ -570,6 +644,10 @@ def solve_classical(
         use_alns=use_alns,
         policy=policy,
         hard_timeout=hard_timeout,
+        optimize_partial_charges=optimize_partial_charges,
+        partial_charges_in_search=partial_charges_in_search,
+        merge_routes=merge_routes,
+        adaptive_destroy=adaptive_destroy,
     ).solve(spec)
 
 

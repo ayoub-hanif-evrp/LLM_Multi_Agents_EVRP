@@ -7,5 +7,6 @@ Return ONLY JSON:
   "components": ["insertion_score", "station_score", "removal_priority"],
   "risks": ["..."],
   "success_criteria": ["feasible on development instance"],
-  "variant_notes": "..."
+  "variant_notes": "...",
+  "station_feature_schema": "2026-10-18.v1"
 }

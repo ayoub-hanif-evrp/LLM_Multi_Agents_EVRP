@@ -9,6 +9,7 @@ from __future__ import annotations
 
 FEATURE_SCHEMA_VERSION = "2026-10-18.v1"
 FEATURE_SCHEMA_V2 = "2026-10-18.v2"
+KNOWN_FEATURE_SCHEMAS = frozenset({FEATURE_SCHEMA_VERSION, FEATURE_SCHEMA_V2})
 
 # battery_arrival is vehicle energy, the same unit as VehicleTypeV2.battery_capacity.
 # On Montoya tc0c10s2cf1 that capacity is 16000 Wh, not a fraction in [0, 1].
@@ -88,6 +89,32 @@ STATION_FEATURES_V2: dict[str, dict[str, str]] = {
         "range": "(-inf, inf)",
     },
 }
+
+
+def normalize_feature_schema(value: object, *, strict: bool = False) -> str:
+    """Return a known schema id. Blank means v1. Unknown ids raise when strict."""
+    text = str(value or "").strip()
+    if not text:
+        return FEATURE_SCHEMA_VERSION
+    if text in KNOWN_FEATURE_SCHEMAS:
+        return text
+    if strict:
+        raise ValueError(f"unknown station feature schema {text}")
+    return FEATURE_SCHEMA_VERSION
+
+
+def feature_schema_prompt() -> str:
+    """Text embedded in station-generation prompts. v1 stays the default."""
+    return (
+        "The feature_schema field is stored on the component bundle and restored "
+        "inside the solver subprocess. It is not inferred from the expression.\n"
+        f"{FEATURE_SCHEMA_VERSION}: battery_arrival is physical energy, the same unit as "
+        "battery capacity. On Montoya that capacity is 16000 Wh, not a fraction in [0, 1].\n"
+        f"{FEATURE_SCHEMA_V2}: battery_arrival is battery_at_station / battery_capacity, "
+        "clipped to [0, 1]. Declare v2 only when the expression was written for that ratio. "
+        "A v1 expression must not be evaluated under v2.\n"
+        f'Include "feature_schema":"{FEATURE_SCHEMA_VERSION}" or "{FEATURE_SCHEMA_V2}".'
+    )
 
 
 def battery_argument_for_schema(schema: str, battery_arrival: float, battery_capacity: float) -> float:

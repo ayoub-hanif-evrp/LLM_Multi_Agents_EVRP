@@ -15,6 +15,7 @@ from typing import Any
 
 from evrptw_autolab.components.interfaces import SIGNATURES, ComponentKind
 from evrptw_autolab.components.interpret import UnsafeComponent, compile_component
+from evrptw_autolab.problem.v2.features import FEATURE_SCHEMA_VERSION, normalize_feature_schema
 from evrptw_autolab.sandbox.safe_exec import run_python_source
 from evrptw_autolab.sandbox.static_scan import scan_source
 
@@ -136,6 +137,10 @@ class PolicyBundle:
     sources: dict[str, str] = field(default_factory=dict)
     owners: dict[str, str] = field(default_factory=dict)
     call_counts: dict[str, int] = field(default_factory=dict)
+    feature_schema: str = FEATURE_SCHEMA_VERSION
+    # Largest battery value actually passed into station_score. The child process
+    # copies this onto the incumbent so a parent can see which scale was used.
+    observed_battery_argument_max: float | None = None
 
     def set(self, kind: ComponentKind, fn: Callable[..., float], source: str, owner: str) -> None:
         setattr(self, kind, fn)
@@ -143,8 +148,13 @@ class PolicyBundle:
         self.owners[kind] = owner
 
 
-def load_bundle(sources: dict[ComponentKind, str], owners: dict[ComponentKind, str] | None = None) -> tuple[PolicyBundle, list[str]]:
-    bundle = PolicyBundle()
+def load_bundle(
+    sources: dict[ComponentKind, str],
+    owners: dict[ComponentKind, str] | None = None,
+    *,
+    feature_schema: str | None = None,
+) -> tuple[PolicyBundle, list[str]]:
+    bundle = PolicyBundle(feature_schema=normalize_feature_schema(feature_schema, strict=True))
     errors: list[str] = []
     owners = owners or {}
     for kind, source in sources.items():
@@ -160,7 +170,11 @@ def write_bundle(bundle: PolicyBundle, directory: Path) -> Path:
     directory.mkdir(parents=True, exist_ok=True)
     for kind, source in bundle.sources.items():
         (directory / f"{kind}.py").write_text(source, encoding="utf-8")
-    meta = {"owners": bundle.owners, "kinds": list(bundle.sources)}
+    meta = {
+        "owners": bundle.owners,
+        "kinds": list(bundle.sources),
+        "feature_schema": bundle.feature_schema,
+    }
     path = directory / "bundle.json"
     path.write_text(json.dumps(meta, indent=2) + "\n", encoding="utf-8")
     return path

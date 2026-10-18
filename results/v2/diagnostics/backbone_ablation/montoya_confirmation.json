@@ -1,0 +1,107 @@
+{
+  "seed7_fixed_route_targets": {
+    "solved_feasible": true,
+    "solved_key": [
+      32.1145472796293
+    ],
+    "full_target_feasible": true,
+    "full_target_key": [
+      33.31835320843785
+    ],
+    "full_fault": "OK",
+    "reoptimized_partial_feasible": true,
+    "reoptimized_partial_key": [
+      32.1145472796293
+    ]
+  },
+  "seeds_11_and_22": [
+    {
+      "seed": 11,
+      "variant": "baseline",
+      "feasible": true,
+      "objective_key": [
+        25.423707721761772
+      ],
+      "vehicles": 3,
+      "completed_within_budget": true,
+      "first_fault": "OK"
+    },
+    {
+      "seed": 11,
+      "variant": "no_partial_charges",
+      "feasible": true,
+      "objective_key": [
+        25.285322313276744
+      ],
+      "vehicles": 3,
+      "completed_within_budget": true,
+      "first_fault": "OK"
+    },
+    {
+      "seed": 11,
+      "variant": "no_route_merge",
+      "feasible": true,
+      "objective_key": [
+        34.12878884048794
+      ],
+      "vehicles": 5,
+      "completed_within_budget": true,
+      "first_fault": "OK"
+    },
+    {
+      "seed": 11,
+      "variant": "uniform_destroy",
+      "feasible": true,
+      "objective_key": [
+        32.08370174283935
+      ],
+      "vehicles": 4,
+      "completed_within_budget": true,
+      "first_fault": "OK"
+    },
+    {
+      "seed": 22,
+      "variant": "baseline",
+      "feasible": true,
+      "objective_key": [
+        25.466450038921884
+      ],
+      "vehicles": 3,
+      "completed_within_budget": true,
+      "first_fault": "OK"
+    },
+    {
+      "seed": 22,
+      "variant": "no_partial_charges",
+      "feasible": true,
+      "objective_key": [
+        25.285322313276744
+      ],
+      "vehicles": 3,
+      "completed_within_budget": true,
+      "first_fault": "OK"
+    },
+    {
+      "seed": 22,
+      "variant": "no_route_merge",
+      "feasible": true,
+      "objective_key": [
+        34.12878884048794
+      ],
+      "vehicles": 5,
+      "completed_within_budget": true,
+      "first_fault": "OK"
+    },
+    {
+      "seed": 22,
+      "variant": "uniform_destroy",
+      "feasible": true,
+      "objective_key": [
+        25.466450038921884
+      ],
+      "vehicles": 3,
+      "completed_within_budget": true,
+      "first_fault": "OK"
+    }
+  ]
+}

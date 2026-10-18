@@ -11,6 +11,7 @@ import ast
 
 from evrptw_autolab.components.interfaces import ComponentKind
 from evrptw_autolab.components.interpret import UnsafeComponent, _eval
+from evrptw_autolab.problem.v2.features import feature_schema_prompt
 
 ARGUMENT_NAMES: dict[ComponentKind, tuple[str, ...]] = {
     "insertion_score": (
@@ -106,7 +107,8 @@ def repair_prompt(kind: ComponentKind, error: str) -> str:
         "Accepted language: ONE arithmetic expression. No def, no if, no assignments, no imports.\n"
         f"Allowed names: {names}. Allowed calls: abs min max float int round.\n"
         f"Example expression: {example}\n"
-        'Return ONLY JSON: {"component":"'
+        + (feature_schema_prompt() + "\n" if kind == "station_score" else "")
+        + 'Return ONLY JSON: {"component":"'
         + kind
         + '","expression":"...","rationale":"...","mechanism":"expression"}'
     )

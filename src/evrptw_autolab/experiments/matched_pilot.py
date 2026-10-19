@@ -2,11 +2,13 @@
 
 Classical is one deployment of the default policy. Random, single-agent, and
 five-agent each receive ``SEARCH_CANDIDATES`` bundle evaluations on the same
-instances, seed, time limits, and iteration caps. The five-agent arm may use
-more language-model calls. It does not receive more solver evaluations.
+instances, seed, time limits, and iteration caps. Each search candidate
+replaces one scheduled component. The five-agent critic is an extra model
+call and does not add a solver evaluation.
 
-Selection is the predeclared conservative rule. The robust rule is recorded
-and is not used to choose the deployed bundle.
+Selection keeps the conservatively accepted candidate with the most wins.
+An earlier candidate wins a tie. The robust rule is recorded and is not used
+to choose the deployed bundle.
 """
 from __future__ import annotations
 
@@ -32,7 +34,7 @@ from evrptw_autolab.components.interfaces import DEFAULT_SOURCES, ComponentKind
 from evrptw_autolab.components.loader import load_bundle, validate_component_source
 from evrptw_autolab.experiments.bundle_selection import (
     conservative_decision,
-    random_removal_expression,
+    random_component_expression,
     robust_decision,
 )
 from evrptw_autolab.experiments.fair_budget import (
@@ -167,6 +169,39 @@ def _accept_expression(
     }
 
 
+_COMPONENT_ROLES: dict[ComponentKind, str] = {
+    "insertion_score": "routing",
+    "station_score": "charging",
+    "removal_priority": "search",
+}
+
+
+def _propose_component(
+    collector: UsageCollector,
+    backend: Any,
+    model: str,
+    kind: ComponentKind,
+    *,
+    context: str,
+) -> tuple[str, dict[str, Any], str]:
+    """Ask for one component expression. The caller copies the parent bundle."""
+    raw = collector.complete(
+        backend,
+        prompt=_expression_prompt(kind, context=context),
+        role=_COMPONENT_ROLES[kind],
+        temperature=0.4,
+        model=model,
+        json_mode=True,
+    )
+    payload = extract_json(raw)
+    code, row = _accept_expression(kind, payload, collector, backend, model)
+    row["agent_role"] = _COMPONENT_ROLES[kind]
+    schema = FEATURE_SCHEMA_VERSION
+    if kind == "station_score" and row["llm_generated"]:
+        schema = normalize_feature_schema(payload.get("feature_schema"))
+    return code, row, schema
+
+
 def _propose_single(
     collector: UsageCollector,
     backend: Any,
@@ -262,21 +297,35 @@ def _propose_five(
     return sources, attribution, schema, {"hypothesis": hypothesis, "summary": str(plan.get("summary") or "")}
 
 
+def _comparison_summary(
+    rows: list[dict[str, Any]],
+    baseline: list[dict[str, Any]] | None = None,
+) -> list[dict[str, Any]]:
+    base = {str(row["instance_id"]): row for row in baseline or []}
+    summary = []
+    for row in rows:
+        other = base.get(str(row["instance_id"]))
+        summary.append(
+            {
+                "instance_id": row["instance_id"],
+                "candidate_feasible": row["feasible"],
+                "candidate_key": row["objective_key"],
+                "candidate_fault": row["first_fault"],
+                "classical_feasible": None if other is None else other["feasible"],
+                "classical_key": None if other is None else other["objective_key"],
+            }
+        )
+    return summary
+
+
 def _critic(
     collector: UsageCollector,
     backend: Any,
     model: str,
     rows: list[dict[str, Any]],
+    baseline: list[dict[str, Any]] | None = None,
 ) -> str:
-    summary = [
-        {
-            "instance_id": row["instance_id"],
-            "feasible": row["feasible"],
-            "objective_key": row["objective_key"],
-            "first_fault": row["first_fault"],
-        }
-        for row in rows
-    ]
+    summary = _comparison_summary(rows, baseline)
     raw = collector.complete(
         backend,
         prompt=(
@@ -375,7 +424,7 @@ def _select(
     grouped: dict[str, list[dict[str, Any]]] = {}
     for row in candidates:
         grouped.setdefault(str(row["candidate_id"]), []).append(row)
-    decisions = []
+    decisions: list[dict[str, Any]] = []
     chosen = None
     for candidate_id, rows in grouped.items():
         pairs = _pairs(baseline, rows)
@@ -388,9 +437,13 @@ def _select(
             "deployed": False,
         }
         decisions.append(item)
-        if apply_selection and chosen is None and conservative["accepted"]:
-            chosen = item
-            item["deployed"] = True
+    accepted = [item for item in decisions if item["conservative"]["accepted"]]
+    if apply_selection and accepted:
+        chosen = max(
+            accepted,
+            key=lambda item: (int(item["conservative"]["wins"]), -decisions.index(item)),
+        )
+        chosen["deployed"] = True
     if not apply_selection and decisions:
         decisions[-1]["deployed"] = True
         chosen = decisions[-1]
@@ -459,8 +512,9 @@ def run_matched_pilot(cfg: MatchedPilotConfig | None = None) -> dict[str, Any]:
     rng = random.Random(0)
     for index in range(int(cfg.candidates)):
         sources = dict(classical_sources)
-        expression = random_removal_expression(rng)
-        sources["removal_priority"] = wrap_expression("removal_priority", expression)
+        kind = KINDS[index % len(KINDS)]
+        expression = random_component_expression(kind, rng)
+        sources[kind] = wrap_expression(kind, expression)
         evaluated = _evaluate(
             "random_evolution",
             f"random_{index}",
@@ -468,25 +522,33 @@ def run_matched_pilot(cfg: MatchedPilotConfig | None = None) -> dict[str, Any]:
             FEATURE_SCHEMA_VERSION,
             panel,
             seed,
-            extra={"expression": expression, "origin": "grammar"},
+            extra={"expression": expression, "component": kind, "origin": "grammar"},
         )
         rows.extend(evaluated)
         solves["random_evolution"] += len(evaluated)
 
     single_collector = UsageCollector(max_calls=cfg.max_llm_calls, max_tokens=cfg.max_llm_tokens)
     for index in range(int(cfg.candidates)):
-        sources, attribution, schema = _propose_single(
-            single_collector, backend, model, families=families, index=index
+        kind = KINDS[index % len(KINDS)]
+        code, row, schema = _propose_component(
+            single_collector,
+            backend,
+            model,
+            kind,
+            context=f"Candidate {index}. Families={families}. One-shot control; no fitness feedback.",
         )
-        genuine = sum(1 for row in attribution if row["llm_generated"])
+        sources = dict(classical_sources)
+        sources[kind] = code
+        use_schema = schema if kind == "station_score" else FEATURE_SCHEMA_VERSION
+        genuine = 1 if row.get("llm_generated") else 0
         evaluated = _evaluate(
             "single_agent",
             f"single_{index}",
             sources,
-            schema,
+            use_schema,
             panel,
             seed,
-            extra={"attribution": attribution, "llm_generated_components": genuine, "origin": "single_agent"},
+            extra={"attribution": [row], "llm_generated_components": genuine, "origin": "single_agent", "component": kind},
         )
         rows.extend(evaluated)
         solves["single_agent"] += len(evaluated)
@@ -496,33 +558,38 @@ def run_matched_pilot(cfg: MatchedPilotConfig | None = None) -> dict[str, Any]:
     five_collector = UsageCollector(max_calls=cfg.max_llm_calls, max_tokens=cfg.max_llm_tokens)
     critic_text = ""
     for index in range(int(cfg.candidates)):
-        sources, attribution, schema, plan = _propose_five(
+        kind = KINDS[index % len(KINDS)]
+        code, row, schema = _propose_component(
             five_collector,
             backend,
             model,
-            families=families,
-            index=index,
-            critic_text=critic_text,
+            kind,
+            context=f"Candidate {index}. Families={families}. Prior critic: {critic_text or 'none'}.",
         )
-        genuine = sum(1 for row in attribution if row["llm_generated"])
+        sources = dict(classical_sources)
+        sources[kind] = code
+        use_schema = schema if kind == "station_score" else FEATURE_SCHEMA_VERSION
+        genuine = 1 if row.get("llm_generated") else 0
+        plan = {"components": [kind], "hypothesis": critic_text}
         evaluated = _evaluate(
             "five_agent",
             f"five_{index}",
             sources,
-            schema,
+            use_schema,
             panel,
             seed,
             extra={
-                "attribution": attribution,
+                "attribution": [row],
                 "plan": plan,
                 "llm_generated_components": genuine,
                 "origin": "five_agent",
+                "component": kind,
             },
         )
         rows.extend(evaluated)
         solves["five_agent"] += len(evaluated)
         if cfg.use_critic:
-            critic_text = _critic(five_collector, backend, model, evaluated)
+            critic_text = _critic(five_collector, backend, model, evaluated, classical)
         else:
             critic_text = ""
     llm_calls["five_agent"] = five_collector.logical_calls

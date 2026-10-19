@@ -16,7 +16,7 @@ from typing import Any
 
 from evrptw_autolab.backbone.solver import solve_classical
 from evrptw_autolab.backbone.util import evaluate
-from evrptw_autolab.components.expressions import wrap_expression
+from evrptw_autolab.components.expressions import ARGUMENT_NAMES, wrap_expression
 from evrptw_autolab.components.interfaces import DEFAULT_SOURCES, ComponentKind
 from evrptw_autolab.components.loader import load_bundle
 from evrptw_autolab.experiments.montoya_attribution import (
@@ -56,6 +56,24 @@ def random_removal_expression(rng: random.Random) -> str:
     if kind == 2:
         return f"{coeff} * {left} + {other} * {right} + 0.01 * rng_value"
     return f"{left} - {coeff} * {right} + {other} * rng_value"
+
+
+def random_component_expression(kind: ComponentKind, rng: random.Random) -> str:
+    """Draw one expression for any scoring component from the shared grammar."""
+    names = list(ARGUMENT_NAMES[kind])
+    coeffs = ("0.01", "0.1", "1.0", "5.0", "10.0")
+    left = rng.choice(names)
+    right = rng.choice(names)
+    coeff = rng.choice(coeffs)
+    other = rng.choice(coeffs)
+    draw = rng.randrange(4)
+    if draw == 0:
+        return f"{left} + {coeff} * {right}"
+    if draw == 1:
+        return f"max(0.0, {left} - {coeff} * {right})"
+    if draw == 2:
+        return f"{coeff} * {left} + {other} * {right}"
+    return f"min({left}, {coeff} * {right})"
 
 
 def conservative_decision(pairs: list[dict[str, Any]]) -> dict[str, Any]:

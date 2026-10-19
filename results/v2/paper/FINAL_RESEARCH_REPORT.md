@@ -64,7 +64,8 @@ Model digest recorded for the generational run: sha256-1194192cf2a187eb02722edcc
 ## G. Limitations
 
 The comparison is exploratory. Five gate instances and one discovery seed do not support a significance claim.
-Single-agent and five-agent proposals are new bundles conditioned on feedback text. Only the random arm mutates the accepted parent's source.
+The 2026-10-19 Qwen run used full-bundle proposals for the language-model arms and deployed the first accepted candidate. The code now awaiting the next run mutates one parent component, shows the critic the classical keys, and deploys the accepted candidate with the most wins. That run has not been executed.
+Single-agent and five-agent proposals in the executed run were new bundles conditioned on feedback text. Only the random arm mutated the accepted parent's source.
 Critic text is not a causal explanation.
 Large 100-customer Schneider instances remain battery-infeasible inside the declared 20-second budget.
 Hiermann `c101_21` remains a 20-vehicle classical solution on the frozen seed-7 gate.

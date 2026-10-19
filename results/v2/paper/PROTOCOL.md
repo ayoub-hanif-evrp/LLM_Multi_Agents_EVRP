@@ -5,8 +5,12 @@ Accept only if feasibility is preserved on every development pair, the candidate
 A candidate whose probe scores do not change is rejected as `no_decision_change`.
 The robust one-third rule is recorded and is not the deployment rule.
 Search arms receive the same candidate count, the same gate instances, the same per-instance time limits, and the same evaluator.
+Each generation replaces one scheduled component of the accepted parent. The schedule cycles insertion, station, then removal.
 Generation 0 receives no fitness feedback. Later generations do.
-The critic does not add a solver evaluation.
+Among conservatively accepted candidates, the one with the most wins is deployed. An earlier generation wins a tie.
+The critic receives the classical objective keys. It does not add a solver evaluation.
+Single-agent and five-agent share one token cap. Five-agent's extra call is the critic.
+The executed 2026-10-19 generational artifact predates this operator. It is not reanalyzed under the new selector.
 Random, single-agent, and five-agent search use the same expression language.
 Confirmation ids `c206C5`, `r202C5`, and `r203C5` are loaded only after the three-seed decision file is written.
 If no learned policy passes that decision, confirmation is classical only.

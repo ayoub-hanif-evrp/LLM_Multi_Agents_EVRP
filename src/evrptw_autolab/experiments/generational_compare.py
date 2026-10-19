@@ -1,8 +1,9 @@
 """Multi-generation comparison with equal panel-evaluation budgets.
 
-Generation 0 of each search arm is the one-shot control: it does not see
-fitness feedback. Later generations mutate a parent and do see it. Critic
-text guides the next five-agent proposal and does not add a solver run.
+Every search arm replaces one scheduled component of its accepted parent.
+Generation 0 does not see fitness feedback. Later generations do. The critic
+sees the classical baseline and does not add a solver evaluation. Single-agent
+and five-agent share one token cap.
 """
 from __future__ import annotations
 
@@ -15,10 +16,13 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from evrptw_autolab.components.expressions import ARGUMENT_NAMES, wrap_expression
+from evrptw_autolab.components.expressions import wrap_expression
 from evrptw_autolab.components.interfaces import DEFAULT_SOURCES, ComponentKind
 from evrptw_autolab.components.loader import load_bundle
-from evrptw_autolab.experiments.bundle_selection import conservative_decision
+from evrptw_autolab.experiments.bundle_selection import (
+    conservative_decision,
+    random_component_expression,
+)
 from evrptw_autolab.experiments.fair_budget import DECLARED_SELECTION_RULE, SEARCH_CANDIDATES
 from evrptw_autolab.experiments.matched_pilot import (
     KINDS,
@@ -28,8 +32,7 @@ from evrptw_autolab.experiments.matched_pilot import (
     _evaluate,
     _pairs,
     _panel,
-    _propose_five,
-    _propose_single,
+    _propose_component,
 )
 from evrptw_autolab.llm.usage import UsageCollector
 from evrptw_autolab.problem.v2.features import FEATURE_SCHEMA_VERSION
@@ -53,20 +56,7 @@ class GenerationalConfig:
 
 
 def _grammar(kind: ComponentKind, rng: random.Random) -> str:
-    names = list(ARGUMENT_NAMES[kind])
-    coeffs = ("0.01", "0.1", "1.0", "5.0", "10.0")
-    left = rng.choice(names)
-    right = rng.choice(names)
-    coeff = rng.choice(coeffs)
-    other = rng.choice(coeffs)
-    draw = rng.randrange(4)
-    if draw == 0:
-        return f"{left} + {coeff} * {right}"
-    if draw == 1:
-        return f"max(0.0, {left} - {coeff} * {right})"
-    if draw == 2:
-        return f"{coeff} * {left} + {other} * {right}"
-    return f"min({left}, {coeff} * {right})"
+    return random_component_expression(kind, rng)
 
 
 def _changed(sources: dict[ComponentKind, str]) -> bool:
@@ -89,12 +79,19 @@ def _changed(sources: dict[ComponentKind, str]) -> bool:
     return False
 
 
-def _feedback(rows: list[dict[str, Any]], decision: dict[str, Any]) -> str:
-    bits = [
-        f"{row['instance_id']}: feasible={row['feasible']} key={row['objective_key']} fault={row['first_fault']}"
-        for row in rows
-    ]
-    return f"selection={decision.get('reason')} wins={decision.get('wins')} losses={decision.get('losses')}; " + "; ".join(bits)
+def _feedback(rows: list[dict[str, Any]], decision: dict[str, Any], baseline: list[dict[str, Any]]) -> str:
+    base = {str(row["instance_id"]): row for row in baseline}
+    bits = []
+    for row in rows:
+        other = base[str(row["instance_id"])]
+        bits.append(
+            f"{row['instance_id']}: classical_key={other['objective_key']} "
+            f"candidate_key={row['objective_key']} feasible={row['feasible']} fault={row['first_fault']}"
+        )
+    return (
+        f"selection={decision.get('reason')} wins={decision.get('wins')} losses={decision.get('losses')}; "
+        + "; ".join(bits)
+    )
 
 
 def _record(
@@ -198,6 +195,23 @@ def _run_random(panel: list[Any], baseline: list[dict[str, Any]], seed: int, can
     return history
 
 
+_TOKEN_CAP = 20000
+
+
+def _apply_component(
+    parent_sources: dict[ComponentKind, str],
+    parent_schema: str,
+    kind: ComponentKind,
+    code: str,
+    schema: str,
+) -> tuple[dict[ComponentKind, str], str]:
+    sources = dict(parent_sources)
+    sources[kind] = code
+    if kind == "station_score":
+        return sources, schema
+    return sources, parent_schema
+
+
 def _run_single(
     panel: list[Any],
     baseline: list[dict[str, Any]],
@@ -206,29 +220,31 @@ def _run_single(
     backend: Any,
     model: str,
 ) -> tuple[list[dict[str, Any]], UsageCollector]:
-    collector = UsageCollector(max_calls=candidates * 3, max_tokens=20000)
+    collector = UsageCollector(max_calls=candidates * 3, max_tokens=_TOKEN_CAP)
+    parent_sources = {kind: DEFAULT_SOURCES[kind] for kind in KINDS}
+    parent_schema = FEATURE_SCHEMA_VERSION
     parent_id = "classical"
     feedback = ""
-    families = sorted({item.family for item in panel})
     history = []
     for generation in range(candidates):
-        sources, attribution, schema = _propose_single(
+        kind = KINDS[generation % len(KINDS)]
+        code, row, schema = _propose_component(
             collector,
             backend,
             model,
-            families=families,
-            index=generation,
-            feedback=feedback,
+            kind,
+            context=f"Generation {generation}. {feedback or 'No fitness feedback yet.'}",
         )
-        genuine = sum(1 for row in attribution if row.get("llm_generated"))
+        sources, use_schema = _apply_component(parent_sources, parent_schema, kind, code, schema)
+        genuine = 1 if row.get("llm_generated") else 0
         rows = _evaluate(
             "single_agent",
             f"single_g{generation}",
             sources,
-            schema,
+            use_schema,
             panel,
             seed,
-            extra={"generation": generation, "origin": "llm", "llm_generated_components": genuine},
+            extra={"generation": generation, "origin": "llm", "llm_generated_components": genuine, "component": kind},
         )
         item = _record(
             "single_agent",
@@ -238,14 +254,16 @@ def _run_single(
             sources,
             rows,
             baseline,
-            mutation="unified expression bundle",
+            mutation=f"{kind}: parent mutation",
             origin="llm",
         )
-        item["attribution"] = [{key: row[key] for key in row if key != "source"} for row in attribution]
+        item["attribution"] = [{key: value for key, value in row.items() if key != "source"}]
         history.append(item)
         _progress(item)
-        feedback = _feedback(rows, item["decision"])
+        feedback = _feedback(rows, item["decision"], baseline)
         if item["accepted"]:
+            parent_sources = sources
+            parent_schema = use_schema
             parent_id = item["candidate_id"]
     return history, collector
 
@@ -260,29 +278,32 @@ def _run_five(
     *,
     use_critic: bool,
 ) -> tuple[list[dict[str, Any]], UsageCollector]:
-    collector = UsageCollector(max_calls=candidates * 8, max_tokens=40000)
+    collector = UsageCollector(max_calls=candidates * 4, max_tokens=_TOKEN_CAP)
+    parent_sources = {kind: DEFAULT_SOURCES[kind] for kind in KINDS}
+    parent_schema = FEATURE_SCHEMA_VERSION
     parent_id = "classical"
     critic_text = ""
-    families = sorted({item.family for item in panel})
     history = []
     for generation in range(candidates):
-        sources, attribution, schema, plan = _propose_five(
+        kind = KINDS[generation % len(KINDS)]
+        context = f"Generation {generation}. Prior critic: {critic_text or 'none'}."
+        code, row, schema = _propose_component(
             collector,
             backend,
             model,
-            families=families,
-            index=generation,
-            critic_text=critic_text,
+            kind,
+            context=context,
         )
-        genuine = sum(1 for row in attribution if row.get("llm_generated"))
+        sources, use_schema = _apply_component(parent_sources, parent_schema, kind, code, schema)
+        genuine = 1 if row.get("llm_generated") else 0
         rows = _evaluate(
             "five_agent",
             f"five_g{generation}",
             sources,
-            schema,
+            use_schema,
             panel,
             seed,
-            extra={"generation": generation, "origin": "llm", "llm_generated_components": genuine},
+            extra={"generation": generation, "origin": "llm", "llm_generated_components": genuine, "component": kind},
         )
         item = _record(
             "five_agent",
@@ -292,13 +313,12 @@ def _run_five(
             sources,
             rows,
             baseline,
-            mutation=str(plan.get("hypothesis") or ""),
+            mutation=f"{kind}: parent mutation",
             origin="llm",
         )
-        item["architect"] = plan
-        item["attribution"] = [{key: row[key] for key in row if key != "source"} for row in attribution]
+        item["attribution"] = [{key: value for key, value in row.items() if key != "source"}]
         if use_critic:
-            critic_text = _critic(collector, backend, model, rows)
+            critic_text = _critic(collector, backend, model, rows, baseline)
             item["critic"] = critic_text
         else:
             critic_text = ""
@@ -306,6 +326,8 @@ def _run_five(
         history.append(item)
         _progress(item)
         if item["accepted"]:
+            parent_sources = sources
+            parent_schema = use_schema
             parent_id = item["candidate_id"]
     return history, collector
 
@@ -330,10 +352,11 @@ def _ollama_digest(model: str) -> str | None:
 
 
 def _selected(history: list[dict[str, Any]]) -> str | None:
-    for item in history:
-        if item["accepted"]:
-            return str(item["candidate_id"])
-    return None
+    accepted = [item for item in history if item["accepted"]]
+    if not accepted:
+        return None
+    best = max(accepted, key=lambda item: (int(item["decision"].get("wins") or 0), -int(item["generation"])))
+    return str(best["candidate_id"])
 
 
 def run_generational(cfg: GenerationalConfig | None = None) -> dict[str, Any]:
@@ -419,8 +442,11 @@ def run_generational(cfg: GenerationalConfig | None = None) -> dict[str, Any]:
         "wall_s": round(time.monotonic() - started, 3),
         "artifact": str(out / "generational.json"),
         "claim": (
-            "Generation 0 is the one-shot control. Later generations are accepted "
-            "only by the conservative rule and only if a probe score changed. "
+            "Each generation mutates one scheduled component of the accepted parent. "
+            "Generation 0 receives no fitness feedback. Acceptance uses the conservative "
+            "rule and requires a probe-score change. The deployed candidate is the "
+            "accepted one with the most wins. Single-agent and five-agent share one "
+            "token cap. The critic sees the classical keys and adds no solver evaluation. "
             "FakeBackend rows are not model evidence."
         ),
     }

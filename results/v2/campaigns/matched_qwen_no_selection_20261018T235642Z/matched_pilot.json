@@ -1,0 +1,2839 @@
+{
+  "experiment": "matched_four_arm_pilot",
+  "ablation": "no_selection",
+  "use_critic": true,
+  "apply_selection": false,
+  "status": "completed",
+  "fake": false,
+  "model": "qwen3-coder:30b",
+  "git_commit": "27278a1",
+  "seed": 7,
+  "candidates": 4,
+  "selection_rule": "conservative",
+  "instances": [
+    {
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "time_limit_s": 8.0,
+      "alns_iterations": 80
+    },
+    {
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "time_limit_s": 10.0,
+      "alns_iterations": 60
+    },
+    {
+      "family": "bezzi",
+      "instance_id": "C101-5",
+      "time_limit_s": 12.0,
+      "alns_iterations": 60
+    },
+    {
+      "family": "goeke",
+      "instance_id": "c101C6",
+      "time_limit_s": 10.0,
+      "alns_iterations": 60
+    },
+    {
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "time_limit_s": 15.0,
+      "alns_iterations": 40
+    }
+  ],
+  "solver_solves": {
+    "classical": 5,
+    "random_evolution": 20,
+    "single_agent": 20,
+    "five_agent": 20
+  },
+  "expected_solves": {
+    "classical": 5,
+    "random_evolution": 20,
+    "single_agent": 20,
+    "five_agent": 20
+  },
+  "llm_calls": {
+    "classical": 0,
+    "random_evolution": 0,
+    "single_agent": 4,
+    "five_agent": 20
+  },
+  "llm_tokens": {
+    "classical": 0,
+    "random_evolution": 0,
+    "single_agent": 1480,
+    "five_agent": 7353
+  },
+  "selections": {
+    "random_evolution": {
+      "rule": "selection_disabled",
+      "selected_candidate_id": "random_3",
+      "decisions": [
+        {
+          "candidate_id": "random_0",
+          "conservative": {
+            "accepted": true,
+            "reason": "accepted_no_regression",
+            "wins": 1,
+            "losses": 0,
+            "ties": 4,
+            "tie_infeasible": 0,
+            "n_pairs": 5,
+            "rule": "conservative"
+          },
+          "robust": {
+            "accepted": true,
+            "reason": "accepted_on_aggregate",
+            "wins": 1,
+            "losses": 0,
+            "ties": 4,
+            "tie_infeasible": 0,
+            "n_pairs": 5,
+            "loss_fraction": 0.0,
+            "baseline_feasibility_rate": 1.0,
+            "candidate_feasibility_rate": 1.0,
+            "rule": "robust",
+            "max_loss_fraction": 0.3333333333333333
+          },
+          "deployed": false
+        },
+        {
+          "candidate_id": "random_1",
+          "conservative": {
+            "accepted": true,
+            "reason": "accepted_no_regression",
+            "wins": 1,
+            "losses": 0,
+            "ties": 4,
+            "tie_infeasible": 0,
+            "n_pairs": 5,
+            "rule": "conservative"
+          },
+          "robust": {
+            "accepted": true,
+            "reason": "accepted_on_aggregate",
+            "wins": 1,
+            "losses": 0,
+            "ties": 4,
+            "tie_infeasible": 0,
+            "n_pairs": 5,
+            "loss_fraction": 0.0,
+            "baseline_feasibility_rate": 1.0,
+            "candidate_feasibility_rate": 1.0,
+            "rule": "robust",
+            "max_loss_fraction": 0.3333333333333333
+          },
+          "deployed": false
+        },
+        {
+          "candidate_id": "random_2",
+          "conservative": {
+            "accepted": false,
+            "reason": "no_strict_improvement",
+            "wins": 0,
+            "losses": 0,
+            "ties": 5,
+            "tie_infeasible": 0,
+            "n_pairs": 5,
+            "rule": "conservative"
+          },
+          "robust": {
+            "accepted": false,
+            "reason": "no_strict_improvement",
+            "wins": 0,
+            "losses": 0,
+            "ties": 5,
+            "tie_infeasible": 0,
+            "n_pairs": 5,
+            "loss_fraction": 0.0,
+            "baseline_feasibility_rate": 1.0,
+            "candidate_feasibility_rate": 1.0,
+            "rule": "robust",
+            "max_loss_fraction": 0.3333333333333333
+          },
+          "deployed": false
+        },
+        {
+          "candidate_id": "random_3",
+          "conservative": {
+            "accepted": true,
+            "reason": "accepted_no_regression",
+            "wins": 1,
+            "losses": 0,
+            "ties": 4,
+            "tie_infeasible": 0,
+            "n_pairs": 5,
+            "rule": "conservative"
+          },
+          "robust": {
+            "accepted": true,
+            "reason": "accepted_on_aggregate",
+            "wins": 1,
+            "losses": 0,
+            "ties": 4,
+            "tie_infeasible": 0,
+            "n_pairs": 5,
+            "loss_fraction": 0.0,
+            "baseline_feasibility_rate": 1.0,
+            "candidate_feasibility_rate": 1.0,
+            "rule": "robust",
+            "max_loss_fraction": 0.3333333333333333
+          },
+          "deployed": true
+        }
+      ]
+    },
+    "single_agent": {
+      "rule": "selection_disabled",
+      "selected_candidate_id": "single_3",
+      "decisions": [
+        {
+          "candidate_id": "single_0",
+          "conservative": {
+            "accepted": false,
+            "reason": "no_strict_improvement",
+            "wins": 0,
+            "losses": 0,
+            "ties": 5,
+            "tie_infeasible": 0,
+            "n_pairs": 5,
+            "rule": "conservative"
+          },
+          "robust": {
+            "accepted": false,
+            "reason": "no_strict_improvement",
+            "wins": 0,
+            "losses": 0,
+            "ties": 5,
+            "tie_infeasible": 0,
+            "n_pairs": 5,
+            "loss_fraction": 0.0,
+            "baseline_feasibility_rate": 1.0,
+            "candidate_feasibility_rate": 1.0,
+            "rule": "robust",
+            "max_loss_fraction": 0.3333333333333333
+          },
+          "deployed": false
+        },
+        {
+          "candidate_id": "single_1",
+          "conservative": {
+            "accepted": false,
+            "reason": "no_strict_improvement",
+            "wins": 0,
+            "losses": 0,
+            "ties": 5,
+            "tie_infeasible": 0,
+            "n_pairs": 5,
+            "rule": "conservative"
+          },
+          "robust": {
+            "accepted": false,
+            "reason": "no_strict_improvement",
+            "wins": 0,
+            "losses": 0,
+            "ties": 5,
+            "tie_infeasible": 0,
+            "n_pairs": 5,
+            "loss_fraction": 0.0,
+            "baseline_feasibility_rate": 1.0,
+            "candidate_feasibility_rate": 1.0,
+            "rule": "robust",
+            "max_loss_fraction": 0.3333333333333333
+          },
+          "deployed": false
+        },
+        {
+          "candidate_id": "single_2",
+          "conservative": {
+            "accepted": false,
+            "reason": "no_strict_improvement",
+            "wins": 0,
+            "losses": 0,
+            "ties": 5,
+            "tie_infeasible": 0,
+            "n_pairs": 5,
+            "rule": "conservative"
+          },
+          "robust": {
+            "accepted": false,
+            "reason": "no_strict_improvement",
+            "wins": 0,
+            "losses": 0,
+            "ties": 5,
+            "tie_infeasible": 0,
+            "n_pairs": 5,
+            "loss_fraction": 0.0,
+            "baseline_feasibility_rate": 1.0,
+            "candidate_feasibility_rate": 1.0,
+            "rule": "robust",
+            "max_loss_fraction": 0.3333333333333333
+          },
+          "deployed": false
+        },
+        {
+          "candidate_id": "single_3",
+          "conservative": {
+            "accepted": false,
+            "reason": "no_strict_improvement",
+            "wins": 0,
+            "losses": 0,
+            "ties": 5,
+            "tie_infeasible": 0,
+            "n_pairs": 5,
+            "rule": "conservative"
+          },
+          "robust": {
+            "accepted": false,
+            "reason": "no_strict_improvement",
+            "wins": 0,
+            "losses": 0,
+            "ties": 5,
+            "tie_infeasible": 0,
+            "n_pairs": 5,
+            "loss_fraction": 0.0,
+            "baseline_feasibility_rate": 1.0,
+            "candidate_feasibility_rate": 1.0,
+            "rule": "robust",
+            "max_loss_fraction": 0.3333333333333333
+          },
+          "deployed": true
+        }
+      ]
+    },
+    "five_agent": {
+      "rule": "selection_disabled",
+      "selected_candidate_id": "five_3",
+      "decisions": [
+        {
+          "candidate_id": "five_0",
+          "conservative": {
+            "accepted": false,
+            "reason": "objective_regression",
+            "wins": 0,
+            "losses": 2,
+            "ties": 3,
+            "tie_infeasible": 0,
+            "n_pairs": 5,
+            "rule": "conservative"
+          },
+          "robust": {
+            "accepted": false,
+            "reason": "loss_fraction_above_one_third",
+            "wins": 0,
+            "losses": 2,
+            "ties": 3,
+            "tie_infeasible": 0,
+            "n_pairs": 5,
+            "loss_fraction": 0.4,
+            "baseline_feasibility_rate": 1.0,
+            "candidate_feasibility_rate": 1.0,
+            "rule": "robust",
+            "max_loss_fraction": 0.3333333333333333
+          },
+          "deployed": false
+        },
+        {
+          "candidate_id": "five_1",
+          "conservative": {
+            "accepted": false,
+            "reason": "objective_regression",
+            "wins": 1,
+            "losses": 1,
+            "ties": 3,
+            "tie_infeasible": 0,
+            "n_pairs": 5,
+            "rule": "conservative"
+          },
+          "robust": {
+            "accepted": true,
+            "reason": "accepted_on_aggregate",
+            "wins": 1,
+            "losses": 1,
+            "ties": 3,
+            "tie_infeasible": 0,
+            "n_pairs": 5,
+            "loss_fraction": 0.2,
+            "baseline_feasibility_rate": 1.0,
+            "candidate_feasibility_rate": 1.0,
+            "rule": "robust",
+            "max_loss_fraction": 0.3333333333333333
+          },
+          "deployed": false
+        },
+        {
+          "candidate_id": "five_2",
+          "conservative": {
+            "accepted": false,
+            "reason": "objective_regression",
+            "wins": 0,
+            "losses": 2,
+            "ties": 3,
+            "tie_infeasible": 0,
+            "n_pairs": 5,
+            "rule": "conservative"
+          },
+          "robust": {
+            "accepted": false,
+            "reason": "loss_fraction_above_one_third",
+            "wins": 0,
+            "losses": 2,
+            "ties": 3,
+            "tie_infeasible": 0,
+            "n_pairs": 5,
+            "loss_fraction": 0.4,
+            "baseline_feasibility_rate": 1.0,
+            "candidate_feasibility_rate": 1.0,
+            "rule": "robust",
+            "max_loss_fraction": 0.3333333333333333
+          },
+          "deployed": false
+        },
+        {
+          "candidate_id": "five_3",
+          "conservative": {
+            "accepted": false,
+            "reason": "feasibility_regression",
+            "wins": 0,
+            "losses": 3,
+            "ties": 2,
+            "tie_infeasible": 0,
+            "n_pairs": 5,
+            "rule": "conservative"
+          },
+          "robust": {
+            "accepted": false,
+            "reason": "feasibility_rate_drop",
+            "wins": 0,
+            "losses": 3,
+            "ties": 2,
+            "tie_infeasible": 0,
+            "n_pairs": 5,
+            "loss_fraction": 0.6,
+            "baseline_feasibility_rate": 1.0,
+            "candidate_feasibility_rate": 0.8,
+            "rule": "robust",
+            "max_loss_fraction": 0.3333333333333333
+          },
+          "deployed": true
+        }
+      ]
+    }
+  },
+  "rows": [
+    {
+      "arm": "classical",
+      "candidate_id": "default",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "duration": 1728.8110030239563,
+      "runtime_s": 2.1487748000072315,
+      "time_limit_s": 8.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 0
+    },
+    {
+      "arm": "classical",
+      "candidate_id": "default",
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        25.285322313276744
+      ],
+      "vehicles": 3,
+      "distance": 760.5111182174095,
+      "duration": 25.285322313276744,
+      "runtime_s": 5.561498700000811,
+      "time_limit_s": 10.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 0
+    },
+    {
+      "arm": "classical",
+      "candidate_id": "default",
+      "family": "bezzi",
+      "instance_id": "C101-5",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        227.0
+      ],
+      "vehicles": 1,
+      "distance": 227.0,
+      "duration": 1197.5015,
+      "runtime_s": 5.7239270999561995,
+      "time_limit_s": 12.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 0
+    },
+    {
+      "arm": "classical",
+      "candidate_id": "default",
+      "family": "goeke",
+      "instance_id": "c101C6",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "duration": 1728.8110030239563,
+      "runtime_s": 2.429336700006388,
+      "time_limit_s": 10.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 0
+    },
+    {
+      "arm": "classical",
+      "candidate_id": "default",
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        4150.872544094683
+      ],
+      "vehicles": 20,
+      "distance": 2904.746852635555,
+      "duration": 25282.378616942446,
+      "runtime_s": 12.2119428999722,
+      "time_limit_s": 15.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 0
+    },
+    {
+      "arm": "random_evolution",
+      "candidate_id": "random_0",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "duration": 1728.8110030239563,
+      "runtime_s": 2.160458300029859,
+      "time_limit_s": 8.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 0,
+      "expression": "route_distance_share - 0.01 * rng_value + 1.0 * rng_value",
+      "origin": "grammar"
+    },
+    {
+      "arm": "random_evolution",
+      "candidate_id": "random_0",
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        25.285322313276744
+      ],
+      "vehicles": 3,
+      "distance": 760.5111182174095,
+      "duration": 25.285322313276744,
+      "runtime_s": 5.57827769999858,
+      "time_limit_s": 10.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 0,
+      "expression": "route_distance_share - 0.01 * rng_value + 1.0 * rng_value",
+      "origin": "grammar"
+    },
+    {
+      "arm": "random_evolution",
+      "candidate_id": "random_0",
+      "family": "bezzi",
+      "instance_id": "C101-5",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        227.0
+      ],
+      "vehicles": 1,
+      "distance": 227.0,
+      "duration": 1197.5015,
+      "runtime_s": 5.749401699984446,
+      "time_limit_s": 12.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 0,
+      "expression": "route_distance_share - 0.01 * rng_value + 1.0 * rng_value",
+      "origin": "grammar"
+    },
+    {
+      "arm": "random_evolution",
+      "candidate_id": "random_0",
+      "family": "goeke",
+      "instance_id": "c101C6",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "duration": 1728.8110030239563,
+      "runtime_s": 2.4811570000019856,
+      "time_limit_s": 10.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 0,
+      "expression": "route_distance_share - 0.01 * rng_value + 1.0 * rng_value",
+      "origin": "grammar"
+    },
+    {
+      "arm": "random_evolution",
+      "candidate_id": "random_0",
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        4126.724254409762
+      ],
+      "vehicles": 20,
+      "distance": 2820.501821805202,
+      "duration": 24882.2936616613,
+      "runtime_s": 8.529891999962274,
+      "time_limit_s": 15.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 0,
+      "expression": "route_distance_share - 0.01 * rng_value + 1.0 * rng_value",
+      "origin": "grammar"
+    },
+    {
+      "arm": "random_evolution",
+      "candidate_id": "random_1",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "duration": 1728.8110030239563,
+      "runtime_s": 2.159234600025229,
+      "time_limit_s": 8.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 0,
+      "expression": "max(0.0, route_distance_share - 5.0 * rng_value)",
+      "origin": "grammar"
+    },
+    {
+      "arm": "random_evolution",
+      "candidate_id": "random_1",
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        25.285322313276744
+      ],
+      "vehicles": 3,
+      "distance": 760.5111182174095,
+      "duration": 25.285322313276744,
+      "runtime_s": 5.496508500014897,
+      "time_limit_s": 10.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 0,
+      "expression": "max(0.0, route_distance_share - 5.0 * rng_value)",
+      "origin": "grammar"
+    },
+    {
+      "arm": "random_evolution",
+      "candidate_id": "random_1",
+      "family": "bezzi",
+      "instance_id": "C101-5",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        227.0
+      ],
+      "vehicles": 1,
+      "distance": 227.0,
+      "duration": 1197.5015,
+      "runtime_s": 5.62550059997011,
+      "time_limit_s": 12.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 0,
+      "expression": "max(0.0, route_distance_share - 5.0 * rng_value)",
+      "origin": "grammar"
+    },
+    {
+      "arm": "random_evolution",
+      "candidate_id": "random_1",
+      "family": "goeke",
+      "instance_id": "c101C6",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "duration": 1728.8110030239563,
+      "runtime_s": 2.5910765000153333,
+      "time_limit_s": 10.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 0,
+      "expression": "max(0.0, route_distance_share - 5.0 * rng_value)",
+      "origin": "grammar"
+    },
+    {
+      "arm": "random_evolution",
+      "candidate_id": "random_1",
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        4037.827743823117
+      ],
+      "vehicles": 19,
+      "distance": 2989.195214998243,
+      "duration": 23892.636059627057,
+      "runtime_s": 8.260008500015829,
+      "time_limit_s": 15.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 0,
+      "expression": "max(0.0, route_distance_share - 5.0 * rng_value)",
+      "origin": "grammar"
+    },
+    {
+      "arm": "random_evolution",
+      "candidate_id": "random_2",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "duration": 1728.8110030239563,
+      "runtime_s": 2.127866900002118,
+      "time_limit_s": 8.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 0,
+      "expression": "rng_value + 1.0 * due_time",
+      "origin": "grammar"
+    },
+    {
+      "arm": "random_evolution",
+      "candidate_id": "random_2",
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        25.285322313276744
+      ],
+      "vehicles": 3,
+      "distance": 760.5111182174095,
+      "duration": 25.285322313276744,
+      "runtime_s": 5.580777299997862,
+      "time_limit_s": 10.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 0,
+      "expression": "rng_value + 1.0 * due_time",
+      "origin": "grammar"
+    },
+    {
+      "arm": "random_evolution",
+      "candidate_id": "random_2",
+      "family": "bezzi",
+      "instance_id": "C101-5",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        227.0
+      ],
+      "vehicles": 1,
+      "distance": 227.0,
+      "duration": 1197.5015,
+      "runtime_s": 5.738582099962514,
+      "time_limit_s": 12.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 0,
+      "expression": "rng_value + 1.0 * due_time",
+      "origin": "grammar"
+    },
+    {
+      "arm": "random_evolution",
+      "candidate_id": "random_2",
+      "family": "goeke",
+      "instance_id": "c101C6",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "duration": 1728.8110030239563,
+      "runtime_s": 2.36615899996832,
+      "time_limit_s": 10.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 0,
+      "expression": "rng_value + 1.0 * due_time",
+      "origin": "grammar"
+    },
+    {
+      "arm": "random_evolution",
+      "candidate_id": "random_2",
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        4150.872544094683
+      ],
+      "vehicles": 20,
+      "distance": 2904.746852635555,
+      "duration": 25282.378616942446,
+      "runtime_s": 12.103482800011989,
+      "time_limit_s": 15.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 0,
+      "expression": "rng_value + 1.0 * due_time",
+      "origin": "grammar"
+    },
+    {
+      "arm": "random_evolution",
+      "candidate_id": "random_3",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "duration": 1728.8110030239563,
+      "runtime_s": 2.203134300012607,
+      "time_limit_s": 8.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 0,
+      "expression": "max(0.0, rng_value - 10.0 * route_distance_share)",
+      "origin": "grammar"
+    },
+    {
+      "arm": "random_evolution",
+      "candidate_id": "random_3",
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        25.285322313276744
+      ],
+      "vehicles": 3,
+      "distance": 760.5111182174095,
+      "duration": 25.285322313276744,
+      "runtime_s": 5.6766130000469275,
+      "time_limit_s": 10.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 0,
+      "expression": "max(0.0, rng_value - 10.0 * route_distance_share)",
+      "origin": "grammar"
+    },
+    {
+      "arm": "random_evolution",
+      "candidate_id": "random_3",
+      "family": "bezzi",
+      "instance_id": "C101-5",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        227.0
+      ],
+      "vehicles": 1,
+      "distance": 227.0,
+      "duration": 1197.5015,
+      "runtime_s": 5.446300300012808,
+      "time_limit_s": 12.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 0,
+      "expression": "max(0.0, rng_value - 10.0 * route_distance_share)",
+      "origin": "grammar"
+    },
+    {
+      "arm": "random_evolution",
+      "candidate_id": "random_3",
+      "family": "goeke",
+      "instance_id": "c101C6",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "duration": 1728.8110030239563,
+      "runtime_s": 2.4310870000044815,
+      "time_limit_s": 10.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 0,
+      "expression": "max(0.0, rng_value - 10.0 * route_distance_share)",
+      "origin": "grammar"
+    },
+    {
+      "arm": "random_evolution",
+      "candidate_id": "random_3",
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        4126.724254409762
+      ],
+      "vehicles": 20,
+      "distance": 2820.501821805202,
+      "duration": 24882.2936616613,
+      "runtime_s": 8.466093999973964,
+      "time_limit_s": 15.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 0,
+      "expression": "max(0.0, rng_value - 10.0 * route_distance_share)",
+      "origin": "grammar"
+    },
+    {
+      "arm": "single_agent",
+      "candidate_id": "single_0",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "duration": 1728.8110030239563,
+      "runtime_s": 2.1155681999516673,
+      "time_limit_s": 8.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance\n"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return detour\n"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return due_time\n"
+        }
+      ],
+      "origin": "single_agent"
+    },
+    {
+      "arm": "single_agent",
+      "candidate_id": "single_0",
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        25.285322313276744
+      ],
+      "vehicles": 3,
+      "distance": 760.5111182174095,
+      "duration": 25.285322313276744,
+      "runtime_s": 5.469547600019723,
+      "time_limit_s": 10.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance\n"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return detour\n"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return due_time\n"
+        }
+      ],
+      "origin": "single_agent"
+    },
+    {
+      "arm": "single_agent",
+      "candidate_id": "single_0",
+      "family": "bezzi",
+      "instance_id": "C101-5",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        227.0
+      ],
+      "vehicles": 1,
+      "distance": 227.0,
+      "duration": 1197.5015,
+      "runtime_s": 5.563904000038747,
+      "time_limit_s": 12.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance\n"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return detour\n"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return due_time\n"
+        }
+      ],
+      "origin": "single_agent"
+    },
+    {
+      "arm": "single_agent",
+      "candidate_id": "single_0",
+      "family": "goeke",
+      "instance_id": "c101C6",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "duration": 1728.8110030239563,
+      "runtime_s": 2.443755899963435,
+      "time_limit_s": 10.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance\n"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return detour\n"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return due_time\n"
+        }
+      ],
+      "origin": "single_agent"
+    },
+    {
+      "arm": "single_agent",
+      "candidate_id": "single_0",
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        4150.872544094683
+      ],
+      "vehicles": 20,
+      "distance": 2904.746852635555,
+      "duration": 25282.378616942446,
+      "runtime_s": 11.814509299991187,
+      "time_limit_s": 15.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance\n"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return detour\n"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return due_time\n"
+        }
+      ],
+      "origin": "single_agent"
+    },
+    {
+      "arm": "single_agent",
+      "candidate_id": "single_1",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "duration": 1728.8110030239563,
+      "runtime_s": 2.050021899980493,
+      "time_limit_s": 8.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance\n"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return detour\n"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return due_time\n"
+        }
+      ],
+      "origin": "single_agent"
+    },
+    {
+      "arm": "single_agent",
+      "candidate_id": "single_1",
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        25.285322313276744
+      ],
+      "vehicles": 3,
+      "distance": 760.5111182174095,
+      "duration": 25.285322313276744,
+      "runtime_s": 5.424669400032144,
+      "time_limit_s": 10.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance\n"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return detour\n"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return due_time\n"
+        }
+      ],
+      "origin": "single_agent"
+    },
+    {
+      "arm": "single_agent",
+      "candidate_id": "single_1",
+      "family": "bezzi",
+      "instance_id": "C101-5",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        227.0
+      ],
+      "vehicles": 1,
+      "distance": 227.0,
+      "duration": 1197.5015,
+      "runtime_s": 5.4270165000343695,
+      "time_limit_s": 12.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance\n"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return detour\n"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return due_time\n"
+        }
+      ],
+      "origin": "single_agent"
+    },
+    {
+      "arm": "single_agent",
+      "candidate_id": "single_1",
+      "family": "goeke",
+      "instance_id": "c101C6",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "duration": 1728.8110030239563,
+      "runtime_s": 2.410279600007925,
+      "time_limit_s": 10.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance\n"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return detour\n"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return due_time\n"
+        }
+      ],
+      "origin": "single_agent"
+    },
+    {
+      "arm": "single_agent",
+      "candidate_id": "single_1",
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        4150.872544094683
+      ],
+      "vehicles": 20,
+      "distance": 2904.746852635555,
+      "duration": 25282.378616942446,
+      "runtime_s": 11.985970200039446,
+      "time_limit_s": 15.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance\n"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return detour\n"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return due_time\n"
+        }
+      ],
+      "origin": "single_agent"
+    },
+    {
+      "arm": "single_agent",
+      "candidate_id": "single_2",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "duration": 1728.8110030239563,
+      "runtime_s": 2.14156560000265,
+      "time_limit_s": 8.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance\n"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return detour\n"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return due_time\n"
+        }
+      ],
+      "origin": "single_agent"
+    },
+    {
+      "arm": "single_agent",
+      "candidate_id": "single_2",
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        25.285322313276744
+      ],
+      "vehicles": 3,
+      "distance": 760.5111182174095,
+      "duration": 25.285322313276744,
+      "runtime_s": 5.524246499990113,
+      "time_limit_s": 10.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance\n"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return detour\n"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return due_time\n"
+        }
+      ],
+      "origin": "single_agent"
+    },
+    {
+      "arm": "single_agent",
+      "candidate_id": "single_2",
+      "family": "bezzi",
+      "instance_id": "C101-5",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        227.0
+      ],
+      "vehicles": 1,
+      "distance": 227.0,
+      "duration": 1197.5015,
+      "runtime_s": 4.993259100010619,
+      "time_limit_s": 12.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance\n"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return detour\n"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return due_time\n"
+        }
+      ],
+      "origin": "single_agent"
+    },
+    {
+      "arm": "single_agent",
+      "candidate_id": "single_2",
+      "family": "goeke",
+      "instance_id": "c101C6",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "duration": 1728.8110030239563,
+      "runtime_s": 2.1067842999473214,
+      "time_limit_s": 10.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance\n"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return detour\n"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return due_time\n"
+        }
+      ],
+      "origin": "single_agent"
+    },
+    {
+      "arm": "single_agent",
+      "candidate_id": "single_2",
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        4150.872544094683
+      ],
+      "vehicles": 20,
+      "distance": 2904.746852635555,
+      "duration": 25282.378616942446,
+      "runtime_s": 11.446779100049753,
+      "time_limit_s": 15.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance\n"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return detour\n"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return due_time\n"
+        }
+      ],
+      "origin": "single_agent"
+    },
+    {
+      "arm": "single_agent",
+      "candidate_id": "single_3",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "duration": 1728.8110030239563,
+      "runtime_s": 2.1537169000366703,
+      "time_limit_s": 8.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance\n"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return detour\n"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return due_time\n"
+        }
+      ],
+      "origin": "single_agent"
+    },
+    {
+      "arm": "single_agent",
+      "candidate_id": "single_3",
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        25.285322313276744
+      ],
+      "vehicles": 3,
+      "distance": 760.5111182174095,
+      "duration": 25.285322313276744,
+      "runtime_s": 5.6771756000234745,
+      "time_limit_s": 10.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance\n"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return detour\n"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return due_time\n"
+        }
+      ],
+      "origin": "single_agent"
+    },
+    {
+      "arm": "single_agent",
+      "candidate_id": "single_3",
+      "family": "bezzi",
+      "instance_id": "C101-5",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        227.0
+      ],
+      "vehicles": 1,
+      "distance": 227.0,
+      "duration": 1197.5015,
+      "runtime_s": 5.513741599977948,
+      "time_limit_s": 12.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance\n"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return detour\n"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return due_time\n"
+        }
+      ],
+      "origin": "single_agent"
+    },
+    {
+      "arm": "single_agent",
+      "candidate_id": "single_3",
+      "family": "goeke",
+      "instance_id": "c101C6",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "duration": 1728.8110030239563,
+      "runtime_s": 2.5211920000147074,
+      "time_limit_s": 10.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance\n"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return detour\n"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return due_time\n"
+        }
+      ],
+      "origin": "single_agent"
+    },
+    {
+      "arm": "single_agent",
+      "candidate_id": "single_3",
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        4150.872544094683
+      ],
+      "vehicles": 20,
+      "distance": 2904.746852635555,
+      "duration": 25282.378616942446,
+      "runtime_s": 12.126304799981881,
+      "time_limit_s": 15.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance\n"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return detour\n"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return due_time\n"
+        }
+      ],
+      "origin": "single_agent"
+    },
+    {
+      "arm": "five_agent",
+      "candidate_id": "five_0",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "duration": 1728.8110030239563,
+      "runtime_s": 2.1581079000025056,
+      "time_limit_s": 8.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v2",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return max(0, capacity_slack - demand) + abs(ready_time - due_time)\n",
+          "agent_role": "routing"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return max(0, min(1, (battery_arrival - 0.2) * 1.25)) * station_rate\n",
+          "agent_role": "charging"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return max(0, float(due_time) - 1.5 * route_distance_share) + abs(rng_value)\n",
+          "agent_role": "search"
+        }
+      ],
+      "plan": {
+        "hypothesis": "Teams with mixed family structures (combining multiple family types from the bezzi, goeke, hiermann, montoya, and schneider families) will demonstrate 25% higher collaborative problem-solving efficiency compared to teams with homogeneous family structures, as measured by task completion time and solution quality metrics.",
+        "summary": "Testing the impact of family structure on collaborative problem-solving performance in distributed teams"
+      },
+      "origin": "five_agent"
+    },
+    {
+      "arm": "five_agent",
+      "candidate_id": "five_0",
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        25.285322313276748
+      ],
+      "vehicles": 3,
+      "distance": 760.5111182174095,
+      "duration": 25.285322313276748,
+      "runtime_s": 6.707156800024677,
+      "time_limit_s": 10.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v2",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return max(0, capacity_slack - demand) + abs(ready_time - due_time)\n",
+          "agent_role": "routing"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return max(0, min(1, (battery_arrival - 0.2) * 1.25)) * station_rate\n",
+          "agent_role": "charging"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return max(0, float(due_time) - 1.5 * route_distance_share) + abs(rng_value)\n",
+          "agent_role": "search"
+        }
+      ],
+      "plan": {
+        "hypothesis": "Teams with mixed family structures (combining multiple family types from the bezzi, goeke, hiermann, montoya, and schneider families) will demonstrate 25% higher collaborative problem-solving efficiency compared to teams with homogeneous family structures, as measured by task completion time and solution quality metrics.",
+        "summary": "Testing the impact of family structure on collaborative problem-solving performance in distributed teams"
+      },
+      "origin": "five_agent"
+    },
+    {
+      "arm": "five_agent",
+      "candidate_id": "five_0",
+      "family": "bezzi",
+      "instance_id": "C101-5",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        227.0
+      ],
+      "vehicles": 1,
+      "distance": 227.0,
+      "duration": 1197.5015,
+      "runtime_s": 5.855213399976492,
+      "time_limit_s": 12.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v2",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return max(0, capacity_slack - demand) + abs(ready_time - due_time)\n",
+          "agent_role": "routing"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return max(0, min(1, (battery_arrival - 0.2) * 1.25)) * station_rate\n",
+          "agent_role": "charging"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return max(0, float(due_time) - 1.5 * route_distance_share) + abs(rng_value)\n",
+          "agent_role": "search"
+        }
+      ],
+      "plan": {
+        "hypothesis": "Teams with mixed family structures (combining multiple family types from the bezzi, goeke, hiermann, montoya, and schneider families) will demonstrate 25% higher collaborative problem-solving efficiency compared to teams with homogeneous family structures, as measured by task completion time and solution quality metrics.",
+        "summary": "Testing the impact of family structure on collaborative problem-solving performance in distributed teams"
+      },
+      "origin": "five_agent"
+    },
+    {
+      "arm": "five_agent",
+      "candidate_id": "five_0",
+      "family": "goeke",
+      "instance_id": "c101C6",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "duration": 1728.8110030239563,
+      "runtime_s": 2.456358099996578,
+      "time_limit_s": 10.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v2",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return max(0, capacity_slack - demand) + abs(ready_time - due_time)\n",
+          "agent_role": "routing"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return max(0, min(1, (battery_arrival - 0.2) * 1.25)) * station_rate\n",
+          "agent_role": "charging"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return max(0, float(due_time) - 1.5 * route_distance_share) + abs(rng_value)\n",
+          "agent_role": "search"
+        }
+      ],
+      "plan": {
+        "hypothesis": "Teams with mixed family structures (combining multiple family types from the bezzi, goeke, hiermann, montoya, and schneider families) will demonstrate 25% higher collaborative problem-solving efficiency compared to teams with homogeneous family structures, as measured by task completion time and solution quality metrics.",
+        "summary": "Testing the impact of family structure on collaborative problem-solving performance in distributed teams"
+      },
+      "origin": "five_agent"
+    },
+    {
+      "arm": "five_agent",
+      "candidate_id": "five_0",
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        4916.248962977467
+      ],
+      "vehicles": 22,
+      "distance": 4094.7156481441402,
+      "duration": 28158.798507993775,
+      "runtime_s": 11.062499099993147,
+      "time_limit_s": 15.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v2",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return max(0, capacity_slack - demand) + abs(ready_time - due_time)\n",
+          "agent_role": "routing"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return max(0, min(1, (battery_arrival - 0.2) * 1.25)) * station_rate\n",
+          "agent_role": "charging"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return max(0, float(due_time) - 1.5 * route_distance_share) + abs(rng_value)\n",
+          "agent_role": "search"
+        }
+      ],
+      "plan": {
+        "hypothesis": "Teams with mixed family structures (combining multiple family types from the bezzi, goeke, hiermann, montoya, and schneider families) will demonstrate 25% higher collaborative problem-solving efficiency compared to teams with homogeneous family structures, as measured by task completion time and solution quality metrics.",
+        "summary": "Testing the impact of family structure on collaborative problem-solving performance in distributed teams"
+      },
+      "origin": "five_agent"
+    },
+    {
+      "arm": "five_agent",
+      "candidate_id": "five_1",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "duration": 1728.8110030239563,
+      "runtime_s": 2.032175100001041,
+      "time_limit_s": 8.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v2",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return max(0, capacity_slack) + min(100, delta_distance) - 0.1 * due_time\n",
+          "agent_role": "routing"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return max(0, min(1, (battery_arrival - 0.2) * 1.25))\n",
+          "agent_role": "charging"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return max(0.0, min(1.0, float(due_time) / (route_distance_share + 1.0) + 0.1 * rng_value))\n",
+          "agent_role": "search"
+        }
+      ],
+      "plan": {
+        "hypothesis": "If we modify the solver's early termination conditions and constraint propagation thresholds by 15-20% while maintaining the current search strategy, then the objective values will remain within 2% of the current baseline, confirming that the existing configuration is already optimal and any further fine-tuning would not yield significant performance improvements.",
+        "summary": "Based on the consistent performance data showing 'OK: feasible' status with stable objective values across all family instances, I propose a hypothesis that the current solver configuration is optimal and any changes to the algorithmic parameters or search strategies would not improve performance. The lack of regression, stagnation, or feasibility failures indicates the system is operating at peak efficiency."
+      },
+      "origin": "five_agent"
+    },
+    {
+      "arm": "five_agent",
+      "candidate_id": "five_1",
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        25.285322313276744
+      ],
+      "vehicles": 3,
+      "distance": 760.5111182174095,
+      "duration": 25.285322313276744,
+      "runtime_s": 4.766008400009014,
+      "time_limit_s": 10.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v2",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return max(0, capacity_slack) + min(100, delta_distance) - 0.1 * due_time\n",
+          "agent_role": "routing"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return max(0, min(1, (battery_arrival - 0.2) * 1.25))\n",
+          "agent_role": "charging"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return max(0.0, min(1.0, float(due_time) / (route_distance_share + 1.0) + 0.1 * rng_value))\n",
+          "agent_role": "search"
+        }
+      ],
+      "plan": {
+        "hypothesis": "If we modify the solver's early termination conditions and constraint propagation thresholds by 15-20% while maintaining the current search strategy, then the objective values will remain within 2% of the current baseline, confirming that the existing configuration is already optimal and any further fine-tuning would not yield significant performance improvements.",
+        "summary": "Based on the consistent performance data showing 'OK: feasible' status with stable objective values across all family instances, I propose a hypothesis that the current solver configuration is optimal and any changes to the algorithmic parameters or search strategies would not improve performance. The lack of regression, stagnation, or feasibility failures indicates the system is operating at peak efficiency."
+      },
+      "origin": "five_agent"
+    },
+    {
+      "arm": "five_agent",
+      "candidate_id": "five_1",
+      "family": "bezzi",
+      "instance_id": "C101-5",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        228.0
+      ],
+      "vehicles": 1,
+      "distance": 228.0,
+      "duration": 1201.9715099999999,
+      "runtime_s": 8.098204499983694,
+      "time_limit_s": 12.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v2",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return max(0, capacity_slack) + min(100, delta_distance) - 0.1 * due_time\n",
+          "agent_role": "routing"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return max(0, min(1, (battery_arrival - 0.2) * 1.25))\n",
+          "agent_role": "charging"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return max(0.0, min(1.0, float(due_time) / (route_distance_share + 1.0) + 0.1 * rng_value))\n",
+          "agent_role": "search"
+        }
+      ],
+      "plan": {
+        "hypothesis": "If we modify the solver's early termination conditions and constraint propagation thresholds by 15-20% while maintaining the current search strategy, then the objective values will remain within 2% of the current baseline, confirming that the existing configuration is already optimal and any further fine-tuning would not yield significant performance improvements.",
+        "summary": "Based on the consistent performance data showing 'OK: feasible' status with stable objective values across all family instances, I propose a hypothesis that the current solver configuration is optimal and any changes to the algorithmic parameters or search strategies would not improve performance. The lack of regression, stagnation, or feasibility failures indicates the system is operating at peak efficiency."
+      },
+      "origin": "five_agent"
+    },
+    {
+      "arm": "five_agent",
+      "candidate_id": "five_1",
+      "family": "goeke",
+      "instance_id": "c101C6",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "duration": 1728.8110030239563,
+      "runtime_s": 2.5150360999978147,
+      "time_limit_s": 10.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v2",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return max(0, capacity_slack) + min(100, delta_distance) - 0.1 * due_time\n",
+          "agent_role": "routing"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return max(0, min(1, (battery_arrival - 0.2) * 1.25))\n",
+          "agent_role": "charging"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return max(0.0, min(1.0, float(due_time) / (route_distance_share + 1.0) + 0.1 * rng_value))\n",
+          "agent_role": "search"
+        }
+      ],
+      "plan": {
+        "hypothesis": "If we modify the solver's early termination conditions and constraint propagation thresholds by 15-20% while maintaining the current search strategy, then the objective values will remain within 2% of the current baseline, confirming that the existing configuration is already optimal and any further fine-tuning would not yield significant performance improvements.",
+        "summary": "Based on the consistent performance data showing 'OK: feasible' status with stable objective values across all family instances, I propose a hypothesis that the current solver configuration is optimal and any changes to the algorithmic parameters or search strategies would not improve performance. The lack of regression, stagnation, or feasibility failures indicates the system is operating at peak efficiency."
+      },
+      "origin": "five_agent"
+    },
+    {
+      "arm": "five_agent",
+      "candidate_id": "five_1",
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        4087.7523740925253
+      ],
+      "vehicles": 19,
+      "distance": 3115.211769915412,
+      "duration": 24953.156537673618,
+      "runtime_s": 8.219215099990834,
+      "time_limit_s": 15.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v2",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return max(0, capacity_slack) + min(100, delta_distance) - 0.1 * due_time\n",
+          "agent_role": "routing"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return max(0, min(1, (battery_arrival - 0.2) * 1.25))\n",
+          "agent_role": "charging"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return max(0.0, min(1.0, float(due_time) / (route_distance_share + 1.0) + 0.1 * rng_value))\n",
+          "agent_role": "search"
+        }
+      ],
+      "plan": {
+        "hypothesis": "If we modify the solver's early termination conditions and constraint propagation thresholds by 15-20% while maintaining the current search strategy, then the objective values will remain within 2% of the current baseline, confirming that the existing configuration is already optimal and any further fine-tuning would not yield significant performance improvements.",
+        "summary": "Based on the consistent performance data showing 'OK: feasible' status with stable objective values across all family instances, I propose a hypothesis that the current solver configuration is optimal and any changes to the algorithmic parameters or search strategies would not improve performance. The lack of regression, stagnation, or feasibility failures indicates the system is operating at peak efficiency."
+      },
+      "origin": "five_agent"
+    },
+    {
+      "arm": "five_agent",
+      "candidate_id": "five_2",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "duration": 1728.8110030239563,
+      "runtime_s": 2.104402300028596,
+      "time_limit_s": 8.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v2",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return max(0, capacity_slack) + min(0, capacity_slack) * abs(delta_distance - ready_time)\n",
+          "agent_role": "routing"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return max(0, 1 - abs(battery_arrival - 0.5)) * station_rate\n",
+          "agent_role": "charging"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return max(0.0, min(1.0, float(due_time) / (route_distance_share + 1.0) + 0.1 * rng_value))\n",
+          "agent_role": "search"
+        }
+      ],
+      "plan": {
+        "hypothesis": "If constraint tightness is systematically reduced across all families by 20% while maintaining the same problem structure, then at least one family instance will show degraded performance (increased runtime, higher objective values, or feasibility failures) compared to baseline performance, indicating that current constraints are artificially loose and masking underlying algorithmic weaknesses.",
+        "summary": "Based on the stable performance analysis showing consistent 'OK: feasible' status across all family instances, I propose a hypothesis that introducing controlled variations in constraint tightness will reveal performance degradation patterns that are currently hidden due to overly loose constraints."
+      },
+      "origin": "five_agent"
+    },
+    {
+      "arm": "five_agent",
+      "candidate_id": "five_2",
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        29.27251808045648
+      ],
+      "vehicles": 4,
+      "distance": 917.6865576891281,
+      "duration": 29.27251808045648,
+      "runtime_s": 7.013350300025195,
+      "time_limit_s": 10.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v2",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return max(0, capacity_slack) + min(0, capacity_slack) * abs(delta_distance - ready_time)\n",
+          "agent_role": "routing"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return max(0, 1 - abs(battery_arrival - 0.5)) * station_rate\n",
+          "agent_role": "charging"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return max(0.0, min(1.0, float(due_time) / (route_distance_share + 1.0) + 0.1 * rng_value))\n",
+          "agent_role": "search"
+        }
+      ],
+      "plan": {
+        "hypothesis": "If constraint tightness is systematically reduced across all families by 20% while maintaining the same problem structure, then at least one family instance will show degraded performance (increased runtime, higher objective values, or feasibility failures) compared to baseline performance, indicating that current constraints are artificially loose and masking underlying algorithmic weaknesses.",
+        "summary": "Based on the stable performance analysis showing consistent 'OK: feasible' status across all family instances, I propose a hypothesis that introducing controlled variations in constraint tightness will reveal performance degradation patterns that are currently hidden due to overly loose constraints."
+      },
+      "origin": "five_agent"
+    },
+    {
+      "arm": "five_agent",
+      "candidate_id": "five_2",
+      "family": "bezzi",
+      "instance_id": "C101-5",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        227.0
+      ],
+      "vehicles": 1,
+      "distance": 227.0,
+      "duration": 1197.5015,
+      "runtime_s": 5.689496100007091,
+      "time_limit_s": 12.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v2",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return max(0, capacity_slack) + min(0, capacity_slack) * abs(delta_distance - ready_time)\n",
+          "agent_role": "routing"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return max(0, 1 - abs(battery_arrival - 0.5)) * station_rate\n",
+          "agent_role": "charging"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return max(0.0, min(1.0, float(due_time) / (route_distance_share + 1.0) + 0.1 * rng_value))\n",
+          "agent_role": "search"
+        }
+      ],
+      "plan": {
+        "hypothesis": "If constraint tightness is systematically reduced across all families by 20% while maintaining the same problem structure, then at least one family instance will show degraded performance (increased runtime, higher objective values, or feasibility failures) compared to baseline performance, indicating that current constraints are artificially loose and masking underlying algorithmic weaknesses.",
+        "summary": "Based on the stable performance analysis showing consistent 'OK: feasible' status across all family instances, I propose a hypothesis that introducing controlled variations in constraint tightness will reveal performance degradation patterns that are currently hidden due to overly loose constraints."
+      },
+      "origin": "five_agent"
+    },
+    {
+      "arm": "five_agent",
+      "candidate_id": "five_2",
+      "family": "goeke",
+      "instance_id": "c101C6",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "duration": 1728.8110030239563,
+      "runtime_s": 2.465542000019923,
+      "time_limit_s": 10.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v2",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return max(0, capacity_slack) + min(0, capacity_slack) * abs(delta_distance - ready_time)\n",
+          "agent_role": "routing"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return max(0, 1 - abs(battery_arrival - 0.5)) * station_rate\n",
+          "agent_role": "charging"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return max(0.0, min(1.0, float(due_time) / (route_distance_share + 1.0) + 0.1 * rng_value))\n",
+          "agent_role": "search"
+        }
+      ],
+      "plan": {
+        "hypothesis": "If constraint tightness is systematically reduced across all families by 20% while maintaining the same problem structure, then at least one family instance will show degraded performance (increased runtime, higher objective values, or feasibility failures) compared to baseline performance, indicating that current constraints are artificially loose and masking underlying algorithmic weaknesses.",
+        "summary": "Based on the stable performance analysis showing consistent 'OK: feasible' status across all family instances, I propose a hypothesis that introducing controlled variations in constraint tightness will reveal performance degradation patterns that are currently hidden due to overly loose constraints."
+      },
+      "origin": "five_agent"
+    },
+    {
+      "arm": "five_agent",
+      "candidate_id": "five_2",
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        4916.248962977467
+      ],
+      "vehicles": 22,
+      "distance": 4094.7156481441402,
+      "duration": 28158.798507993775,
+      "runtime_s": 10.958208099997137,
+      "time_limit_s": 15.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v2",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return max(0, capacity_slack) + min(0, capacity_slack) * abs(delta_distance - ready_time)\n",
+          "agent_role": "routing"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return max(0, 1 - abs(battery_arrival - 0.5)) * station_rate\n",
+          "agent_role": "charging"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return max(0.0, min(1.0, float(due_time) / (route_distance_share + 1.0) + 0.1 * rng_value))\n",
+          "agent_role": "search"
+        }
+      ],
+      "plan": {
+        "hypothesis": "If constraint tightness is systematically reduced across all families by 20% while maintaining the same problem structure, then at least one family instance will show degraded performance (increased runtime, higher objective values, or feasibility failures) compared to baseline performance, indicating that current constraints are artificially loose and masking underlying algorithmic weaknesses.",
+        "summary": "Based on the stable performance analysis showing consistent 'OK: feasible' status across all family instances, I propose a hypothesis that introducing controlled variations in constraint tightness will reveal performance degradation patterns that are currently hidden due to overly loose constraints."
+      },
+      "origin": "five_agent"
+    },
+    {
+      "arm": "five_agent",
+      "candidate_id": "five_3",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "duration": 1728.8110030239563,
+      "runtime_s": 2.043426799995359,
+      "time_limit_s": 8.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v2",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return max(0, capacity_slack) - min(delta_distance, demand)\n",
+          "agent_role": "routing"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return max(0, 1 - abs(battery_arrival - 0.5)) * station_rate\n",
+          "agent_role": "charging"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return max(0.0, min(1.0, float(due_time) / (route_distance_share + 1.0) + 0.1 * rng_value))\n",
+          "agent_role": "search"
+        }
+      ],
+      "plan": {
+        "hypothesis": "Introducing a new multi-objective constraint that balances resource utilization and solution diversity will result in an average 15% improvement in objective function values while maintaining 100% feasible solution rate, compared to the current baseline approach that shows stable but suboptimal performance across all family instances.",
+        "summary": "Based on the analysis showing consistent feasible solutions with no regression, stagnation, or feasibility failures across all family instances, I propose testing whether introducing a new constraint type will improve solution quality without compromising feasibility."
+      },
+      "origin": "five_agent"
+    },
+    {
+      "arm": "five_agent",
+      "candidate_id": "five_3",
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        29.27251808045648
+      ],
+      "vehicles": 4,
+      "distance": 917.6865576891281,
+      "duration": 29.27251808045648,
+      "runtime_s": 6.797306900029071,
+      "time_limit_s": 10.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v2",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return max(0, capacity_slack) - min(delta_distance, demand)\n",
+          "agent_role": "routing"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return max(0, 1 - abs(battery_arrival - 0.5)) * station_rate\n",
+          "agent_role": "charging"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return max(0.0, min(1.0, float(due_time) / (route_distance_share + 1.0) + 0.1 * rng_value))\n",
+          "agent_role": "search"
+        }
+      ],
+      "plan": {
+        "hypothesis": "Introducing a new multi-objective constraint that balances resource utilization and solution diversity will result in an average 15% improvement in objective function values while maintaining 100% feasible solution rate, compared to the current baseline approach that shows stable but suboptimal performance across all family instances.",
+        "summary": "Based on the analysis showing consistent feasible solutions with no regression, stagnation, or feasibility failures across all family instances, I propose testing whether introducing a new constraint type will improve solution quality without compromising feasibility."
+      },
+      "origin": "five_agent"
+    },
+    {
+      "arm": "five_agent",
+      "candidate_id": "five_3",
+      "family": "bezzi",
+      "instance_id": "C101-5",
+      "seed": 7,
+      "feasible": false,
+      "objective_key": [
+        0.0
+      ],
+      "vehicles": 1,
+      "distance": 209.0,
+      "duration": 659.0,
+      "runtime_s": 12.040558599983342,
+      "time_limit_s": 12.0,
+      "first_fault": "CHARGE_POLICY: missing_charge_decisions",
+      "completed_within_budget": false,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v2",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return max(0, capacity_slack) - min(delta_distance, demand)\n",
+          "agent_role": "routing"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return max(0, 1 - abs(battery_arrival - 0.5)) * station_rate\n",
+          "agent_role": "charging"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return max(0.0, min(1.0, float(due_time) / (route_distance_share + 1.0) + 0.1 * rng_value))\n",
+          "agent_role": "search"
+        }
+      ],
+      "plan": {
+        "hypothesis": "Introducing a new multi-objective constraint that balances resource utilization and solution diversity will result in an average 15% improvement in objective function values while maintaining 100% feasible solution rate, compared to the current baseline approach that shows stable but suboptimal performance across all family instances.",
+        "summary": "Based on the analysis showing consistent feasible solutions with no regression, stagnation, or feasibility failures across all family instances, I propose testing whether introducing a new constraint type will improve solution quality without compromising feasibility."
+      },
+      "origin": "five_agent"
+    },
+    {
+      "arm": "five_agent",
+      "candidate_id": "five_3",
+      "family": "goeke",
+      "instance_id": "c101C6",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "duration": 1728.8110030239563,
+      "runtime_s": 2.470454399997834,
+      "time_limit_s": 10.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v2",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return max(0, capacity_slack) - min(delta_distance, demand)\n",
+          "agent_role": "routing"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return max(0, 1 - abs(battery_arrival - 0.5)) * station_rate\n",
+          "agent_role": "charging"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return max(0.0, min(1.0, float(due_time) / (route_distance_share + 1.0) + 0.1 * rng_value))\n",
+          "agent_role": "search"
+        }
+      ],
+      "plan": {
+        "hypothesis": "Introducing a new multi-objective constraint that balances resource utilization and solution diversity will result in an average 15% improvement in objective function values while maintaining 100% feasible solution rate, compared to the current baseline approach that shows stable but suboptimal performance across all family instances.",
+        "summary": "Based on the analysis showing consistent feasible solutions with no regression, stagnation, or feasibility failures across all family instances, I propose testing whether introducing a new constraint type will improve solution quality without compromising feasibility."
+      },
+      "origin": "five_agent"
+    },
+    {
+      "arm": "five_agent",
+      "candidate_id": "five_3",
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "feasible": true,
+      "objective_key": [
+        4660.408685703013
+      ],
+      "vehicles": 20,
+      "distance": 4216.4982813419765,
+      "duration": 26198.47066293945,
+      "runtime_s": 11.646698100026697,
+      "time_limit_s": 15.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v2",
+      "llm_generated_components": 3,
+      "attribution": [
+        {
+          "component": "insertion_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return max(0, capacity_slack) - min(delta_distance, demand)\n",
+          "agent_role": "routing"
+        },
+        {
+          "component": "station_score",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return max(0, 1 - abs(battery_arrival - 0.5)) * station_rate\n",
+          "agent_role": "charging"
+        },
+        {
+          "component": "removal_priority",
+          "status": "expression_wrapped",
+          "llm_generated": true,
+          "source": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return max(0.0, min(1.0, float(due_time) / (route_distance_share + 1.0) + 0.1 * rng_value))\n",
+          "agent_role": "search"
+        }
+      ],
+      "plan": {
+        "hypothesis": "Introducing a new multi-objective constraint that balances resource utilization and solution diversity will result in an average 15% improvement in objective function values while maintaining 100% feasible solution rate, compared to the current baseline approach that shows stable but suboptimal performance across all family instances.",
+        "summary": "Based on the analysis showing consistent feasible solutions with no regression, stagnation, or feasibility failures across all family instances, I propose testing whether introducing a new constraint type will improve solution quality without compromising feasibility."
+      },
+      "origin": "five_agent"
+    }
+  ],
+  "claim": "Development-seed comparison under the declared conservative rule. One seed is not a held-out result. Fallback expressions are not LLM discoveries."
+}

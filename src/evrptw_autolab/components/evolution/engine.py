@@ -67,6 +67,9 @@ class EvolutionConfig:
     max_llm_calls: int = 40
     max_llm_tokens: int | None = None
     max_wall_s: float | None = None
+    # None preserves uncapped evolution. A matched pilot sets this so five-agent
+    # search cannot take more panel evaluations than the other search arms.
+    max_panel_evaluations: int | None = None
     panel_seeds: list[int] = field(default_factory=lambda: [0])
     work_dir: Path | None = None
 
@@ -394,19 +397,37 @@ def run_evolution(
     panel = list(specs)
     panel_seeds = list(cfg.panel_seeds) or [cfg.seed]
     families = sorted({str(s.family) for s in panel})
+    panel_evaluations = 0
 
-    # Seed archive with classical defaults evaluated on the full panel.
-    if not archive.members:
-        default_sources: dict[str, str] = {k: DEFAULT_SOURCES[k] for k in KINDS}
-        owners: dict[str, str] = {k: ROLE_FOR[k] for k in KINDS}
-        panel_eval, load_errors = evaluate_candidate_on_panel(
-            default_sources,
+    def _limited_panel(
+        sources: dict[str, str],
+        owners: dict[str, str],
+        *,
+        feature_schema: str | None = None,
+    ) -> tuple[Any, list[str]] | None:
+        nonlocal panel_evaluations
+        if cfg.max_panel_evaluations is not None and panel_evaluations >= int(cfg.max_panel_evaluations):
+            return None
+        panel_evaluations += 1
+        evaluated = evaluate_candidate_on_panel(
+            sources,
             owners,
             panel,
             seeds=panel_seeds,
             time_limit_s=cfg.time_limit_s,
             alns_iterations=cfg.alns_iterations,
+            feature_schema=feature_schema,
         )
+        return cast(tuple[Any, list[str]], evaluated)
+
+    # Seed archive with classical defaults evaluated on the full panel.
+    if not archive.members:
+        default_sources: dict[str, str] = {k: DEFAULT_SOURCES[k] for k in KINDS}
+        owners: dict[str, str] = {k: ROLE_FOR[k] for k in KINDS}
+        evaluated = _limited_panel(default_sources, owners)
+        if evaluated is None:
+            raise ValueError("max_panel_evaluations must be at least 1")
+        panel_eval, load_errors = evaluated
         panel_eval.validation_ok = panel_eval.validation_ok and not load_errors
         cand = BundleCandidate(
             candidate_id="g0_default",
@@ -450,6 +471,8 @@ def run_evolution(
         if collector.stopped or (
             cfg.max_llm_calls is not None and collector.logical_calls >= cfg.max_llm_calls
         ):
+            break
+        if cfg.max_panel_evaluations is not None and panel_evaluations >= int(cfg.max_panel_evaluations):
             break
         parents = archive.select_parents(rng, k=2)
         if not parents:
@@ -549,15 +572,10 @@ def run_evolution(
                 )
 
         owners = {str(k): ROLE_FOR[k] for k in KINDS}
-        panel_eval, errors = evaluate_candidate_on_panel(
-            child_sources,
-            owners,
-            panel,
-            seeds=panel_seeds,
-            time_limit_s=cfg.time_limit_s,
-            alns_iterations=cfg.alns_iterations,
-            feature_schema=child_schema,
-        )
+        evaluated = _limited_panel(child_sources, owners, feature_schema=child_schema)
+        if evaluated is None:
+            break
+        panel_eval, errors = evaluated
         if errors:
             panel_eval.validation_ok = False
         causal.append({"step": "evaluate", "panel": {
@@ -619,37 +637,39 @@ def run_evolution(
                 except BudgetExhausted:
                     repair_attr = None
                 if repair_attr is not None:
+                    previous_source = child_sources.get(target)
+                    previous_schema = child_schema
                     child_sources[target] = repair_attr["executed_source"]
                     if target == "station_score":
                         child_schema = str(repair_attr.get("feature_schema") or FEATURE_SCHEMA_VERSION)
-                    panel_eval, errors = evaluate_candidate_on_panel(
-                        child_sources,
-                        owners,
-                        panel,
-                        seeds=panel_seeds,
-                        time_limit_s=cfg.time_limit_s,
-                        alns_iterations=cfg.alns_iterations,
-                        feature_schema=child_schema,
-                    )
-                    if errors:
-                        panel_eval.validation_ok = False
-                    # Repair success = panel improvement, not merely valid code.
-                    repair_attr["successful_repair"] = panel_is_better(panel_eval, before_repair)
-                    child_lineage[target] = lineage_from_mutation(
-                        kind=str(target),
-                        attr=repair_attr,
-                        candidate_id=child_id,
-                        generation=gen,
-                    )
-                    attr_rows.append(repair_attr)
-                    causal.append(
-                        {
-                            "step": "repair_eval",
-                            "component": target,
-                            "successful_repair": repair_attr["successful_repair"],
-                            "fully_feasible": panel_eval.fully_feasible_on_panel,
-                        }
-                    )
+                    evaluated = _limited_panel(child_sources, owners, feature_schema=child_schema)
+                    if evaluated is None:
+                        if previous_source is None:
+                            child_sources.pop(target, None)
+                        else:
+                            child_sources[target] = previous_source
+                        child_schema = previous_schema
+                        causal.append({"step": "repair_skipped", "reason": "panel_evaluation_cap"})
+                    else:
+                        panel_eval, errors = evaluated
+                        if errors:
+                            panel_eval.validation_ok = False
+                        repair_attr["successful_repair"] = panel_is_better(panel_eval, before_repair)
+                        child_lineage[target] = lineage_from_mutation(
+                            kind=str(target),
+                            attr=repair_attr,
+                            candidate_id=child_id,
+                            generation=gen,
+                        )
+                        attr_rows.append(repair_attr)
+                        causal.append(
+                            {
+                                "step": "repair_eval",
+                                "component": target,
+                                "successful_repair": repair_attr["successful_repair"],
+                                "fully_feasible": panel_eval.fully_feasible_on_panel,
+                            }
+                        )
 
         # Controlled cross-variant transfer: retrieve foreign LLM components and measure effect.
         transfer_records: list[Any] = []
@@ -676,15 +696,11 @@ def run_evolution(
                     continue
                 trial_sources = apply_transfer(child_sources, donor, xfer_kind)
                 trial_schema = donor.feature_schema if xfer_kind == "station_score" else child_schema
-                after_panel, _terr = evaluate_candidate_on_panel(
-                    trial_sources,
-                    owners,
-                    panel,
-                    seeds=panel_seeds,
-                    time_limit_s=cfg.time_limit_s,
-                    alns_iterations=cfg.alns_iterations,
-                    feature_schema=trial_schema,
-                )
+                evaluated = _limited_panel(trial_sources, owners, feature_schema=trial_schema)
+                if evaluated is None:
+                    causal.append({"step": "transfer_skipped", "reason": "panel_evaluation_cap"})
+                    break
+                after_panel, _terr = evaluated
                 rec = evaluate_transfer_effect(
                     kind=xfer_kind,
                     source_family=source_family,
@@ -764,17 +780,13 @@ def run_evolution(
     # Re-evaluate the best fully-feasible candidate on the full panel before freeze.
     best = archive.best()
     frozen_dir = work / "frozen_bundle"
+    deployment_reevaluated = False
     if best is not None:
-        panel_eval, errors = evaluate_candidate_on_panel(
-            best.sources,
-            best.owners,
-            panel,
-            seeds=panel_seeds,
-            time_limit_s=cfg.time_limit_s,
-            alns_iterations=cfg.alns_iterations,
-            feature_schema=best.feature_schema,
-        )
-        apply_panel(best, panel_eval, validation_status="ok" if not errors else "invalid")
+        evaluated = _limited_panel(best.sources, best.owners, feature_schema=best.feature_schema)
+        if evaluated is not None:
+            panel_eval, errors = evaluated
+            apply_panel(best, panel_eval, validation_status="ok" if not errors else "invalid")
+            deployment_reevaluated = True
         if best.fully_feasible_on_panel:
             typed = _typed_sources(best.sources)
             typed_owners = {k: best.owners.get(k, ROLE_FOR[k]) for k in typed}
@@ -825,6 +837,9 @@ def run_evolution(
         "use_cross_variant_memory": cfg.use_cross_variant_memory,
         "panel_instance_ids": [s.instance_id for s in panel],
         "panel_seeds": panel_seeds,
+        "panel_evaluations": panel_evaluations,
+        "max_panel_evaluations": cfg.max_panel_evaluations,
+        "deployment_reevaluated": deployment_reevaluated,
         "best_fully_feasible_on_panel": bool(best.fully_feasible_on_panel) if best else False,
         "best_feasible": bool(best.fully_feasible_on_panel) if best else False,
         "best_instances_feasible": best.instances_feasible if best else 0,

@@ -1,0 +1,727 @@
+{
+  "protocol": "predeclared_schneider_rc2_heldout",
+  "policy": "classical_default",
+  "seeds": [
+    7,
+    11,
+    22
+  ],
+  "n": 42,
+  "feasible": 24,
+  "rows": [
+    {
+      "family": "schneider",
+      "instance_id": "rc201_21",
+      "seed": 7,
+      "time_limit_s": 20.0,
+      "alns_iterations": 40,
+      "feasible": true,
+      "objective_key": [
+        19.0,
+        2868.4824015563454
+      ],
+      "vehicles": 19,
+      "distance": 2868.4824015563454,
+      "first_fault": "OK",
+      "completed_within_budget": false,
+      "runtime_s": 20.014011000050232
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc201_21",
+      "seed": 11,
+      "time_limit_s": 20.0,
+      "alns_iterations": 40,
+      "feasible": true,
+      "objective_key": [
+        19.0,
+        2868.4824015563454
+      ],
+      "vehicles": 19,
+      "distance": 2868.4824015563454,
+      "first_fault": "OK",
+      "completed_within_budget": false,
+      "runtime_s": 20.005497400008608
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc201_21",
+      "seed": 22,
+      "time_limit_s": 20.0,
+      "alns_iterations": 40,
+      "feasible": true,
+      "objective_key": [
+        19.0,
+        2709.96661334248
+      ],
+      "vehicles": 19,
+      "distance": 2709.96661334248,
+      "first_fault": "OK",
+      "completed_within_budget": false,
+      "runtime_s": 20.01782219996676
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc201C10",
+      "seed": 7,
+      "time_limit_s": 12.0,
+      "alns_iterations": 60,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        355.73537108784444
+      ],
+      "vehicles": 2,
+      "distance": 355.73537108784444,
+      "first_fault": "OK",
+      "completed_within_budget": true,
+      "runtime_s": 3.6013345000101253
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc201C10",
+      "seed": 11,
+      "time_limit_s": 12.0,
+      "alns_iterations": 60,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        355.73537108784444
+      ],
+      "vehicles": 2,
+      "distance": 355.73537108784444,
+      "first_fault": "OK",
+      "completed_within_budget": true,
+      "runtime_s": 3.8269047000212595
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc201C10",
+      "seed": 22,
+      "time_limit_s": 12.0,
+      "alns_iterations": 60,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        355.73537108784444
+      ],
+      "vehicles": 2,
+      "distance": 355.73537108784444,
+      "first_fault": "OK",
+      "completed_within_budget": true,
+      "runtime_s": 3.7606145999743603
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc202_21",
+      "seed": 7,
+      "time_limit_s": 20.0,
+      "alns_iterations": 40,
+      "feasible": true,
+      "objective_key": [
+        24.0,
+        2966.3830174956456
+      ],
+      "vehicles": 24,
+      "distance": 2966.3830174956456,
+      "first_fault": "OK",
+      "completed_within_budget": false,
+      "runtime_s": 20.024470199947245
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc202_21",
+      "seed": 11,
+      "time_limit_s": 20.0,
+      "alns_iterations": 40,
+      "feasible": true,
+      "objective_key": [
+        24.0,
+        2966.3830174956456
+      ],
+      "vehicles": 24,
+      "distance": 2966.3830174956456,
+      "first_fault": "OK",
+      "completed_within_budget": false,
+      "runtime_s": 20.011816500045825
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc202_21",
+      "seed": 22,
+      "time_limit_s": 20.0,
+      "alns_iterations": 40,
+      "feasible": true,
+      "objective_key": [
+        24.0,
+        2966.3830174956456
+      ],
+      "vehicles": 24,
+      "distance": 2966.3830174956456,
+      "first_fault": "OK",
+      "completed_within_budget": false,
+      "runtime_s": 20.01404099998763
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc202C15",
+      "seed": 7,
+      "time_limit_s": 15.0,
+      "alns_iterations": 60,
+      "feasible": true,
+      "objective_key": [
+        3.0,
+        423.48044992063194
+      ],
+      "vehicles": 3,
+      "distance": 423.48044992063194,
+      "first_fault": "OK",
+      "completed_within_budget": true,
+      "runtime_s": 7.088718700048048
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc202C15",
+      "seed": 11,
+      "time_limit_s": 15.0,
+      "alns_iterations": 60,
+      "feasible": true,
+      "objective_key": [
+        3.0,
+        426.4804111455682
+      ],
+      "vehicles": 3,
+      "distance": 426.4804111455682,
+      "first_fault": "OK",
+      "completed_within_budget": true,
+      "runtime_s": 8.396214799955487
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc202C15",
+      "seed": 22,
+      "time_limit_s": 15.0,
+      "alns_iterations": 60,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        406.85442165301396
+      ],
+      "vehicles": 2,
+      "distance": 406.85442165301396,
+      "first_fault": "OK",
+      "completed_within_budget": true,
+      "runtime_s": 6.931147800001781
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc203_21",
+      "seed": 7,
+      "time_limit_s": 20.0,
+      "alns_iterations": 40,
+      "feasible": false,
+      "objective_key": [
+        29.0,
+        3396.6007638924716
+      ],
+      "vehicles": 29,
+      "distance": 3396.6007638924716,
+      "first_fault": "BATTERY",
+      "completed_within_budget": false,
+      "runtime_s": 20.02630590001354
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc203_21",
+      "seed": 11,
+      "time_limit_s": 20.0,
+      "alns_iterations": 40,
+      "feasible": false,
+      "objective_key": [
+        29.0,
+        3396.6007638924716
+      ],
+      "vehicles": 29,
+      "distance": 3396.6007638924716,
+      "first_fault": "BATTERY",
+      "completed_within_budget": false,
+      "runtime_s": 20.01885230001062
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc203_21",
+      "seed": 22,
+      "time_limit_s": 20.0,
+      "alns_iterations": 40,
+      "feasible": false,
+      "objective_key": [
+        29.0,
+        3396.6007638924716
+      ],
+      "vehicles": 29,
+      "distance": 3396.6007638924716,
+      "first_fault": "BATTERY",
+      "completed_within_budget": false,
+      "runtime_s": 20.013834899989888
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc204_21",
+      "seed": 7,
+      "time_limit_s": 20.0,
+      "alns_iterations": 40,
+      "feasible": false,
+      "objective_key": [
+        27.0,
+        3048.821439848783
+      ],
+      "vehicles": 27,
+      "distance": 3048.821439848783,
+      "first_fault": "BATTERY",
+      "completed_within_budget": false,
+      "runtime_s": 20.015418099996168
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc204_21",
+      "seed": 11,
+      "time_limit_s": 20.0,
+      "alns_iterations": 40,
+      "feasible": false,
+      "objective_key": [
+        27.0,
+        3048.821439848783
+      ],
+      "vehicles": 27,
+      "distance": 3048.821439848783,
+      "first_fault": "BATTERY",
+      "completed_within_budget": false,
+      "runtime_s": 20.010800699994434
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc204_21",
+      "seed": 22,
+      "time_limit_s": 20.0,
+      "alns_iterations": 40,
+      "feasible": false,
+      "objective_key": [
+        27.0,
+        3048.821439848783
+      ],
+      "vehicles": 27,
+      "distance": 3048.821439848783,
+      "first_fault": "BATTERY",
+      "completed_within_budget": false,
+      "runtime_s": 20.013748899975326
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc204C15",
+      "seed": 7,
+      "time_limit_s": 15.0,
+      "alns_iterations": 60,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        331.82819413871005
+      ],
+      "vehicles": 2,
+      "distance": 331.82819413871005,
+      "first_fault": "OK",
+      "completed_within_budget": true,
+      "runtime_s": 6.37237619998632
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc204C15",
+      "seed": 11,
+      "time_limit_s": 15.0,
+      "alns_iterations": 60,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        330.4045631645216
+      ],
+      "vehicles": 2,
+      "distance": 330.4045631645216,
+      "first_fault": "OK",
+      "completed_within_budget": true,
+      "runtime_s": 7.611800700018648
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc204C15",
+      "seed": 22,
+      "time_limit_s": 15.0,
+      "alns_iterations": 60,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        331.82819413871005
+      ],
+      "vehicles": 2,
+      "distance": 331.82819413871005,
+      "first_fault": "OK",
+      "completed_within_budget": true,
+      "runtime_s": 6.713798900018446
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc204C5",
+      "seed": 7,
+      "time_limit_s": 8.0,
+      "alns_iterations": 80,
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        185.15824477649488
+      ],
+      "vehicles": 1,
+      "distance": 185.15824477649488,
+      "first_fault": "OK",
+      "completed_within_budget": true,
+      "runtime_s": 1.4085529999574646
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc204C5",
+      "seed": 11,
+      "time_limit_s": 8.0,
+      "alns_iterations": 80,
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        185.15824477649488
+      ],
+      "vehicles": 1,
+      "distance": 185.15824477649488,
+      "first_fault": "OK",
+      "completed_within_budget": true,
+      "runtime_s": 1.442604499985464
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc204C5",
+      "seed": 22,
+      "time_limit_s": 8.0,
+      "alns_iterations": 80,
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        185.15824477649488
+      ],
+      "vehicles": 1,
+      "distance": 185.15824477649488,
+      "first_fault": "OK",
+      "completed_within_budget": true,
+      "runtime_s": 1.488850200024899
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc205_21",
+      "seed": 7,
+      "time_limit_s": 20.0,
+      "alns_iterations": 40,
+      "feasible": false,
+      "objective_key": [
+        28.0,
+        3301.826365304249
+      ],
+      "vehicles": 28,
+      "distance": 3301.826365304249,
+      "first_fault": "BATTERY",
+      "completed_within_budget": false,
+      "runtime_s": 20.01956970000174
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc205_21",
+      "seed": 11,
+      "time_limit_s": 20.0,
+      "alns_iterations": 40,
+      "feasible": false,
+      "objective_key": [
+        28.0,
+        3301.826365304249
+      ],
+      "vehicles": 28,
+      "distance": 3301.826365304249,
+      "first_fault": "BATTERY",
+      "completed_within_budget": false,
+      "runtime_s": 20.01737309998134
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc205_21",
+      "seed": 22,
+      "time_limit_s": 20.0,
+      "alns_iterations": 40,
+      "feasible": false,
+      "objective_key": [
+        4.0,
+        2098.741615044719
+      ],
+      "vehicles": 4,
+      "distance": 2098.741615044719,
+      "first_fault": "BATTERY",
+      "completed_within_budget": false,
+      "runtime_s": 20.015607100038324
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc205C10",
+      "seed": 7,
+      "time_limit_s": 12.0,
+      "alns_iterations": 60,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        470.0027599386048
+      ],
+      "vehicles": 2,
+      "distance": 470.0027599386048,
+      "first_fault": "OK",
+      "completed_within_budget": true,
+      "runtime_s": 4.514312200015411
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc205C10",
+      "seed": 11,
+      "time_limit_s": 12.0,
+      "alns_iterations": 60,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        429.4421682693841
+      ],
+      "vehicles": 2,
+      "distance": 429.4421682693841,
+      "first_fault": "OK",
+      "completed_within_budget": true,
+      "runtime_s": 4.0233330999617465
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc205C10",
+      "seed": 22,
+      "time_limit_s": 12.0,
+      "alns_iterations": 60,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        458.73757370758483
+      ],
+      "vehicles": 2,
+      "distance": 458.73757370758483,
+      "first_fault": "OK",
+      "completed_within_budget": true,
+      "runtime_s": 3.6687334000016563
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc206_21",
+      "seed": 7,
+      "time_limit_s": 20.0,
+      "alns_iterations": 40,
+      "feasible": false,
+      "objective_key": [
+        4.0,
+        2215.0755739837564
+      ],
+      "vehicles": 4,
+      "distance": 2215.0755739837564,
+      "first_fault": "BATTERY",
+      "completed_within_budget": false,
+      "runtime_s": 19.99658489995636
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc206_21",
+      "seed": 11,
+      "time_limit_s": 20.0,
+      "alns_iterations": 40,
+      "feasible": false,
+      "objective_key": [
+        4.0,
+        2215.0755739837564
+      ],
+      "vehicles": 4,
+      "distance": 2215.0755739837564,
+      "first_fault": "BATTERY",
+      "completed_within_budget": false,
+      "runtime_s": 20.01238720002584
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc206_21",
+      "seed": 22,
+      "time_limit_s": 20.0,
+      "alns_iterations": 40,
+      "feasible": false,
+      "objective_key": [
+        28.0,
+        3256.0834538147997
+      ],
+      "vehicles": 28,
+      "distance": 3256.0834538147997,
+      "first_fault": "BATTERY",
+      "completed_within_budget": false,
+      "runtime_s": 20.025004600000102
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc207_21",
+      "seed": 7,
+      "time_limit_s": 20.0,
+      "alns_iterations": 40,
+      "feasible": false,
+      "objective_key": [
+        4.0,
+        1877.8753934595527
+      ],
+      "vehicles": 4,
+      "distance": 1877.8753934595527,
+      "first_fault": "BATTERY",
+      "completed_within_budget": false,
+      "runtime_s": 20.00676860002568
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc207_21",
+      "seed": 11,
+      "time_limit_s": 20.0,
+      "alns_iterations": 40,
+      "feasible": false,
+      "objective_key": [
+        4.0,
+        1877.8753934595527
+      ],
+      "vehicles": 4,
+      "distance": 1877.8753934595527,
+      "first_fault": "BATTERY",
+      "completed_within_budget": false,
+      "runtime_s": 20.016249499982223
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc207_21",
+      "seed": 22,
+      "time_limit_s": 20.0,
+      "alns_iterations": 40,
+      "feasible": false,
+      "objective_key": [
+        4.0,
+        1877.8753934595527
+      ],
+      "vehicles": 4,
+      "distance": 1877.8753934595527,
+      "first_fault": "BATTERY",
+      "completed_within_budget": false,
+      "runtime_s": 20.0232110999641
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc208_21",
+      "seed": 7,
+      "time_limit_s": 20.0,
+      "alns_iterations": 40,
+      "feasible": false,
+      "objective_key": [
+        5.0,
+        2181.376982362843
+      ],
+      "vehicles": 5,
+      "distance": 2181.376982362843,
+      "first_fault": "BATTERY",
+      "completed_within_budget": false,
+      "runtime_s": 20.019231599988416
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc208_21",
+      "seed": 11,
+      "time_limit_s": 20.0,
+      "alns_iterations": 40,
+      "feasible": false,
+      "objective_key": [
+        5.0,
+        2181.376982362843
+      ],
+      "vehicles": 5,
+      "distance": 2181.376982362843,
+      "first_fault": "BATTERY",
+      "completed_within_budget": false,
+      "runtime_s": 20.001780099992175
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc208_21",
+      "seed": 22,
+      "time_limit_s": 20.0,
+      "alns_iterations": 40,
+      "feasible": false,
+      "objective_key": [
+        5.0,
+        2181.376982362843
+      ],
+      "vehicles": 5,
+      "distance": 2181.376982362843,
+      "first_fault": "BATTERY",
+      "completed_within_budget": false,
+      "runtime_s": 20.003949599980842
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc208C5",
+      "seed": 7,
+      "time_limit_s": 8.0,
+      "alns_iterations": 80,
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        167.98346924988414
+      ],
+      "vehicles": 1,
+      "distance": 167.98346924988414,
+      "first_fault": "OK",
+      "completed_within_budget": true,
+      "runtime_s": 1.2750858999788761
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc208C5",
+      "seed": 11,
+      "time_limit_s": 8.0,
+      "alns_iterations": 80,
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        167.98346924988414
+      ],
+      "vehicles": 1,
+      "distance": 167.98346924988414,
+      "first_fault": "OK",
+      "completed_within_budget": true,
+      "runtime_s": 1.288839699991513
+    },
+    {
+      "family": "schneider",
+      "instance_id": "rc208C5",
+      "seed": 22,
+      "time_limit_s": 8.0,
+      "alns_iterations": 80,
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        167.98346924988414
+      ],
+      "vehicles": 1,
+      "distance": 167.98346924988414,
+      "first_fault": "OK",
+      "completed_within_budget": true,
+      "runtime_s": 1.3338454000186175
+    }
+  ]
+}

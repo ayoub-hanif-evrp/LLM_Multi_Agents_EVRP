@@ -577,6 +577,13 @@ def _aggregate(rows: list[dict[str, Any]], runs: list[dict[str, Any]]) -> dict[s
 def run_research_campaign(cfg: CampaignConfig | None = None) -> dict[str, Any]:
     """Execute matched arms and write results under results/v2/campaigns/."""
     cfg = cfg or CampaignConfig()
+    if not cfg.fake:
+        raise RuntimeError(
+            "Live Qwen is blocked. experiments.campaign still evaluates one "
+            "single-agent proposal per instance while evolution can evaluate "
+            "several panel candidates. Use experiments.fair_budget and approve "
+            "the declared four-candidate pilot before any Ollama run."
+        )
     stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     out = cfg.out_dir or (ROOT / "results" / "v2" / "campaigns" / f"campaign_{stamp}")
     out.mkdir(parents=True, exist_ok=True)

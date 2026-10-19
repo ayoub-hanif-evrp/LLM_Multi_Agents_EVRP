@@ -17,9 +17,12 @@ def test_pilot_arms_share_one_budget_and_are_not_started() -> None:
     limits = {row["time_limit_s"] for row in protocol["instances"]}
     assert len(protocol["instances"]) == 5
     assert limits == {8.0, 10.0, 12.0, 15.0}
-    assert protocol["solver_passes"]["classical"] == protocol["solver_passes"]["single_agent"]
-    assert protocol["solver_passes"]["five_agent"] == protocol["solver_passes"]["classical"]
-    assert protocol["solver_passes"]["random_evolution"] == 4 * len(protocol["instances"])
+    passes = protocol["solver_passes"]
+    assert passes["random_evolution"] == passes["single_agent"] == passes["five_agent"]
+    assert passes["random_evolution"] == 4 * len(protocol["instances"])
+    assert passes["classical"] == len(protocol["instances"])
+    assert protocol["selection_rule"] == "conservative"
+    assert protocol["cost"]["token_extrapolation"]["measured"] is False
     assert protocol["solver_wall_s_lower_bound"] > 0
 
 

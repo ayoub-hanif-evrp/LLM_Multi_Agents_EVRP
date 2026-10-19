@@ -87,6 +87,59 @@ def conservative_decision(pairs: list[dict[str, Any]]) -> dict[str, Any]:
         "ties": ties,
         "tie_infeasible": infeasible,
         "n_pairs": len(pairs),
+        "rule": "conservative",
+    }
+
+
+# Declared before any held-out run. A loss on at most one third of the
+# development pairs is allowed. A drop in the feasibility rate is not.
+ROBUST_MAX_LOSS_FRACTION = 1.0 / 3.0
+
+
+def robust_decision(pairs: list[dict[str, Any]]) -> dict[str, Any]:
+    """Aggregate development rule. It does not replace the deployed conservative rule."""
+    if not pairs:
+        return {
+            "accepted": False,
+            "reason": "no_development_pairs",
+            "wins": 0,
+            "losses": 0,
+            "ties": 0,
+            "rule": "robust",
+        }
+    wins = sum(1 for item in pairs if item["paired_outcome"] == "candidate")
+    losses = sum(1 for item in pairs if item["paired_outcome"] == "baseline")
+    ties = sum(1 for item in pairs if item["paired_outcome"] == "tie")
+    infeasible = sum(1 for item in pairs if item["paired_outcome"] == "tie_infeasible")
+    n_pairs = len(pairs)
+    base_rate = sum(1 for item in pairs if item["baseline_feasible"]) / n_pairs
+    cand_rate = sum(1 for item in pairs if item["candidate_feasible"]) / n_pairs
+    loss_fraction = losses / n_pairs
+    if cand_rate < base_rate:
+        reason = "feasibility_rate_drop"
+        accepted = False
+    elif loss_fraction > ROBUST_MAX_LOSS_FRACTION:
+        reason = "loss_fraction_above_one_third"
+        accepted = False
+    elif wins < 1:
+        reason = "no_strict_improvement"
+        accepted = False
+    else:
+        reason = "accepted_on_aggregate"
+        accepted = True
+    return {
+        "accepted": accepted,
+        "reason": reason,
+        "wins": wins,
+        "losses": losses,
+        "ties": ties,
+        "tie_infeasible": infeasible,
+        "n_pairs": n_pairs,
+        "loss_fraction": loss_fraction,
+        "baseline_feasibility_rate": base_rate,
+        "candidate_feasibility_rate": cand_rate,
+        "rule": "robust",
+        "max_loss_fraction": ROBUST_MAX_LOSS_FRACTION,
     }
 
 

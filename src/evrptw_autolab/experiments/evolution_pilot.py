@@ -1,45 +1,44 @@
 """Matched four-arm pilot protocol. This module does not call a model.
 
-Arms share instances, seed, time limit, ALNS iteration cap, and the trusted
-evaluator. Selection is feasibility first, then the lexicographic objective.
-A live Qwen run stays unstarted until the development gate and the charging
-ablation are on record and a wall-clock budget is approved.
+Search arms share the candidate-evaluation budget in ``fair_budget``.
+Classical deployment is one solve per instance. A live Qwen run stays
+unstarted until that budget is approved.
 """
 from __future__ import annotations
 
 from typing import Any
 
 from evrptw_autolab.baselines.classical_pilot import PilotInstance
+from evrptw_autolab.experiments.fair_budget import (
+    ARMS,
+    DECLARED_SELECTION_RULE,
+    SEARCH_CANDIDATES,
+    pilot_cost,
+)
 from evrptw_autolab.experiments.family_gate import gate_panel
 
-ARMS = ("classical", "random_evolution", "single_agent", "five_agent")
-MODEL = "qwen3-coder:30b"
-RANDOM_EXPRESSIONS = 4
 STATUS = "not_started"
 
 
 def pilot_protocol(panel: list[PilotInstance] | None = None) -> dict[str, Any]:
     rows = panel if panel is not None else gate_panel()
-    per_pass_s = sum(float(item.time_limit_s) for item in rows)
-    solves = {
-        "classical": len(rows),
-        "random_evolution": len(rows) * RANDOM_EXPRESSIONS,
-        "single_agent": len(rows),
-        "five_agent": len(rows),
-    }
+    cost = pilot_cost(rows)
     return {
         "status": STATUS,
-        "model": MODEL,
+        "model": "qwen3-coder:30b",
         "sequential_ollama": True,
         "arms": list(ARMS),
+        "search_candidates": SEARCH_CANDIDATES,
+        "selection_rule": DECLARED_SELECTION_RULE,
         "matched_fields": [
             "instances",
             "seed",
             "time_limit_s",
             "alns_iterations",
             "evaluator",
+            "candidate_evaluations",
         ],
-        "selection": "feasibility_first_then_lexicographic_objective",
+        "selection": DECLARED_SELECTION_RULE,
         "instances": [
             {
                 "family": item.family,
@@ -49,11 +48,13 @@ def pilot_protocol(panel: list[PilotInstance] | None = None) -> dict[str, Any]:
             }
             for item in rows
         ],
-        "solver_passes": solves,
-        "solver_wall_s_lower_bound": per_pass_s * sum(solves.values()) / max(len(rows), 1),
+        "solver_passes": cost["solver_passes"],
+        "solver_wall_s_lower_bound": cost["solver_wall_s_lower_bound"],
+        "cost": cost,
         "reason": (
-            "Live multi-agent evolution is not started. The lower bound counts "
-            "solver time only, on one seed, with four random-evolution expressions "
-            "and one generation of each LLM arm. Token time is extra."
+            "Live multi-agent evolution is not started. Search arms each receive "
+            f"{SEARCH_CANDIDATES} candidate evaluations per instance on one seed. "
+            "Classical receives one deployment evaluation. Token time is extra "
+            "and is not measured in this protocol file."
         ),
     }

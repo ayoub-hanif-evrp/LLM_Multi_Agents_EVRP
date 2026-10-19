@@ -1,5 +1,9 @@
 # VoltForge 2.0 — Research Readiness Report
 
+**Update 2026-10-18.** Solver commit `27278a1`. Tests after the matched-budget edits: 227 passed. Classical development panel: 36/39 independent rows feasible; Bezzi `10-N10` stays infeasible. A two-second repair reserve did not fix it and was reverted. Held-out Schneider RC2, classical only: 24/42 rows feasible inside the predeclared size budgets (`results/v2/paper/heldout_classical.json`). The equal-budget Qwen pilot and the critic, one-candidate, and selection-disabled ablations are in `results/v2/paper/RESULTS.md`. Five-agent seed-7 gains do not survive seeds 11 and 22. Selection-disabled deployment accepts a feasibility regression. No learned policy was frozen for held-out.
+
+The sections below are the 2026-10-16 record and are not the current result.
+
 **Date:** 2026-10-16  
 **Pushed repair commit:** `d18fe0edd6f8` (14/14 classical pilot)  
 **This document tracks subsequent integrity work on top of that commit.**

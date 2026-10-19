@@ -29,6 +29,13 @@ def test_fake_campaign_runs_all_arms(tmp_path: Path) -> None:
     assert payload["aggregate"]["classical"]["n"] == 1
 
 
+def test_live_ollama_campaign_is_blocked(tmp_path: Path) -> None:
+    import pytest
+
+    with pytest.raises(RuntimeError, match="Live Qwen is blocked"):
+        run_research_campaign(CampaignConfig(fake=False, out_dir=tmp_path / "live"))
+
+
 def test_panel_cap_spans_families() -> None:
     items = _select_panel_items(CampaignConfig(max_instances=5, fake=True))
     families = {i.family for i in items}

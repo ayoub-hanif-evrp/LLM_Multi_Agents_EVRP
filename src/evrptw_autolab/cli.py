@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import time
 from pathlib import Path
 
 import typer
@@ -138,6 +139,56 @@ def experiments_backbone_ablation() -> None:
     typer.echo(json.dumps(brief, indent=2))
 
 
+@experiments_app.command("matched-pilot")
+def experiments_matched_pilot(
+    fake: bool = typer.Option(True, "--fake/--ollama"),
+    seed: int = typer.Option(7, "--seed"),
+    micro: bool = typer.Option(False, "--micro"),
+    profile: str = typer.Option("qwen3_coder_30b", "--profile"),
+    ablation: str = typer.Option(
+        "primary",
+        "--ablation",
+        help="primary, no_critic, no_evolution, or no_selection",
+    ),
+) -> None:
+    """Equal-budget classical, random, single-agent, and five-agent pilot."""
+    from evrptw_autolab.experiments.matched_pilot import MatchedPilotConfig, run_matched_pilot
+
+    stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
+    label = "fake" if fake else "qwen"
+    candidates = 1 if ablation == "no_evolution" else 4
+    out = ROOT / "results" / "v2" / "campaigns" / f"matched_{label}_{ablation}_{stamp}"
+    payload = run_matched_pilot(
+        MatchedPilotConfig(
+            seed=seed,
+            fake=fake,
+            profile=profile,
+            micro=micro,
+            candidates=candidates,
+            use_critic=ablation != "no_critic",
+            apply_selection=ablation != "no_selection",
+            ablation=ablation,
+            out_dir=out,
+        )
+    )
+    typer.echo(
+        json.dumps(
+            {
+                "out": str(out),
+                "model": payload["model"],
+                "solver_solves": payload["solver_solves"],
+                "llm_calls": payload["llm_calls"],
+                "llm_tokens": payload["llm_tokens"],
+                "selections": {
+                    arm: item["selected_candidate_id"] for arm, item in payload["selections"].items()
+                },
+                "claim": payload["claim"],
+            },
+            indent=2,
+        )
+    )
+
+
 @experiments_app.command("campaign")
 def experiments_campaign(
     fake: bool = typer.Option(True, "--fake/--ollama", help="FakeBackend (default) or local Ollama"),
@@ -244,6 +295,33 @@ def validate_data() -> None:
         f"confirmation={len(split['confirmation'])} heldout={len(split['heldout'])} "
         f"manifest={manifest} hashes={hashes}"
     )
+
+
+@app.command("research-ready")
+def research_ready(
+    full: bool = typer.Option(True, "--full/--checks-only"),
+) -> None:
+    """Fail when a known engineering gate is broken. --full also runs pytest, ruff, and mypy."""
+    import subprocess
+    import sys
+
+    from evrptw_autolab.experiments.readiness import engineering_checks
+
+    report = engineering_checks(ROOT)
+    typer.echo(json.dumps(report, indent=2))
+    if not report["ok"]:
+        raise typer.Exit(code=1)
+    if not full:
+        return
+    commands = [
+        [sys.executable, "-m", "pytest", "-q"],
+        [sys.executable, "-m", "ruff", "check", "src", "tests"],
+        [sys.executable, "-m", "mypy", "src/evrptw_autolab"],
+    ]
+    for cmd in commands:
+        code = subprocess.call(cmd, cwd=ROOT)
+        if code != 0:
+            raise typer.Exit(code=code)
 
 
 @models_app.command("list")

@@ -63,7 +63,15 @@ Model digest recorded for the generational run: sha256-1194192cf2a187eb02722edcc
 ## G. Limitations
 
 The comparison is exploratory. Five gate instances and one discovery seed do not support a significance claim.
-The 2026-10-19 Qwen run used full-bundle proposals for the language-model arms and deployed the first accepted candidate. The code now awaiting the next run mutates one parent component, shows the critic the classical keys, and deploys the accepted candidate with the most wins. That run has not been executed.
+The 2026-10-19 parent-mutation run is `results/v2/campaigns/generational_qwen_20261019T182727Z/generational.json`.
+Model digest `sha256-1194192cf2a187eb02722edcc3f77b11d21f537048ce04b67ccf8ba78863006a`.
+Solver evaluations stayed 5/20/20/20. Tokens were 1,842 for single-agent and 3,711 for five-agent.
+Seed 7 selected `random_g2`, one-shot `single_g0`, and one-shot `five_g0`. Later generations did not earn more wins, so the earliest accepted candidate was kept.
+All three selected policies moved only Hiermann `c101_21` on seed 7: classical 4150.872544094683, random 4126.724254409762, and both language-model policies 4087.7523740925253.
+Seeds 11 and 22 reject both language-model policies: seed 11 is 4259.304471929594 against classical 4164.778526628387, and seed 22 is 4044.2164307328712.
+`random_g2` stays feasible and better on `c101_21` for seeds 11 and 22, at 4122.8495525577955 and 4082.91815223344, then ties classical on all 9 untouched Schneider confirmation rows.
+Five-agent search still does not pass the conservative rule.
+An independent discovery repeat on seed 13, with the same operator and four candidates, accepted no random, single-agent, or five-agent candidate.
 Single-agent and five-agent proposals in the executed run were new bundles conditioned on feedback text. Only the random arm mutated the accepted parent's source.
 Critic text is not a causal explanation.
 Large 100-customer Schneider construction used to time out with a battery violation. Route-local construction makes development `c101_21` seed 7 feasible inside 20 seconds at 39 vehicles. That fleet is not an optimized result.

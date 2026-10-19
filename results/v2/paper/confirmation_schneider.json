@@ -27,7 +27,7 @@
       "distance": 254.13327262608993,
       "first_fault": "OK: feasible",
       "completed_within_budget": true,
-      "runtime_s": 1.604974299960304
+      "runtime_s": 1.3947083000093699
     },
     {
       "policy": "classical_default",
@@ -44,7 +44,7 @@
       "distance": 254.13327262608993,
       "first_fault": "OK: feasible",
       "completed_within_budget": true,
-      "runtime_s": 1.5614244000171311
+      "runtime_s": 1.5138768999604508
     },
     {
       "policy": "classical_default",
@@ -61,7 +61,7 @@
       "distance": 254.13327262608993,
       "first_fault": "OK: feasible",
       "completed_within_budget": true,
-      "runtime_s": 1.5604745000018738
+      "runtime_s": 1.4325510000344366
     },
     {
       "policy": "classical_default",
@@ -78,7 +78,7 @@
       "distance": 142.65393342266287,
       "first_fault": "OK: feasible",
       "completed_within_budget": true,
-      "runtime_s": 1.5322928999667056
+      "runtime_s": 1.4931950999889523
     },
     {
       "policy": "classical_default",
@@ -95,7 +95,7 @@
       "distance": 142.65393342266287,
       "first_fault": "OK: feasible",
       "completed_within_budget": true,
-      "runtime_s": 1.503976900014095
+      "runtime_s": 1.5458380000200123
     },
     {
       "policy": "classical_default",
@@ -112,7 +112,7 @@
       "distance": 142.65393342266287,
       "first_fault": "OK: feasible",
       "completed_within_budget": true,
-      "runtime_s": 1.6174831000389531
+      "runtime_s": 1.5476300999871455
     },
     {
       "policy": "classical_default",
@@ -129,7 +129,7 @@
       "distance": 179.05589081805485,
       "first_fault": "OK: feasible",
       "completed_within_budget": true,
-      "runtime_s": 1.5163319999701343
+      "runtime_s": 1.5603280000505038
     },
     {
       "policy": "classical_default",
@@ -146,7 +146,7 @@
       "distance": 179.05589081805485,
       "first_fault": "OK: feasible",
       "completed_within_budget": true,
-      "runtime_s": 1.5515639000223018
+      "runtime_s": 1.5675602999981493
     },
     {
       "policy": "classical_default",
@@ -163,7 +163,7 @@
       "distance": 179.05589081805485,
       "first_fault": "OK: feasible",
       "completed_within_budget": true,
-      "runtime_s": 1.5308686000062153
+      "runtime_s": 1.5304042000207119
     },
     {
       "policy": "random_evolution:random_g2",
@@ -180,7 +180,7 @@
       "distance": 254.13327262608993,
       "first_fault": "OK: feasible",
       "completed_within_budget": true,
-      "runtime_s": 2.1153568000299856
+      "runtime_s": 2.1826653000316583
     },
     {
       "policy": "random_evolution:random_g2",
@@ -197,7 +197,7 @@
       "distance": 254.13327262608993,
       "first_fault": "OK: feasible",
       "completed_within_budget": true,
-      "runtime_s": 2.2288259000051767
+      "runtime_s": 2.0878221999737434
     },
     {
       "policy": "random_evolution:random_g2",
@@ -214,7 +214,7 @@
       "distance": 254.13327262608993,
       "first_fault": "OK: feasible",
       "completed_within_budget": true,
-      "runtime_s": 2.138895899988711
+      "runtime_s": 1.9470384000451304
     },
     {
       "policy": "random_evolution:random_g2",
@@ -231,7 +231,7 @@
       "distance": 142.65393342266287,
       "first_fault": "OK: feasible",
       "completed_within_budget": true,
-      "runtime_s": 2.112193799985107
+      "runtime_s": 1.5736431000404991
     },
     {
       "policy": "random_evolution:random_g2",
@@ -248,7 +248,7 @@
       "distance": 142.65393342266287,
       "first_fault": "OK: feasible",
       "completed_within_budget": true,
-      "runtime_s": 2.1570329999667592
+      "runtime_s": 1.4903137999936007
     },
     {
       "policy": "random_evolution:random_g2",
@@ -265,7 +265,7 @@
       "distance": 142.65393342266287,
       "first_fault": "OK: feasible",
       "completed_within_budget": true,
-      "runtime_s": 2.144638900004793
+      "runtime_s": 1.6557590999873355
     },
     {
       "policy": "random_evolution:random_g2",
@@ -282,7 +282,7 @@
       "distance": 179.05589081805485,
       "first_fault": "OK: feasible",
       "completed_within_budget": true,
-      "runtime_s": 2.0678866999805905
+      "runtime_s": 2.12367160001304
     },
     {
       "policy": "random_evolution:random_g2",
@@ -299,7 +299,7 @@
       "distance": 179.05589081805485,
       "first_fault": "OK: feasible",
       "completed_within_budget": true,
-      "runtime_s": 2.070094699971378
+      "runtime_s": 2.2417914000106975
     },
     {
       "policy": "random_evolution:random_g2",
@@ -316,7 +316,7 @@
       "distance": 179.05589081805485,
       "first_fault": "OK: feasible",
       "completed_within_budget": true,
-      "runtime_s": 2.00623880000785
+      "runtime_s": 2.0766215000185184
     }
   ],
   "seed_confirmation": [
@@ -345,7 +345,7 @@
               "vehicles": 2,
               "distance": 267.3289940850671,
               "duration": 1728.8110030239563,
-              "runtime_s": 2.300280700030271,
+              "runtime_s": 2.2565565000404604,
               "time_limit_s": 8.0,
               "first_fault": "OK: feasible",
               "completed_within_budget": true,
@@ -366,7 +366,7 @@
               "vehicles": 3,
               "distance": 760.5111182174095,
               "duration": 25.285322313276744,
-              "runtime_s": 5.720327999966685,
+              "runtime_s": 5.634074600005988,
               "time_limit_s": 10.0,
               "first_fault": "OK: feasible",
               "completed_within_budget": true,
@@ -387,7 +387,7 @@
               "vehicles": 1,
               "distance": 227.0,
               "duration": 1197.5015,
-              "runtime_s": 5.485138099989854,
+              "runtime_s": 4.438299799978267,
               "time_limit_s": 12.0,
               "first_fault": "OK: feasible",
               "completed_within_budget": true,
@@ -409,7 +409,7 @@
               "vehicles": 2,
               "distance": 267.3289940850671,
               "duration": 1728.8110030239563,
-              "runtime_s": 2.429342799994629,
+              "runtime_s": 2.2327785000088625,
               "time_limit_s": 10.0,
               "first_fault": "OK: feasible",
               "completed_within_budget": true,
@@ -430,7 +430,7 @@
               "vehicles": 20,
               "distance": 2817.9651062387165,
               "duration": 25476.310658116872,
-              "runtime_s": 12.518563900026493,
+              "runtime_s": 7.504350500006694,
               "time_limit_s": 15.0,
               "first_fault": "OK: feasible",
               "completed_within_budget": true,
@@ -457,7 +457,7 @@
               "vehicles": 2,
               "distance": 267.3289940850671,
               "duration": 1728.8110030239563,
-              "runtime_s": 2.202880799944978,
+              "runtime_s": 2.0722316000028513,
               "time_limit_s": 8.0,
               "first_fault": "OK: feasible",
               "completed_within_budget": true,
@@ -478,7 +478,7 @@
               "vehicles": 3,
               "distance": 760.5111182174095,
               "duration": 25.285322313276744,
-              "runtime_s": 5.828263100003824,
+              "runtime_s": 4.919586699979845,
               "time_limit_s": 10.0,
               "first_fault": "OK: feasible",
               "completed_within_budget": true,
@@ -499,7 +499,7 @@
               "vehicles": 1,
               "distance": 227.0,
               "duration": 1197.5015,
-              "runtime_s": 6.144448100007139,
+              "runtime_s": 5.987095199991018,
               "time_limit_s": 12.0,
               "first_fault": "OK: feasible",
               "completed_within_budget": true,
@@ -521,7 +521,7 @@
               "vehicles": 2,
               "distance": 267.3289940850671,
               "duration": 1728.8110030239563,
-              "runtime_s": 2.5829817000194453,
+              "runtime_s": 2.6499441000050865,
               "time_limit_s": 10.0,
               "first_fault": "OK: feasible",
               "completed_within_budget": true,
@@ -542,7 +542,7 @@
               "vehicles": 20,
               "distance": 2736.548576973696,
               "duration": 25384.304621960295,
-              "runtime_s": 9.341914499993436,
+              "runtime_s": 7.097338499967009,
               "time_limit_s": 15.0,
               "first_fault": "OK: feasible",
               "completed_within_budget": true,
@@ -556,13 +556,7 @@
     },
     {
       "arm": "single_agent",
-      "candidate_id": null,
-      "three_seed_accepted": false,
-      "reason": "not_selected_on_seed_7"
-    },
-    {
-      "arm": "five_agent",
-      "candidate_id": "five_g3",
+      "candidate_id": "single_g0",
       "three_seed_accepted": false,
       "reason": "objective_regression",
       "wins": 2,
@@ -572,8 +566,8 @@
           "seed": 11,
           "rows": [
             {
-              "arm": "five_agent",
-              "candidate_id": "five_g3",
+              "arm": "single_agent",
+              "candidate_id": "single_g0",
               "family": "schneider",
               "instance_id": "c101C5",
               "seed": 11,
@@ -585,17 +579,17 @@
               "vehicles": 2,
               "distance": 267.3289940850671,
               "duration": 1728.8110030239563,
-              "runtime_s": 2.123120799951721,
+              "runtime_s": 1.7653126000077464,
               "time_limit_s": 8.0,
               "first_fault": "OK: feasible",
               "completed_within_budget": true,
               "load_errors": [],
-              "feature_schema": "2026-10-18.v2",
+              "feature_schema": "2026-10-18.v1",
               "llm_generated_components": 0
             },
             {
-              "arm": "five_agent",
-              "candidate_id": "five_g3",
+              "arm": "single_agent",
+              "candidate_id": "single_g0",
               "family": "montoya",
               "instance_id": "tc0c10s2cf1",
               "seed": 11,
@@ -606,17 +600,17 @@
               "vehicles": 3,
               "distance": 760.5111182174095,
               "duration": 25.285322313276744,
-              "runtime_s": 5.509648900013417,
+              "runtime_s": 5.375473799998872,
               "time_limit_s": 10.0,
               "first_fault": "OK: feasible",
               "completed_within_budget": true,
               "load_errors": [],
-              "feature_schema": "2026-10-18.v2",
+              "feature_schema": "2026-10-18.v1",
               "llm_generated_components": 0
             },
             {
-              "arm": "five_agent",
-              "candidate_id": "five_g3",
+              "arm": "single_agent",
+              "candidate_id": "single_g0",
               "family": "bezzi",
               "instance_id": "C101-5",
               "seed": 11,
@@ -627,17 +621,17 @@
               "vehicles": 1,
               "distance": 227.0,
               "duration": 1197.5015,
-              "runtime_s": 5.629625300003681,
+              "runtime_s": 5.51874199998565,
               "time_limit_s": 12.0,
               "first_fault": "OK: feasible",
               "completed_within_budget": true,
               "load_errors": [],
-              "feature_schema": "2026-10-18.v2",
+              "feature_schema": "2026-10-18.v1",
               "llm_generated_components": 0
             },
             {
-              "arm": "five_agent",
-              "candidate_id": "five_g3",
+              "arm": "single_agent",
+              "candidate_id": "single_g0",
               "family": "goeke",
               "instance_id": "c101C6",
               "seed": 11,
@@ -649,17 +643,17 @@
               "vehicles": 2,
               "distance": 267.3289940850671,
               "duration": 1728.8110030239563,
-              "runtime_s": 2.5651496999780647,
+              "runtime_s": 2.6352994999615476,
               "time_limit_s": 10.0,
               "first_fault": "OK: feasible",
               "completed_within_budget": true,
               "load_errors": [],
-              "feature_schema": "2026-10-18.v2",
+              "feature_schema": "2026-10-18.v1",
               "llm_generated_components": 0
             },
             {
-              "arm": "five_agent",
-              "candidate_id": "five_g3",
+              "arm": "single_agent",
+              "candidate_id": "single_g0",
               "family": "hiermann",
               "instance_id": "c101_21",
               "seed": 11,
@@ -670,12 +664,12 @@
               "vehicles": 20,
               "distance": 3164.0330800129623,
               "duration": 26033.697820448666,
-              "runtime_s": 9.418383999960497,
+              "runtime_s": 8.789298799994867,
               "time_limit_s": 15.0,
               "first_fault": "OK: feasible",
               "completed_within_budget": true,
               "load_errors": [],
-              "feature_schema": "2026-10-18.v2",
+              "feature_schema": "2026-10-18.v1",
               "llm_generated_components": 0
             }
           ]
@@ -684,8 +678,8 @@
           "seed": 22,
           "rows": [
             {
-              "arm": "five_agent",
-              "candidate_id": "five_g3",
+              "arm": "single_agent",
+              "candidate_id": "single_g0",
               "family": "schneider",
               "instance_id": "c101C5",
               "seed": 22,
@@ -697,17 +691,17 @@
               "vehicles": 2,
               "distance": 267.3289940850671,
               "duration": 1728.8110030239563,
-              "runtime_s": 2.2773275999934413,
+              "runtime_s": 2.1315879999892786,
               "time_limit_s": 8.0,
               "first_fault": "OK: feasible",
               "completed_within_budget": true,
               "load_errors": [],
-              "feature_schema": "2026-10-18.v2",
+              "feature_schema": "2026-10-18.v1",
               "llm_generated_components": 0
             },
             {
-              "arm": "five_agent",
-              "candidate_id": "five_g3",
+              "arm": "single_agent",
+              "candidate_id": "single_g0",
               "family": "montoya",
               "instance_id": "tc0c10s2cf1",
               "seed": 22,
@@ -718,17 +712,17 @@
               "vehicles": 3,
               "distance": 760.5111182174095,
               "duration": 25.285322313276744,
-              "runtime_s": 5.984245800005738,
+              "runtime_s": 5.5035627000033855,
               "time_limit_s": 10.0,
               "first_fault": "OK: feasible",
               "completed_within_budget": true,
               "load_errors": [],
-              "feature_schema": "2026-10-18.v2",
+              "feature_schema": "2026-10-18.v1",
               "llm_generated_components": 0
             },
             {
-              "arm": "five_agent",
-              "candidate_id": "five_g3",
+              "arm": "single_agent",
+              "candidate_id": "single_g0",
               "family": "bezzi",
               "instance_id": "C101-5",
               "seed": 22,
@@ -739,17 +733,17 @@
               "vehicles": 1,
               "distance": 227.0,
               "duration": 1197.5015,
-              "runtime_s": 5.651207700022496,
+              "runtime_s": 6.170474799990188,
               "time_limit_s": 12.0,
               "first_fault": "OK: feasible",
               "completed_within_budget": true,
               "load_errors": [],
-              "feature_schema": "2026-10-18.v2",
+              "feature_schema": "2026-10-18.v1",
               "llm_generated_components": 0
             },
             {
-              "arm": "five_agent",
-              "candidate_id": "five_g3",
+              "arm": "single_agent",
+              "candidate_id": "single_g0",
               "family": "goeke",
               "instance_id": "c101C6",
               "seed": 22,
@@ -761,17 +755,17 @@
               "vehicles": 2,
               "distance": 267.3289940850671,
               "duration": 1728.8110030239563,
-              "runtime_s": 2.5481619000202045,
+              "runtime_s": 2.682535399973858,
               "time_limit_s": 10.0,
               "first_fault": "OK: feasible",
               "completed_within_budget": true,
               "load_errors": [],
-              "feature_schema": "2026-10-18.v2",
+              "feature_schema": "2026-10-18.v1",
               "llm_generated_components": 0
             },
             {
-              "arm": "five_agent",
-              "candidate_id": "five_g3",
+              "arm": "single_agent",
+              "candidate_id": "single_g0",
               "family": "hiermann",
               "instance_id": "c101_21",
               "seed": 22,
@@ -782,12 +776,246 @@
               "vehicles": 19,
               "distance": 3011.90681455654,
               "duration": 24701.609314997786,
-              "runtime_s": 12.291743799985852,
+              "runtime_s": 11.620577699970454,
               "time_limit_s": 15.0,
               "first_fault": "OK: feasible",
               "completed_within_budget": true,
               "load_errors": [],
-              "feature_schema": "2026-10-18.v2",
+              "feature_schema": "2026-10-18.v1",
+              "llm_generated_components": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "arm": "five_agent",
+      "candidate_id": "five_g0",
+      "three_seed_accepted": false,
+      "reason": "objective_regression",
+      "wins": 2,
+      "losses": 1,
+      "seed_rows": [
+        {
+          "seed": 11,
+          "rows": [
+            {
+              "arm": "five_agent",
+              "candidate_id": "five_g0",
+              "family": "schneider",
+              "instance_id": "c101C5",
+              "seed": 11,
+              "feasible": true,
+              "objective_key": [
+                2.0,
+                267.3289940850671
+              ],
+              "vehicles": 2,
+              "distance": 267.3289940850671,
+              "duration": 1728.8110030239563,
+              "runtime_s": 2.006163000012748,
+              "time_limit_s": 8.0,
+              "first_fault": "OK: feasible",
+              "completed_within_budget": true,
+              "load_errors": [],
+              "feature_schema": "2026-10-18.v1",
+              "llm_generated_components": 0
+            },
+            {
+              "arm": "five_agent",
+              "candidate_id": "five_g0",
+              "family": "montoya",
+              "instance_id": "tc0c10s2cf1",
+              "seed": 11,
+              "feasible": true,
+              "objective_key": [
+                25.285322313276744
+              ],
+              "vehicles": 3,
+              "distance": 760.5111182174095,
+              "duration": 25.285322313276744,
+              "runtime_s": 5.190011399972718,
+              "time_limit_s": 10.0,
+              "first_fault": "OK: feasible",
+              "completed_within_budget": true,
+              "load_errors": [],
+              "feature_schema": "2026-10-18.v1",
+              "llm_generated_components": 0
+            },
+            {
+              "arm": "five_agent",
+              "candidate_id": "five_g0",
+              "family": "bezzi",
+              "instance_id": "C101-5",
+              "seed": 11,
+              "feasible": true,
+              "objective_key": [
+                227.0
+              ],
+              "vehicles": 1,
+              "distance": 227.0,
+              "duration": 1197.5015,
+              "runtime_s": 5.46228350000456,
+              "time_limit_s": 12.0,
+              "first_fault": "OK: feasible",
+              "completed_within_budget": true,
+              "load_errors": [],
+              "feature_schema": "2026-10-18.v1",
+              "llm_generated_components": 0
+            },
+            {
+              "arm": "five_agent",
+              "candidate_id": "five_g0",
+              "family": "goeke",
+              "instance_id": "c101C6",
+              "seed": 11,
+              "feasible": true,
+              "objective_key": [
+                2.0,
+                267.3289940850671
+              ],
+              "vehicles": 2,
+              "distance": 267.3289940850671,
+              "duration": 1728.8110030239563,
+              "runtime_s": 2.6425369000062346,
+              "time_limit_s": 10.0,
+              "first_fault": "OK: feasible",
+              "completed_within_budget": true,
+              "load_errors": [],
+              "feature_schema": "2026-10-18.v1",
+              "llm_generated_components": 0
+            },
+            {
+              "arm": "five_agent",
+              "candidate_id": "five_g0",
+              "family": "hiermann",
+              "instance_id": "c101_21",
+              "seed": 11,
+              "feasible": true,
+              "objective_key": [
+                4259.304471929594
+              ],
+              "vehicles": 20,
+              "distance": 3164.0330800129623,
+              "duration": 26033.697820448666,
+              "runtime_s": 6.475138000037987,
+              "time_limit_s": 15.0,
+              "first_fault": "OK: feasible",
+              "completed_within_budget": true,
+              "load_errors": [],
+              "feature_schema": "2026-10-18.v1",
+              "llm_generated_components": 0
+            }
+          ]
+        },
+        {
+          "seed": 22,
+          "rows": [
+            {
+              "arm": "five_agent",
+              "candidate_id": "five_g0",
+              "family": "schneider",
+              "instance_id": "c101C5",
+              "seed": 22,
+              "feasible": true,
+              "objective_key": [
+                2.0,
+                267.3289940850671
+              ],
+              "vehicles": 2,
+              "distance": 267.3289940850671,
+              "duration": 1728.8110030239563,
+              "runtime_s": 1.8319401000044309,
+              "time_limit_s": 8.0,
+              "first_fault": "OK: feasible",
+              "completed_within_budget": true,
+              "load_errors": [],
+              "feature_schema": "2026-10-18.v1",
+              "llm_generated_components": 0
+            },
+            {
+              "arm": "five_agent",
+              "candidate_id": "five_g0",
+              "family": "montoya",
+              "instance_id": "tc0c10s2cf1",
+              "seed": 22,
+              "feasible": true,
+              "objective_key": [
+                25.285322313276744
+              ],
+              "vehicles": 3,
+              "distance": 760.5111182174095,
+              "duration": 25.285322313276744,
+              "runtime_s": 5.37373099999968,
+              "time_limit_s": 10.0,
+              "first_fault": "OK: feasible",
+              "completed_within_budget": true,
+              "load_errors": [],
+              "feature_schema": "2026-10-18.v1",
+              "llm_generated_components": 0
+            },
+            {
+              "arm": "five_agent",
+              "candidate_id": "five_g0",
+              "family": "bezzi",
+              "instance_id": "C101-5",
+              "seed": 22,
+              "feasible": true,
+              "objective_key": [
+                227.0
+              ],
+              "vehicles": 1,
+              "distance": 227.0,
+              "duration": 1197.5015,
+              "runtime_s": 6.170030000037514,
+              "time_limit_s": 12.0,
+              "first_fault": "OK: feasible",
+              "completed_within_budget": true,
+              "load_errors": [],
+              "feature_schema": "2026-10-18.v1",
+              "llm_generated_components": 0
+            },
+            {
+              "arm": "five_agent",
+              "candidate_id": "five_g0",
+              "family": "goeke",
+              "instance_id": "c101C6",
+              "seed": 22,
+              "feasible": true,
+              "objective_key": [
+                2.0,
+                267.3289940850671
+              ],
+              "vehicles": 2,
+              "distance": 267.3289940850671,
+              "duration": 1728.8110030239563,
+              "runtime_s": 2.5200439000036567,
+              "time_limit_s": 10.0,
+              "first_fault": "OK: feasible",
+              "completed_within_budget": true,
+              "load_errors": [],
+              "feature_schema": "2026-10-18.v1",
+              "llm_generated_components": 0
+            },
+            {
+              "arm": "five_agent",
+              "candidate_id": "five_g0",
+              "family": "hiermann",
+              "instance_id": "c101_21",
+              "seed": 22,
+              "feasible": true,
+              "objective_key": [
+                4044.2164307328712
+              ],
+              "vehicles": 19,
+              "distance": 3011.90681455654,
+              "duration": 24701.609314997786,
+              "runtime_s": 9.867545099987183,
+              "time_limit_s": 15.0,
+              "first_fault": "OK: feasible",
+              "completed_within_budget": true,
+              "load_errors": [],
+              "feature_schema": "2026-10-18.v1",
               "llm_generated_components": 0
             }
           ]

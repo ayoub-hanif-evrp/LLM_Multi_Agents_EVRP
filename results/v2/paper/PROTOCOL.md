@@ -10,7 +10,7 @@ Generation 0 receives no fitness feedback. Later generations do.
 Among conservatively accepted candidates, the one with the most wins is deployed. An earlier generation wins a tie.
 The critic receives the classical objective keys. It does not add a solver evaluation.
 Single-agent and five-agent share one token cap. Five-agent's extra call is the critic.
-The executed 2026-10-19 generational artifact predates this operator. It is not reanalyzed under the new selector.
+The executed 2026-10-19 18:27 UTC generational artifact uses this operator. An earlier same-day artifact used full-bundle proposals and is not reanalyzed under the new selector.
 Random, single-agent, and five-agent search use the same expression language.
 Confirmation ids `c206C5`, `r202C5`, and `r203C5` are loaded only after the three-seed decision file is written.
 If no learned policy passes that decision, confirmation is classical only.

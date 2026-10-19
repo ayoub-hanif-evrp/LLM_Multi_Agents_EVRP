@@ -2,7 +2,7 @@ name: ci
 
 on:
   push:
-    branches: [master, main]
+    branches: [master, main, research/completion-d5853ee]
   pull_request:
 
 jobs:

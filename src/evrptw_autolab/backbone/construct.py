@@ -219,6 +219,27 @@ def _construct_heterogeneous(
     return solution
 
 
+def _construct_route_local(
+    spec: ProblemSpecV2,
+    rng: random.Random,
+    policy: object | None,
+) -> SolutionV2:
+    """Insert with route-local checks. Used when a full-solution evaluate is too slow.
+
+    Battery-infeasible single-customer routes are left for energy repair. The
+    small-instance constructor is unchanged.
+    """
+    vehicle_id = default_vehicle_id(spec)
+    solution = SolutionV2(routes=[empty_route(spec, vehicle_id)], vehicle_assignments=[vehicle_id])
+    for customer_id in _customer_order(spec, rng):
+        solution = insert_customer_fast(spec, solution, customer_id, policy=policy)
+    if len(solution.routes) > 1 and len(solution.routes[0]) == 2:
+        solution.routes = solution.routes[1:]
+        solution.vehicle_assignments = solution.vehicle_assignments[1:]
+    solution.metadata["construction"] = "route_local_large"
+    return solution
+
+
 def construct_greedy(
     spec: ProblemSpecV2,
     rng: random.Random,
@@ -229,6 +250,9 @@ def construct_greedy(
         spec.capabilities.pickup_delivery and spec.requests
     ):
         return _construct_heterogeneous(spec, rng, policy)
+    n_customers = sum(1 for node in spec.nodes if node.kind == "customer")
+    if n_customers > 20 and not (spec.capabilities.pickup_delivery and spec.requests):
+        return _construct_route_local(spec, rng, policy)
     vehicle_id = default_vehicle_id(spec)
     solution = SolutionV2(routes=[empty_route(spec, vehicle_id)], vehicle_assignments=[vehicle_id])
 

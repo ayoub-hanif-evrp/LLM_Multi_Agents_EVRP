@@ -217,6 +217,11 @@ class ClassicalSolver:
             # Parent wall clock includes process spawn. Leave that margin so a
             # finished Hiermann run is budget-compliant, not a killed worker.
             deadline = min(deadline, started + max(0.5, float(self.time_limit_s) - 2.0))
+        elif sum(1 for node in spec.nodes if node.kind == "customer") > 20:
+            # Route-local construction is fast, but one ALNS pass on 100
+            # customers does not return at the deadline. Leave the same spawn
+            # margin so a feasible incumbent is still budget-compliant.
+            deadline = min(deadline, started + max(0.5, float(self.time_limit_s) - 2.0))
         rng = random.Random(int(self.seed))
         construct_started = time.monotonic()
         solution = construct_greedy(spec, rng, policy=self.policy)

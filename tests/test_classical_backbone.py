@@ -23,6 +23,18 @@ def test_construct_not_identity_noop() -> None:
     served = {s.node_id for route in sol.routes for s in route}
     assert "C1" in served
     assert sol.routes != [[]]
+    assert sol.metadata.get("construction") != "route_local_large"
+
+
+def test_large_schneider_uses_route_local_construction() -> None:
+    """100-customer discovery construction must not full-evaluate every insertion."""
+    import random
+
+    spec = load_schneider_v2(ROOT / "dataset" / "schneider" / "raw_instances" / "c101_21.txt")
+    solution = construct_greedy(spec, random.Random(7))
+    assert solution.metadata.get("construction") == "route_local_large"
+    report = evaluate(spec, repair_energy(spec, solution))
+    assert report.feasible, report.explanation
 
 
 def test_micro_g1_construction_is_feasible() -> None:

@@ -1,0 +1,20 @@
+{
+  "instance_id": "c101_21",
+  "seed": 7,
+  "time_limit_s": 20.0,
+  "alns_iterations": 40,
+  "construction": "route_local_large",
+  "feasible": true,
+  "objective_key": [
+    39.0,
+    3260.688883679656
+  ],
+  "vehicles": 39,
+  "distance": 3260.688883679656,
+  "fault_family": "OK",
+  "completed_within_budget": true,
+  "runtime_s": 18.566,
+  "time_to_first_feasible_s": 2.008006200019736,
+  "return_status": "feasible_incumbent",
+  "note": "Development Schneider c101_21 only. Not an RC2 held-out instance. Classical solver."
+}

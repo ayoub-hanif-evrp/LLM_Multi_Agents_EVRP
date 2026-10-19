@@ -1,0 +1,33 @@
+{
+  "instance_id": "c101_21",
+  "seed": 7,
+  "customers": 100,
+  "stations": 21,
+  "routes_after_construction": 13,
+  "construct_s": 10.998,
+  "repair_s": 0.2,
+  "before_feasible": false,
+  "before_faults": {
+    "BATTERY": 27
+  },
+  "after_feasible": false,
+  "after_faults": {
+    "BATTERY": 21
+  },
+  "after_key": null,
+  "fast_routes": 39,
+  "fast_construct_s": 0.543,
+  "fast_repair_s": 0.21,
+  "fast_before_feasible": false,
+  "fast_before_faults": {
+    "BATTERY": 21
+  },
+  "fast_after_feasible": true,
+  "fast_after_faults": {},
+  "fast_after_key": [
+    39.0,
+    3367.1394905662464
+  ],
+  "fast_vehicles": 39,
+  "note": "In-process construction plus one energy repair. No ALNS. Not RC2."
+}

@@ -19,8 +19,7 @@ Seed-7 gate keys remain the frozen baseline where that baseline was already feas
 Bezzi `10-N10` is feasible on seeds 7, 11, and 22 in `results/v2/diagnostics/bezzi_pack/summary.json` and in this freeze.
 Those costs are classical pack plus ALNS. They are not the published 22.924 reference and they are not an LLM result.
 The historical expanded panel still records the earlier infeasible `10-N10` rows.
-Large Schneider discovery profile, not RC2: c103C15 feasible=True fault=OK; r102C10 feasible=True fault=OK; c101_21 feasible=False fault=BATTERY.
-The 100-customer discovery instance `c101_21` still times out with a battery violation inside 20 seconds. No further search was added.
+Large Schneider discovery profile, not RC2: c103C15 feasible=True fault=OK; r102C10 feasible=True fault=OK. The first c101_21 trace timed out with a battery violation. Route-local construction then makes seed 7 feasible inside 20 seconds at (39, 3260.688883679656). That is a classical result, not an optimized fleet.
 
 ## C. Single-agent evolution
 
@@ -67,7 +66,7 @@ The comparison is exploratory. Five gate instances and one discovery seed do not
 The 2026-10-19 Qwen run used full-bundle proposals for the language-model arms and deployed the first accepted candidate. The code now awaiting the next run mutates one parent component, shows the critic the classical keys, and deploys the accepted candidate with the most wins. That run has not been executed.
 Single-agent and five-agent proposals in the executed run were new bundles conditioned on feedback text. Only the random arm mutated the accepted parent's source.
 Critic text is not a causal explanation.
-Large 100-customer Schneider instances remain battery-infeasible inside the declared 20-second budget.
+Large 100-customer Schneider construction used to time out with a battery violation. Route-local construction makes development `c101_21` seed 7 feasible inside 20 seconds at 39 vehicles. That fleet is not an optimized result.
 Hiermann `c101_21` remains a 20-vehicle classical solution on the frozen seed-7 gate.
 FakeBackend output is plumbing and is not model evidence.
 

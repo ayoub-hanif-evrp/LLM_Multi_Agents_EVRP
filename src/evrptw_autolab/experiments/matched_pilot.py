@@ -174,6 +174,7 @@ def _propose_single(
     *,
     families: list[str],
     index: int,
+    feedback: str = "",
 ) -> tuple[dict[ComponentKind, str], list[dict[str, Any]], str]:
     raw = collector.complete(
         backend,
@@ -181,6 +182,7 @@ def _propose_single(
             "You are one unified heuristic designer. Return JSON with an arithmetic "
             "expression for each of insertion_score, station_score, and removal_priority. "
             f"Candidate {index}. Families={families}. "
+            f"Parent measurements: {feedback or 'none yet'}. "
             + feature_schema_prompt()
             + '\n{"feature_schema":"2026-10-18.v1","components":['
             '{"component":"insertion_score","expression":"delta_distance"},'

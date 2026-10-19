@@ -193,4 +193,43 @@ def engineering_checks(root: Path | None = None) -> dict[str, Any]:
                         "detail": f"{key} seed 7 key {measured} does not match the frozen gate {frozen_seed7[key]}",
                     }
                 )
+    campaigns = sorted((base / "results" / "v2" / "campaigns").glob("generational_qwen_*/generational.json"))
+    if not campaigns:
+        failures.append(
+            {
+                "check": "generational_artifact",
+                "class": "provenance",
+                "detail": "the live generational comparison artifact is missing",
+            }
+        )
+    else:
+        generated = json.loads(campaigns[-1].read_text(encoding="utf-8"))
+        solves = generated.get("solver_solves") or {}
+        search = [solves.get("random_evolution"), solves.get("single_agent"), solves.get("five_agent")]
+        if generated.get("fake") or search[0] is None or len(set(search)) != 1:
+            failures.append(
+                {
+                    "check": "generational_budget",
+                    "class": "fairness",
+                    "detail": "live search arms must be non-fake and have equal solver evaluations",
+                }
+            )
+        digest = str(generated.get("model_digest") or "")
+        if not digest.startswith("sha256-"):
+            failures.append(
+                {
+                    "check": "model_digest",
+                    "class": "provenance",
+                    "detail": "the live run must record an Ollama model digest",
+                }
+            )
+    decision_path = base / "results" / "v2" / "paper" / "confirmation_decision.json"
+    if not decision_path.exists():
+        failures.append(
+            {
+                "check": "confirmation_decision",
+                "class": "provenance",
+                "detail": "the pre-confirmation decision file is missing",
+            }
+        )
     return {"ok": not failures, "failures": failures, "notes": notes}

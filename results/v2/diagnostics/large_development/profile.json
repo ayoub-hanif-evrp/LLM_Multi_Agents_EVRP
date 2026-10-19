@@ -1,0 +1,63 @@
+{
+  "protocol": "development_large_profile",
+  "note": "Schneider discovery ids only. RC2 held-out ids are not loaded.",
+  "rows": [
+    {
+      "instance_id": "c103C15",
+      "seed": 7,
+      "time_limit_s": 15.0,
+      "alns_iterations": 60,
+      "customers": 15,
+      "feasible": true,
+      "objective_key": [
+        4.0,
+        387.5532638638446
+      ],
+      "vehicles": 4,
+      "fault_family": "OK",
+      "fault_detail": "feasible",
+      "completed_within_budget": true,
+      "runtime_s": 7.098,
+      "stage_construction_s": 0.5089158999617212,
+      "time_to_first_feasible_s": 0.8334419000311755,
+      "return_status": "feasible_incumbent"
+    },
+    {
+      "instance_id": "r102C10",
+      "seed": 7,
+      "time_limit_s": 12.0,
+      "alns_iterations": 60,
+      "customers": 10,
+      "feasible": true,
+      "objective_key": [
+        4.0,
+        292.26304568772173
+      ],
+      "vehicles": 4,
+      "fault_family": "OK",
+      "fault_detail": "feasible",
+      "completed_within_budget": true,
+      "runtime_s": 4.456,
+      "stage_construction_s": 0.49044010002398863,
+      "time_to_first_feasible_s": 0.6460199999855831,
+      "return_status": "feasible_incumbent"
+    },
+    {
+      "instance_id": "c101_21",
+      "seed": 7,
+      "time_limit_s": 20.0,
+      "alns_iterations": 40,
+      "customers": 100,
+      "feasible": false,
+      "objective_key": null,
+      "vehicles": null,
+      "fault_family": "BATTERY",
+      "fault_detail": "battery_arrival=-0.788134 battery_departure=-0.788134",
+      "completed_within_budget": false,
+      "runtime_s": 20.065,
+      "stage_construction_s": null,
+      "time_to_first_feasible_s": null,
+      "return_status": "timeout_no_feasible_incumbent"
+    }
+  ]
+}

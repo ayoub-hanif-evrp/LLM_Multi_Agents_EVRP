@@ -1,0 +1,66 @@
+study,arm,candidate_id,generation,instance_id,seed,feasible,objective_key,accepted,wins,losses,reason
+generational_qwen_seed7,classical,default,,c101C5,7,True,"[2.0, 267.3289940850671]",,,,
+generational_qwen_seed7,classical,default,,tc0c10s2cf1,7,True,[25.285322313276744],,,,
+generational_qwen_seed7,classical,default,,C101-5,7,True,[227.0],,,,
+generational_qwen_seed7,classical,default,,c101C6,7,True,"[2.0, 267.3289940850671]",,,,
+generational_qwen_seed7,classical,default,,c101_21,7,True,[4150.872544094683],,,,
+generational_qwen_seed7,random_evolution,random_g0,0,c101C5,7,True,"[2.0, 267.3289940850671]",False,0,2,objective_regression
+generational_qwen_seed7,random_evolution,random_g0,0,tc0c10s2cf1,7,True,[25.285322313276748],False,0,2,objective_regression
+generational_qwen_seed7,random_evolution,random_g0,0,C101-5,7,True,[227.0],False,0,2,objective_regression
+generational_qwen_seed7,random_evolution,random_g0,0,c101C6,7,True,"[2.0, 267.3289940850671]",False,0,2,objective_regression
+generational_qwen_seed7,random_evolution,random_g0,0,c101_21,7,True,[4866.575611637987],False,0,2,objective_regression
+generational_qwen_seed7,random_evolution,random_g1,1,c101C5,7,True,"[2.0, 267.3289940850671]",False,0,0,no_strict_improvement
+generational_qwen_seed7,random_evolution,random_g1,1,tc0c10s2cf1,7,True,[25.285322313276744],False,0,0,no_strict_improvement
+generational_qwen_seed7,random_evolution,random_g1,1,C101-5,7,True,[227.0],False,0,0,no_strict_improvement
+generational_qwen_seed7,random_evolution,random_g1,1,c101C6,7,True,"[2.0, 267.3289940850671]",False,0,0,no_strict_improvement
+generational_qwen_seed7,random_evolution,random_g1,1,c101_21,7,True,[4150.872544094683],False,0,0,no_strict_improvement
+generational_qwen_seed7,random_evolution,random_g2,2,c101C5,7,True,"[2.0, 267.3289940850671]",True,1,0,accepted_no_regression
+generational_qwen_seed7,random_evolution,random_g2,2,tc0c10s2cf1,7,True,[25.285322313276744],True,1,0,accepted_no_regression
+generational_qwen_seed7,random_evolution,random_g2,2,C101-5,7,True,[227.0],True,1,0,accepted_no_regression
+generational_qwen_seed7,random_evolution,random_g2,2,c101C6,7,True,"[2.0, 267.3289940850671]",True,1,0,accepted_no_regression
+generational_qwen_seed7,random_evolution,random_g2,2,c101_21,7,True,[4126.724254409762],True,1,0,accepted_no_regression
+generational_qwen_seed7,random_evolution,random_g3,3,c101C5,7,True,"[2.0, 267.3289940850671]",False,1,1,objective_regression
+generational_qwen_seed7,random_evolution,random_g3,3,tc0c10s2cf1,7,True,[25.285322313276748],False,1,1,objective_regression
+generational_qwen_seed7,random_evolution,random_g3,3,C101-5,7,True,[227.0],False,1,1,objective_regression
+generational_qwen_seed7,random_evolution,random_g3,3,c101C6,7,True,"[2.0, 267.3289940850671]",False,1,1,objective_regression
+generational_qwen_seed7,random_evolution,random_g3,3,c101_21,7,True,[4126.724254409762],False,1,1,objective_regression
+generational_qwen_seed7,single_agent,single_g0,0,c101C5,7,True,"[2.0, 267.3289940850671]",False,0,0,no_strict_improvement
+generational_qwen_seed7,single_agent,single_g0,0,tc0c10s2cf1,7,True,[25.285322313276744],False,0,0,no_strict_improvement
+generational_qwen_seed7,single_agent,single_g0,0,C101-5,7,True,[227.0],False,0,0,no_strict_improvement
+generational_qwen_seed7,single_agent,single_g0,0,c101C6,7,True,"[2.0, 267.3289940850671]",False,0,0,no_strict_improvement
+generational_qwen_seed7,single_agent,single_g0,0,c101_21,7,True,[4150.872544094683],False,0,0,no_strict_improvement
+generational_qwen_seed7,single_agent,single_g1,1,c101C5,7,True,"[2.0, 267.3289940850671]",False,0,0,no_strict_improvement
+generational_qwen_seed7,single_agent,single_g1,1,tc0c10s2cf1,7,True,[25.285322313276744],False,0,0,no_strict_improvement
+generational_qwen_seed7,single_agent,single_g1,1,C101-5,7,True,[227.0],False,0,0,no_strict_improvement
+generational_qwen_seed7,single_agent,single_g1,1,c101C6,7,True,"[2.0, 267.3289940850671]",False,0,0,no_strict_improvement
+generational_qwen_seed7,single_agent,single_g1,1,c101_21,7,True,[4150.872544094683],False,0,0,no_strict_improvement
+generational_qwen_seed7,single_agent,single_g2,2,c101C5,7,True,"[2.0, 267.3289940850671]",False,0,0,no_strict_improvement
+generational_qwen_seed7,single_agent,single_g2,2,tc0c10s2cf1,7,True,[25.285322313276744],False,0,0,no_strict_improvement
+generational_qwen_seed7,single_agent,single_g2,2,C101-5,7,True,[227.0],False,0,0,no_strict_improvement
+generational_qwen_seed7,single_agent,single_g2,2,c101C6,7,True,"[2.0, 267.3289940850671]",False,0,0,no_strict_improvement
+generational_qwen_seed7,single_agent,single_g2,2,c101_21,7,True,[4150.872544094683],False,0,0,no_strict_improvement
+generational_qwen_seed7,single_agent,single_g3,3,c101C5,7,True,"[2.0, 267.3289940850671]",False,0,0,no_strict_improvement
+generational_qwen_seed7,single_agent,single_g3,3,tc0c10s2cf1,7,True,[25.285322313276744],False,0,0,no_strict_improvement
+generational_qwen_seed7,single_agent,single_g3,3,C101-5,7,True,[227.0],False,0,0,no_strict_improvement
+generational_qwen_seed7,single_agent,single_g3,3,c101C6,7,True,"[2.0, 267.3289940850671]",False,0,0,no_strict_improvement
+generational_qwen_seed7,single_agent,single_g3,3,c101_21,7,True,[4150.872544094683],False,0,0,no_strict_improvement
+generational_qwen_seed7,five_agent,five_g0,0,c101C5,7,True,"[2.0, 267.3289940850671]",False,1,2,objective_regression
+generational_qwen_seed7,five_agent,five_g0,0,tc0c10s2cf1,7,True,[25.285322313276748],False,1,2,objective_regression
+generational_qwen_seed7,five_agent,five_g0,0,C101-5,7,True,[214.0],False,1,2,objective_regression
+generational_qwen_seed7,five_agent,five_g0,0,c101C6,7,True,"[2.0, 267.3289940850671]",False,1,2,objective_regression
+generational_qwen_seed7,five_agent,five_g0,0,c101_21,7,True,[4507.621800328778],False,1,2,objective_regression
+generational_qwen_seed7,five_agent,five_g1,1,c101C5,7,True,"[2.0, 286.1755097423537]",False,0,2,objective_regression
+generational_qwen_seed7,five_agent,five_g1,1,tc0c10s2cf1,7,True,[25.285322313276744],False,0,2,objective_regression
+generational_qwen_seed7,five_agent,five_g1,1,C101-5,7,True,[227.0],False,0,2,objective_regression
+generational_qwen_seed7,five_agent,five_g1,1,c101C6,7,True,"[2.0, 267.3289940850671]",False,0,2,objective_regression
+generational_qwen_seed7,five_agent,five_g1,1,c101_21,7,True,[4918.485356809807],False,0,2,objective_regression
+generational_qwen_seed7,five_agent,five_g2,2,c101C5,7,True,"[2.0, 267.3289940850671]",False,0,0,no_strict_improvement
+generational_qwen_seed7,five_agent,five_g2,2,tc0c10s2cf1,7,True,[25.285322313276744],False,0,0,no_strict_improvement
+generational_qwen_seed7,five_agent,five_g2,2,C101-5,7,True,[227.0],False,0,0,no_strict_improvement
+generational_qwen_seed7,five_agent,five_g2,2,c101C6,7,True,"[2.0, 267.3289940850671]",False,0,0,no_strict_improvement
+generational_qwen_seed7,five_agent,five_g2,2,c101_21,7,True,[4150.872544094683],False,0,0,no_strict_improvement
+generational_qwen_seed7,five_agent,five_g3,3,c101C5,7,True,"[2.0, 267.3289940850671]",True,1,0,accepted_no_regression
+generational_qwen_seed7,five_agent,five_g3,3,tc0c10s2cf1,7,True,[25.285322313276744],True,1,0,accepted_no_regression
+generational_qwen_seed7,five_agent,five_g3,3,C101-5,7,True,[227.0],True,1,0,accepted_no_regression
+generational_qwen_seed7,five_agent,five_g3,3,c101C6,7,True,"[2.0, 267.3289940850671]",True,1,0,accepted_no_regression
+generational_qwen_seed7,five_agent,five_g3,3,c101_21,7,True,[4087.7523740925253],True,1,0,accepted_no_regression

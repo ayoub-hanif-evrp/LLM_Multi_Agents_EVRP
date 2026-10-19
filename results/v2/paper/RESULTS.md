@@ -109,3 +109,8 @@ Disabling selection deploys the last bundle. That bundle is infeasible on part o
 - `10-N10` is still an open classical charging failure.
 - Hiermann `c101_21` remains about 20 vehicles under the classical solver. The seed-7 drop to 19 vehicles belonged to `five_1` and did not replicate.
 - No significance test is reported. The comparisons are paired instance-seed rows.
+
+
+## Correction, 2026-10-19
+
+The Bezzi `10-N10` paragraph above describes the solver before commit `c2de5a0`. That commit makes seeds 7, 11, and 22 feasible inside 12 seconds. The costs are in `results/v2/diagnostics/bezzi_pack/summary.json`. They are classical results, not LLM results, and they do not match the published 22.924 reference. The expanded-panel rows from the older solver stay infeasible on purpose.

@@ -1,0 +1,9 @@
+study,arm,solver_solves,llm_calls,llm_tokens,wall_s,model,model_digest
+generational_qwen_seed7,classical,5,0,0,420.962,qwen3-coder:30b,sha256-1194192cf2a187eb02722edcc3f77b11d21f537048ce04b67ccf8ba78863006a
+generational_qwen_seed7,random_evolution,20,0,0,420.962,qwen3-coder:30b,sha256-1194192cf2a187eb02722edcc3f77b11d21f537048ce04b67ccf8ba78863006a
+generational_qwen_seed7,single_agent,20,4,2071,420.962,qwen3-coder:30b,sha256-1194192cf2a187eb02722edcc3f77b11d21f537048ce04b67ccf8ba78863006a
+generational_qwen_seed7,five_agent,20,21,7568,420.962,qwen3-coder:30b,sha256-1194192cf2a187eb02722edcc3f77b11d21f537048ce04b67ccf8ba78863006a
+matched_qwen_20261018,classical,5,0,0,,qwen3-coder:30b,
+matched_qwen_20261018,random_evolution,20,0,0,,qwen3-coder:30b,
+matched_qwen_20261018,single_agent,20,4,1480,,qwen3-coder:30b,
+matched_qwen_20261018,five_agent,20,20,7058,,qwen3-coder:30b,

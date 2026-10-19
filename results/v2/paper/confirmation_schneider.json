@@ -1,0 +1,798 @@
+{
+  "protocol": "untouched_schneider_confirmation_c5",
+  "instance_ids": [
+    "c206C5",
+    "r202C5",
+    "r203C5"
+  ],
+  "decision_file": "C:\\Users\\ayoub\\Desktop\\LLM_Multi_Agents_EVRP-main\\results\\v2\\paper\\confirmation_decision.json",
+  "promoted_policies": [
+    "random_evolution:random_g2"
+  ],
+  "classical_feasible": 9,
+  "classical_n": 9,
+  "rows": [
+    {
+      "policy": "classical_default",
+      "instance_id": "c206C5",
+      "seed": 7,
+      "time_limit_s": 8.0,
+      "alns_iterations": 80,
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        254.13327262608993
+      ],
+      "vehicles": 1,
+      "distance": 254.13327262608993,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "runtime_s": 1.604974299960304
+    },
+    {
+      "policy": "classical_default",
+      "instance_id": "c206C5",
+      "seed": 11,
+      "time_limit_s": 8.0,
+      "alns_iterations": 80,
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        254.13327262608993
+      ],
+      "vehicles": 1,
+      "distance": 254.13327262608993,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "runtime_s": 1.5614244000171311
+    },
+    {
+      "policy": "classical_default",
+      "instance_id": "c206C5",
+      "seed": 22,
+      "time_limit_s": 8.0,
+      "alns_iterations": 80,
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        254.13327262608993
+      ],
+      "vehicles": 1,
+      "distance": 254.13327262608993,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "runtime_s": 1.5604745000018738
+    },
+    {
+      "policy": "classical_default",
+      "instance_id": "r202C5",
+      "seed": 7,
+      "time_limit_s": 8.0,
+      "alns_iterations": 80,
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        142.65393342266287
+      ],
+      "vehicles": 1,
+      "distance": 142.65393342266287,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "runtime_s": 1.5322928999667056
+    },
+    {
+      "policy": "classical_default",
+      "instance_id": "r202C5",
+      "seed": 11,
+      "time_limit_s": 8.0,
+      "alns_iterations": 80,
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        142.65393342266287
+      ],
+      "vehicles": 1,
+      "distance": 142.65393342266287,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "runtime_s": 1.503976900014095
+    },
+    {
+      "policy": "classical_default",
+      "instance_id": "r202C5",
+      "seed": 22,
+      "time_limit_s": 8.0,
+      "alns_iterations": 80,
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        142.65393342266287
+      ],
+      "vehicles": 1,
+      "distance": 142.65393342266287,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "runtime_s": 1.6174831000389531
+    },
+    {
+      "policy": "classical_default",
+      "instance_id": "r203C5",
+      "seed": 7,
+      "time_limit_s": 8.0,
+      "alns_iterations": 80,
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        179.05589081805485
+      ],
+      "vehicles": 1,
+      "distance": 179.05589081805485,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "runtime_s": 1.5163319999701343
+    },
+    {
+      "policy": "classical_default",
+      "instance_id": "r203C5",
+      "seed": 11,
+      "time_limit_s": 8.0,
+      "alns_iterations": 80,
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        179.05589081805485
+      ],
+      "vehicles": 1,
+      "distance": 179.05589081805485,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "runtime_s": 1.5515639000223018
+    },
+    {
+      "policy": "classical_default",
+      "instance_id": "r203C5",
+      "seed": 22,
+      "time_limit_s": 8.0,
+      "alns_iterations": 80,
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        179.05589081805485
+      ],
+      "vehicles": 1,
+      "distance": 179.05589081805485,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "runtime_s": 1.5308686000062153
+    },
+    {
+      "policy": "random_evolution:random_g2",
+      "instance_id": "c206C5",
+      "seed": 7,
+      "time_limit_s": 8.0,
+      "alns_iterations": 80,
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        254.13327262608993
+      ],
+      "vehicles": 1,
+      "distance": 254.13327262608993,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "runtime_s": 2.1153568000299856
+    },
+    {
+      "policy": "random_evolution:random_g2",
+      "instance_id": "c206C5",
+      "seed": 11,
+      "time_limit_s": 8.0,
+      "alns_iterations": 80,
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        254.13327262608993
+      ],
+      "vehicles": 1,
+      "distance": 254.13327262608993,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "runtime_s": 2.2288259000051767
+    },
+    {
+      "policy": "random_evolution:random_g2",
+      "instance_id": "c206C5",
+      "seed": 22,
+      "time_limit_s": 8.0,
+      "alns_iterations": 80,
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        254.13327262608993
+      ],
+      "vehicles": 1,
+      "distance": 254.13327262608993,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "runtime_s": 2.138895899988711
+    },
+    {
+      "policy": "random_evolution:random_g2",
+      "instance_id": "r202C5",
+      "seed": 7,
+      "time_limit_s": 8.0,
+      "alns_iterations": 80,
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        142.65393342266287
+      ],
+      "vehicles": 1,
+      "distance": 142.65393342266287,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "runtime_s": 2.112193799985107
+    },
+    {
+      "policy": "random_evolution:random_g2",
+      "instance_id": "r202C5",
+      "seed": 11,
+      "time_limit_s": 8.0,
+      "alns_iterations": 80,
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        142.65393342266287
+      ],
+      "vehicles": 1,
+      "distance": 142.65393342266287,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "runtime_s": 2.1570329999667592
+    },
+    {
+      "policy": "random_evolution:random_g2",
+      "instance_id": "r202C5",
+      "seed": 22,
+      "time_limit_s": 8.0,
+      "alns_iterations": 80,
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        142.65393342266287
+      ],
+      "vehicles": 1,
+      "distance": 142.65393342266287,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "runtime_s": 2.144638900004793
+    },
+    {
+      "policy": "random_evolution:random_g2",
+      "instance_id": "r203C5",
+      "seed": 7,
+      "time_limit_s": 8.0,
+      "alns_iterations": 80,
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        179.05589081805485
+      ],
+      "vehicles": 1,
+      "distance": 179.05589081805485,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "runtime_s": 2.0678866999805905
+    },
+    {
+      "policy": "random_evolution:random_g2",
+      "instance_id": "r203C5",
+      "seed": 11,
+      "time_limit_s": 8.0,
+      "alns_iterations": 80,
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        179.05589081805485
+      ],
+      "vehicles": 1,
+      "distance": 179.05589081805485,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "runtime_s": 2.070094699971378
+    },
+    {
+      "policy": "random_evolution:random_g2",
+      "instance_id": "r203C5",
+      "seed": 22,
+      "time_limit_s": 8.0,
+      "alns_iterations": 80,
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        179.05589081805485
+      ],
+      "vehicles": 1,
+      "distance": 179.05589081805485,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "runtime_s": 2.00623880000785
+    }
+  ],
+  "seed_confirmation": [
+    {
+      "arm": "random_evolution",
+      "candidate_id": "random_g2",
+      "three_seed_accepted": true,
+      "reason": "accepted_no_regression",
+      "wins": 3,
+      "losses": 0,
+      "seed_rows": [
+        {
+          "seed": 11,
+          "rows": [
+            {
+              "arm": "random_evolution",
+              "candidate_id": "random_g2",
+              "family": "schneider",
+              "instance_id": "c101C5",
+              "seed": 11,
+              "feasible": true,
+              "objective_key": [
+                2.0,
+                267.3289940850671
+              ],
+              "vehicles": 2,
+              "distance": 267.3289940850671,
+              "duration": 1728.8110030239563,
+              "runtime_s": 2.300280700030271,
+              "time_limit_s": 8.0,
+              "first_fault": "OK: feasible",
+              "completed_within_budget": true,
+              "load_errors": [],
+              "feature_schema": "2026-10-18.v1",
+              "llm_generated_components": 0
+            },
+            {
+              "arm": "random_evolution",
+              "candidate_id": "random_g2",
+              "family": "montoya",
+              "instance_id": "tc0c10s2cf1",
+              "seed": 11,
+              "feasible": true,
+              "objective_key": [
+                25.285322313276744
+              ],
+              "vehicles": 3,
+              "distance": 760.5111182174095,
+              "duration": 25.285322313276744,
+              "runtime_s": 5.720327999966685,
+              "time_limit_s": 10.0,
+              "first_fault": "OK: feasible",
+              "completed_within_budget": true,
+              "load_errors": [],
+              "feature_schema": "2026-10-18.v1",
+              "llm_generated_components": 0
+            },
+            {
+              "arm": "random_evolution",
+              "candidate_id": "random_g2",
+              "family": "bezzi",
+              "instance_id": "C101-5",
+              "seed": 11,
+              "feasible": true,
+              "objective_key": [
+                227.0
+              ],
+              "vehicles": 1,
+              "distance": 227.0,
+              "duration": 1197.5015,
+              "runtime_s": 5.485138099989854,
+              "time_limit_s": 12.0,
+              "first_fault": "OK: feasible",
+              "completed_within_budget": true,
+              "load_errors": [],
+              "feature_schema": "2026-10-18.v1",
+              "llm_generated_components": 0
+            },
+            {
+              "arm": "random_evolution",
+              "candidate_id": "random_g2",
+              "family": "goeke",
+              "instance_id": "c101C6",
+              "seed": 11,
+              "feasible": true,
+              "objective_key": [
+                2.0,
+                267.3289940850671
+              ],
+              "vehicles": 2,
+              "distance": 267.3289940850671,
+              "duration": 1728.8110030239563,
+              "runtime_s": 2.429342799994629,
+              "time_limit_s": 10.0,
+              "first_fault": "OK: feasible",
+              "completed_within_budget": true,
+              "load_errors": [],
+              "feature_schema": "2026-10-18.v1",
+              "llm_generated_components": 0
+            },
+            {
+              "arm": "random_evolution",
+              "candidate_id": "random_g2",
+              "family": "hiermann",
+              "instance_id": "c101_21",
+              "seed": 11,
+              "feasible": true,
+              "objective_key": [
+                4122.8495525577955
+              ],
+              "vehicles": 20,
+              "distance": 2817.9651062387165,
+              "duration": 25476.310658116872,
+              "runtime_s": 12.518563900026493,
+              "time_limit_s": 15.0,
+              "first_fault": "OK: feasible",
+              "completed_within_budget": true,
+              "load_errors": [],
+              "feature_schema": "2026-10-18.v1",
+              "llm_generated_components": 0
+            }
+          ]
+        },
+        {
+          "seed": 22,
+          "rows": [
+            {
+              "arm": "random_evolution",
+              "candidate_id": "random_g2",
+              "family": "schneider",
+              "instance_id": "c101C5",
+              "seed": 22,
+              "feasible": true,
+              "objective_key": [
+                2.0,
+                267.3289940850671
+              ],
+              "vehicles": 2,
+              "distance": 267.3289940850671,
+              "duration": 1728.8110030239563,
+              "runtime_s": 2.202880799944978,
+              "time_limit_s": 8.0,
+              "first_fault": "OK: feasible",
+              "completed_within_budget": true,
+              "load_errors": [],
+              "feature_schema": "2026-10-18.v1",
+              "llm_generated_components": 0
+            },
+            {
+              "arm": "random_evolution",
+              "candidate_id": "random_g2",
+              "family": "montoya",
+              "instance_id": "tc0c10s2cf1",
+              "seed": 22,
+              "feasible": true,
+              "objective_key": [
+                25.285322313276744
+              ],
+              "vehicles": 3,
+              "distance": 760.5111182174095,
+              "duration": 25.285322313276744,
+              "runtime_s": 5.828263100003824,
+              "time_limit_s": 10.0,
+              "first_fault": "OK: feasible",
+              "completed_within_budget": true,
+              "load_errors": [],
+              "feature_schema": "2026-10-18.v1",
+              "llm_generated_components": 0
+            },
+            {
+              "arm": "random_evolution",
+              "candidate_id": "random_g2",
+              "family": "bezzi",
+              "instance_id": "C101-5",
+              "seed": 22,
+              "feasible": true,
+              "objective_key": [
+                227.0
+              ],
+              "vehicles": 1,
+              "distance": 227.0,
+              "duration": 1197.5015,
+              "runtime_s": 6.144448100007139,
+              "time_limit_s": 12.0,
+              "first_fault": "OK: feasible",
+              "completed_within_budget": true,
+              "load_errors": [],
+              "feature_schema": "2026-10-18.v1",
+              "llm_generated_components": 0
+            },
+            {
+              "arm": "random_evolution",
+              "candidate_id": "random_g2",
+              "family": "goeke",
+              "instance_id": "c101C6",
+              "seed": 22,
+              "feasible": true,
+              "objective_key": [
+                2.0,
+                267.3289940850671
+              ],
+              "vehicles": 2,
+              "distance": 267.3289940850671,
+              "duration": 1728.8110030239563,
+              "runtime_s": 2.5829817000194453,
+              "time_limit_s": 10.0,
+              "first_fault": "OK: feasible",
+              "completed_within_budget": true,
+              "load_errors": [],
+              "feature_schema": "2026-10-18.v1",
+              "llm_generated_components": 0
+            },
+            {
+              "arm": "random_evolution",
+              "candidate_id": "random_g2",
+              "family": "hiermann",
+              "instance_id": "c101_21",
+              "seed": 22,
+              "feasible": true,
+              "objective_key": [
+                4082.91815223344
+              ],
+              "vehicles": 20,
+              "distance": 2736.548576973696,
+              "duration": 25384.304621960295,
+              "runtime_s": 9.341914499993436,
+              "time_limit_s": 15.0,
+              "first_fault": "OK: feasible",
+              "completed_within_budget": true,
+              "load_errors": [],
+              "feature_schema": "2026-10-18.v1",
+              "llm_generated_components": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "arm": "single_agent",
+      "candidate_id": null,
+      "three_seed_accepted": false,
+      "reason": "not_selected_on_seed_7"
+    },
+    {
+      "arm": "five_agent",
+      "candidate_id": "five_g3",
+      "three_seed_accepted": false,
+      "reason": "objective_regression",
+      "wins": 2,
+      "losses": 1,
+      "seed_rows": [
+        {
+          "seed": 11,
+          "rows": [
+            {
+              "arm": "five_agent",
+              "candidate_id": "five_g3",
+              "family": "schneider",
+              "instance_id": "c101C5",
+              "seed": 11,
+              "feasible": true,
+              "objective_key": [
+                2.0,
+                267.3289940850671
+              ],
+              "vehicles": 2,
+              "distance": 267.3289940850671,
+              "duration": 1728.8110030239563,
+              "runtime_s": 2.123120799951721,
+              "time_limit_s": 8.0,
+              "first_fault": "OK: feasible",
+              "completed_within_budget": true,
+              "load_errors": [],
+              "feature_schema": "2026-10-18.v2",
+              "llm_generated_components": 0
+            },
+            {
+              "arm": "five_agent",
+              "candidate_id": "five_g3",
+              "family": "montoya",
+              "instance_id": "tc0c10s2cf1",
+              "seed": 11,
+              "feasible": true,
+              "objective_key": [
+                25.285322313276744
+              ],
+              "vehicles": 3,
+              "distance": 760.5111182174095,
+              "duration": 25.285322313276744,
+              "runtime_s": 5.509648900013417,
+              "time_limit_s": 10.0,
+              "first_fault": "OK: feasible",
+              "completed_within_budget": true,
+              "load_errors": [],
+              "feature_schema": "2026-10-18.v2",
+              "llm_generated_components": 0
+            },
+            {
+              "arm": "five_agent",
+              "candidate_id": "five_g3",
+              "family": "bezzi",
+              "instance_id": "C101-5",
+              "seed": 11,
+              "feasible": true,
+              "objective_key": [
+                227.0
+              ],
+              "vehicles": 1,
+              "distance": 227.0,
+              "duration": 1197.5015,
+              "runtime_s": 5.629625300003681,
+              "time_limit_s": 12.0,
+              "first_fault": "OK: feasible",
+              "completed_within_budget": true,
+              "load_errors": [],
+              "feature_schema": "2026-10-18.v2",
+              "llm_generated_components": 0
+            },
+            {
+              "arm": "five_agent",
+              "candidate_id": "five_g3",
+              "family": "goeke",
+              "instance_id": "c101C6",
+              "seed": 11,
+              "feasible": true,
+              "objective_key": [
+                2.0,
+                267.3289940850671
+              ],
+              "vehicles": 2,
+              "distance": 267.3289940850671,
+              "duration": 1728.8110030239563,
+              "runtime_s": 2.5651496999780647,
+              "time_limit_s": 10.0,
+              "first_fault": "OK: feasible",
+              "completed_within_budget": true,
+              "load_errors": [],
+              "feature_schema": "2026-10-18.v2",
+              "llm_generated_components": 0
+            },
+            {
+              "arm": "five_agent",
+              "candidate_id": "five_g3",
+              "family": "hiermann",
+              "instance_id": "c101_21",
+              "seed": 11,
+              "feasible": true,
+              "objective_key": [
+                4259.304471929594
+              ],
+              "vehicles": 20,
+              "distance": 3164.0330800129623,
+              "duration": 26033.697820448666,
+              "runtime_s": 9.418383999960497,
+              "time_limit_s": 15.0,
+              "first_fault": "OK: feasible",
+              "completed_within_budget": true,
+              "load_errors": [],
+              "feature_schema": "2026-10-18.v2",
+              "llm_generated_components": 0
+            }
+          ]
+        },
+        {
+          "seed": 22,
+          "rows": [
+            {
+              "arm": "five_agent",
+              "candidate_id": "five_g3",
+              "family": "schneider",
+              "instance_id": "c101C5",
+              "seed": 22,
+              "feasible": true,
+              "objective_key": [
+                2.0,
+                267.3289940850671
+              ],
+              "vehicles": 2,
+              "distance": 267.3289940850671,
+              "duration": 1728.8110030239563,
+              "runtime_s": 2.2773275999934413,
+              "time_limit_s": 8.0,
+              "first_fault": "OK: feasible",
+              "completed_within_budget": true,
+              "load_errors": [],
+              "feature_schema": "2026-10-18.v2",
+              "llm_generated_components": 0
+            },
+            {
+              "arm": "five_agent",
+              "candidate_id": "five_g3",
+              "family": "montoya",
+              "instance_id": "tc0c10s2cf1",
+              "seed": 22,
+              "feasible": true,
+              "objective_key": [
+                25.285322313276744
+              ],
+              "vehicles": 3,
+              "distance": 760.5111182174095,
+              "duration": 25.285322313276744,
+              "runtime_s": 5.984245800005738,
+              "time_limit_s": 10.0,
+              "first_fault": "OK: feasible",
+              "completed_within_budget": true,
+              "load_errors": [],
+              "feature_schema": "2026-10-18.v2",
+              "llm_generated_components": 0
+            },
+            {
+              "arm": "five_agent",
+              "candidate_id": "five_g3",
+              "family": "bezzi",
+              "instance_id": "C101-5",
+              "seed": 22,
+              "feasible": true,
+              "objective_key": [
+                227.0
+              ],
+              "vehicles": 1,
+              "distance": 227.0,
+              "duration": 1197.5015,
+              "runtime_s": 5.651207700022496,
+              "time_limit_s": 12.0,
+              "first_fault": "OK: feasible",
+              "completed_within_budget": true,
+              "load_errors": [],
+              "feature_schema": "2026-10-18.v2",
+              "llm_generated_components": 0
+            },
+            {
+              "arm": "five_agent",
+              "candidate_id": "five_g3",
+              "family": "goeke",
+              "instance_id": "c101C6",
+              "seed": 22,
+              "feasible": true,
+              "objective_key": [
+                2.0,
+                267.3289940850671
+              ],
+              "vehicles": 2,
+              "distance": 267.3289940850671,
+              "duration": 1728.8110030239563,
+              "runtime_s": 2.5481619000202045,
+              "time_limit_s": 10.0,
+              "first_fault": "OK: feasible",
+              "completed_within_budget": true,
+              "load_errors": [],
+              "feature_schema": "2026-10-18.v2",
+              "llm_generated_components": 0
+            },
+            {
+              "arm": "five_agent",
+              "candidate_id": "five_g3",
+              "family": "hiermann",
+              "instance_id": "c101_21",
+              "seed": 22,
+              "feasible": true,
+              "objective_key": [
+                4044.2164307328712
+              ],
+              "vehicles": 19,
+              "distance": 3011.90681455654,
+              "duration": 24701.609314997786,
+              "runtime_s": 12.291743799985852,
+              "time_limit_s": 15.0,
+              "first_fault": "OK: feasible",
+              "completed_within_budget": true,
+              "load_errors": [],
+              "feature_schema": "2026-10-18.v2",
+              "llm_generated_components": 0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

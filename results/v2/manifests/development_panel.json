@@ -1,7 +1,7 @@
 {
   "protocol": "voltforge_v2_development_panel",
   "note": "Development/tuning instances only. Held-out Schneider RC2 and any confirmation splits must not be used for model selection.",
-  "git_commit": "27278a1",
+  "git_commit": "c2de5a0",
   "instances": [
     {
       "family": "schneider",

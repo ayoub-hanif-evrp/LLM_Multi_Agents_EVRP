@@ -1,0 +1,8 @@
+{"git_head": "c2de5a05a9cc27a4aad65f6895231c13b580790a", "role": "package"}
+{"path": "results/v2/baselines/classical_frozen_c2de5a0", "role": "classical_freeze"}
+{"path": "results/v2/diagnostics/bezzi_pack/summary.json", "role": "bezzi_10n10"}
+{"path": "results/v2/diagnostics/large_development/profile.json", "role": "large_discovery"}
+{"path": "results\\v2\\campaigns\\generational_qwen_20261019T145936Z\\generational.json", "role": "generational", "digest": "sha256-1194192cf2a187eb02722edcc3f77b11d21f537048ce04b67ccf8ba78863006a"}
+{"path": "results/v2/campaigns/matched_qwen_20261018T205937Z/matched_pilot.json", "role": "historical_matched_pilot", "solver": "27278a1"}
+{"path": "results/v2/paper/heldout_classical.json", "role": "historical_rc2"}
+{"path": "results/v2/paper/confirmation_schneider.json", "role": "confirmation", "present": true}

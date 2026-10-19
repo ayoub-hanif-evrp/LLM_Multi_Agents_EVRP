@@ -1,0 +1,31 @@
+{
+  "source": "C:\\Users\\ayoub\\Desktop\\LLM_Multi_Agents_EVRP-main\\results\\v2\\campaigns\\generational_qwen_20261019T145936Z\\generational.json",
+  "rule": "conservative on gate seeds 7, 11, and 22",
+  "decisions": [
+    {
+      "arm": "random_evolution",
+      "candidate_id": "random_g2",
+      "three_seed_accepted": true,
+      "reason": "accepted_no_regression",
+      "wins": 3,
+      "losses": 0
+    },
+    {
+      "arm": "single_agent",
+      "candidate_id": null,
+      "three_seed_accepted": false,
+      "reason": "not_selected_on_seed_7"
+    },
+    {
+      "arm": "five_agent",
+      "candidate_id": "five_g3",
+      "three_seed_accepted": false,
+      "reason": "objective_regression",
+      "wins": 2,
+      "losses": 1
+    }
+  ],
+  "promoted": [
+    "random_evolution:random_g2"
+  ]
+}

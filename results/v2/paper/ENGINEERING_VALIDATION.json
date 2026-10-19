@@ -1,0 +1,10 @@
+{
+  "git_head": "c2de5a05a9cc27a4aad65f6895231c13b580790a",
+  "artifact_checks": {
+    "ok": true,
+    "failures": [],
+    "notes": [
+      "Schneider confirmation ids also appear in the development panel: rc105C5"
+    ]
+  }
+}

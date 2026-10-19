@@ -9,9 +9,9 @@ from __future__ import annotations
 
 import ast
 
-from evrptw_autolab.components.interfaces import ComponentKind
+from evrptw_autolab.components.interfaces import DEFAULT_SOURCES, ComponentKind
 from evrptw_autolab.components.interpret import UnsafeComponent, _eval
-from evrptw_autolab.problem.v2.features import feature_schema_prompt
+from evrptw_autolab.problem.v2.features import FEATURE_SCHEMA_V3, feature_schema_prompt
 
 ARGUMENT_NAMES: dict[ComponentKind, tuple[str, ...]] = {
     "insertion_score": (
@@ -23,6 +23,13 @@ ARGUMENT_NAMES: dict[ComponentKind, tuple[str, ...]] = {
     ),
     "station_score": ("detour", "battery_arrival", "station_rate"),
     "removal_priority": ("due_time", "route_distance_share", "rng_value"),
+}
+
+ARGUMENT_NAMES_V3: dict[ComponentKind, tuple[str, ...]] = {
+    "insertion_score": ARGUMENT_NAMES["insertion_score"]
+    + ("vehicle_fixed_cost", "marginal_energy", "new_route_fixed_cost"),
+    "station_score": ARGUMENT_NAMES["station_score"] + ("charge_time",),
+    "removal_priority": ARGUMENT_NAMES["removal_priority"],
 }
 
 EXPRESSION_EXAMPLES: dict[ComponentKind, str] = {
@@ -68,7 +75,32 @@ def _check_expression(node: ast.AST, allowed: set[str], depth: int = 0) -> None:
     _eval(node, env, [0])
 
 
-def wrap_expression(kind: ComponentKind, expression: str) -> str:
+def default_sources(schema: str | None = None) -> dict[ComponentKind, str]:
+    """v3 uses the same formulas as v1 and adds the new parameters unused."""
+    if schema != FEATURE_SCHEMA_V3:
+        return {kind: DEFAULT_SOURCES[kind] for kind in DEFAULT_SOURCES}
+    bodies = {
+        "insertion_score": (
+            "delta_distance + (0.0 if due_time >= 1000000.0 else "
+            "(0.01 * due_time + 1.0 / max(due_time - ready_time, 1.0))) + "
+            "(0.0 if capacity_slack >= demand else 1000000.0)"
+        ),
+        "station_score": "detour + 0.1 * station_rate + (0.0 if battery_arrival > 0.0 else 1000.0)",
+        "removal_priority": (
+            "(0.0 if due_time >= 1000000.0 else due_time) + 10.0 * route_distance_share + 0.01 * rng_value"
+        ),
+    }
+    return {kind: wrap_expression(kind, body, FEATURE_SCHEMA_V3) for kind, body in bodies.items()}
+
+
+def argument_names(kind: ComponentKind, schema: str | None = None) -> tuple[str, ...]:
+    """v3 names are a superset. A v1 expression cannot see the added features."""
+    if schema == FEATURE_SCHEMA_V3:
+        return ARGUMENT_NAMES_V3[kind]
+    return ARGUMENT_NAMES[kind]
+
+
+def wrap_expression(kind: ComponentKind, expression: str, schema: str | None = None) -> str:
     """Build the only function body the interpreter accepts: one return."""
     text = str(expression or "").strip()
     if not text or "\n" in text or ";" in text:
@@ -79,18 +111,23 @@ def wrap_expression(kind: ComponentKind, expression: str) -> str:
         tree = ast.parse(text, mode="eval")
     except SyntaxError as error:
         raise UnsafeComponent(str(error)) from error
-    allowed = set(ARGUMENT_NAMES[kind])
+    names = argument_names(kind, schema)
+    allowed = set(names)
     _check_expression(tree.body, allowed)
-    params = ", ".join(f"{name}: float" for name in ARGUMENT_NAMES[kind])
+    params = ", ".join(f"{name}: float" for name in names)
     return f"def {kind}({params}) -> float:\n    return {text}\n"
 
 
-def materialize_component(kind: ComponentKind, payload: dict[str, object]) -> tuple[str, str]:
+def materialize_component(
+    kind: ComponentKind,
+    payload: dict[str, object],
+    schema: str | None = None,
+) -> tuple[str, str]:
     """Return (source, status). Status starting with ``fallback`` means unused LLM code."""
     expression = str(payload.get("expression") or "").strip()
     if expression:
         try:
-            return wrap_expression(kind, expression), "expression_wrapped"
+            return wrap_expression(kind, expression, schema), "expression_wrapped"
         except (UnsafeComponent, SyntaxError, ValueError) as error:
             return "", f"expression_rejected:{error}"
     code = normalize_llm_source(str(payload.get("code") or ""))

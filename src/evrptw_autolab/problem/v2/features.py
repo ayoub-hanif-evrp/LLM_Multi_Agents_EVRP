@@ -9,7 +9,8 @@ from __future__ import annotations
 
 FEATURE_SCHEMA_VERSION = "2026-10-18.v1"
 FEATURE_SCHEMA_V2 = "2026-10-18.v2"
-KNOWN_FEATURE_SCHEMAS = frozenset({FEATURE_SCHEMA_VERSION, FEATURE_SCHEMA_V2})
+FEATURE_SCHEMA_V3 = "2026-10-19.v3"
+KNOWN_FEATURE_SCHEMAS = frozenset({FEATURE_SCHEMA_VERSION, FEATURE_SCHEMA_V2, FEATURE_SCHEMA_V3})
 
 # battery_arrival is vehicle energy, the same unit as VehicleTypeV2.battery_capacity.
 # On Montoya tc0c10s2cf1 that capacity is 16000 Wh, not a fraction in [0, 1].
@@ -117,20 +118,81 @@ def feature_schema_prompt() -> str:
     )
 
 
+# v3 adds insertion features. It does not change the v1 station battery unit.
+# Historical expressions stay on v1 and are not rewritten.
+INSERTION_FEATURES_V3: dict[str, dict[str, str]] = {
+    "delta_distance": {
+        "unit": "distance",
+        "scale": "inserted travel minus the direct arc",
+        "range": "(-inf, inf)",
+    },
+    "due_time": {
+        "unit": "time",
+        "scale": "customer due time; 1000000 means no useful window",
+        "range": "[0, 1000000]",
+    },
+    "ready_time": {"unit": "time", "scale": "customer ready time", "range": "[0, inf)"},
+    "demand": {"unit": "load", "scale": "customer demand", "range": "[0, inf)"},
+    "capacity_slack": {
+        "unit": "load",
+        "scale": "first vehicle type capacity minus current route load",
+        "range": "(-inf, inf)",
+    },
+    "vehicle_fixed_cost": {
+        "unit": "money",
+        "scale": "fixed cost of the vehicle type being scored; 0 when the family has none",
+        "range": "[0, inf)",
+    },
+    "marginal_energy": {
+        "unit": "energy",
+        "scale": "vehicle consumption rate times delta_distance; 0 when the rate is absent",
+        "range": "(-inf, inf)",
+    },
+    "new_route_fixed_cost": {
+        "unit": "money",
+        "scale": "vehicle fixed cost when the route has no customers yet, otherwise 0",
+        "range": "[0, inf)",
+    },
+}
+
+STATION_FEATURES_V3_EXTRA: dict[str, dict[str, str]] = {
+    "charge_time": {
+        "unit": "time",
+        "scale": "duration of the candidate charge after the feasibility filter",
+        "range": "[0, inf)",
+    },
+}
+
+
+def insertion_feature_prompt() -> str:
+    """Units for the v3 insertion signature. v1 expressions do not receive the new names."""
+    lines = [
+        "Insertion features are finite floats. A v1 expression receives only "
+        "delta_distance, due_time, ready_time, demand, and capacity_slack.",
+        f"{FEATURE_SCHEMA_V3} also receives vehicle_fixed_cost (money), "
+        "marginal_energy (energy = consumption rate * delta_distance), and "
+        "new_route_fixed_cost (money paid only when the route has no customers yet).",
+        "charge_time (time) is available to a v3 station expression. It is not an insertion feature.",
+    ]
+    for name, spec in INSERTION_FEATURES_V3.items():
+        lines.append(f"{name}: unit={spec['unit']}; {spec['scale']}.")
+    return "\n".join(lines)
+
+
 def battery_argument_for_schema(schema: str, battery_arrival: float, battery_capacity: float) -> float:
     """Map physical energy to the value a scorer of this schema expects.
 
-    v1 returns physical energy. v2 returns a ratio in [0, 1]. Callers must not
-    apply v2 to an expression that was generated against v1.
+    v1 and v3 return physical energy. v2 returns a ratio in [0, 1]. Callers must not
+    apply v2 to an expression that was written against physical energy.
     """
     if schema == FEATURE_SCHEMA_V2:
         if battery_capacity <= 0.0:
             return 0.0
         ratio = float(battery_arrival) / float(battery_capacity)
         return max(0.0, min(1.0, ratio))
-    if schema != FEATURE_SCHEMA_VERSION:
-        raise ValueError(f"unknown station feature schema {schema}")
-    return float(battery_arrival)
+    if schema in {FEATURE_SCHEMA_VERSION, FEATURE_SCHEMA_V3}:
+        return float(battery_arrival)
+    raise ValueError(f"unknown station feature schema {schema}")
 
 
 def station_feature_record(

@@ -16,7 +16,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from evrptw_autolab.components.expressions import wrap_expression
+from evrptw_autolab.backbone.util import call_scorer
+from evrptw_autolab.components.expressions import ARGUMENT_NAMES, default_sources, wrap_expression
 from evrptw_autolab.components.interfaces import DEFAULT_SOURCES, ComponentKind
 from evrptw_autolab.components.loader import load_bundle
 from evrptw_autolab.experiments.bundle_selection import (
@@ -35,16 +36,31 @@ from evrptw_autolab.experiments.matched_pilot import (
     _panel,
     _propose_component,
     _propose_unified_component,
+    _routing_brief,
 )
 from evrptw_autolab.llm.usage import UsageCollector
-from evrptw_autolab.problem.v2.features import FEATURE_SCHEMA_VERSION
+from evrptw_autolab.problem.v2.features import FEATURE_SCHEMA_VERSION, normalize_feature_schema
 
 ROOT = Path(__file__).resolve().parents[3]
-_PROBES: dict[ComponentKind, tuple[tuple[float, ...], ...]] = {
-    "insertion_score": ((1.0, 10.0, 0.0, 1.0, 5.0), (5.0, 1.0e6, 0.0, 1.0, 0.0)),
-    "station_score": ((1.0, 0.2, 2.0), (3.0, 0.0, 1.0)),
-    "removal_priority": ((10.0, 0.5, 0.2), (1.0e6, 0.1, 0.9)),
+_PROBES: dict[ComponentKind, tuple[dict[str, float], ...]] = {
+    "insertion_score": (
+        {"delta_distance": 1.0, "due_time": 10.0, "ready_time": 0.0, "demand": 1.0, "capacity_slack": 5.0, "vehicle_fixed_cost": 0.0, "marginal_energy": 0.2, "new_route_fixed_cost": 0.0},
+        {"delta_distance": 4.0, "due_time": 30.0, "ready_time": 5.0, "demand": 2.0, "capacity_slack": 3.0, "vehicle_fixed_cost": 20.0, "marginal_energy": 0.8, "new_route_fixed_cost": 0.0},
+        {"delta_distance": 0.5, "due_time": 1.0e6, "ready_time": 0.0, "demand": 1.0, "capacity_slack": 8.0, "vehicle_fixed_cost": 100.0, "marginal_energy": 0.1, "new_route_fixed_cost": 100.0},
+        {"delta_distance": 2.0, "due_time": 15.0, "ready_time": 14.0, "demand": 4.0, "capacity_slack": 1.0, "vehicle_fixed_cost": 50.0, "marginal_energy": 0.4, "new_route_fixed_cost": 50.0},
+    ),
+    "station_score": (
+        {"detour": 1.0, "battery_arrival": 10.0, "station_rate": 2.0, "charge_time": 1.0},
+        {"detour": 3.0, "battery_arrival": 0.0, "station_rate": 1.0, "charge_time": 4.0},
+        {"detour": 0.5, "battery_arrival": 20.0, "station_rate": 5.0, "charge_time": 0.2},
+    ),
+    "removal_priority": (
+        {"due_time": 10.0, "route_distance_share": 0.5, "rng_value": 0.2},
+        {"due_time": 1.0e6, "route_distance_share": 0.1, "rng_value": 0.9},
+        {"due_time": 5.0, "route_distance_share": 0.8, "rng_value": 0.1},
+    ),
 }
+_LOWER_IS_BETTER = {"insertion_score", "station_score"}
 
 
 @dataclass
@@ -54,30 +70,75 @@ class GenerationalConfig:
     micro: bool = False
     candidates: int = SEARCH_CANDIDATES
     use_critic: bool = True
+    feature_schema: str = FEATURE_SCHEMA_VERSION
     out_dir: Path | None = None
 
 
-def _grammar(kind: ComponentKind, rng: random.Random) -> str:
-    return random_component_expression(kind, rng)
+def _grammar(kind: ComponentKind, rng: random.Random, schema: str | None = None) -> str:
+    return random_component_expression(kind, rng, schema)
 
 
-def _changed(sources: dict[ComponentKind, str]) -> bool:
+def _rank(scores: list[float], *, lower_is_better: bool) -> list[int]:
+    return sorted(range(len(scores)), key=lambda index: (scores[index] if lower_is_better else -scores[index], index))
+
+
+def _score_points(fn: object, kind: ComponentKind, points: tuple[dict[str, float], ...]) -> list[float]:
+    return [call_scorer(fn, point, ARGUMENT_NAMES[kind]) for point in points]
+
+
+def _probe_trace(sources: dict[ComponentKind, str]) -> dict[str, Any]:
+    """Separate a numeric score change from a ranking change and a selected-move change."""
     defaults = {kind: DEFAULT_SOURCES[kind] for kind in KINDS}
     baseline, _ = load_bundle(defaults, {kind: "default" for kind in KINDS})
     trial, errors = load_bundle(sources, {kind: "trial" for kind in sources})
+    score_changed = False
+    ranking_changed = False
+    selected_move_changed = False
     if errors:
-        return False
+        return {
+            "score_changed": False,
+            "ranking_changed": False,
+            "selected_move_changed": False,
+            "load_errors": errors,
+        }
     for kind, points in _PROBES.items():
         left = getattr(baseline, kind, None)
         right = getattr(trial, kind, None)
         if left is None or right is None:
             continue
-        for point in points:
-            try:
-                if abs(float(left(*point)) - float(right(*point))) > 1e-9:
-                    return True
-            except (TypeError, ValueError):
-                return True
+        try:
+            base_scores = _score_points(left, kind, points)
+            trial_scores = _score_points(right, kind, points)
+        except (TypeError, ValueError):
+            score_changed = True
+            ranking_changed = True
+            selected_move_changed = True
+            continue
+        if any(abs(a - b) > 1e-9 for a, b in zip(base_scores, trial_scores, strict=True)):
+            score_changed = True
+        lower = kind in _LOWER_IS_BETTER
+        base_order = _rank(base_scores, lower_is_better=lower)
+        trial_order = _rank(trial_scores, lower_is_better=lower)
+        if base_order != trial_order:
+            ranking_changed = True
+        if base_order[0] != trial_order[0]:
+            selected_move_changed = True
+    return {
+        "score_changed": score_changed,
+        "ranking_changed": ranking_changed,
+        "selected_move_changed": selected_move_changed,
+        "load_errors": [],
+    }
+
+
+def _solve_moves_differ(baseline: list[dict[str, Any]], rows: list[dict[str, Any]]) -> bool:
+    base = {str(row["instance_id"]): row for row in baseline}
+    for row in rows:
+        other = base.get(str(row["instance_id"]))
+        if other is None:
+            continue
+        if list(row.get("selected_moves") or []) != list(other.get("selected_moves") or []):
+            return True
     return False
 
 
@@ -108,13 +169,18 @@ def _record(
     mutation: str,
     origin: str,
 ) -> dict[str, Any]:
-    changed = _changed(sources)
+    probe = _probe_trace(sources)
+    moves_differ = _solve_moves_differ(baseline, rows)
     decision = conservative_decision(_pairs(baseline, rows))
-    accepted = bool(decision["accepted"]) and changed
-    if decision["accepted"] and not changed:
+    objective_accepted = bool(decision["accepted"])
+    ranking_changed = bool(probe["ranking_changed"])
+    selected_move_changed = bool(probe["selected_move_changed"]) or moves_differ
+    informative = ranking_changed or selected_move_changed
+    accepted = objective_accepted and informative
+    if objective_accepted and not informative:
         decision = dict(decision)
         decision["accepted"] = False
-        decision["reason"] = "no_decision_change"
+        decision["reason"] = "no_ranking_change"
     return {
         "arm": arm,
         "generation": generation,
@@ -123,7 +189,14 @@ def _record(
         "candidate_id": candidate_id,
         "mutation": mutation,
         "origin": origin,
-        "behavior_changed": changed,
+        "behavior_changed": informative,
+        "behavior": {
+            "score_changed": bool(probe["score_changed"]),
+            "ranking_changed": ranking_changed,
+            "selected_move_changed": selected_move_changed,
+            "solve_moves_changed": moves_differ,
+            "final_solution_improved": objective_accepted,
+        },
         "decision": decision,
         "accepted": accepted,
         "sources": {kind: sources[kind] for kind in KINDS},
@@ -159,21 +232,27 @@ def _digest(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()[:16]
 
 
-def _run_random(panel: list[Any], baseline: list[dict[str, Any]], seed: int, candidates: int) -> list[dict[str, Any]]:
+def _run_random(
+    panel: list[Any],
+    baseline: list[dict[str, Any]],
+    seed: int,
+    candidates: int,
+    schema: str = FEATURE_SCHEMA_VERSION,
+) -> list[dict[str, Any]]:
     rng = random.Random(seed)
-    parent_sources = {kind: DEFAULT_SOURCES[kind] for kind in KINDS}
+    parent_sources = default_sources(schema)
     parent_id = "classical"
     history = []
     for generation in range(candidates):
         sources = dict(parent_sources)
         kind = KINDS[generation % len(KINDS)]
-        expression = _grammar(kind, rng)
-        sources[kind] = wrap_expression(kind, expression)
+        expression = _grammar(kind, rng, schema)
+        sources[kind] = wrap_expression(kind, expression, schema)
         rows = _evaluate(
             "random_evolution",
             f"random_g{generation}",
             sources,
-            FEATURE_SCHEMA_VERSION,
+            schema,
             panel,
             seed,
             extra={"generation": generation, "origin": "grammar", "llm_generated_components": 0},
@@ -221,23 +300,25 @@ def _run_single(
     candidates: int,
     backend: Any,
     model: str,
+    schema: str = FEATURE_SCHEMA_VERSION,
 ) -> tuple[list[dict[str, Any]], UsageCollector]:
     collector = UsageCollector(max_calls=candidates * 3, max_tokens=_TOKEN_CAP)
-    parent_sources = {kind: DEFAULT_SOURCES[kind] for kind in KINDS}
-    parent_schema = FEATURE_SCHEMA_VERSION
+    parent_sources = default_sources(schema)
+    parent_schema = schema
     parent_id = "classical"
     feedback = ""
     history = []
     for generation in range(candidates):
         kind = KINDS[generation % len(KINDS)]
-        code, row, schema = _propose_unified_component(
+        code, row, proposed_schema = _propose_unified_component(
             collector,
             backend,
             model,
             kind,
-            context=f"Generation {generation}. {feedback or 'No fitness feedback yet.'}",
+            context=_routing_brief(panel, schema) + f"\nGeneration {generation}. {feedback or 'No fitness feedback yet.'}",
+            schema=schema,
         )
-        sources, use_schema = _apply_component(parent_sources, parent_schema, kind, code, schema)
+        sources, use_schema = _apply_component(parent_sources, parent_schema, kind, code, proposed_schema)
         genuine = 1 if row.get("llm_generated") else 0
         rows = _evaluate(
             "single_agent",
@@ -279,29 +360,37 @@ def _run_five(
     model: str,
     *,
     use_critic: bool,
+    schema: str = FEATURE_SCHEMA_VERSION,
 ) -> tuple[list[dict[str, Any]], UsageCollector]:
-    collector = UsageCollector(max_calls=candidates * 6, max_tokens=_TOKEN_CAP)
-    parent_sources = {kind: DEFAULT_SOURCES[kind] for kind in KINDS}
-    parent_schema = FEATURE_SCHEMA_VERSION
+    collector = UsageCollector(max_calls=candidates * 8, max_tokens=_TOKEN_CAP)
+    parent_sources = default_sources(schema)
+    parent_schema = schema
     parent_id = "classical"
     critic_text = ""
     history = []
     for generation in range(candidates):
         kind = KINDS[generation % len(KINDS)]
-        hypothesis = _architect_text(
+        brief = _routing_brief(panel, schema)
+        plan_text = _architect_text(
             collector,
             backend,
             model,
-            context=f"Generation {generation}. Scheduled component={kind}. Prior critic: {critic_text or 'none'}.",
+            context=f"{brief}\nGeneration {generation}. Scheduled component={kind}. Prior critic: {critic_text or 'none'}.",
         )
-        code, row, schema = _propose_component(
+        hypothesis = str(plan_text["hypothesis"]) if plan_text["grounded"] else ""
+        code, row, proposed_schema = _propose_component(
             collector,
             backend,
             model,
             kind,
-            context=f"Generation {generation}. Architect hypothesis: {hypothesis}. Prior critic: {critic_text or 'none'}.",
+            context=(
+                f"{brief}\nGeneration {generation}. "
+                f"Architect hypothesis: {hypothesis or 'rejected because it was not a routing hypothesis'}. "
+                f"Prior critic: {critic_text or 'none'}."
+            ),
+            schema=schema,
         )
-        sources, use_schema = _apply_component(parent_sources, parent_schema, kind, code, schema)
+        sources, use_schema = _apply_component(parent_sources, parent_schema, kind, code, proposed_schema)
         genuine = 1 if row.get("llm_generated") else 0
         rows = _evaluate(
             "five_agent",
@@ -324,6 +413,7 @@ def _run_five(
             origin="llm",
         )
         item["architect_hypothesis"] = hypothesis
+        item["architect_grounded"] = bool(plan_text["grounded"])
         item["attribution"] = [{key: value for key, value in row.items() if key != "source"}]
         if use_critic:
             critic_text = _critic(collector, backend, model, rows, baseline)
@@ -383,14 +473,15 @@ def run_generational(cfg: GenerationalConfig | None = None) -> dict[str, Any]:
     out = cfg.out_dir or (ROOT / "results" / "v2" / "campaigns" / f"generational_{label}{critic}_{stamp}")
     out.mkdir(parents=True, exist_ok=True)
     started = time.monotonic()
-    classical_sources = {kind: DEFAULT_SOURCES[kind] for kind in KINDS}
-    baseline = _evaluate("classical", "default", classical_sources, FEATURE_SCHEMA_VERSION, panel, cfg.seed)
+    schema = normalize_feature_schema(cfg.feature_schema, strict=True)
+    classical_sources = default_sources(schema)
+    baseline = _evaluate("classical", "default", classical_sources, schema, panel, cfg.seed)
     print({"arm": "classical", "rows": len(baseline)}, flush=True)
     (out / "partial.json").write_text(
         json.dumps({"status": "classical_done", "classical": baseline}, indent=2) + "\n",
         encoding="utf-8",
     )
-    random_history = _run_random(panel, baseline, cfg.seed, cfg.candidates)
+    random_history = _run_random(panel, baseline, cfg.seed, cfg.candidates, schema)
     (out / "partial.json").write_text(
         json.dumps(
             {"status": "random_done", "classical": baseline, "random_evolution": random_history},
@@ -399,7 +490,9 @@ def run_generational(cfg: GenerationalConfig | None = None) -> dict[str, Any]:
         + "\n",
         encoding="utf-8",
     )
-    single_history, single_usage = _run_single(panel, baseline, cfg.seed, cfg.candidates, backend, model)
+    single_history, single_usage = _run_single(
+        panel, baseline, cfg.seed, cfg.candidates, backend, model, schema
+    )
     five_history, five_usage = _run_five(
         panel,
         baseline,
@@ -408,6 +501,7 @@ def run_generational(cfg: GenerationalConfig | None = None) -> dict[str, Any]:
         backend,
         model,
         use_critic=cfg.use_critic,
+        schema=schema,
     )
     solves = {
         "classical": len(baseline),
@@ -425,6 +519,7 @@ def run_generational(cfg: GenerationalConfig | None = None) -> dict[str, Any]:
         "seed": cfg.seed,
         "candidates": cfg.candidates,
         "use_critic": cfg.use_critic,
+        "feature_schema": schema,
         "oneshot_definition": "generation 0 receives no fitness feedback",
         "solver_solves": solves,
         "llm_calls": {
@@ -472,6 +567,7 @@ def main() -> None:
     parser.add_argument("--no-critic", action="store_true")
     parser.add_argument("--seed", type=int, default=7)
     parser.add_argument("--candidates", type=int, default=SEARCH_CANDIDATES)
+    parser.add_argument("--feature-schema", default=FEATURE_SCHEMA_VERSION)
     args = parser.parse_args()
     result = run_generational(
         GenerationalConfig(
@@ -480,6 +576,7 @@ def main() -> None:
             micro=args.micro,
             candidates=args.candidates,
             use_critic=not args.no_critic,
+            feature_schema=args.feature_schema,
         )
     )
     print(

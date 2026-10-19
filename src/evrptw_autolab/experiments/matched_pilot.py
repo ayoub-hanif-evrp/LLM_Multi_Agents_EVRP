@@ -24,8 +24,9 @@ from evrptw_autolab.agents.base import extract_json
 from evrptw_autolab.backbone.solver import solve_classical
 from evrptw_autolab.backbone.util import evaluate
 from evrptw_autolab.components.expressions import (
-    ARGUMENT_NAMES,
+    ARGUMENT_NAMES_V3,
     EXPRESSION_EXAMPLES,
+    argument_names,
     materialize_component,
     repair_prompt,
     wrap_expression,
@@ -46,8 +47,10 @@ from evrptw_autolab.experiments.family_gate import gate_panel
 from evrptw_autolab.experiments.policy_sensitivity import paired_feasible_outcome
 from evrptw_autolab.llm.usage import UsageCollector
 from evrptw_autolab.problem.v2.features import (
+    FEATURE_SCHEMA_V3,
     FEATURE_SCHEMA_VERSION,
     feature_schema_prompt,
+    insertion_feature_prompt,
     normalize_feature_schema,
 )
 from evrptw_autolab.problem.v2.types import ProblemSpecV2
@@ -123,16 +126,97 @@ def _panel(cfg: MatchedPilotConfig) -> list[PanelItem]:
     return items
 
 
-def _expression_prompt(kind: ComponentKind, *, context: str) -> str:
-    names = ", ".join(ARGUMENT_NAMES[kind])
-    schema = feature_schema_prompt() + "\n" if kind == "station_score" else ""
+_OBJECTIVES = {
+    "schneider": "minimize vehicle count, then travel distance",
+    "goeke": "minimize vehicle count, then travel distance",
+    "montoya": "minimize total route duration",
+    "bezzi": "minimize recharge cost",
+    "hiermann": "minimize fixed vehicle cost plus fuel and electricity cost",
+    "micro": "minimize travel distance on a synthetic instance",
+}
+
+_OBJECTIVE_WORDS = (
+    "vehicle",
+    "distance",
+    "duration",
+    "recharge",
+    "battery",
+    "fleet",
+    "charge",
+    "energy",
+    "capacity",
+    "cost",
+    "time window",
+)
+
+
+def _routing_brief(panel: list[Any], schema: str | None = None) -> str:
+    """State the native objective and constraints. This is not a software-performance task."""
+    lines = [
+        "You are scoring routes for an electric-vehicle routing problem.",
+        "A feasible route must respect capacity, battery, and charging limits.",
+        "Time windows apply only when the instance has them. A due time of 1000000 means there is no useful window.",
+        "Do not discuss insertion speed, data structures, memory, or software resources.",
+    ]
+    seen: set[str] = set()
+    for item in panel:
+        family = str(getattr(item, "family", ""))
+        if family in seen:
+            continue
+        seen.add(family)
+        objective = _OBJECTIVES.get(family, "minimize the family's native objective")
+        caps = getattr(getattr(item, "spec", None), "capabilities", None)
+        flags: list[str] = []
+        if caps is not None:
+            if caps.time_windows:
+                flags.append("time windows")
+            if caps.capacity:
+                flags.append("capacity")
+            if caps.battery:
+                flags.append("battery")
+            if caps.heterogeneous_fleet:
+                flags.append("heterogeneous fleet and vehicle fixed cost")
+            if caps.partial_recharge:
+                flags.append("partial recharge")
+            if caps.multiple_charge_technologies:
+                flags.append("multiple charging technologies")
+            if caps.pickup_delivery:
+                flags.append("pickup and delivery")
+        instance_id = str(getattr(item, "instance_id", ""))
+        lines.append(
+            f"{family} {instance_id}: {objective}. Constraints: {', '.join(flags) or 'see the instance'}."
+        )
+    lines.append(
+        "Allowed insertion names: " + ", ".join(argument_names("insertion_score", schema)) + "."
+    )
+    if schema == FEATURE_SCHEMA_V3:
+        lines.append(insertion_feature_prompt())
+    return "\n".join(lines)
+
+
+def _hypothesis_grounded(text: str) -> bool:
+    """A usable hypothesis names one scoring feature and the routing objective it should change."""
+    lowered = text.lower()
+    names = [name for kind_names in ARGUMENT_NAMES_V3.values() for name in kind_names]
+    has_feature = any(name in lowered for name in names)
+    has_objective = any(word in lowered for word in _OBJECTIVE_WORDS)
+    return has_feature and has_objective
+
+
+def _expression_prompt(kind: ComponentKind, *, context: str, schema: str | None = None) -> str:
+    names = ", ".join(argument_names(kind, schema))
+    schema_text = feature_schema_prompt() + "\n" if kind == "station_score" else ""
     return (
-        f"Return one arithmetic expression for {kind}. No def, no imports, no assignments.\n"
+        "Return one arithmetic expression for an electric-vehicle routing score. "
+        f"Component: {kind}. No def, no imports, no assignments.\n"
         f"Allowed names: {names}. Allowed calls: abs min max float int round.\n"
         f"Example: {EXPRESSION_EXAMPLES[kind]}\n"
-        f"{schema}"
-        f"{context}\n"
-        '{"component":"' + kind + '","expression":"...","rationale":"...","mechanism":"expression"}'
+        f"{schema_text}"
+        + (insertion_feature_prompt() + "\n" if schema == FEATURE_SCHEMA_V3 else "")
+        + f"{context}\n"
+        + '{"component":"'
+        + kind
+        + '","expression":"...","rationale":"...","mechanism":"expression"}'
     )
 
 
@@ -142,8 +226,9 @@ def _accept_expression(
     collector: UsageCollector,
     backend: Any,
     model: str,
+    schema: str | None = None,
 ) -> tuple[str, dict[str, Any]]:
-    code, status = materialize_component(kind, payload)
+    code, status = materialize_component(kind, payload, schema)
     ok = bool(code) and bool(validate_component_source(kind, code).get("ok"))
     if not ok:
         repaired = extract_json(
@@ -156,7 +241,7 @@ def _accept_expression(
                 json_mode=True,
             )
         )
-        code, status = materialize_component(kind, repaired)
+        code, status = materialize_component(kind, repaired, schema)
         ok = bool(code) and bool(validate_component_source(kind, code).get("ok"))
     if not ok:
         code = DEFAULT_SOURCES[kind]
@@ -183,23 +268,24 @@ def _propose_component(
     kind: ComponentKind,
     *,
     context: str,
+    schema: str | None = None,
 ) -> tuple[str, dict[str, Any], str]:
     """Ask for one component expression. The caller copies the parent bundle."""
     raw = collector.complete(
         backend,
-        prompt=_expression_prompt(kind, context=context),
+        prompt=_expression_prompt(kind, context=context, schema=schema),
         role=_COMPONENT_ROLES[kind],
         temperature=0.4,
         model=model,
         json_mode=True,
     )
     payload = extract_json(raw)
-    code, row = _accept_expression(kind, payload, collector, backend, model)
+    code, row = _accept_expression(kind, payload, collector, backend, model, schema)
     row["agent_role"] = _COMPONENT_ROLES[kind]
-    schema = FEATURE_SCHEMA_VERSION
-    if kind == "station_score" and row["llm_generated"]:
-        schema = normalize_feature_schema(payload.get("feature_schema"))
-    return code, row, schema
+    resolved = schema or FEATURE_SCHEMA_VERSION
+    if kind == "station_score" and row["llm_generated"] and resolved == FEATURE_SCHEMA_VERSION:
+        resolved = normalize_feature_schema(payload.get("feature_schema"))
+    return code, row, resolved
 
 
 def _propose_unified_component(
@@ -209,13 +295,14 @@ def _propose_unified_component(
     kind: ComponentKind,
     *,
     context: str,
+    schema: str | None = None,
 ) -> tuple[str, dict[str, Any], str]:
     """One designer proposes the scheduled component. No specialist role is used."""
     raw = collector.complete(
         backend,
         prompt=(
-            "You are one unified heuristic designer. "
-            + _expression_prompt(kind, context=context)
+            "You are one unified electric-vehicle routing designer. "
+            + _expression_prompt(kind, context=context, schema=schema)
         ),
         role="unified",
         temperature=0.4,
@@ -223,12 +310,12 @@ def _propose_unified_component(
         json_mode=True,
     )
     payload = extract_json(raw)
-    code, row = _accept_expression(kind, payload, collector, backend, model)
+    code, row = _accept_expression(kind, payload, collector, backend, model, schema)
     row["agent_role"] = "unified"
-    schema = FEATURE_SCHEMA_VERSION
-    if kind == "station_score" and row["llm_generated"]:
-        schema = normalize_feature_schema(payload.get("feature_schema"))
-    return code, row, schema
+    resolved = schema or FEATURE_SCHEMA_VERSION
+    if kind == "station_score" and row["llm_generated"] and resolved == FEATURE_SCHEMA_VERSION:
+        resolved = normalize_feature_schema(payload.get("feature_schema"))
+    return code, row, resolved
 
 
 def _architect_text(
@@ -237,21 +324,44 @@ def _architect_text(
     model: str,
     *,
     context: str,
-) -> str:
+) -> dict[str, Any]:
+    """Ask for a routing hypothesis. A hypothesis that names no feature is not passed downstream."""
+    prompt = (
+        "You are the Architect for an electric-vehicle routing heuristic.\n"
+        "State one testable hypothesis about the scheduled scoring component.\n"
+        "Name one allowed feature and the native objective you expect to improve.\n"
+        "Do not write the expression. Do not discuss software speed or data structures.\n"
+        'Return JSON: {"hypothesis":"...","prediction":"...","feature":"..."}\n'
+        + context
+    )
     raw = collector.complete(
         backend,
-        prompt=(
-            "You are the Architect. State one hypothesis about the scheduled component. "
-            "Return JSON with summary and hypothesis. Do not write the expression.\n"
-            + context
-        ),
+        prompt=prompt,
         role="architect",
         temperature=0.3,
         model=model,
         json_mode=True,
     )
     plan = extract_json(raw)
-    return str(plan.get("hypothesis") or plan.get("summary") or "")
+    text = str(plan.get("hypothesis") or plan.get("summary") or "")
+    grounded = _hypothesis_grounded(text)
+    if not grounded:
+        raw = collector.complete(
+            backend,
+            prompt=(
+                "The previous hypothesis was rejected because it did not name both an allowed "
+                "routing feature and the native objective.\n"
+                + prompt
+            ),
+            role="architect",
+            temperature=0.0,
+            model=model,
+            json_mode=True,
+        )
+        plan = extract_json(raw)
+        text = str(plan.get("hypothesis") or "")
+        grounded = _hypothesis_grounded(text)
+    return {"hypothesis": text, "grounded": grounded, "prediction": str(plan.get("prediction") or "")}
 
 
 def _propose_single(
@@ -435,6 +545,7 @@ def _evaluate(
             "time_limit_s": item.time_limit_s,
             "first_fault": fault,
             "completed_within_budget": solution.metadata.get("completed_within_budget"),
+            "selected_moves": list(solution.metadata.get("selected_moves") or []),
             "load_errors": errors,
             "feature_schema": schema,
             "llm_generated_components": 0,
@@ -445,23 +556,40 @@ def _evaluate(
     return rows
 
 
+def _budget_flag(row: dict[str, Any]) -> bool | None:
+    if "completed_within_budget" not in row or row.get("completed_within_budget") is None:
+        return None
+    return bool(row["completed_within_budget"])
+
+
 def _pairs(baseline: list[dict[str, Any]], candidate: list[dict[str, Any]]) -> list[dict[str, Any]]:
     base = {row["instance_id"]: row for row in baseline}
     pairs: list[dict[str, Any]] = []
     for row in candidate:
         other = base[row["instance_id"]]
+        outcome = paired_feasible_outcome(
+            bool(other["feasible"]),
+            tuple(float(v) for v in other["objective_key"]),
+            bool(row["feasible"]),
+            tuple(float(v) for v in row["objective_key"]),
+        )
+        candidate_budget = _budget_flag(row)
+        baseline_budget = _budget_flag(other)
+        deadline = False
+        if bool(row["feasible"]) and candidate_budget is False:
+            if outcome == "candidate" or (outcome == "tie" and baseline_budget is not False):
+                outcome = "baseline"
+                deadline = True
         pairs.append(
             {
                 "instance_id": row["instance_id"],
                 "seed": row["seed"],
                 "baseline_feasible": bool(other["feasible"]),
                 "candidate_feasible": bool(row["feasible"]),
-                "paired_outcome": paired_feasible_outcome(
-                    bool(other["feasible"]),
-                    tuple(float(v) for v in other["objective_key"]),
-                    bool(row["feasible"]),
-                    tuple(float(v) for v in row["objective_key"]),
-                ),
+                "baseline_on_time": baseline_budget,
+                "candidate_on_time": candidate_budget,
+                "deadline_regression": deadline,
+                "paired_outcome": outcome,
             }
         )
     return pairs
@@ -550,7 +678,6 @@ def run_matched_pilot(cfg: MatchedPilotConfig | None = None) -> dict[str, Any]:
     panel = _panel(cfg)
     backend, model = _backend(cfg)
     seed = int(cfg.seed)
-    families = sorted({item.family for item in panel})
     solves = {arm: 0 for arm in ("classical", "random_evolution", "single_agent", "five_agent")}
     llm_calls = {arm: 0 for arm in solves}
     llm_tokens = {arm: 0 for arm in solves}
@@ -587,7 +714,7 @@ def run_matched_pilot(cfg: MatchedPilotConfig | None = None) -> dict[str, Any]:
             backend,
             model,
             kind,
-            context=f"Candidate {index}. Families={families}. One-shot control; no fitness feedback.",
+            context=_routing_brief(panel) + f"\nCandidate {index}. One-shot control; no fitness feedback.",
         )
         sources = dict(classical_sources)
         sources[kind] = code
@@ -611,24 +738,36 @@ def run_matched_pilot(cfg: MatchedPilotConfig | None = None) -> dict[str, Any]:
     critic_text = ""
     for index in range(int(cfg.candidates)):
         kind = KINDS[index % len(KINDS)]
-        hypothesis = _architect_text(
+        plan_text = _architect_text(
             five_collector,
             backend,
             model,
-            context=f"Candidate {index}. Families={families}. Scheduled component={kind}. Prior critic: {critic_text or 'none'}.",
+            context=(
+                _routing_brief(panel)
+                + f"\nCandidate {index}. Scheduled component={kind}. Prior critic: {critic_text or 'none'}."
+            ),
         )
+        hypothesis = str(plan_text["hypothesis"]) if plan_text["grounded"] else ""
         code, row, schema = _propose_component(
             five_collector,
             backend,
             model,
             kind,
-            context=f"Candidate {index}. Architect hypothesis: {hypothesis}. Prior critic: {critic_text or 'none'}.",
+            context=(
+                _routing_brief(panel)
+                + f"\nCandidate {index}. Architect hypothesis: {hypothesis or 'rejected because it was not a routing hypothesis'}. "
+                + f"Prior critic: {critic_text or 'none'}."
+            ),
         )
         sources = dict(classical_sources)
         sources[kind] = code
         use_schema = schema if kind == "station_score" else FEATURE_SCHEMA_VERSION
         genuine = 1 if row.get("llm_generated") else 0
-        plan = {"components": [kind], "hypothesis": hypothesis}
+        plan = {
+            "components": [kind],
+            "hypothesis": hypothesis,
+            "architect_grounded": bool(plan_text["grounded"]),
+        }
         evaluated = _evaluate(
             "five_agent",
             f"five_{index}",

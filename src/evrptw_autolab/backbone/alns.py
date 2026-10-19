@@ -9,6 +9,7 @@ from evrptw_autolab.backbone.construct import insert_customer_fast
 from evrptw_autolab.backbone.energy_repair import repair_energy
 from evrptw_autolab.backbone.local_search import relocate_improve, two_opt_improve
 from evrptw_autolab.backbone.util import (
+    call_scorer,
     clone_solution,
     default_vehicle_id,
     empty_route,
@@ -16,6 +17,7 @@ from evrptw_autolab.backbone.util import (
     is_better,
     make_customer_stop,
     note_scorer_call,
+    note_selected_move,
     served_request_nodes,
 )
 from evrptw_autolab.problem.v2.types import ProblemSpecV2, SolutionV2
@@ -94,13 +96,28 @@ def destroy_worst(
         rng_value = rng.random()
         if scorer is not None:
             note_scorer_call(policy, "removal_priority")
-            score = float(scorer(float(due), float(share), float(rng_value)))
+            score = call_scorer(
+                scorer,
+                {
+                    "due_time": float(due),
+                    "route_distance_share": float(share),
+                    "rng_value": float(rng_value),
+                },
+                ("due_time", "route_distance_share", "rng_value"),
+            )
         else:
             score = float(due) + 10.0 * share + 0.01 * rng_value
         if score != score or score in (float("inf"), float("-inf")):
             score = 10.0 * share + 0.01 * rng_value
         scored.append((score + 1e-9 * (due / total_dist), unit))
     scored.sort(reverse=True)
+    if scored:
+        note_selected_move(
+            policy,
+            "removal_priority",
+            ",".join(scored[0][1]),
+            [",".join(unit) for _, unit in scored],
+        )
     k = max(1, min(k, len(scored)))
     removed = [u for _, u in scored[:k]]
     nodes = {n for unit in removed for n in unit}

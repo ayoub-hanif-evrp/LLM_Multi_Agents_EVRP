@@ -16,7 +16,7 @@ from typing import Any
 
 from evrptw_autolab.backbone.solver import solve_classical
 from evrptw_autolab.backbone.util import evaluate
-from evrptw_autolab.components.expressions import ARGUMENT_NAMES, wrap_expression
+from evrptw_autolab.components.expressions import argument_names, wrap_expression
 from evrptw_autolab.components.interfaces import DEFAULT_SOURCES, ComponentKind
 from evrptw_autolab.components.loader import load_bundle
 from evrptw_autolab.experiments.montoya_attribution import (
@@ -58,9 +58,13 @@ def random_removal_expression(rng: random.Random) -> str:
     return f"{left} - {coeff} * {right} + {other} * rng_value"
 
 
-def random_component_expression(kind: ComponentKind, rng: random.Random) -> str:
+def random_component_expression(
+    kind: ComponentKind,
+    rng: random.Random,
+    schema: str | None = None,
+) -> str:
     """Draw one expression for any scoring component from the shared grammar."""
-    names = list(ARGUMENT_NAMES[kind])
+    names = list(argument_names(kind, schema))
     coeffs = ("0.01", "0.1", "1.0", "5.0", "10.0")
     left = rng.choice(names)
     right = rng.choice(names)
@@ -81,12 +85,16 @@ def conservative_decision(pairs: list[dict[str, Any]]) -> dict[str, Any]:
     if not pairs:
         return {"accepted": False, "reason": "no_development_pairs", "wins": 0, "losses": 0, "ties": 0}
     feasibility_regression = any(item["baseline_feasible"] and not item["candidate_feasible"] for item in pairs)
+    deadline_regression = any(bool(item.get("deadline_regression")) for item in pairs)
     wins = sum(1 for item in pairs if item["paired_outcome"] == "candidate")
     losses = sum(1 for item in pairs if item["paired_outcome"] == "baseline")
     ties = sum(1 for item in pairs if item["paired_outcome"] == "tie")
     infeasible = sum(1 for item in pairs if item["paired_outcome"] == "tie_infeasible")
     if feasibility_regression:
         reason = "feasibility_regression"
+        accepted = False
+    elif deadline_regression:
+        reason = "deadline_regression"
         accepted = False
     elif losses:
         reason = "objective_regression"

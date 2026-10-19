@@ -295,10 +295,16 @@ def _statistics(
                         "reason": decision.get("reason"),
                     }
                 )
-    promoted = []
-    if confirmation is not None:
-        for row in confirmation.get("seed_confirmation") or []:
-            promoted.append(
+    def _confirm(path: Path, workflow: str) -> dict[str, Any] | None:
+        if not path.exists():
+            return None
+        payload = _load(path)
+        return {
+            "workflow": workflow,
+            "file": path.name,
+            "source": payload.get("decision_file"),
+            "promoted_policies": payload.get("promoted_policies"),
+            "decisions": [
                 {
                     "arm": row.get("arm"),
                     "candidate_id": row.get("candidate_id"),
@@ -307,15 +313,31 @@ def _statistics(
                     "wins": row.get("wins"),
                     "losses": row.get("losses"),
                 }
-            )
+                for row in payload.get("seed_confirmation") or []
+            ],
+        }
+
+    confirmations = [
+        block
+        for block in (
+            _confirm(PAPER / "confirmation_schneider.json", "specialist_schedule"),
+            _confirm(PAPER / "confirmation_schneider_role_split.json", "unified_versus_architect_specialist_critic"),
+        )
+        if block is not None
+    ]
     return {
-        "design": "paired instance-seed rows; seeds on one instance are not an independent dataset",
+        "design": "paired instance-seed rows; seeds on one instance are not an independent geometry",
         "power": "exploratory",
-        "reason": "The new evolution uses five gate instances and discovery seed 7. Extra seeds are measured only for a candidate the seed-7 rule already accepted.",
+        "reason": (
+            "Each recorded search uses one development instance per family. "
+            "Three-seed confirmation is stored separately for the specialist-role schedule and the role-separated workflow. "
+            "A later deadline-aware rule rejects a late feasible candidate as a win over an on-time baseline. "
+            "The recorded campaigns were selected before that rule."
+        ),
         "selection_rule": "conservative",
         "robust_rule": "recorded, not used for deployment",
         "seed7_comparisons": comparisons,
-        "three_seed_confirmation": promoted,
+        "three_seed_confirmation": confirmations,
         "interval": "No interval is reported. The paired sample is too small for a superiority claim.",
     }
 
@@ -523,7 +545,8 @@ def _report(
             "",
             "## G. Limitations",
             "",
-            "The comparison is exploratory. Five gate instances and one discovery seed do not support a significance claim.",
+            "The comparison is exploratory. One instance per family and one discovery seed do not support a significance claim.",
+            "Deadline-aware selection and ranking-change traces apply to later runs. They do not rewrite the recorded campaigns.",
             "The 14:59 UTC artifact used full-bundle proposals and deployed the first accepted candidate. It is historical.",
             "The 2026-10-19 18:27 and 18:38 UTC runs used specialist role prompts on a rotating component. The five-agent arm added a critic and did not call an architect.",
             "Seed 13 of that same schedule accepted no candidate.",
@@ -642,6 +665,8 @@ def main() -> None:
                 "Generation 0 receives no fitness feedback. Later generations do.",
                 "Among conservatively accepted candidates, the one with the most wins is deployed. An earlier generation wins a tie.",
                 "The critic receives the classical objective keys. It does not add a solver evaluation.",
+                "A feasible candidate that misses completed_within_budget cannot beat an on-time baseline. Recorded campaigns were accepted before this deadline check.",
+                "Score changes are recorded separately from ranking changes and from the move selected during construction.",
                 "The 2026-10-19 18:27 and 18:38 UTC artifacts use specialist prompts. Five-agent's extra call in those artifacts is the critic, not an architect.",
                 "The current code workflow is unified_versus_architect_specialist_critic. It is reported only from artifacts that record that workflow.",
                 "Random, single-agent, and five-agent search use the same expression language and the same scheduled component.",

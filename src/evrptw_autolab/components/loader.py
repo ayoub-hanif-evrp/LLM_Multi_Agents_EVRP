@@ -30,14 +30,24 @@ import component  # noqa: F401
 
 kind = {kind!r}
 fn = getattr(component, kind)
-if kind == "insertion_score":
-    val = fn(1.0, 100.0, 0.0, 5.0, 50.0)
-elif kind == "station_score":
-    val = fn(2.0, 10.0, 1.0)
-elif kind == "removal_priority":
-    val = fn(100.0, 0.5, 0.1)
-else:
-    raise SystemExit("unknown kind")
+known = {{
+    "delta_distance": 1.0,
+    "due_time": 100.0,
+    "ready_time": 0.0,
+    "demand": 5.0,
+    "capacity_slack": 50.0,
+    "detour": 2.0,
+    "battery_arrival": 10.0,
+    "station_rate": 1.0,
+    "route_distance_share": 0.5,
+    "rng_value": 0.1,
+    "vehicle_fixed_cost": 0.0,
+    "marginal_energy": 0.0,
+    "new_route_fixed_cost": 0.0,
+    "charge_time": 0.0,
+}}
+params = list(getattr(fn, "__code__").co_varnames[: getattr(fn, "__code__").co_argcount])
+val = fn(*(known.get(name, 0.0) for name in params))
 if not isinstance(val, (int, float)) or isinstance(val, bool):
     raise TypeError("score must be numeric")
 if not math.isfinite(float(val)):
@@ -141,6 +151,7 @@ class PolicyBundle:
     # Largest battery value actually passed into station_score. The child process
     # copies this onto the incumbent so a parent can see which scale was used.
     observed_battery_argument_max: float | None = None
+    selected_moves: list[dict[str, Any]] = field(default_factory=list)
 
     def set(self, kind: ComponentKind, fn: Callable[..., float], source: str, owner: str) -> None:
         setattr(self, kind, fn)

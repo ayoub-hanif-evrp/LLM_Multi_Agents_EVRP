@@ -1,7 +1,7 @@
 {
-  "design": "paired instance-seed rows; seeds on one instance are not an independent dataset",
+  "design": "paired instance-seed rows; seeds on one instance are not an independent geometry",
   "power": "exploratory",
-  "reason": "The new evolution uses five gate instances and discovery seed 7. Extra seeds are measured only for a candidate the seed-7 rule already accepted.",
+  "reason": "Each recorded search uses one development instance per family. Three-seed confirmation is stored separately for the specialist-role schedule and the role-separated workflow. A later deadline-aware rule rejects a late feasible candidate as a win over an on-time baseline. The recorded campaigns were selected before that rule.",
   "selection_rule": "conservative",
   "robust_rule": "recorded, not used for deployment",
   "seed7_comparisons": [
@@ -536,28 +536,72 @@
   ],
   "three_seed_confirmation": [
     {
-      "arm": "random_evolution",
-      "candidate_id": "random_g2",
-      "three_seed_accepted": true,
-      "reason": "accepted_no_regression",
-      "wins": 3,
-      "losses": 0
+      "workflow": "specialist_schedule",
+      "file": "confirmation_schneider.json",
+      "source": "C:\\Users\\ayoub\\Desktop\\LLM_Multi_Agents_EVRP-main\\results\\v2\\paper\\confirmation_decision.json",
+      "promoted_policies": [
+        "random_evolution:random_g2"
+      ],
+      "decisions": [
+        {
+          "arm": "random_evolution",
+          "candidate_id": "random_g2",
+          "three_seed_accepted": true,
+          "reason": "accepted_no_regression",
+          "wins": 3,
+          "losses": 0
+        },
+        {
+          "arm": "single_agent",
+          "candidate_id": "single_g0",
+          "three_seed_accepted": false,
+          "reason": "objective_regression",
+          "wins": 2,
+          "losses": 1
+        },
+        {
+          "arm": "five_agent",
+          "candidate_id": "five_g0",
+          "three_seed_accepted": false,
+          "reason": "objective_regression",
+          "wins": 2,
+          "losses": 1
+        }
+      ]
     },
     {
-      "arm": "single_agent",
-      "candidate_id": "single_g0",
-      "three_seed_accepted": false,
-      "reason": "objective_regression",
-      "wins": 2,
-      "losses": 1
-    },
-    {
-      "arm": "five_agent",
-      "candidate_id": "five_g0",
-      "three_seed_accepted": false,
-      "reason": "objective_regression",
-      "wins": 2,
-      "losses": 1
+      "workflow": "unified_versus_architect_specialist_critic",
+      "file": "confirmation_schneider_role_split.json",
+      "source": "results\\v2\\paper\\confirmation_decision_role_split.json",
+      "promoted_policies": [
+        "random_evolution:random_g2"
+      ],
+      "decisions": [
+        {
+          "arm": "random_evolution",
+          "candidate_id": "random_g2",
+          "three_seed_accepted": true,
+          "reason": "accepted_no_regression",
+          "wins": 3,
+          "losses": 0
+        },
+        {
+          "arm": "single_agent",
+          "candidate_id": "single_g0",
+          "three_seed_accepted": false,
+          "reason": "objective_regression",
+          "wins": 2,
+          "losses": 1
+        },
+        {
+          "arm": "five_agent",
+          "candidate_id": "five_g0",
+          "three_seed_accepted": false,
+          "reason": "objective_regression",
+          "wins": 2,
+          "losses": 1
+        }
+      ]
     }
   ],
   "interval": "No interval is reported. The paired sample is too small for a superiority claim."

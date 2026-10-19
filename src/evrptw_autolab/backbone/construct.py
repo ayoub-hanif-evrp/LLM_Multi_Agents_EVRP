@@ -4,6 +4,7 @@ from __future__ import annotations
 import random
 
 from evrptw_autolab.backbone.util import (
+    call_scorer,
     candidate_vehicle_ids,
     clone_solution,
     default_vehicle_id,
@@ -11,6 +12,7 @@ from evrptw_autolab.backbone.util import (
     evaluate,
     make_customer_stop,
     note_scorer_call,
+    note_selected_move,
     served_request_nodes,
     vehicle_for_route,
 )
@@ -25,14 +27,14 @@ def _finite_due(node) -> float:
     return normalize_due_time(float(node.due_time))
 
 
-def _insertion_cost(
+def _insertion_features(
     spec: ProblemSpecV2,
     route: list[RouteStopV2],
     index: int,
     node_id: str,
-    policy: object | None = None,
-) -> float:
-    """Cheap insertion score (not a feasibility check). Lower is better."""
+    vehicle: VehicleTypeV2 | None = None,
+) -> dict[str, float]:
+    """Feature values at one insertion. v1 names keep the historical capacity slack."""
     prev = spec.node_map[route[index - 1].node_id]
     nxt = spec.node_map[route[index].node_id]
     node = spec.node_map[node_id]
@@ -41,24 +43,47 @@ def _insertion_cost(
         + travel_distance(spec, node, nxt)
         - travel_distance(spec, prev, nxt)
     )
-    scorer = getattr(policy, "insertion_score", None) if policy is not None else None
-    if scorer is None:
-        # Prefer insertions that keep time-window slack when windows exist.
-        due = _finite_due(node)
-        return float(delta) + 0.001 * due
-    note_scorer_call(policy, "insertion_score")
+    due = _finite_due(node)
+    ready = float(node.ready_time) if node.ready_time == node.ready_time else 0.0
     vehicle_cap = spec.vehicle_types[0].capacity if spec.vehicle_types else 0.0
-    # Rough load on route (sum demands of request nodes).
     load = sum(spec.node_map[s.node_id].demand for s in route if s.event != "depot")
     slack = float(vehicle_cap) - float(load)
-    return float(
-        scorer(
-            float(delta),
-            _finite_due(node),
-            float(node.ready_time) if node.ready_time == node.ready_time else 0.0,
-            float(node.demand),
-            float(slack),
-        )
+    typed = vehicle
+    if typed is None and spec.vehicle_types:
+        typed = spec.vehicle_types[0]
+    fixed = float(typed.fixed_cost) if typed is not None else 0.0
+    rate = float(typed.consumption_rate or 0.0) if typed is not None else 0.0
+    has_customer = any(stop.event != "depot" for stop in route)
+    return {
+        "delta_distance": float(delta),
+        "due_time": float(due),
+        "ready_time": ready,
+        "demand": float(node.demand),
+        "capacity_slack": float(slack),
+        "vehicle_fixed_cost": fixed,
+        "marginal_energy": rate * float(delta),
+        "new_route_fixed_cost": 0.0 if has_customer else fixed,
+    }
+
+
+def _insertion_cost(
+    spec: ProblemSpecV2,
+    route: list[RouteStopV2],
+    index: int,
+    node_id: str,
+    policy: object | None = None,
+    vehicle: VehicleTypeV2 | None = None,
+) -> float:
+    """Cheap insertion score (not a feasibility check). Lower is better."""
+    features = _insertion_features(spec, route, index, node_id, vehicle)
+    scorer = getattr(policy, "insertion_score", None) if policy is not None else None
+    if scorer is None:
+        return float(features["delta_distance"]) + 0.001 * float(features["due_time"])
+    note_scorer_call(policy, "insertion_score")
+    return call_scorer(
+        scorer,
+        features,
+        ("delta_distance", "due_time", "ready_time", "demand", "capacity_slack"),
     )
 
 
@@ -154,6 +179,7 @@ def insert_customer_fast(
     best_route = -1
     best_pos = -1
     best_cost = float("inf")
+    considered: list[tuple[float, int, int]] = []
     node = spec.node_map[customer_id]
     for r_idx, route in enumerate(solution.routes):
         try:
@@ -170,11 +196,20 @@ def insert_customer_fast(
             if not ok:
                 continue
             delta = distance - base_distance
-            cost = _insertion_cost(spec, route, pos, customer_id, policy=policy) if policy is not None else delta
+            cost = _insertion_cost(spec, route, pos, customer_id, policy=policy, vehicle=vehicle) if policy is not None else delta
+            considered.append((float(cost), r_idx, pos))
             if cost < best_cost - 1e-12:
                 best_cost = cost
                 best_route = r_idx
                 best_pos = pos
+    if considered and policy is not None:
+        ordered = sorted(considered, key=lambda item: (item[0], item[1], item[2]))
+        note_selected_move(
+            policy,
+            "insertion_score",
+            f"{customer_id}:{ordered[0][1]}:{ordered[0][2]}",
+            [f"{customer_id}:{item[1]}:{item[2]}" for item in ordered],
+        )
     if best_route >= 0:
         updated = clone_solution(solution)
         updated.routes[best_route].insert(best_pos, make_customer_stop(customer_id, spec))
@@ -262,15 +297,27 @@ def construct_greedy(
     for customer_id in _customer_order(spec, rng):
         best: SolutionV2 | None = None
         best_cost = float("inf")
+        best_at = ""
+        considered: list[tuple[float, int, int]] = []
         for r_idx, route in enumerate(solution.routes):
             for pos in range(1, len(route)):
                 cost = _insertion_cost(spec, route, pos, customer_id, policy=policy)
                 trial = _try_insert(spec, solution, r_idx, pos, customer_id)
                 if trial is None:
                     continue
+                considered.append((float(cost), r_idx, pos))
                 if cost < best_cost - 1e-12:
                     best_cost = cost
                     best = trial
+                    best_at = f"{customer_id}:{r_idx}:{pos}"
+        if considered:
+            ordered = sorted(considered, key=lambda item: (item[0], item[1], item[2]))
+            note_selected_move(
+                policy,
+                "insertion_score",
+                best_at or f"{customer_id}:{ordered[0][1]}:{ordered[0][2]}",
+                [f"{customer_id}:{item[1]}:{item[2]}" for item in ordered],
+            )
         if best is None:
             # Open a new route; try cheaper vehicle types first on heterogeneous fleets.
             trial = None

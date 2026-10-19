@@ -111,4 +111,5 @@ def compile_component(kind: str, source: str) -> Any:
             raise UnsafeComponent("non-finite result")
         return float(value)
 
+    call.parameter_names = tuple(params)  # type: ignore[attr-defined]
     return call

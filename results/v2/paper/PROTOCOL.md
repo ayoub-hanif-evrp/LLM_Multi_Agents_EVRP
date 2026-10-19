@@ -9,6 +9,8 @@ Each generation replaces one scheduled component of the accepted parent. The sch
 Generation 0 receives no fitness feedback. Later generations do.
 Among conservatively accepted candidates, the one with the most wins is deployed. An earlier generation wins a tie.
 The critic receives the classical objective keys. It does not add a solver evaluation.
+A feasible candidate that misses completed_within_budget cannot beat an on-time baseline. Recorded campaigns were accepted before this deadline check.
+Score changes are recorded separately from ranking changes and from the move selected during construction.
 The 2026-10-19 18:27 and 18:38 UTC artifacts use specialist prompts. Five-agent's extra call in those artifacts is the critic, not an architect.
 The current code workflow is unified_versus_architect_specialist_critic. It is reported only from artifacts that record that workflow.
 Random, single-agent, and five-agent search use the same expression language and the same scheduled component.

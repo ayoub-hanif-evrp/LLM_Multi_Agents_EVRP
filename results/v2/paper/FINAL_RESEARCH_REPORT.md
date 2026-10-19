@@ -1,6 +1,6 @@
 # VoltForge 2.0 final research report
 
-Generated from raw artifacts at `63cc1d65edc15d01d6a8fe51a14f000f86f56c5a`.
+Generated from raw artifacts at `ca307d1f0d9272d2b07985489e5240ba2c3ff6a0`.
 Native objectives are not averaged across families. Infeasible nominal keys are not results.
 Classical improvements are not attributed to the LLM.
 
@@ -93,7 +93,8 @@ Model digest recorded for the generational run: sha256-1194192cf2a187eb02722edcc
 
 ## G. Limitations
 
-The comparison is exploratory. Five gate instances and one discovery seed do not support a significance claim.
+The comparison is exploratory. One instance per family and one discovery seed do not support a significance claim.
+Deadline-aware selection and ranking-change traces apply to later runs. They do not rewrite the recorded campaigns.
 The 14:59 UTC artifact used full-bundle proposals and deployed the first accepted candidate. It is historical.
 The 2026-10-19 18:27 and 18:38 UTC runs used specialist role prompts on a rotating component. The five-agent arm added a critic and did not call an architect.
 Seed 13 of that same schedule accepted no candidate.

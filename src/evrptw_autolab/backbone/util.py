@@ -106,6 +106,26 @@ def note_scorer_call(policy: object | None, name: str) -> None:
         counts[name] = int(counts.get(name, 0)) + 1
 
 
+def call_scorer(scorer: object, values: dict[str, float], legacy: tuple[str, ...]) -> float:
+    """Pass the features the loaded expression declares. Extra features stay unused."""
+    names = getattr(scorer, "parameter_names", None) or legacy
+    try:
+        args = tuple(float(values[str(name)]) for name in names)
+    except KeyError as error:
+        raise TypeError(f"scorer feature {error} was not provided") from error
+    return float(scorer(*args))  # type: ignore[operator]
+
+
+def note_selected_move(policy: object | None, kind: str, chosen: str, order: list[str]) -> None:
+    """Record one selected move and the candidate order that produced it."""
+    if policy is None:
+        return
+    log = getattr(policy, "selected_moves", None)
+    if not isinstance(log, list) or len(log) >= 16:
+        return
+    log.append({"kind": kind, "chosen": chosen, "order": list(order[:8])})
+
+
 def served_request_nodes(spec: ProblemSpecV2) -> list[str]:
     if spec.capabilities.pickup_delivery and spec.requests:
         out: list[str] = []

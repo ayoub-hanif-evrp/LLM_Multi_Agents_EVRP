@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, replace
 
-from evrptw_autolab.backbone.util import note_scorer_call
+from evrptw_autolab.backbone.util import call_scorer, note_scorer_call, note_selected_move
 from evrptw_autolab.problem.v2.charging import resolve_charge
 from evrptw_autolab.problem.v2.features import FEATURE_SCHEMA_VERSION, battery_argument_for_schema
 from evrptw_autolab.problem.v2.transport import (
@@ -97,7 +97,16 @@ def rank_station_candidates(
             if previous is None or float(battery_arg) > float(previous):
                 assert policy is not None
                 policy.observed_battery_argument_max = float(battery_arg)  # type: ignore[attr-defined]
-            value = float(scorer(item.detour, battery_arg, _rate(spec, item.station_id)))
+            value = call_scorer(
+                scorer,
+                {
+                    "detour": float(item.detour),
+                    "battery_arrival": float(battery_arg),
+                    "station_rate": float(_rate(spec, item.station_id)),
+                    "charge_time": float(getattr(item, "charge_duration", 0.0) or 0.0),
+                },
+                ("detour", "battery_arrival", "station_rate"),
+            )
         else:
             value = float(item.detour)
         scored.append(
@@ -123,6 +132,13 @@ def rank_station_candidates(
             item.station_id,
         )
     )
+    if scored:
+        note_selected_move(
+            policy,
+            "station_score",
+            scored[0].station_id,
+            [item.station_id for item in scored],
+        )
     rejected = [item for item in decisions if not item.accepted]
     ordered = scored + rejected
     _remember(policy, ordered)

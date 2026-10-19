@@ -85,7 +85,7 @@ def test_unified_and_role_split_use_different_model_roles() -> None:
     backend = FakeBackend(
         {
             "unified": expression,
-            "architect": json.dumps({"hypothesis": "prefer short insertions"}),
+            "architect": json.dumps({"hypothesis": "Lower delta_distance to reduce travel distance"}),
             "routing": expression,
         },
         token_sequence=[4],
@@ -94,11 +94,119 @@ def test_unified_and_role_split_use_different_model_roles() -> None:
     _code, row, _schema = _propose_unified_component(
         collector, backend, "fake", "insertion_score", context="test"
     )
-    hypothesis = _architect_text(collector, backend, "fake", context="test")
+    hypothesis = _architect_text(collector, backend, "fake", context="test")["hypothesis"]
     _code, specialist, _schema = _propose_component(
         collector, backend, "fake", "insertion_score", context="test"
     )
     assert backend.calls == ["unified", "architect", "routing"]
     assert row["agent_role"] == "unified"
     assert specialist["agent_role"] == "routing"
-    assert hypothesis == "prefer short insertions"
+    assert hypothesis == "Lower delta_distance to reduce travel distance"
+
+
+def test_ungrounded_architect_hypothesis_is_rejected() -> None:
+    import json
+
+    from evrptw_autolab.experiments.matched_pilot import _architect_text
+    from evrptw_autolab.llm.registry import FakeBackend
+    from evrptw_autolab.llm.usage import UsageCollector
+
+    backend = FakeBackend(
+        {"architect": json.dumps({"hypothesis": "improve insertion speed and data structures"})},
+        token_sequence=[3],
+    )
+    collector = UsageCollector(max_calls=4, max_tokens=100)
+    result = _architect_text(collector, backend, "fake", context="routing test")
+    assert result["grounded"] is False
+    assert backend.calls == ["architect", "architect"]
+
+
+def test_score_change_without_a_ranking_change_is_recorded_separately() -> None:
+    from evrptw_autolab.components.expressions import wrap_expression
+    from evrptw_autolab.components.interfaces import DEFAULT_SOURCES
+    from evrptw_autolab.experiments.generational_compare import _probe_trace
+
+    doubled = wrap_expression(
+        "removal_priority",
+        "2.0 * ((0.0 if due_time >= 1000000.0 else due_time) + 10.0 * route_distance_share + 0.01 * rng_value)",
+    )
+    sources = dict(DEFAULT_SOURCES)
+    sources["removal_priority"] = doubled
+    trace = _probe_trace(sources)
+    assert trace["score_changed"] is True
+    assert trace["ranking_changed"] is False
+    assert trace["selected_move_changed"] is False
+
+
+def test_fixed_cost_feature_can_change_the_selected_insertion() -> None:
+    from evrptw_autolab.backbone.util import call_scorer
+    from evrptw_autolab.components.expressions import wrap_expression
+    from evrptw_autolab.components.loader import load_bundle
+    from evrptw_autolab.problem.v2.features import FEATURE_SCHEMA_V3
+
+    distance_only = wrap_expression("insertion_score", "delta_distance", FEATURE_SCHEMA_V3)
+    with_fixed = wrap_expression(
+        "insertion_score",
+        "delta_distance + new_route_fixed_cost",
+        FEATURE_SCHEMA_V3,
+    )
+    points = (
+        {"delta_distance": 1.0, "due_time": 10.0, "ready_time": 0.0, "demand": 1.0, "capacity_slack": 5.0, "vehicle_fixed_cost": 10.0, "marginal_energy": 0.0, "new_route_fixed_cost": 100.0},
+        {"delta_distance": 2.0, "due_time": 10.0, "ready_time": 0.0, "demand": 1.0, "capacity_slack": 5.0, "vehicle_fixed_cost": 10.0, "marginal_energy": 0.0, "new_route_fixed_cost": 0.0},
+    )
+    left, _ = load_bundle({"insertion_score": distance_only}, feature_schema=FEATURE_SCHEMA_V3)
+    right, errors = load_bundle({"insertion_score": with_fixed}, feature_schema=FEATURE_SCHEMA_V3)
+    assert errors == []
+    left_scores = [call_scorer(left.insertion_score, point, ()) for point in points]
+    right_scores = [call_scorer(right.insertion_score, point, ()) for point in points]
+    assert left_scores.index(min(left_scores)) == 0
+    assert right_scores.index(min(right_scores)) == 1
+
+
+def test_v3_default_formulas_match_v1_on_shared_features() -> None:
+    from evrptw_autolab.backbone.util import call_scorer
+    from evrptw_autolab.components.expressions import ARGUMENT_NAMES, default_sources
+    from evrptw_autolab.components.loader import load_bundle
+    from evrptw_autolab.experiments.generational_compare import _PROBES
+    from evrptw_autolab.problem.v2.features import FEATURE_SCHEMA_V3, FEATURE_SCHEMA_VERSION
+
+    v1, _ = load_bundle(default_sources(FEATURE_SCHEMA_VERSION), feature_schema=FEATURE_SCHEMA_VERSION)
+    v3, errors = load_bundle(default_sources(FEATURE_SCHEMA_V3), feature_schema=FEATURE_SCHEMA_V3)
+    assert errors == []
+    for kind, points in _PROBES.items():
+        left = getattr(v1, kind)
+        right = getattr(v3, kind)
+        for point in points:
+            assert call_scorer(left, point, ARGUMENT_NAMES[kind]) == call_scorer(
+                right, point, ARGUMENT_NAMES[kind]
+            )
+
+
+def test_late_candidate_does_not_beat_an_on_time_baseline() -> None:
+    from evrptw_autolab.experiments.bundle_selection import conservative_decision
+    from evrptw_autolab.experiments.matched_pilot import _pairs
+
+    baseline = [
+        {
+            "instance_id": "c101_21",
+            "seed": 7,
+            "feasible": True,
+            "objective_key": [100.0],
+            "completed_within_budget": True,
+        }
+    ]
+    candidate = [
+        {
+            "instance_id": "c101_21",
+            "seed": 7,
+            "feasible": True,
+            "objective_key": [90.0],
+            "completed_within_budget": False,
+        }
+    ]
+    pairs = _pairs(baseline, candidate)
+    decision = conservative_decision(pairs)
+    assert pairs[0]["deadline_regression"] is True
+    assert pairs[0]["paired_outcome"] == "baseline"
+    assert decision["accepted"] is False
+    assert decision["reason"] == "deadline_regression"

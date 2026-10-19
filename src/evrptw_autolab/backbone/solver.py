@@ -345,6 +345,7 @@ class ClassicalSolver:
                 "parent_validated": False,
                 "inprocess_validated": True,
                 "scorer_calls": dict(getattr(self.policy, "call_counts", {}) or {}),
+                "selected_moves": list(getattr(self.policy, "selected_moves", []) or [])[:16],
                 "feature_schema": str(
                     getattr(self.policy, "feature_schema", FEATURE_SCHEMA_VERSION) or FEATURE_SCHEMA_VERSION
                 ),
@@ -359,6 +360,7 @@ class ClassicalSolver:
         published = tracker.get("incumbent")
         if isinstance(published, SolutionV2):
             published.metadata["scorer_calls"] = dict(solution.metadata["scorer_calls"])
+            published.metadata["selected_moves"] = list(solution.metadata.get("selected_moves") or [])
             published.metadata["feature_schema"] = solution.metadata["feature_schema"]
             published.metadata["station_battery_argument_max"] = solution.metadata[
                 "station_battery_argument_max"

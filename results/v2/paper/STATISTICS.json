@@ -6,7 +6,8 @@
   "robust_rule": "recorded, not used for deployment",
   "seed7_comparisons": [
     {
-      "study": "generational_qwen_seed7",
+      "study": "specialist_schedule_seed7",
+      "design": "Rotating specialist prompts. The five-agent arm adds a critic and does not call an architect",
       "arm": "random_evolution",
       "candidate_id": "random_g0",
       "wins": 0,
@@ -16,7 +17,8 @@
       "reason": "objective_regression"
     },
     {
-      "study": "generational_qwen_seed7",
+      "study": "specialist_schedule_seed7",
+      "design": "Rotating specialist prompts. The five-agent arm adds a critic and does not call an architect",
       "arm": "random_evolution",
       "candidate_id": "random_g1",
       "wins": 0,
@@ -26,7 +28,8 @@
       "reason": "no_strict_improvement"
     },
     {
-      "study": "generational_qwen_seed7",
+      "study": "specialist_schedule_seed7",
+      "design": "Rotating specialist prompts. The five-agent arm adds a critic and does not call an architect",
       "arm": "random_evolution",
       "candidate_id": "random_g2",
       "wins": 1,
@@ -36,7 +39,8 @@
       "reason": "accepted_no_regression"
     },
     {
-      "study": "generational_qwen_seed7",
+      "study": "specialist_schedule_seed7",
+      "design": "Rotating specialist prompts. The five-agent arm adds a critic and does not call an architect",
       "arm": "random_evolution",
       "candidate_id": "random_g3",
       "wins": 1,
@@ -46,29 +50,197 @@
       "reason": "objective_regression"
     },
     {
-      "study": "generational_qwen_seed7",
+      "study": "specialist_schedule_seed7",
+      "design": "Rotating specialist prompts. The five-agent arm adds a critic and does not call an architect",
+      "arm": "single_agent",
+      "candidate_id": "single_g0",
+      "wins": 1,
+      "losses": 0,
+      "ties": 4,
+      "accepted": true,
+      "reason": "accepted_no_regression"
+    },
+    {
+      "study": "specialist_schedule_seed7",
+      "design": "Rotating specialist prompts. The five-agent arm adds a critic and does not call an architect",
+      "arm": "single_agent",
+      "candidate_id": "single_g1",
+      "wins": 1,
+      "losses": 0,
+      "ties": 4,
+      "accepted": true,
+      "reason": "accepted_no_regression"
+    },
+    {
+      "study": "specialist_schedule_seed7",
+      "design": "Rotating specialist prompts. The five-agent arm adds a critic and does not call an architect",
+      "arm": "single_agent",
+      "candidate_id": "single_g2",
+      "wins": 1,
+      "losses": 0,
+      "ties": 4,
+      "accepted": true,
+      "reason": "accepted_no_regression"
+    },
+    {
+      "study": "specialist_schedule_seed7",
+      "design": "Rotating specialist prompts. The five-agent arm adds a critic and does not call an architect",
+      "arm": "single_agent",
+      "candidate_id": "single_g3",
+      "wins": 0,
+      "losses": 1,
+      "ties": 4,
+      "accepted": false,
+      "reason": "objective_regression"
+    },
+    {
+      "study": "specialist_schedule_seed7",
+      "design": "Rotating specialist prompts. The five-agent arm adds a critic and does not call an architect",
+      "arm": "five_agent",
+      "candidate_id": "five_g0",
+      "wins": 1,
+      "losses": 0,
+      "ties": 4,
+      "accepted": true,
+      "reason": "accepted_no_regression"
+    },
+    {
+      "study": "specialist_schedule_seed7",
+      "design": "Rotating specialist prompts. The five-agent arm adds a critic and does not call an architect",
+      "arm": "five_agent",
+      "candidate_id": "five_g1",
+      "wins": 1,
+      "losses": 0,
+      "ties": 4,
+      "accepted": true,
+      "reason": "accepted_no_regression"
+    },
+    {
+      "study": "specialist_schedule_seed7",
+      "design": "Rotating specialist prompts. The five-agent arm adds a critic and does not call an architect",
+      "arm": "five_agent",
+      "candidate_id": "five_g2",
+      "wins": 1,
+      "losses": 0,
+      "ties": 4,
+      "accepted": true,
+      "reason": "accepted_no_regression"
+    },
+    {
+      "study": "specialist_schedule_seed7",
+      "design": "Rotating specialist prompts. The five-agent arm adds a critic and does not call an architect",
+      "arm": "five_agent",
+      "candidate_id": "five_g3",
+      "wins": 0,
+      "losses": 2,
+      "ties": 3,
+      "accepted": false,
+      "reason": "objective_regression"
+    },
+    {
+      "study": "specialist_schedule_seed13",
+      "design": "Independent discovery seed using the same specialist-role schedule as 182727Z",
+      "arm": "random_evolution",
+      "candidate_id": "random_g0",
+      "wins": 0,
+      "losses": 2,
+      "ties": 3,
+      "accepted": false,
+      "reason": "objective_regression"
+    },
+    {
+      "study": "specialist_schedule_seed13",
+      "design": "Independent discovery seed using the same specialist-role schedule as 182727Z",
+      "arm": "random_evolution",
+      "candidate_id": "random_g1",
+      "wins": 0,
+      "losses": 0,
+      "ties": 5,
+      "accepted": false,
+      "reason": "no_strict_improvement"
+    },
+    {
+      "study": "specialist_schedule_seed13",
+      "design": "Independent discovery seed using the same specialist-role schedule as 182727Z",
+      "arm": "random_evolution",
+      "candidate_id": "random_g2",
+      "wins": 0,
+      "losses": 1,
+      "ties": 4,
+      "accepted": false,
+      "reason": "objective_regression"
+    },
+    {
+      "study": "specialist_schedule_seed13",
+      "design": "Independent discovery seed using the same specialist-role schedule as 182727Z",
+      "arm": "random_evolution",
+      "candidate_id": "random_g3",
+      "wins": 1,
+      "losses": 2,
+      "ties": 2,
+      "accepted": false,
+      "reason": "objective_regression"
+    },
+    {
+      "study": "specialist_schedule_seed13",
+      "design": "Independent discovery seed using the same specialist-role schedule as 182727Z",
       "arm": "single_agent",
       "candidate_id": "single_g0",
       "wins": 0,
-      "losses": 0,
-      "ties": 5,
+      "losses": 1,
+      "ties": 4,
       "accepted": false,
-      "reason": "no_strict_improvement"
+      "reason": "objective_regression"
     },
     {
-      "study": "generational_qwen_seed7",
+      "study": "specialist_schedule_seed13",
+      "design": "Independent discovery seed using the same specialist-role schedule as 182727Z",
       "arm": "single_agent",
       "candidate_id": "single_g1",
       "wins": 0,
-      "losses": 0,
-      "ties": 5,
+      "losses": 1,
+      "ties": 4,
       "accepted": false,
-      "reason": "no_strict_improvement"
+      "reason": "objective_regression"
     },
     {
-      "study": "generational_qwen_seed7",
+      "study": "specialist_schedule_seed13",
+      "design": "Independent discovery seed using the same specialist-role schedule as 182727Z",
       "arm": "single_agent",
       "candidate_id": "single_g2",
+      "wins": 0,
+      "losses": 1,
+      "ties": 4,
+      "accepted": false,
+      "reason": "objective_regression"
+    },
+    {
+      "study": "specialist_schedule_seed13",
+      "design": "Independent discovery seed using the same specialist-role schedule as 182727Z",
+      "arm": "single_agent",
+      "candidate_id": "single_g3",
+      "wins": 0,
+      "losses": 2,
+      "ties": 3,
+      "accepted": false,
+      "reason": "objective_regression"
+    },
+    {
+      "study": "specialist_schedule_seed13",
+      "design": "Independent discovery seed using the same specialist-role schedule as 182727Z",
+      "arm": "five_agent",
+      "candidate_id": "five_g0",
+      "wins": 0,
+      "losses": 1,
+      "ties": 4,
+      "accepted": false,
+      "reason": "objective_regression"
+    },
+    {
+      "study": "specialist_schedule_seed13",
+      "design": "Independent discovery seed using the same specialist-role schedule as 182727Z",
+      "arm": "five_agent",
+      "candidate_id": "five_g1",
       "wins": 0,
       "losses": 0,
       "ties": 5,
@@ -76,7 +248,107 @@
       "reason": "no_strict_improvement"
     },
     {
-      "study": "generational_qwen_seed7",
+      "study": "specialist_schedule_seed13",
+      "design": "Independent discovery seed using the same specialist-role schedule as 182727Z",
+      "arm": "five_agent",
+      "candidate_id": "five_g2",
+      "wins": 0,
+      "losses": 1,
+      "ties": 4,
+      "accepted": false,
+      "reason": "objective_regression"
+    },
+    {
+      "study": "specialist_schedule_seed13",
+      "design": "Independent discovery seed using the same specialist-role schedule as 182727Z",
+      "arm": "five_agent",
+      "candidate_id": "five_g3",
+      "wins": 0,
+      "losses": 1,
+      "ties": 4,
+      "accepted": false,
+      "reason": "objective_regression"
+    },
+    {
+      "study": "role_split_seed7",
+      "design": "unified_versus_architect_specialist_critic",
+      "arm": "random_evolution",
+      "candidate_id": "random_g0",
+      "wins": 0,
+      "losses": 2,
+      "ties": 3,
+      "accepted": false,
+      "reason": "objective_regression"
+    },
+    {
+      "study": "role_split_seed7",
+      "design": "unified_versus_architect_specialist_critic",
+      "arm": "random_evolution",
+      "candidate_id": "random_g1",
+      "wins": 0,
+      "losses": 0,
+      "ties": 5,
+      "accepted": false,
+      "reason": "no_strict_improvement"
+    },
+    {
+      "study": "role_split_seed7",
+      "design": "unified_versus_architect_specialist_critic",
+      "arm": "random_evolution",
+      "candidate_id": "random_g2",
+      "wins": 1,
+      "losses": 0,
+      "ties": 4,
+      "accepted": true,
+      "reason": "accepted_no_regression"
+    },
+    {
+      "study": "role_split_seed7",
+      "design": "unified_versus_architect_specialist_critic",
+      "arm": "random_evolution",
+      "candidate_id": "random_g3",
+      "wins": 1,
+      "losses": 1,
+      "ties": 3,
+      "accepted": false,
+      "reason": "objective_regression"
+    },
+    {
+      "study": "role_split_seed7",
+      "design": "unified_versus_architect_specialist_critic",
+      "arm": "single_agent",
+      "candidate_id": "single_g0",
+      "wins": 1,
+      "losses": 0,
+      "ties": 4,
+      "accepted": true,
+      "reason": "accepted_no_regression"
+    },
+    {
+      "study": "role_split_seed7",
+      "design": "unified_versus_architect_specialist_critic",
+      "arm": "single_agent",
+      "candidate_id": "single_g1",
+      "wins": 2,
+      "losses": 2,
+      "ties": 1,
+      "accepted": false,
+      "reason": "feasibility_regression"
+    },
+    {
+      "study": "role_split_seed7",
+      "design": "unified_versus_architect_specialist_critic",
+      "arm": "single_agent",
+      "candidate_id": "single_g2",
+      "wins": 1,
+      "losses": 0,
+      "ties": 4,
+      "accepted": true,
+      "reason": "accepted_no_regression"
+    },
+    {
+      "study": "role_split_seed7",
+      "design": "unified_versus_architect_specialist_critic",
       "arm": "single_agent",
       "candidate_id": "single_g3",
       "wins": 0,
@@ -86,19 +358,43 @@
       "reason": "no_strict_improvement"
     },
     {
-      "study": "generational_qwen_seed7",
+      "study": "role_split_seed7",
+      "design": "unified_versus_architect_specialist_critic",
       "arm": "five_agent",
       "candidate_id": "five_g0",
       "wins": 1,
-      "losses": 2,
-      "ties": 2,
+      "losses": 0,
+      "ties": 4,
+      "accepted": true,
+      "reason": "accepted_no_regression"
+    },
+    {
+      "study": "role_split_seed7",
+      "design": "unified_versus_architect_specialist_critic",
+      "arm": "five_agent",
+      "candidate_id": "five_g1",
+      "wins": 1,
+      "losses": 1,
+      "ties": 3,
       "accepted": false,
       "reason": "objective_regression"
     },
     {
-      "study": "generational_qwen_seed7",
+      "study": "role_split_seed7",
+      "design": "unified_versus_architect_specialist_critic",
       "arm": "five_agent",
-      "candidate_id": "five_g1",
+      "candidate_id": "five_g2",
+      "wins": 1,
+      "losses": 0,
+      "ties": 4,
+      "accepted": true,
+      "reason": "accepted_no_regression"
+    },
+    {
+      "study": "role_split_seed7",
+      "design": "unified_versus_architect_specialist_critic",
+      "arm": "five_agent",
+      "candidate_id": "five_g3",
       "wins": 0,
       "losses": 2,
       "ties": 3,
@@ -106,9 +402,10 @@
       "reason": "objective_regression"
     },
     {
-      "study": "generational_qwen_seed7",
-      "arm": "five_agent",
-      "candidate_id": "five_g2",
+      "study": "role_split_seed19",
+      "design": "unified_versus_architect_specialist_critic",
+      "arm": "random_evolution",
+      "candidate_id": "random_g0",
       "wins": 0,
       "losses": 0,
       "ties": 5,
@@ -116,14 +413,125 @@
       "reason": "no_strict_improvement"
     },
     {
-      "study": "generational_qwen_seed7",
-      "arm": "five_agent",
-      "candidate_id": "five_g3",
+      "study": "role_split_seed19",
+      "design": "unified_versus_architect_specialist_critic",
+      "arm": "random_evolution",
+      "candidate_id": "random_g1",
+      "wins": 0,
+      "losses": 0,
+      "ties": 5,
+      "accepted": false,
+      "reason": "no_strict_improvement"
+    },
+    {
+      "study": "role_split_seed19",
+      "design": "unified_versus_architect_specialist_critic",
+      "arm": "random_evolution",
+      "candidate_id": "random_g2",
+      "wins": 0,
+      "losses": 1,
+      "ties": 4,
+      "accepted": false,
+      "reason": "objective_regression"
+    },
+    {
+      "study": "role_split_seed19",
+      "design": "unified_versus_architect_specialist_critic",
+      "arm": "random_evolution",
+      "candidate_id": "random_g3",
+      "wins": 0,
+      "losses": 2,
+      "ties": 3,
+      "accepted": false,
+      "reason": "objective_regression"
+    },
+    {
+      "study": "role_split_seed19",
+      "design": "unified_versus_architect_specialist_critic",
+      "arm": "single_agent",
+      "candidate_id": "single_g0",
       "wins": 1,
       "losses": 0,
       "ties": 4,
       "accepted": true,
       "reason": "accepted_no_regression"
+    },
+    {
+      "study": "role_split_seed19",
+      "design": "unified_versus_architect_specialist_critic",
+      "arm": "single_agent",
+      "candidate_id": "single_g1",
+      "wins": 2,
+      "losses": 2,
+      "ties": 1,
+      "accepted": false,
+      "reason": "feasibility_regression"
+    },
+    {
+      "study": "role_split_seed19",
+      "design": "unified_versus_architect_specialist_critic",
+      "arm": "single_agent",
+      "candidate_id": "single_g2",
+      "wins": 1,
+      "losses": 0,
+      "ties": 4,
+      "accepted": true,
+      "reason": "accepted_no_regression"
+    },
+    {
+      "study": "role_split_seed19",
+      "design": "unified_versus_architect_specialist_critic",
+      "arm": "single_agent",
+      "candidate_id": "single_g3",
+      "wins": 0,
+      "losses": 0,
+      "ties": 5,
+      "accepted": false,
+      "reason": "no_strict_improvement"
+    },
+    {
+      "study": "role_split_seed19",
+      "design": "unified_versus_architect_specialist_critic",
+      "arm": "five_agent",
+      "candidate_id": "five_g0",
+      "wins": 0,
+      "losses": 2,
+      "ties": 3,
+      "accepted": false,
+      "reason": "objective_regression"
+    },
+    {
+      "study": "role_split_seed19",
+      "design": "unified_versus_architect_specialist_critic",
+      "arm": "five_agent",
+      "candidate_id": "five_g1",
+      "wins": 0,
+      "losses": 0,
+      "ties": 5,
+      "accepted": false,
+      "reason": "no_strict_improvement"
+    },
+    {
+      "study": "role_split_seed19",
+      "design": "unified_versus_architect_specialist_critic",
+      "arm": "five_agent",
+      "candidate_id": "five_g2",
+      "wins": 0,
+      "losses": 1,
+      "ties": 4,
+      "accepted": false,
+      "reason": "objective_regression"
+    },
+    {
+      "study": "role_split_seed19",
+      "design": "unified_versus_architect_specialist_critic",
+      "arm": "five_agent",
+      "candidate_id": "five_g3",
+      "wins": 0,
+      "losses": 2,
+      "ties": 3,
+      "accepted": false,
+      "reason": "objective_regression"
     }
   ],
   "three_seed_confirmation": [
@@ -137,15 +545,15 @@
     },
     {
       "arm": "single_agent",
-      "candidate_id": null,
+      "candidate_id": "single_g0",
       "three_seed_accepted": false,
-      "reason": "not_selected_on_seed_7",
-      "wins": null,
-      "losses": null
+      "reason": "objective_regression",
+      "wins": 2,
+      "losses": 1
     },
     {
       "arm": "five_agent",
-      "candidate_id": "five_g3",
+      "candidate_id": "five_g0",
       "three_seed_accepted": false,
       "reason": "objective_regression",
       "wins": 2,

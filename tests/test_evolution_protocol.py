@@ -66,3 +66,39 @@ def test_generational_selection_prefers_more_wins() -> None:
         {"accepted": True, "generation": 2, "candidate_id": "g2", "decision": {"wins": 3}},
     ]
     assert _selected(history) == "g2"
+
+
+def test_unified_and_role_split_use_different_model_roles() -> None:
+    import json
+
+    from evrptw_autolab.experiments.matched_pilot import (
+        _architect_text,
+        _propose_component,
+        _propose_unified_component,
+    )
+    from evrptw_autolab.llm.registry import FakeBackend
+    from evrptw_autolab.llm.usage import UsageCollector
+
+    expression = json.dumps(
+        {"component": "insertion_score", "expression": "max(0, capacity_slack - demand) + abs(delta_distance)"}
+    )
+    backend = FakeBackend(
+        {
+            "unified": expression,
+            "architect": json.dumps({"hypothesis": "prefer short insertions"}),
+            "routing": expression,
+        },
+        token_sequence=[4],
+    )
+    collector = UsageCollector(max_calls=4, max_tokens=100)
+    _code, row, _schema = _propose_unified_component(
+        collector, backend, "fake", "insertion_score", context="test"
+    )
+    hypothesis = _architect_text(collector, backend, "fake", context="test")
+    _code, specialist, _schema = _propose_component(
+        collector, backend, "fake", "insertion_score", context="test"
+    )
+    assert backend.calls == ["unified", "architect", "routing"]
+    assert row["agent_role"] == "unified"
+    assert specialist["agent_role"] == "routing"
+    assert hypothesis == "prefer short insertions"

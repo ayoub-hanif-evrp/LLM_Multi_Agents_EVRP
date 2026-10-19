@@ -1,6 +1,6 @@
 # VoltForge 2.0 final research report
 
-Generated from raw artifacts at `c2de5a05a9cc27a4aad65f6895231c13b580790a`.
+Generated from raw artifacts at `63cc1d65edc15d01d6a8fe51a14f000f86f56c5a`.
 Native objectives are not averaged across families. Infeasible nominal keys are not results.
 Classical improvements are not attributed to the LLM.
 
@@ -19,30 +19,61 @@ Seed-7 gate keys remain the frozen baseline where that baseline was already feas
 Bezzi `10-N10` is feasible on seeds 7, 11, and 22 in `results/v2/diagnostics/bezzi_pack/summary.json` and in this freeze.
 Those costs are classical pack plus ALNS. They are not the published 22.924 reference and they are not an LLM result.
 The historical expanded panel still records the earlier infeasible `10-N10` rows.
-Large Schneider discovery profile, not RC2: c103C15 feasible=True fault=OK; r102C10 feasible=True fault=OK. The first c101_21 trace timed out with a battery violation. Route-local construction then makes seed 7 feasible inside 20 seconds at (39, 3260.688883679656). That is a classical result, not an optimized fleet.
+Large Schneider discovery profile, not RC2: c103C15 feasible=True fault=OK; r102C10 feasible=True fault=OK; c101_21 feasible=False fault=BATTERY.
+That profile is the trace before route-local construction. Seed 7 of c101_21 is then feasible inside 20 seconds at 39 vehicles in results/v2/diagnostics/large_development/c101_21_route_local.json.
+The 39-vehicle key is a classical feasible result, not an optimized fleet and not an LLM result.
 
-## C. Single-agent evolution
+## C. Specialist-role schedule, seed 7
 
-Seed-7 generational selection: {"random_evolution": "random_g2", "single_agent": null, "five_agent": "five_g3"}.
-Generation 0 is the one-shot control. A candidate is accepted only by the conservative rule and only if a probe score changed.
-The earlier matched pilot on solver `27278a1` also selected nothing from the single-agent arm.
+Design: Rotating specialist prompts. The five-agent arm adds a critic and does not call an architect.
+Selection: {"random_evolution": "random_g2", "single_agent": "single_g0", "five_agent": "five_g0"}.
+This is not a unified-agent versus five-role comparison. Both language-model arms used specialist prompts.
+The accepted insertion returns are `return max(0, capacity_slack - demand) + abs(delta_distance)` for single_g0 and the same expression plus `float(ready_time > due_time)` for five_g0. That added term is zero when ready_time is at or before due_time.
+
+## C2. Unified designer versus architect, specialist, and critic
+
+Each generation calls the architect, the specialist for the one scheduled component, and the critic. Routing, charging, and search rotate across generations. All five roles are not called in the same generation.
+
+Artifact `results/v2/campaigns/generational_qwen_20261019T190105Z/generational.json`, discovery seed 7, wall 361.026s.
+Selection: {"random_evolution": "random_g2", "single_agent": "single_g0", "five_agent": "five_g0"}.
+Tokens: {"single_agent": 1891, "five_agent": 4455, "random_evolution": 0, "classical": 0}. Solver evaluations: {"classical": 5, "random_evolution": 20, "single_agent": 20, "five_agent": 20}.
+single_agent single_g0 role=unified c101_21=[4087.7523740925253] insertion=`def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:     return max(0, capacity_slack) + min(1000, delta_distance) - 0.1 * abs(ready_time - due_time)`.
+five_agent five_g0 role=routing c101_21=[4087.7523740925253] insertion=`def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:     return max(0, capacity_slack - demand) + abs(delta_distance)`.
+Architect hypothesis: The insertion_score component will serve as a metric for quantifying the effectiveness of insertion operations, likely measuring factors such as insertion speed, resource utilization, or impact on existing data structures, and may be integrated with existing performance monitoring systems to provide real-time feedback on insertion operation quality.
+
+Artifact `results/v2/campaigns/generational_qwen_20261019T190854Z/generational.json`, discovery seed 19, wall 360.822s.
+Selection: {"random_evolution": null, "single_agent": "single_g0", "five_agent": null}.
+Tokens: {"single_agent": 1920, "five_agent": 4430, "random_evolution": 0, "classical": 0}. Solver evaluations: {"classical": 5, "random_evolution": 20, "single_agent": 20, "five_agent": 20}.
+single_agent single_g0 role=unified c101_21=[4036.867946210605] insertion=`def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:     return max(0, capacity_slack) + min(1000, delta_distance) - 0.1 * abs(ready_time - due_time)`.
+five_agent selected nothing.
+
+Role-split three-seed file: `confirmation_schneider_role_split.json`.
+Promoted: ['random_evolution:random_g2'].
+- random_evolution random_g2: three-seed accepted=True reason=accepted_no_regression wins=3 losses=0
+- single_agent single_g0: three-seed accepted=False reason=objective_regression wins=2 losses=1
+- five_agent five_g0: three-seed accepted=False reason=objective_regression wins=2 losses=1
+
 
 ## D. Five-agent evolution
 
 The 2026-10-18 matched pilot accepted `five_1` on seed 7 and that bundle lost Hiermann `c101_21` on seeds 11 and 22.
 It did not beat classical or the random grammar once those seeds were measured.
 The 2026-10-19 generational arm uses the same conservative rule, the same gate, and the same candidate count.
-Five-agent token use is higher because the architect, component calls, and critic are extra model calls. They do not add solver evaluations.
-A resource-matched claim is not supported: equal solver evaluations were enforced, and the extra tokens were measured rather than matched by giving the other arms more model calls.
+Five-agent token use in that schedule is the critic call. The architect was not called.
+Equal solver evaluations were enforced. Token counts are measured and are not a matched compute budget.
 
 ## E. What generalizes
 
+The bullets below are the specialist-schedule confirmation in `confirmation_schneider.json`, not the role-split confirmation in section C2.
 The classical default remains the deployed scoring policy.
 A grammar candidate can pass the development rule without being an LLM result.
 - random_evolution random_g2: three-seed accepted=True reason=accepted_no_regression wins=3 losses=0
 -   seed 11 c101_21 key=[4122.8495525577955] within_budget=True
 -   seed 22 c101_21 key=[4082.91815223344] within_budget=True
-- five_agent five_g3: three-seed accepted=False reason=objective_regression wins=2 losses=1
+- single_agent single_g0: three-seed accepted=False reason=objective_regression wins=2 losses=1
+-   seed 11 c101_21 key=[4259.304471929594] within_budget=True
+-   seed 22 c101_21 key=[4044.2164307328712] within_budget=True
+- five_agent five_g0: three-seed accepted=False reason=objective_regression wins=2 losses=1
 -   seed 11 c101_21 key=[4259.304471929594] within_budget=True
 -   seed 22 c101_21 key=[4044.2164307328712] within_budget=True
 - confirmation paired rows tied=9 differed=0
@@ -63,18 +94,12 @@ Model digest recorded for the generational run: sha256-1194192cf2a187eb02722edcc
 ## G. Limitations
 
 The comparison is exploratory. Five gate instances and one discovery seed do not support a significance claim.
-The 2026-10-19 parent-mutation run is `results/v2/campaigns/generational_qwen_20261019T182727Z/generational.json`.
-Model digest `sha256-1194192cf2a187eb02722edcc3f77b11d21f537048ce04b67ccf8ba78863006a`.
-Solver evaluations stayed 5/20/20/20. Tokens were 1,842 for single-agent and 3,711 for five-agent.
-Seed 7 selected `random_g2`, one-shot `single_g0`, and one-shot `five_g0`. Later generations did not earn more wins, so the earliest accepted candidate was kept.
-All three selected policies moved only Hiermann `c101_21` on seed 7: classical 4150.872544094683, random 4126.724254409762, and both language-model policies 4087.7523740925253.
-Seeds 11 and 22 reject both language-model policies: seed 11 is 4259.304471929594 against classical 4164.778526628387, and seed 22 is 4044.2164307328712.
-`random_g2` stays feasible and better on `c101_21` for seeds 11 and 22, at 4122.8495525577955 and 4082.91815223344, then ties classical on all 9 untouched Schneider confirmation rows.
-Five-agent search still does not pass the conservative rule.
-An independent discovery repeat on seed 13, with the same operator and four candidates, accepted no random, single-agent, or five-agent candidate.
-Single-agent and five-agent proposals in the executed run were new bundles conditioned on feedback text. Only the random arm mutated the accepted parent's source.
+The 14:59 UTC artifact used full-bundle proposals and deployed the first accepted candidate. It is historical.
+The 2026-10-19 18:27 and 18:38 UTC runs used specialist role prompts on a rotating component. The five-agent arm added a critic and did not call an architect.
+Seed 13 of that same schedule accepted no candidate.
+A later run with workflow unified_versus_architect_specialist_critic is reported only when its artifact is present.
 Critic text is not a causal explanation.
-Large 100-customer Schneider construction used to time out with a battery violation. Route-local construction makes development `c101_21` seed 7 feasible inside 20 seconds at 39 vehicles. That fleet is not an optimized result.
+Route-local construction makes development c101_21 seed 7 feasible inside 20 seconds at 39 vehicles. That fleet is not an optimized result. RC2 was not used to make this change.
 Hiermann `c101_21` remains a 20-vehicle classical solution on the frozen seed-7 gate.
 FakeBackend output is plumbing and is not model evidence.
 

@@ -114,6 +114,13 @@ def _solve_confirmation(policy: str, sources: dict[str, str] | None, schema: str
 
 
 def main() -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--source", type=Path, default=None)
+    parser.add_argument("--decision", type=Path, default=OUT.with_name("confirmation_decision.json"))
+    parser.add_argument("--out", type=Path, default=OUT)
+    args = parser.parse_args()
     split = json.loads((ROOT / "results" / "manifests" / "split.json").read_text(encoding="utf-8"))
     panel_ids = {item.instance_id for item in gate_panel()}
     development = json.loads(
@@ -130,7 +137,7 @@ def main() -> None:
             or instance_id in panel_ids
         ):
             raise SystemExit(f"{instance_id} is not an untouched confirmation id")
-    source = _latest_generational()
+    source = args.source or _latest_generational()
     payload = json.loads(source.read_text(encoding="utf-8"))
     if payload.get("fake"):
         raise SystemExit("refusing a FakeBackend artifact")
@@ -171,7 +178,7 @@ def main() -> None:
         decisions.append(record)
         if decision["accepted"]:
             promoted.append({"policy": f"{arm}:{candidate_id}", "sources": sources, "schema": schema})
-    decision_path = OUT.with_name("confirmation_decision.json")
+    decision_path = args.decision
     decision_path.write_text(
         json.dumps(
             {
@@ -191,8 +198,9 @@ def main() -> None:
     rows = _solve_confirmation("classical_default", None, None)
     for policy in promoted:
         rows.extend(_solve_confirmation(policy["policy"], policy["sources"], policy["schema"]))
+    OUT_PATH = args.out
     feasible = sum(1 for row in rows if row["feasible"] and row["policy"] == "classical_default")
-    OUT.write_text(
+    OUT_PATH.write_text(
         json.dumps(
             {
                 "protocol": "untouched_schneider_confirmation_c5",
@@ -209,7 +217,7 @@ def main() -> None:
         + "\n",
         encoding="utf-8",
     )
-    print("wrote", OUT, flush=True)
+    print("wrote", OUT_PATH, flush=True)
 
 
 if __name__ == "__main__":

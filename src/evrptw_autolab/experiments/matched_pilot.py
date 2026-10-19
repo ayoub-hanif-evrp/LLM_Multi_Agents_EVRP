@@ -202,6 +202,58 @@ def _propose_component(
     return code, row, schema
 
 
+def _propose_unified_component(
+    collector: UsageCollector,
+    backend: Any,
+    model: str,
+    kind: ComponentKind,
+    *,
+    context: str,
+) -> tuple[str, dict[str, Any], str]:
+    """One designer proposes the scheduled component. No specialist role is used."""
+    raw = collector.complete(
+        backend,
+        prompt=(
+            "You are one unified heuristic designer. "
+            + _expression_prompt(kind, context=context)
+        ),
+        role="unified",
+        temperature=0.4,
+        model=model,
+        json_mode=True,
+    )
+    payload = extract_json(raw)
+    code, row = _accept_expression(kind, payload, collector, backend, model)
+    row["agent_role"] = "unified"
+    schema = FEATURE_SCHEMA_VERSION
+    if kind == "station_score" and row["llm_generated"]:
+        schema = normalize_feature_schema(payload.get("feature_schema"))
+    return code, row, schema
+
+
+def _architect_text(
+    collector: UsageCollector,
+    backend: Any,
+    model: str,
+    *,
+    context: str,
+) -> str:
+    raw = collector.complete(
+        backend,
+        prompt=(
+            "You are the Architect. State one hypothesis about the scheduled component. "
+            "Return JSON with summary and hypothesis. Do not write the expression.\n"
+            + context
+        ),
+        role="architect",
+        temperature=0.3,
+        model=model,
+        json_mode=True,
+    )
+    plan = extract_json(raw)
+    return str(plan.get("hypothesis") or plan.get("summary") or "")
+
+
 def _propose_single(
     collector: UsageCollector,
     backend: Any,
@@ -530,7 +582,7 @@ def run_matched_pilot(cfg: MatchedPilotConfig | None = None) -> dict[str, Any]:
     single_collector = UsageCollector(max_calls=cfg.max_llm_calls, max_tokens=cfg.max_llm_tokens)
     for index in range(int(cfg.candidates)):
         kind = KINDS[index % len(KINDS)]
-        code, row, schema = _propose_component(
+        code, row, schema = _propose_unified_component(
             single_collector,
             backend,
             model,
@@ -559,18 +611,24 @@ def run_matched_pilot(cfg: MatchedPilotConfig | None = None) -> dict[str, Any]:
     critic_text = ""
     for index in range(int(cfg.candidates)):
         kind = KINDS[index % len(KINDS)]
+        hypothesis = _architect_text(
+            five_collector,
+            backend,
+            model,
+            context=f"Candidate {index}. Families={families}. Scheduled component={kind}. Prior critic: {critic_text or 'none'}.",
+        )
         code, row, schema = _propose_component(
             five_collector,
             backend,
             model,
             kind,
-            context=f"Candidate {index}. Families={families}. Prior critic: {critic_text or 'none'}.",
+            context=f"Candidate {index}. Architect hypothesis: {hypothesis}. Prior critic: {critic_text or 'none'}.",
         )
         sources = dict(classical_sources)
         sources[kind] = code
         use_schema = schema if kind == "station_score" else FEATURE_SCHEMA_VERSION
         genuine = 1 if row.get("llm_generated") else 0
-        plan = {"components": [kind], "hypothesis": critic_text}
+        plan = {"components": [kind], "hypothesis": hypothesis}
         evaluated = _evaluate(
             "five_agent",
             f"five_{index}",

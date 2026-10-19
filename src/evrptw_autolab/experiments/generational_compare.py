@@ -1,9 +1,9 @@
-"""Multi-generation comparison with equal panel-evaluation budgets.
+"""Multi-generation comparison with one shared mutation schedule.
 
-Every search arm replaces one scheduled component of its accepted parent.
-Generation 0 does not see fitness feedback. Later generations do. The critic
-sees the classical baseline and does not add a solver evaluation. Single-agent
-and five-agent share one token cap.
+The unified arm asks one designer for the scheduled component. The role-split
+arm asks an architect, then the specialist for that component, then a critic.
+Random uses the same component schedule and no model. Solver evaluations match.
+Token counts are recorded and are not assumed to be equal.
 """
 from __future__ import annotations
 
@@ -27,12 +27,14 @@ from evrptw_autolab.experiments.fair_budget import DECLARED_SELECTION_RULE, SEAR
 from evrptw_autolab.experiments.matched_pilot import (
     KINDS,
     MatchedPilotConfig,
+    _architect_text,
     _backend,
     _critic,
     _evaluate,
     _pairs,
     _panel,
     _propose_component,
+    _propose_unified_component,
 )
 from evrptw_autolab.llm.usage import UsageCollector
 from evrptw_autolab.problem.v2.features import FEATURE_SCHEMA_VERSION
@@ -228,7 +230,7 @@ def _run_single(
     history = []
     for generation in range(candidates):
         kind = KINDS[generation % len(KINDS)]
-        code, row, schema = _propose_component(
+        code, row, schema = _propose_unified_component(
             collector,
             backend,
             model,
@@ -254,7 +256,7 @@ def _run_single(
             sources,
             rows,
             baseline,
-            mutation=f"{kind}: parent mutation",
+            mutation=f"{kind}: unified designer",
             origin="llm",
         )
         item["attribution"] = [{key: value for key, value in row.items() if key != "source"}]
@@ -278,7 +280,7 @@ def _run_five(
     *,
     use_critic: bool,
 ) -> tuple[list[dict[str, Any]], UsageCollector]:
-    collector = UsageCollector(max_calls=candidates * 4, max_tokens=_TOKEN_CAP)
+    collector = UsageCollector(max_calls=candidates * 6, max_tokens=_TOKEN_CAP)
     parent_sources = {kind: DEFAULT_SOURCES[kind] for kind in KINDS}
     parent_schema = FEATURE_SCHEMA_VERSION
     parent_id = "classical"
@@ -286,13 +288,18 @@ def _run_five(
     history = []
     for generation in range(candidates):
         kind = KINDS[generation % len(KINDS)]
-        context = f"Generation {generation}. Prior critic: {critic_text or 'none'}."
+        hypothesis = _architect_text(
+            collector,
+            backend,
+            model,
+            context=f"Generation {generation}. Scheduled component={kind}. Prior critic: {critic_text or 'none'}.",
+        )
         code, row, schema = _propose_component(
             collector,
             backend,
             model,
             kind,
-            context=context,
+            context=f"Generation {generation}. Architect hypothesis: {hypothesis}. Prior critic: {critic_text or 'none'}.",
         )
         sources, use_schema = _apply_component(parent_sources, parent_schema, kind, code, schema)
         genuine = 1 if row.get("llm_generated") else 0
@@ -313,9 +320,10 @@ def _run_five(
             sources,
             rows,
             baseline,
-            mutation=f"{kind}: parent mutation",
+            mutation=f"{kind}: architect plus specialist",
             origin="llm",
         )
+        item["architect_hypothesis"] = hypothesis
         item["attribution"] = [{key: value for key, value in row.items() if key != "source"}]
         if use_critic:
             critic_text = _critic(collector, backend, model, rows, baseline)
@@ -409,6 +417,7 @@ def run_generational(cfg: GenerationalConfig | None = None) -> dict[str, Any]:
     }
     payload = {
         "protocol": "generational_equal_panel_evaluations",
+        "workflow": "unified_versus_architect_specialist_critic",
         "selection_rule": DECLARED_SELECTION_RULE,
         "model": model,
         "model_digest": _ollama_digest(model),
@@ -442,12 +451,12 @@ def run_generational(cfg: GenerationalConfig | None = None) -> dict[str, Any]:
         "wall_s": round(time.monotonic() - started, 3),
         "artifact": str(out / "generational.json"),
         "claim": (
-            "Each generation mutates one scheduled component of the accepted parent. "
-            "Generation 0 receives no fitness feedback. Acceptance uses the conservative "
-            "rule and requires a probe-score change. The deployed candidate is the "
-            "accepted one with the most wins. Single-agent and five-agent share one "
-            "token cap. The critic sees the classical keys and adds no solver evaluation. "
-            "FakeBackend rows are not model evidence."
+            "The unified arm is one designer. The other language-model arm is an architect, "
+            "the specialist for the scheduled component, and a critic. Both replace one "
+            "parent component per generation. Generation 0 receives no fitness feedback. "
+            "Acceptance uses the conservative rule and a probe-score change. The deployed "
+            "candidate has the most wins. Solver evaluations match. Tokens are measured, "
+            "not assumed equal. FakeBackend rows are not model evidence."
         ),
     }
     (out / "generational.json").write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")

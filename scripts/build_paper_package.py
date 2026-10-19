@@ -99,12 +99,50 @@ def _feasibility(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 
 def _generational() -> dict[str, Any] | None:
-    matches = sorted((ROOT / "results" / "v2" / "campaigns").glob("generational_qwen_*/generational.json"))
-    if not matches:
-        return None
-    payload = _load(matches[-1])
-    payload["_path"] = str(matches[-1].relative_to(ROOT))
-    return payload
+    studies = _studies()
+    for study in studies:
+        if study["_study"] == "specialist_schedule_seed7":
+            return study
+    return studies[-1] if studies else None
+
+
+def _studies() -> list[dict[str, Any]]:
+    named = [
+        (
+            "results/v2/campaigns/generational_qwen_20261019T182727Z/generational.json",
+            "specialist_schedule_seed7",
+            "Rotating specialist prompts. The five-agent arm adds a critic and does not call an architect",
+        ),
+        (
+            "results/v2/campaigns/generational_qwen_20261019T183813Z/generational.json",
+            "specialist_schedule_seed13",
+            "Independent discovery seed using the same specialist-role schedule as 182727Z",
+        ),
+    ]
+    found: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for relative, study, design in named:
+        path = ROOT / relative
+        if not path.exists():
+            continue
+        payload = _load(path)
+        payload["_path"] = relative.replace("\\", "/")
+        payload["_study"] = study
+        payload["_design"] = design
+        found.append(payload)
+        seen.add(payload["_path"])
+    for path in sorted((ROOT / "results" / "v2" / "campaigns").glob("generational_qwen_*/generational.json")):
+        relative = str(path.relative_to(ROOT)).replace("\\", "/")
+        if relative in seen:
+            continue
+        payload = _load(path)
+        if payload.get("workflow") != "unified_versus_architect_specialist_critic":
+            continue
+        payload["_path"] = relative
+        payload["_study"] = f"role_split_seed{payload.get('seed')}"
+        payload["_design"] = str(payload["workflow"])
+        found.append(payload)
+    return found
 
 
 def _comparison_rows(gen: dict[str, Any]) -> list[dict[str, Any]]:
@@ -112,7 +150,7 @@ def _comparison_rows(gen: dict[str, Any]) -> list[dict[str, Any]]:
     for row in gen["classical"]:
         rows.append(
             {
-                "study": "generational_qwen_seed7",
+                "study": gen.get("_study", "generational_qwen_seed7"),
                 "arm": "classical",
                 "candidate_id": "default",
                 "generation": "",
@@ -132,7 +170,7 @@ def _comparison_rows(gen: dict[str, Any]) -> list[dict[str, Any]]:
                 decision = item["decision"]
                 rows.append(
                     {
-                        "study": "generational_qwen_seed7",
+                        "study": gen.get("_study", "generational_qwen_seed7"),
                         "arm": arm,
                         "candidate_id": item["candidate_id"],
                         "generation": item["generation"],
@@ -156,6 +194,7 @@ def _evolution_rows(gen: dict[str, Any]) -> list[dict[str, Any]]:
             decision = item["decision"]
             rows.append(
                 {
+                    "study": gen.get("_study", "generational"),
                     "arm": arm,
                     "generation": item["generation"],
                     "oneshot": item["oneshot"],
@@ -205,7 +244,7 @@ def _compute(gen: dict[str, Any] | None) -> list[dict[str, Any]]:
         for arm, solves in gen["solver_solves"].items():
             rows.append(
                 {
-                    "study": "generational_qwen_seed7",
+                    "study": gen.get("_study", "generational_qwen_seed7"),
                     "arm": arm,
                     "solver_solves": solves,
                     "llm_calls": gen["llm_calls"].get(arm, 0),
@@ -232,15 +271,21 @@ def _compute(gen: dict[str, Any] | None) -> list[dict[str, Any]]:
     return rows
 
 
-def _statistics(gen: dict[str, Any] | None, confirmation: dict[str, Any] | None) -> dict[str, Any]:
+def _statistics(
+    gen: dict[str, Any] | None,
+    confirmation: dict[str, Any] | None,
+    studies: list[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
     comparisons = []
-    if gen is not None:
+    sources = studies if studies is not None else ([gen] if gen is not None else [])
+    for source in sources:
         for arm in ("random_evolution", "single_agent", "five_agent"):
-            for item in gen[arm]:
+            for item in source[arm]:
                 decision = item["decision"]
                 comparisons.append(
                     {
-                        "study": "generational_qwen_seed7",
+                        "study": source.get("_study", "generational"),
+                        "design": source.get("_design"),
                         "arm": arm,
                         "candidate_id": item["candidate_id"],
                         "wins": decision.get("wins"),
@@ -331,6 +376,63 @@ def _moved(confirmation: dict[str, Any] | None) -> list[str]:
     return lines
 
 
+def _role_split_lines() -> list[str]:
+    studies = [
+        study
+        for study in _studies()
+        if study.get("workflow") == "unified_versus_architect_specialist_critic"
+    ]
+    lines = [
+        "## C2. Unified designer versus architect, specialist, and critic",
+        "",
+        "Each generation calls the architect, the specialist for the one scheduled component, and the critic. Routing, charging, and search rotate across generations. All five roles are not called in the same generation.",
+        "",
+    ]
+    if not studies:
+        lines.extend(["No artifact with this workflow is present.", ""])
+        return lines
+    for study in studies:
+        lines.append(
+            f"Artifact `{study['_path']}`, discovery seed {study.get('seed')}, wall {study.get('wall_s')}s."
+        )
+        lines.append(f"Selection: {json.dumps(study.get('selected'))}.")
+        lines.append(
+            f"Tokens: {json.dumps(study.get('llm_tokens'))}. Solver evaluations: {json.dumps(study.get('solver_solves'))}."
+        )
+        selected = study.get("selected") or {}
+        for arm in ("single_agent", "five_agent"):
+            candidate_id = selected.get(arm)
+            item = next((row for row in study.get(arm, []) if row.get("candidate_id") == candidate_id), None)
+            if item is None:
+                lines.append(f"{arm} selected nothing.")
+                continue
+            insertion = str(item["sources"]["insertion_score"]).strip().replace("\n", " ")
+            role = ""
+            attribution = item.get("attribution") or []
+            if attribution:
+                role = str(attribution[0].get("agent_role") or "")
+            hiermann = next((row for row in item["rows"] if row["instance_id"] == "c101_21"), None)
+            key = None if hiermann is None else hiermann.get("objective_key")
+            lines.append(
+                f"{arm} {candidate_id} role={role or 'unrecorded'} c101_21={key} insertion=`{insertion}`."
+            )
+            if item.get("architect_hypothesis"):
+                lines.append(f"Architect hypothesis: {item['architect_hypothesis']}")
+        lines.append("")
+    extra = PAPER / "confirmation_schneider_role_split.json"
+    if extra.exists():
+        payload = _load(extra)
+        lines.append(f"Role-split three-seed file: `{extra.name}`.")
+        lines.append(f"Promoted: {payload.get('promoted_policies')}.")
+        for row in payload.get("seed_confirmation") or []:
+            lines.append(
+                f"- {row.get('arm')} {row.get('candidate_id')}: three-seed accepted={row.get('three_seed_accepted')} "
+                f"reason={row.get('reason')} wins={row.get('wins')} losses={row.get('losses')}"
+            )
+        lines.append("")
+    return lines
+
+
 def _report(
     freeze: list[dict[str, Any]],
     feasibility: list[dict[str, Any]],
@@ -382,22 +484,26 @@ def _report(
             "That profile is the trace before route-local construction. Seed 7 of c101_21 is then feasible inside 20 seconds at 39 vehicles in results/v2/diagnostics/large_development/c101_21_route_local.json.",
             "The 39-vehicle key is a classical feasible result, not an optimized fleet and not an LLM result.",
             "",
-            "## C. Single-agent evolution",
+            "## C. Specialist-role schedule, seed 7",
             "",
-            f"Seed-7 generational selection: {json.dumps(selected)}.",
-            "Generation 0 is the one-shot control. A candidate is accepted only by the conservative rule and only if a probe score changed.",
-            "The earlier matched pilot on solver `27278a1` also selected nothing from the single-agent arm.",
+            f"Design: {gen.get('_design') if gen else 'missing'}.",
+            f"Selection: {json.dumps(selected)}.",
+            "This is not a unified-agent versus five-role comparison. Both language-model arms used specialist prompts.",
+            "The accepted insertion returns are `return max(0, capacity_slack - demand) + abs(delta_distance)` for single_g0 and the same expression plus `float(ready_time > due_time)` for five_g0. That added term is zero when ready_time is at or before due_time.",
+            "",
+            *_role_split_lines(),
             "",
             "## D. Five-agent evolution",
             "",
             "The 2026-10-18 matched pilot accepted `five_1` on seed 7 and that bundle lost Hiermann `c101_21` on seeds 11 and 22.",
             "It did not beat classical or the random grammar once those seeds were measured.",
             "The 2026-10-19 generational arm uses the same conservative rule, the same gate, and the same candidate count.",
-            "Five-agent token use is higher because the architect, component calls, and critic are extra model calls. They do not add solver evaluations.",
-            "A resource-matched claim is not supported: equal solver evaluations were enforced, and the extra tokens were measured rather than matched by giving the other arms more model calls.",
+            "Five-agent token use in that schedule is the critic call. The architect was not called.",
+            "Equal solver evaluations were enforced. Token counts are measured and are not a matched compute budget.",
             "",
             "## E. What generalizes",
             "",
+            "The bullets below are the specialist-schedule confirmation in `confirmation_schneider.json`, not the role-split confirmation in section C2.",
             "The classical default remains the deployed scoring policy.",
             "A grammar candidate can pass the development rule without being an LLM result.",
             * [f"- {line}" for line in _moved(confirmation)],
@@ -418,9 +524,10 @@ def _report(
             "## G. Limitations",
             "",
             "The comparison is exploratory. Five gate instances and one discovery seed do not support a significance claim.",
-            "The 2026-10-19 Qwen run used full-bundle proposals for the language-model arms and deployed the first accepted candidate.",
-            "The 2026-10-19 18:27 UTC parent-mutation run is recorded separately. Later generations did not earn more wins than generation 0.",
-            "Single-agent and five-agent selections from that run fail the three-seed conservative rule.",
+            "The 14:59 UTC artifact used full-bundle proposals and deployed the first accepted candidate. It is historical.",
+            "The 2026-10-19 18:27 and 18:38 UTC runs used specialist role prompts on a rotating component. The five-agent arm added a critic and did not call an architect.",
+            "Seed 13 of that same schedule accepted no candidate.",
+            "A later run with workflow unified_versus_architect_specialist_critic is reported only when its artifact is present.",
             "Critic text is not a causal explanation.",
             "Route-local construction makes development c101_21 seed 7 feasible inside 20 seconds at 39 vehicles. That fleet is not an optimized result. RC2 was not used to make this change.",
             "Hiermann `c101_21` remains a 20-vehicle classical solution on the frozen seed-7 gate.",
@@ -439,6 +546,7 @@ def main() -> None:
     commit = _git()
     freeze = _freeze_rows()
     feasibility = _feasibility(freeze)
+    studies = _studies()
     gen = _generational()
     confirmation_path = PAPER / "confirmation_schneider.json"
     confirmation = _load(confirmation_path) if confirmation_path.exists() else None
@@ -446,7 +554,19 @@ def main() -> None:
     _write_csv(PAPER / "CLASSICAL_BASELINES.csv", freeze)
     _write_csv(PAPER / "FEASIBILITY.csv", feasibility)
     _write_csv(PAPER / "ABLATIONS.csv", _historical_ablations())
-    _write_csv(PAPER / "COMPUTE_COSTS.csv", _compute(gen))
+    comparison_rows: list[dict[str, Any]] = []
+    evolution_rows: list[dict[str, Any]] = []
+    compute_rows: list[dict[str, Any]] = []
+    for index, study in enumerate(studies):
+        comparison_rows.extend(_comparison_rows(study))
+        evolution_rows.extend(_evolution_rows(study))
+        part = _compute(study)
+        if index:
+            part = [row for row in part if row["study"] != "matched_qwen_20261018"]
+        compute_rows.extend(part)
+    if not studies:
+        compute_rows = _compute(None)
+    _write_csv(PAPER / "COMPUTE_COSTS.csv", compute_rows)
     _write_csv(
         PAPER / "TRANSFER_RESULTS.csv",
         [
@@ -456,11 +576,11 @@ def main() -> None:
             }
         ],
     )
-    if gen is not None:
-        _write_csv(PAPER / "LLM_METHOD_COMPARISON.csv", _comparison_rows(gen))
-        _write_csv(PAPER / "EVOLUTION_RESULTS.csv", _evolution_rows(gen))
+    if comparison_rows:
+        _write_csv(PAPER / "LLM_METHOD_COMPARISON.csv", comparison_rows)
+        _write_csv(PAPER / "EVOLUTION_RESULTS.csv", evolution_rows)
     (PAPER / "STATISTICS.json").write_text(
-        json.dumps(_statistics(gen, confirmation), indent=2) + "\n",
+        json.dumps(_statistics(gen, confirmation, studies), indent=2) + "\n",
         encoding="utf-8",
     )
     split = _load(ROOT / "results" / "manifests" / "split.json")
@@ -495,7 +615,11 @@ def main() -> None:
                 json.dumps({"path": "results/v2/baselines/classical_frozen_c2de5a0", "role": "classical_freeze"}),
                 json.dumps({"path": "results/v2/diagnostics/bezzi_pack/summary.json", "role": "bezzi_10n10"}),
                 json.dumps({"path": "results/v2/diagnostics/large_development/profile.json", "role": "large_discovery"}),
-                json.dumps({"path": gen["_path"] if gen else None, "role": "generational", "digest": None if gen is None else gen.get("model_digest")}),
+                json.dumps({"path": "results/v2/campaigns/generational_qwen_20261019T145936Z/generational.json", "role": "historical_full_bundle_generation"}),
+                *[
+                    json.dumps({"path": study["_path"], "role": study["_study"], "design": study["_design"], "digest": study.get("model_digest")})
+                    for study in studies
+                ],
                 json.dumps({"path": "results/v2/campaigns/matched_qwen_20261018T205937Z/matched_pilot.json", "role": "historical_matched_pilot", "solver": "27278a1"}),
                 json.dumps({"path": "results/v2/paper/heldout_classical.json", "role": "historical_rc2"}),
                 json.dumps({"path": "results/v2/paper/confirmation_schneider.json", "role": "confirmation", "present": confirmation is not None}),
@@ -518,9 +642,9 @@ def main() -> None:
                 "Generation 0 receives no fitness feedback. Later generations do.",
                 "Among conservatively accepted candidates, the one with the most wins is deployed. An earlier generation wins a tie.",
                 "The critic receives the classical objective keys. It does not add a solver evaluation.",
-                "Single-agent and five-agent share one token cap. Five-agent's extra call is the critic.",
-                "The 2026-10-19 18:27 UTC generational artifact uses this operator. An earlier same-day artifact used full-bundle proposals.",
-                "Random, single-agent, and five-agent search use the same expression language.",
+                "The 2026-10-19 18:27 and 18:38 UTC artifacts use specialist prompts. Five-agent's extra call in those artifacts is the critic, not an architect.",
+                "The current code workflow is unified_versus_architect_specialist_critic. It is reported only from artifacts that record that workflow.",
+                "Random, single-agent, and five-agent search use the same expression language and the same scheduled component.",
                 "Confirmation ids `c206C5`, `r202C5`, and `r203C5` are loaded only after the three-seed decision file is written.",
                 "If no learned policy passes that decision, confirmation is classical only.",
                 "Schneider RC2 is not used to choose a policy.",

@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any
 
 from evrptw_autolab.backbone.alns import alns_improve
+from evrptw_autolab.backbone.bezzi_pack import pack_bezzi_fleet
 from evrptw_autolab.backbone.charge_completion import complete_solution_charges
 from evrptw_autolab.backbone.construct import construct_greedy
 from evrptw_autolab.backbone.energy_repair import remove_redundant_stations, repair_energy
@@ -114,6 +115,12 @@ def repair_feasibility(
         return current
     current = split_infeasible_routes(spec, current, policy=policy)
     current = _apply_partial_charges(spec, current, enabled=optimize_partial_charges)
+    if spec.capabilities.multiple_charge_technologies:
+        report = evaluate(spec, current)
+        if not report.feasible and (deadline is None or time.monotonic() <= deadline):
+            packed = pack_bezzi_fleet(spec, deadline=deadline)
+            if packed is not None and is_better(evaluate(spec, packed), report):
+                current = packed
     if deadline is not None and time.monotonic() > deadline:
         return current
     current = relocate_improve(spec, current, max_passes=2, deadline=deadline)
@@ -199,6 +206,13 @@ class ClassicalSolver:
         tracker: dict[str, Any] = box if box is not None else {}
         started = time.monotonic()
         deadline = started + float(self.time_limit_s)
+        parent_started = tracker.get("parent_started")
+        if isinstance(parent_started, (int, float)) and spec.capabilities.multiple_charge_technologies:
+            # Merge attempts on these instances do not return the instant the
+            # deadline passes. Leave room for the in-flight attempt to finish
+            # and for the child to exit before the parent join.
+            deadline = min(deadline, float(parent_started) + float(self.time_limit_s) - 1.5)
+        tracker["deadline_margin_s"] = started + float(self.time_limit_s) - deadline
         if spec.capabilities.heterogeneous_fleet:
             # Parent wall clock includes process spawn. Leave that margin so a
             # finished Hiermann run is budget-compliant, not a killed worker.
@@ -334,6 +348,7 @@ class ClassicalSolver:
                 ),
                 "stage_construction_s": construction_s,
                 "time_to_first_feasible_s": first_feasible_s,
+                "deadline_margin_s": tracker.get("deadline_margin_s"),
             }
         )
         published = tracker.get("incumbent")
@@ -345,6 +360,7 @@ class ClassicalSolver:
             ]
             published.metadata["stage_construction_s"] = solution.metadata["stage_construction_s"]
             published.metadata["time_to_first_feasible_s"] = solution.metadata["time_to_first_feasible_s"]
+            published.metadata["deadline_margin_s"] = solution.metadata.get("deadline_margin_s")
             sink = tracker.get("sink")
             if sink is not None:
                 sink.put(published)
@@ -409,6 +425,9 @@ def _solver_process_main(spec: ProblemSpecV2, config: dict[str, Any], incumbent_
         adaptive_destroy=bool(config.get("adaptive_destroy", True)),
     )
     sink = _FileSink(incumbent_path)
+    box: dict[str, Any] = {"sink": sink}
+    if config.get("parent_started") is not None:
+        box["parent_started"] = float(config["parent_started"])
     if config.get("debug_crash"):
         raise RuntimeError("injected worker crash")
     if config.get("debug_invalid_snapshot"):
@@ -420,7 +439,7 @@ def _solver_process_main(spec: ProblemSpecV2, config: dict[str, Any], incumbent_
             sink.put(construct_greedy(spec, rng, policy=policy))
         time.sleep(float(config["debug_sleep_s"]))
         return
-    solver._solve_body(spec, {"sink": sink})
+    solver._solve_body(spec, box)
 
 
 _BUDGET_TOLERANCE_S = 0.05
@@ -552,6 +571,7 @@ def _solve_in_process(solver: ClassicalSolver, spec: ProblemSpecV2) -> SolutionV
         daemon=True,
     )
     started = time.monotonic()
+    config["parent_started"] = started
     limit = float(solver.time_limit_s)
     deadline = started + limit
     proc.start()

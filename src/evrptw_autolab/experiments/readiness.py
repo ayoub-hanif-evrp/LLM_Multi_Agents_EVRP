@@ -133,11 +133,48 @@ def engineering_checks(root: Path | None = None) -> dict[str, Any]:
         if not n10 or any(row.get("feasible") is True for row in n10):
             failures.append(
                 {
-                    "check": "bezzi_10n10",
-                    "class": "correctness",
-                    "detail": "10-N10 must stay recorded as infeasible on its measured seeds",
+                    "check": "bezzi_10n10_history",
+                    "class": "provenance",
+                    "detail": "the historical expanded panel must keep the infeasible 10-N10 rows",
                 }
             )
+        pack_path = base / "results" / "v2" / "diagnostics" / "bezzi_pack" / "summary.json"
+        if not pack_path.exists():
+            failures.append(
+                {
+                    "check": "bezzi_10n10_repair",
+                    "class": "correctness",
+                    "detail": "the 10-N10 fleet-pack measurement is missing",
+                }
+            )
+        else:
+            packed = json.loads(pack_path.read_text(encoding="utf-8"))
+            repaired = [
+                row
+                for row in packed.get("rows") or []
+                if row.get("instance_id") == "10-N10" and int(row.get("seed") or -1) in {7, 11, 22}
+            ]
+            if len(repaired) != 3 or any(not row.get("feasible") or not row.get("completed_within_budget") for row in repaired):
+                failures.append(
+                    {
+                        "check": "bezzi_10n10_repair",
+                        "class": "correctness",
+                        "detail": "10-N10 seeds 7, 11, and 22 must be feasible inside the 12s budget",
+                    }
+                )
+            c101 = [
+                row
+                for row in packed.get("rows") or []
+                if row.get("instance_id") == "C101-5" and int(row.get("seed") or -1) == 7
+            ]
+            if len(c101) != 1 or c101[0].get("objective_key") != [227.0] or not c101[0].get("feasible"):
+                failures.append(
+                    {
+                        "check": "bezzi_c101_regression",
+                        "class": "performance",
+                        "detail": "C101-5 seed 7 must stay feasible at recharge cost 227",
+                    }
+                )
         frozen_seed7 = {
             (str(row["family"]), str(row["instance_id"])): [float(v) for v in row["objective_key"]]
             for row in baseline["rows"]

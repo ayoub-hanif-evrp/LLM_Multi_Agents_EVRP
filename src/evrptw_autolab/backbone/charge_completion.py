@@ -5,6 +5,8 @@ helpers call this module to annotate routes with explicit recharge decisions.
 """
 from __future__ import annotations
 
+import time
+
 from evrptw_autolab.backbone.util import clone_solution, vehicle_for_route
 from evrptw_autolab.problem.v2.bezzi_recharge import plan_bezzi_recharges
 from evrptw_autolab.problem.v2.types import ProblemSpecV2, RouteStopV2, SolutionV2
@@ -41,6 +43,7 @@ def complete_solution_charges(
     solution: SolutionV2,
     *,
     drop_idle_stations: bool = True,
+    deadline: float | None = None,
 ) -> SolutionV2:
     """Annotate every Bezzi route with a fresh recharge plan. No-op for other families.
 
@@ -67,8 +70,14 @@ def complete_solution_charges(
             )
             for stop in route
         ]
+        if deadline is not None and time.monotonic() > deadline:
+            break
         planned = plan_bezzi_recharges(
-            spec, cleared, vehicle, drop_idle_stations=drop_idle_stations
+            spec,
+            cleared,
+            vehicle,
+            drop_idle_stations=drop_idle_stations,
+            deadline=deadline,
         )
         if planned is None:
             failed.append(index)

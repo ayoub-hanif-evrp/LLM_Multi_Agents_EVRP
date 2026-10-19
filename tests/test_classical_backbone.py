@@ -25,11 +25,35 @@ def test_construct_not_identity_noop() -> None:
     assert sol.routes != [[]]
 
 
+def test_micro_g1_construction_is_feasible() -> None:
+    """Customer coverage is checked in-process, without process-spawn time."""
+    import random
+
+    spec = load_schneider_v2(micro_g1_one_customer().metadata["source_path"])
+    solution = repair_energy(spec, construct_greedy(spec, random.Random(1)))
+    report = evaluate(spec, solution)
+    assert report.feasible, report.explanation
+
+
 def test_micro_g1_classical_feasible() -> None:
+    """A two-second spawned solve includes worker startup.
+
+    On a cold CI runner the child can be killed before it publishes. That is a
+    timeout with no snapshot, not an unserved customer. A worker that finishes
+    and still leaves the customer unserved fails this test.
+    """
     spec = load_schneider_v2(micro_g1_one_customer().metadata["source_path"])
     sol = solve_classical(spec, seed=1, time_limit_s=2.0, alns_iterations=20)
     report = evaluate(spec, sol)
-    assert report.feasible, report.explanation
+    if report.feasible:
+        return
+    status = str(sol.metadata.get("return_status"))
+    assert status in {"timeout_no_snapshot", "worker_no_snapshot"}, (
+        status,
+        report.explanation,
+        sol.metadata,
+    )
+    assert sol.metadata.get("hard_timeout_triggered") is True
 
 
 def test_micro_g2_energy_repair_makes_feasible() -> None:

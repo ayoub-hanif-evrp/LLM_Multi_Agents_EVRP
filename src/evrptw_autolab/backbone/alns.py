@@ -115,6 +115,7 @@ def repair_greedy(
     policy: object | None = None,
     *,
     optimize_partial_charges: bool = True,
+    deadline: float | None = None,
 ) -> SolutionV2:
     current = clone_solution(solution)
     vehicle_id = default_vehicle_id(spec)
@@ -125,6 +126,8 @@ def repair_greedy(
     order = list(removed)
     rng.shuffle(order)
     for unit in order:
+        if deadline is not None and time.monotonic() > deadline:
+            break
         best = None
         best_score = float("inf")
         if len(unit) == 1:
@@ -133,7 +136,11 @@ def repair_greedy(
                 current = insert_customer_fast(spec, current, node_id, policy=policy)
                 continue
             for r_idx, route in enumerate(current.routes):
+                if deadline is not None and time.monotonic() > deadline:
+                    break
                 for pos in range(1, len(route)):
+                    if deadline is not None and time.monotonic() > deadline:
+                        break
                     trial = clone_solution(current)
                     trial.routes[r_idx].insert(pos, make_customer_stop(node_id, spec))
                     report = evaluate(spec, trial)
@@ -161,8 +168,14 @@ def repair_greedy(
         else:
             pickup, delivery = unit[0], unit[1]
             for r_idx, route in enumerate(current.routes):
+                if deadline is not None and time.monotonic() > deadline:
+                    break
                 for ppos in range(1, len(route)):
+                    if deadline is not None and time.monotonic() > deadline:
+                        break
                     for dpos in range(ppos + 1, len(route) + 1):
+                        if deadline is not None and time.monotonic() > deadline:
+                            break
                         trial = clone_solution(current)
                         trial.routes[r_idx].insert(ppos, make_customer_stop(pickup, spec))
                         trial.routes[r_idx].insert(dpos, make_customer_stop(delivery, spec))
@@ -189,7 +202,7 @@ def repair_greedy(
                 current.vehicle_assignments.append(vehicle_id)
             else:
                 current = best
-    current = repair_energy(spec, current, policy=policy)
+    current = repair_energy(spec, current, policy=policy, deadline=deadline)
     from evrptw_autolab.backbone.charge_completion import complete_solution_charges
     from evrptw_autolab.backbone.nonlinear_charge import optimize_solution_partial_charges
 
@@ -256,6 +269,7 @@ def alns_improve(
             rng,
             policy=policy,
             optimize_partial_charges=optimize_partial_charges,
+            deadline=end_by,
         )
         if it % 5 == 0 and heavy_local:
             candidate = relocate_improve(spec, candidate, max_passes=1, deadline=end_by)

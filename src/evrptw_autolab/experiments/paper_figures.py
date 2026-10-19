@@ -17,7 +17,7 @@ PILOT = ROOT / "results" / "v2" / "campaigns" / "matched_qwen_20261018T205937Z"
 def _hiermann_c101() -> None:
     pilot = json.loads((PILOT / "matched_pilot.json").read_text(encoding="utf-8"))
     confirm = json.loads((PILOT / "confirmation_seeds.json").read_text(encoding="utf-8"))
-    values = {7: {}, 11: {}, 22: {}}
+    values: dict[int, dict[str, float]] = {7: {}, 11: {}, 22: {}}
     for row in pilot["rows"]:
         if row["instance_id"] != "c101_21":
             continue

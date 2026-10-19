@@ -15,6 +15,7 @@ maximum route duration.
 """
 from __future__ import annotations
 
+import time as _time
 from dataclasses import dataclass
 from typing import Literal
 
@@ -88,6 +89,7 @@ def plan_bezzi_recharges(
     vehicle: VehicleTypeV2,
     *,
     drop_idle_stations: bool = False,
+    deadline: float | None = None,
 ) -> list[RouteStopV2] | None:
     """Return a fully specified route, or None if no feasible recharge plan exists.
 
@@ -96,7 +98,7 @@ def plan_bezzi_recharges(
     a zero-recharge station is removed only if the shortened route still has a
     feasible plan whose recharge cost is no higher.
     """
-    planned = _plan_fixed_sequence(spec, stops, vehicle)
+    planned = _plan_fixed_sequence(spec, stops, vehicle, deadline=deadline)
     if planned is None or not drop_idle_stations:
         return None if planned is None else planned[0]
     current, cost = planned
@@ -109,7 +111,7 @@ def plan_bezzi_recharges(
         removed = False
         for index in idle:
             reduced = [_bare_stop(stop) for pos, stop in enumerate(current) if pos != index]
-            trial = _plan_fixed_sequence(spec, reduced, vehicle)
+            trial = _plan_fixed_sequence(spec, reduced, vehicle, deadline=deadline)
             if trial is None or trial[1] > cost + 1e-6:
                 continue
             current, cost = trial
@@ -124,6 +126,8 @@ def _plan_fixed_sequence(
     spec: ProblemSpecV2,
     stops: list[RouteStopV2],
     vehicle: VehicleTypeV2,
+    *,
+    deadline: float | None = None,
 ) -> tuple[list[RouteStopV2], float] | None:
     """Optimal recharge plan for one fixed node sequence."""
     battery_cap = vehicle.battery_capacity
@@ -156,6 +160,8 @@ def _plan_fixed_sequence(
     frontier: dict[int, list[_Label]] = {0: [_Label(0.0, 0.0, ())]}
 
     for index, stop in enumerate(stops):
+        if deadline is not None and _time.monotonic() > deadline:
+            return None
         node = nodes[stop.node_id]
         can_charge = index == 0 or node.kind == "station"
         available: list[tuple[str, float, float]] = []
@@ -172,6 +178,8 @@ def _plan_fixed_sequence(
 
         updated: dict[int, list[_Label]] = {}
         for battery, labels in frontier.items():
+            if deadline is not None and _time.monotonic() > deadline:
+                return None
             for lab in labels:
                 options: list[tuple[str | None, int, float, float]] = [(None, 0, 0.0, 0.0)]
                 if can_charge and available and stop.charge_amount is None and stop.target_soc is None:

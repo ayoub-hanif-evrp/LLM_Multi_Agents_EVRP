@@ -60,13 +60,18 @@ def repair_energy(
     """
     if not spec.capabilities.battery:
         return solution
+    # One multi-technology recharge repair can run for several seconds.
+    # Keep a single call inside a short slice so the solver can still exit
+    # at its deadline. Other families are not sliced.
+    if deadline is not None and spec.capabilities.multiple_charge_technologies:
+        deadline = min(deadline, time.monotonic() + 0.75)
 
-    current = complete_solution_charges(spec, clone_solution(solution))
+    current = complete_solution_charges(spec, clone_solution(solution), deadline=deadline)
     inserts = 0
     while inserts < max_inserts:
         if deadline is not None and time.monotonic() > deadline:
             break
-        current = complete_solution_charges(spec, current)
+        current = complete_solution_charges(spec, current, deadline=deadline)
         report = evaluate(spec, current)
         hard_energy = any(v.family in {"BATTERY", "CHARGE_POLICY"} for v in report.violations)
         if report.feasible or not hard_energy:
@@ -113,7 +118,7 @@ def repair_energy(
                         )
                         for s in trial.routes[r_idx]
                     ]
-                trial = complete_solution_charges(spec, trial)
+                trial = complete_solution_charges(spec, trial, deadline=deadline)
                 trial_report = evaluate(spec, trial)
                 old_batt = sum(
                     1 for v in report.violations if v.family in {"BATTERY", "CHARGE_POLICY"}
@@ -173,7 +178,7 @@ def repair_energy(
                 break
         if not progress:
             break
-    current = complete_solution_charges(spec, current)
+    current = complete_solution_charges(spec, current, deadline=deadline)
     current.metadata["energy_repair_inserts"] = inserts
     return current
 

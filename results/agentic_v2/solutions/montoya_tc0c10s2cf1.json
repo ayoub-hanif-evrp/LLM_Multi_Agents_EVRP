@@ -1,0 +1,100 @@
+{
+  "vehicle_assignments": [
+    "EV0"
+  ],
+  "routes": [
+    [
+      {
+        "node_id": "0",
+        "event": "depot",
+        "charge_amount": null,
+        "charge_technology": null,
+        "target_soc": null
+      },
+      {
+        "node_id": "1",
+        "event": "visit",
+        "charge_amount": null,
+        "charge_technology": null,
+        "target_soc": null
+      },
+      {
+        "node_id": "2",
+        "event": "visit",
+        "charge_amount": null,
+        "charge_technology": null,
+        "target_soc": null
+      },
+      {
+        "node_id": "3",
+        "event": "visit",
+        "charge_amount": null,
+        "charge_technology": null,
+        "target_soc": null
+      },
+      {
+        "node_id": "4",
+        "event": "visit",
+        "charge_amount": null,
+        "charge_technology": null,
+        "target_soc": null
+      },
+      {
+        "node_id": "5",
+        "event": "visit",
+        "charge_amount": null,
+        "charge_technology": null,
+        "target_soc": null
+      },
+      {
+        "node_id": "6",
+        "event": "visit",
+        "charge_amount": null,
+        "charge_technology": null,
+        "target_soc": null
+      },
+      {
+        "node_id": "7",
+        "event": "visit",
+        "charge_amount": null,
+        "charge_technology": null,
+        "target_soc": null
+      },
+      {
+        "node_id": "8",
+        "event": "visit",
+        "charge_amount": null,
+        "charge_technology": null,
+        "target_soc": null
+      },
+      {
+        "node_id": "9",
+        "event": "visit",
+        "charge_amount": null,
+        "charge_technology": null,
+        "target_soc": null
+      },
+      {
+        "node_id": "10",
+        "event": "visit",
+        "charge_amount": null,
+        "charge_technology": null,
+        "target_soc": null
+      },
+      {
+        "node_id": "11",
+        "event": "charge",
+        "charge_amount": null,
+        "charge_technology": null,
+        "target_soc": 16000.0
+      },
+      {
+        "node_id": "0",
+        "event": "depot",
+        "charge_amount": null,
+        "charge_technology": null,
+        "target_soc": null
+      }
+    ]
+  ]
+}

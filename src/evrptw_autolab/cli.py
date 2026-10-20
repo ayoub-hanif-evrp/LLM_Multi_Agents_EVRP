@@ -4,6 +4,7 @@ from __future__ import annotations
 import json
 import time
 from pathlib import Path
+from typing import Any
 
 import typer
 
@@ -19,11 +20,13 @@ datasets_app = typer.Typer(no_args_is_help=True, help="Dataset registry and audi
 components_app = typer.Typer(no_args_is_help=True, help="Component synthesis smoke (Track 2).")
 baselines_app = typer.Typer(no_args_is_help=True, help="Classical and LLM baseline pilots.")
 experiments_app = typer.Typer(no_args_is_help=True, help="Matched research campaigns.")
+agentic_app = typer.Typer(no_args_is_help=True, help="Five-agent EVRP solving on ProblemSpecV2.")
 app.add_typer(models_app, name="models")
 app.add_typer(datasets_app, name="datasets")
 app.add_typer(components_app, name="components")
 app.add_typer(baselines_app, name="baselines")
 app.add_typer(experiments_app, name="experiments")
+app.add_typer(agentic_app, name="agentic")
 ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -454,6 +457,95 @@ def components_smoke(
         "model",
     )
     typer.echo(json.dumps({k: result[k] for k in keys if k in result}, indent=2))
+
+
+def _agentic_backend(model: str) -> tuple[Any, str]:
+    from evrptw_autolab.llm.registry import make_backend, resolve_profile
+
+    if ":" in model:
+        profile = resolve_profile("qwen3_coder_30b")
+        profile = replace_model(profile, model)
+        return make_backend(profile), model
+    profile = resolve_profile(model)
+    return make_backend(profile), profile.model
+
+
+def replace_model(profile: Any, model: str) -> Any:
+    from dataclasses import replace
+
+    return replace(profile, model=model)
+
+
+@agentic_app.command("solve")
+def agentic_solve(
+    family: str = typer.Option(..., "--family"),
+    instance: str = typer.Option(..., "--instance"),
+    model: str = typer.Option("qwen3_coder_30b", "--model"),
+) -> None:
+    """Solve one instance with the five-agent loop. Does not call classical ALNS."""
+    from evrptw_autolab.agentic_v2.instance_context import file_sha256, load_family_instance
+    from evrptw_autolab.agentic_v2.orchestrator import solve_with_agents
+    from evrptw_autolab.agentic_v2.run_manager import write_run
+
+    spec, path = load_family_instance(family, instance)
+    backend, model_name = _agentic_backend(model)
+    record = solve_with_agents(
+        spec,
+        backend=backend,
+        model=model_name,
+        source_sha256=file_sha256(path),
+        source_path=str(path),
+    )
+    from evrptw_autolab.experiments.generational_compare import _ollama_digest
+
+    record["model_digest"] = _ollama_digest(model_name)
+    out = write_run(record)
+    typer.echo(json.dumps({"path": str(out), "status": record["status"], "feasible": record["feasible"], "calls": record["llm_calls"]}, indent=2))
+
+
+@agentic_app.command("benchmark")
+def agentic_benchmark(
+    all_families: bool = typer.Option(False, "--all-families"),
+    family: str = typer.Option("", "--family"),
+    model: str = typer.Option("qwen3_coder_30b", "--model"),
+    resume: bool = typer.Option(False, "--resume"),
+    max_instances: int = typer.Option(1, "--max-instances"),
+) -> None:
+    """Run the agentic solver over dataset files. Default cap is one instance per invocation."""
+    from evrptw_autolab.agentic_v2.instance_context import file_sha256, load_family_instance
+    from evrptw_autolab.agentic_v2.orchestrator import solve_with_agents
+    from evrptw_autolab.agentic_v2.run_manager import already_recorded, write_run
+    from evrptw_autolab.problem.datasets.registry import (
+        DATASET_ROOT,
+        DATASET_SPECS,
+        _match_instances,
+    )
+
+    families = [row.family_id for row in DATASET_SPECS] if all_families else [family]
+    if not families or families == [""]:
+        raise typer.BadParameter("pass --family or --all-families")
+    backend, model_name = _agentic_backend(model)
+    written = []
+    for family_id in families:
+        row = next(item for item in DATASET_SPECS if item.family_id == family_id)
+        paths = _match_instances(DATASET_ROOT / row.folder_name, row.instance_glob)
+        count = 0
+        for path in paths:
+            if max_instances and count >= max_instances:
+                break
+            if resume and already_recorded(family_id, path.stem):
+                continue
+            spec, source = load_family_instance(family_id, path.stem)
+            record = solve_with_agents(
+                spec,
+                backend=backend,
+                model=model_name,
+                source_sha256=file_sha256(source),
+                source_path=str(source),
+            )
+            written.append(str(write_run(record)))
+            count += 1
+    typer.echo(json.dumps({"wrote": written, "model": model_name}, indent=2))
 
 
 def main() -> None:

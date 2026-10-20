@@ -1,0 +1,65 @@
+{
+  "vehicle_assignments": [
+    "type_0"
+  ],
+  "routes": [
+    [
+      {
+        "node_id": "8",
+        "event": "depot",
+        "charge_amount": null,
+        "charge_technology": null,
+        "target_soc": null
+      },
+      {
+        "node_id": "0",
+        "event": "visit",
+        "charge_amount": null,
+        "charge_technology": null,
+        "target_soc": null
+      },
+      {
+        "node_id": "1",
+        "event": "visit",
+        "charge_amount": null,
+        "charge_technology": null,
+        "target_soc": null
+      },
+      {
+        "node_id": "2",
+        "event": "visit",
+        "charge_amount": null,
+        "charge_technology": null,
+        "target_soc": null
+      },
+      {
+        "node_id": "3",
+        "event": "visit",
+        "charge_amount": null,
+        "charge_technology": null,
+        "target_soc": null
+      },
+      {
+        "node_id": "4",
+        "event": "visit",
+        "charge_amount": null,
+        "charge_technology": null,
+        "target_soc": null
+      },
+      {
+        "node_id": "5",
+        "event": "charge",
+        "charge_amount": 77.0,
+        "charge_technology": "1",
+        "target_soc": 77.0
+      },
+      {
+        "node_id": "8",
+        "event": "depot",
+        "charge_amount": null,
+        "charge_technology": null,
+        "target_soc": null
+      }
+    ]
+  ]
+}

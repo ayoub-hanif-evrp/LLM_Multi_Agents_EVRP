@@ -79,7 +79,7 @@ def default_sources(schema: str | None = None) -> dict[ComponentKind, str]:
     """v3 uses the same formulas as v1 and adds the new parameters unused."""
     if schema != FEATURE_SCHEMA_V3:
         return {kind: DEFAULT_SOURCES[kind] for kind in DEFAULT_SOURCES}
-    bodies = {
+    bodies: dict[ComponentKind, str] = {
         "insertion_score": (
             "delta_distance + (0.0 if due_time >= 1000000.0 else "
             "(0.01 * due_time + 1.0 / max(due_time - ready_time, 1.0))) + "

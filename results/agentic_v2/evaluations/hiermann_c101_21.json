@@ -1,0 +1,21 @@
+{
+  "feasible": false,
+  "objective_key": [
+    5458.472203722316
+  ],
+  "vehicles": 20,
+  "distance": 6311.76895716399,
+  "duration": 31470.720177333464,
+  "first_fault": "WINDOW",
+  "fault_detail": "service_start=147.519231 due=97.990000 lateness=49.529231",
+  "violations": [
+    "WINDOW",
+    "WINDOW",
+    "WINDOW",
+    "WINDOW",
+    "WINDOW",
+    "WINDOW",
+    "WINDOW",
+    "WINDOW"
+  ]
+}

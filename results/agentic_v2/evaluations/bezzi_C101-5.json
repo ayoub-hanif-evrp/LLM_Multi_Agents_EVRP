@@ -1,0 +1,22 @@
+{
+  "feasible": false,
+  "objective_key": [
+    247.0
+  ],
+  "vehicles": 1,
+  "distance": 170.0,
+  "duration": 1477.09247,
+  "first_fault": "CHARGE_POLICY",
+  "fault_detail": "5:negative_battery_on_arrival",
+  "violations": [
+    "CHARGE_POLICY",
+    "BATTERY",
+    "BATTERY",
+    "BATTERY",
+    "BATTERY",
+    "BATTERY",
+    "BATTERY",
+    "DURATION"
+  ],
+  "move_errors": []
+}

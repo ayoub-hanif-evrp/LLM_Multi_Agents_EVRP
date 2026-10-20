@@ -1,0 +1,72 @@
+{
+  "vehicle_assignments": [
+    "EV"
+  ],
+  "routes": [
+    [
+      {
+        "node_id": "D0",
+        "event": "depot",
+        "charge_amount": null,
+        "charge_technology": null,
+        "target_soc": null
+      },
+      {
+        "node_id": "C12",
+        "event": "pickup",
+        "charge_amount": null,
+        "charge_technology": null,
+        "target_soc": null
+      },
+      {
+        "node_id": "C30",
+        "event": "delivery",
+        "charge_amount": null,
+        "charge_technology": null,
+        "target_soc": null
+      },
+      {
+        "node_id": "C64",
+        "event": "pickup",
+        "charge_amount": null,
+        "charge_technology": null,
+        "target_soc": null
+      },
+      {
+        "node_id": "C85",
+        "event": "delivery",
+        "charge_amount": null,
+        "charge_technology": null,
+        "target_soc": null
+      },
+      {
+        "node_id": "C101",
+        "event": "pickup",
+        "charge_amount": null,
+        "charge_technology": null,
+        "target_soc": null
+      },
+      {
+        "node_id": "C100",
+        "event": "delivery",
+        "charge_amount": null,
+        "charge_technology": null,
+        "target_soc": null
+      },
+      {
+        "node_id": "S0",
+        "event": "charge",
+        "charge_amount": null,
+        "charge_technology": null,
+        "target_soc": 77.75
+      },
+      {
+        "node_id": "D0",
+        "event": "depot",
+        "charge_amount": null,
+        "charge_technology": null,
+        "target_soc": null
+      }
+    ]
+  ]
+}

@@ -1,9 +1,11 @@
 """Apply bounded agent actions. This module does not search or call ALNS."""
 from __future__ import annotations
 
+import copy
 from typing import Any
 
 from evrptw_autolab.agentic_v2.instance_context import customer_ids
+from evrptw_autolab.problem.v2.evaluator import evaluate_solution_v2
 from evrptw_autolab.problem.v2.types import ProblemSpecV2, RouteStopV2, SolutionV2
 
 
@@ -40,7 +42,13 @@ def solution_from_plan(spec: ProblemSpecV2, payload: dict[str, Any]) -> tuple[So
             errors.append("route_not_object")
             continue
         vehicle = _vehicle_type(spec, raw.get("vehicle_type"))
-        stops = [RouteStopV2(depot, vehicle, "depot")]
+        raw_charge = raw.get("depot_charge")
+        depot_charge: dict[str, Any] = raw_charge if isinstance(raw_charge, dict) else {}
+        amount = None if depot_charge.get("charge_amount") is None else float(depot_charge["charge_amount"])
+        technology = None if depot_charge.get("charge_technology") is None else str(depot_charge["charge_technology"])
+        stops = [
+            RouteStopV2(depot, vehicle, "depot", charge_amount=amount, charge_technology=technology)
+        ]
         customers = raw.get("stops") or raw.get("customers") or []
         for item in customers:
             node_id = str(item.get("node_id") if isinstance(item, dict) else item)
@@ -100,23 +108,41 @@ def insert_charges(spec: ProblemSpecV2, solution: SolutionV2, payload: dict[str,
             errors.append("insertion_not_object")
             continue
         route_index = int(item.get("route", 0))
+        if route_index < 0 or route_index >= len(solution.routes):
+            errors.append(f"bad_route:{route_index}")
+            continue
+        route = solution.routes[route_index]
+        vehicle = route[0].vehicle_type_id
+        amount = None if item.get("charge_amount") is None else float(item["charge_amount"])
+        target = None if item.get("target_soc") is None else float(item["target_soc"])
+        technology = None if item.get("charge_technology") is None else str(item["charge_technology"])
+        if str(item.get("where") or "") == "departure_depot":
+            origin = route[0]
+            route[0] = RouteStopV2(
+                origin.node_id,
+                vehicle,
+                "depot",
+                charge_amount=amount,
+                charge_technology=technology,
+                target_soc=target,
+            )
+            continue
         station_id = str(item.get("station_id") or "")
         after_node = str(item.get("after_stop") or "")
         if station_id not in spec.node_map or spec.node_map[station_id].kind != "station":
             errors.append(f"unknown_station:{station_id}")
             continue
-        if route_index < 0 or route_index >= len(solution.routes):
-            errors.append(f"bad_route:{route_index}")
-            continue
-        route = solution.routes[route_index]
-        position = next((index for index, stop in enumerate(route) if stop.node_id == after_node), None)
-        if position is None:
-            errors.append(f"after_stop_missing:{after_node}")
-            continue
-        vehicle = route[0].vehicle_type_id
-        amount = None if item.get("charge_amount") is None else float(item["charge_amount"])
-        target = None if item.get("target_soc") is None else float(item["target_soc"])
-        technology = None if item.get("charge_technology") is None else str(item["charge_technology"])
+        if item.get("after_index") is not None:
+            position = int(item["after_index"])
+            if position < 0 or position >= len(route) - 1:
+                errors.append(f"bad_after_index:{position}")
+                continue
+        else:
+            matches = [index for index, stop in enumerate(route) if stop.node_id == after_node]
+            if len(matches) != 1:
+                errors.append(f"ambiguous_or_missing_after_stop:{after_node}")
+                continue
+            position = matches[0]
         route.insert(
             position + 1,
             RouteStopV2(
@@ -131,8 +157,17 @@ def insert_charges(spec: ProblemSpecV2, solution: SolutionV2, payload: dict[str,
     return errors
 
 
+def _paired_ids(spec: ProblemSpecV2, node_id: str) -> list[str]:
+    if not spec.capabilities.pickup_delivery:
+        return [node_id]
+    for request in spec.requests:
+        if node_id in {request.pickup_id, request.delivery_id} and request.same_vehicle:
+            return [request.pickup_id, request.delivery_id]
+    return [node_id]
+
+
 def apply_relocations(spec: ProblemSpecV2, solution: SolutionV2, payload: dict[str, Any]) -> list[str]:
-    """Apply at most four customer relocations. Other operations are ignored."""
+    """Apply at most four relocations. A pickup-delivery pair moves together."""
     errors: list[str] = []
     applied = 0
     for item in payload.get("moves") or []:
@@ -150,20 +185,55 @@ def apply_relocations(spec: ProblemSpecV2, solution: SolutionV2, payload: dict[s
         if destination < 0 or destination >= len(solution.routes):
             errors.append(f"bad_route:{destination}")
             continue
-        removed: RouteStopV2 | None = None
-        for route in solution.routes:
-            for index, stop in enumerate(list(route)):
-                if stop.node_id == customer and stop.event != "depot":
-                    removed = route.pop(index)
+        wanted = _paired_ids(spec, customer)
+        removed: list[RouteStopV2] = []
+        for node_id in wanted:
+            found: RouteStopV2 | None = None
+            for route in solution.routes:
+                for index, stop in enumerate(list(route)):
+                    if stop.node_id == node_id and stop.event != "depot":
+                        found = route.pop(index)
+                        break
+                if found is not None:
                     break
-            if removed is not None:
-                break
-        if removed is None:
-            errors.append(f"customer_not_in_solution:{customer}")
+            if found is None:
+                errors.append(f"customer_not_in_solution:{node_id}")
+            else:
+                removed.append(found)
+        if len(removed) != len(wanted):
             continue
-        position = int(item.get("position", 1))
         route = solution.routes[destination]
-        position = max(1, min(position, len(route) - 1))
-        route.insert(position, removed)
+        position = max(1, min(int(item.get("position", 1)), len(route) - 1))
+        for offset, stop in enumerate(removed):
+            route.insert(position + offset, stop)
         applied += 1
     return errors
+
+
+def _clone_solution(solution: SolutionV2) -> SolutionV2:
+    return SolutionV2(
+        routes=copy.deepcopy(solution.routes),
+        vehicle_assignments=list(solution.vehicle_assignments),
+        metadata=dict(solution.metadata),
+    )
+
+
+def apply_transaction(
+    spec: ProblemSpecV2,
+    solution: SolutionV2,
+    payload: dict[str, Any],
+) -> tuple[SolutionV2, list[str], bool]:
+    """Clone, apply, and keep the clone only when the evaluator accepts it."""
+    trial = _clone_solution(solution)
+    errors = insert_charges(spec, trial, payload)
+    errors.extend(apply_relocations(spec, trial, payload))
+    if errors:
+        return _clone_solution(solution), errors, False
+    before = evaluate_solution_v2(spec, solution)
+    after = evaluate_solution_v2(spec, trial)
+    if not after.feasible:
+        return _clone_solution(solution), ["rejected_preserve_incumbent"], False
+    if before.feasible and tuple(after.objective_key) > tuple(before.objective_key):
+        return _clone_solution(solution), ["rejected_objective_regression"], False
+    trial.metadata["classical_alns"] = False
+    return trial, [], True

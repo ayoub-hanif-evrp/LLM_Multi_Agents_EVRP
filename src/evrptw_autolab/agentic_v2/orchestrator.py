@@ -6,6 +6,7 @@ import time
 from typing import Any
 
 from evrptw_autolab.agentic_v2.actions import apply_relocations, insert_charges, solution_from_plan
+from evrptw_autolab.agentic_v2.charge_repair import certify_charging
 from evrptw_autolab.agentic_v2.executor import execute_generated_solver
 from evrptw_autolab.agentic_v2.instance_context import (
     agent_for_fault,
@@ -94,6 +95,7 @@ def solve_with_agents(
     max_llm_calls: int = 16,
     source_sha256: str | None = None,
     source_path: str | None = None,
+    deterministic_charging: bool = False,
 ) -> dict[str, Any]:
     """Collaborate on one instance and return the best independently feasible incumbent, if any."""
     started = time.monotonic()
@@ -125,11 +127,11 @@ def solve_with_agents(
 
         if mode == "generated_solver":
             incumbent_solution, incumbent_report, trace = _generated_loop(
-                spec, collector, backend, model, summary, feedback, trace, max_rounds
+                spec, collector, backend, model, summary, feedback, trace, max_rounds, deterministic_charging
             )
         else:
             incumbent_solution, incumbent_report, trace = _explicit_loop(
-                spec, collector, backend, model, summary, feedback, trace, max_rounds
+                spec, collector, backend, model, summary, feedback, trace, max_rounds, deterministic_charging
             )
     except BudgetExhausted as error:
         trace.append({"role": "controller", "note": f"budget_exhausted:{error}"})
@@ -150,6 +152,9 @@ def solve_with_agents(
         "model": model,
         "mode": mode,
         "method": "agentic_v2",
+        "charging": None if incumbent_solution is None else incumbent_solution.metadata.get("charging"),
+        "attribution": None if incumbent_solution is None else incumbent_solution.metadata.get("attribution"),
+        "deterministic_charging": deterministic_charging,
         "classical_alns_used": False,
         "feasible": bool(report.get("feasible")),
         "evaluation": report,
@@ -188,6 +193,7 @@ def _explicit_loop(
     feedback: str,
     trace: list[dict[str, Any]],
     max_rounds: int,
+    deterministic_charging: bool = False,
 ) -> tuple[SolutionV2 | None, dict[str, Any] | None, list[dict[str, Any]]]:
     incumbent_solution: SolutionV2 | None = None
     incumbent_report: dict[str, Any] | None = None
@@ -236,6 +242,7 @@ def _explicit_loop(
             )
             payload = executed["routes"] if executed["ok"] and isinstance(executed["routes"], dict) else {"routes": []}
             solution, route_errors = solution_from_plan(spec, payload)
+            solution, _charge_mode = certify_charging(spec, solution, insert_stations=deterministic_charging)
             route_errors = list(route_errors) + list(executed["errors"])
         else:
             routing = _ask(
@@ -257,6 +264,7 @@ def _explicit_loop(
             )
             trace.append({"role": "routing", "round": round_index, "output": routing})
             solution, route_errors = solution_from_plan(spec, routing)
+        solution, _charge_mode = certify_charging(spec, solution, insert_stations=deterministic_charging)
         report = _report_dict(spec, solution)
         report["route_errors"] = route_errors
         _keep(solution, report)
@@ -272,7 +280,9 @@ def _explicit_loop(
                 "If full_recharge is true, set target_soc to the vehicle battery_capacity and omit charge_amount.\n"
                 "If multiple_charge_technologies is true, set charge_amount and charge_technology; do not omit them.\n"
                 "Use an empty insertions list when no station is required.\n"
-                "Schema: {\"insertions\":[{\"route\":0,\"after_stop\":\"<existing stop>\",\"station_id\":\"<station>\",\"target_soc\":0}]}\n"
+                "For a multi-technology departure depot, set where to departure_depot and include charge_amount and charge_technology. "
+                "Do not invent a full battery. Schema: "
+                "{\"insertions\":[{\"route\":0,\"where\":\"departure_depot\",\"charge_amount\":1,\"charge_technology\":\"0\"}]}\n"
                 f"Current routes: {_route_ids(solution)}\n"
                 f"Current faults: {report}\n"
                 + json_summary(
@@ -357,6 +367,7 @@ def _generated_loop(
     feedback: str,
     trace: list[dict[str, Any]],
     max_rounds: int,
+    deterministic_charging: bool = False,
 ) -> tuple[SolutionV2 | None, dict[str, Any] | None, list[dict[str, Any]]]:
     incumbent_solution: SolutionV2 | None = None
     incumbent_report: dict[str, Any] | None = None
@@ -389,7 +400,11 @@ def _generated_loop(
             trace.append({"role": "critic", "round": round_index, "output": critic})
             continue
         solution, route_errors = solution_from_plan(spec, executed["routes"])
-        solution.metadata["attribution"] = "agent_generated_solver"
+        solution, charge_mode = certify_charging(spec, solution, insert_stations=deterministic_charging)
+        if charge_mode == "agent_explicit":
+            solution.metadata["attribution"] = "agent_generated_solver"
+        elif charge_mode == "not_required":
+            solution.metadata["attribution"] = "agent_generated_solver"
         report = _report_dict(spec, solution)
         report["route_errors"] = route_errors
         latest_solution = _snapshot(solution)

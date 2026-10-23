@@ -1,0 +1,73 @@
+{
+  "track": "deterministic_repair",
+  "git": "93e1e3e527c2977e584a45fcb12fae2923142dee",
+  "llm_calls": 0,
+  "rows": [
+    {
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "source": "C:\\Users\\ayoub\\Desktop\\LLM_Multi_Agents_EVRP-main\\dataset\\schneider\\raw_instances\\c101C5.txt",
+      "feasible": true,
+      "status": "FEASIBLE",
+      "mode": "deterministic_customer_pack",
+      "llm_calls": 0,
+      "objective_key": [
+        5.0,
+        296.0921118198048
+      ],
+      "vehicles": 5,
+      "first_fault": null,
+      "fault_detail": null,
+      "classical_alns_used": false
+    },
+    {
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "source": "C:\\Users\\ayoub\\Desktop\\LLM_Multi_Agents_EVRP-main\\dataset\\montoya-et-al-2017\\tc0c10s2cf1.xml",
+      "feasible": true,
+      "status": "FEASIBLE",
+      "mode": "deterministic_energy_repair",
+      "llm_calls": 0,
+      "objective_key": [
+        43.453874454811256
+      ],
+      "vehicles": 10,
+      "first_fault": null,
+      "fault_detail": null,
+      "classical_alns_used": false
+    },
+    {
+      "family": "bezzi",
+      "instance_id": "C101-5",
+      "source": "C:\\Users\\ayoub\\Desktop\\LLM_Multi_Agents_EVRP-main\\dataset\\Bezzi & Ceselli EVRP-MRT\\Dataset_A\\Instances\\C101-5.xml",
+      "feasible": true,
+      "status": "FEASIBLE",
+      "mode": "deterministic_energy_repair",
+      "llm_calls": 0,
+      "objective_key": [
+        225.0
+      ],
+      "vehicles": 2,
+      "first_fault": null,
+      "fault_detail": null,
+      "classical_alns_used": false
+    },
+    {
+      "family": "goeke",
+      "instance_id": "c101C6",
+      "source": "C:\\Users\\ayoub\\Desktop\\LLM_Multi_Agents_EVRP-main\\dataset\\goeke-2018\\c101C6.txt",
+      "feasible": true,
+      "status": "FEASIBLE",
+      "mode": "deterministic_energy_repair",
+      "llm_calls": 0,
+      "objective_key": [
+        3.0,
+        270.9864386050047
+      ],
+      "vehicles": 3,
+      "first_fault": null,
+      "fault_detail": null,
+      "classical_alns_used": false
+    }
+  ]
+}

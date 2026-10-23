@@ -132,9 +132,7 @@ def _objective(
         fixed = float(spec.metadata.get("fixed_recharge_cost") or 0.0)
         variable = 0.0
         operations = 0
-        type_ids = assignments[: len(trajectories)]
-        if len(type_ids) < len(trajectories) and spec.vehicle_types:
-            type_ids = type_ids + [spec.vehicle_types[0].type_id] * (len(trajectories) - len(type_ids))
+        type_ids = list(assignments)
         by_id = {v.type_id: v for v in spec.vehicle_types}
         for traj, type_id in zip(trajectories, type_ids, strict=True):
             vehicle = by_id.get(type_id)
@@ -163,9 +161,7 @@ def _objective(
         fuel = sum(traj[-1].fuel_used for traj in trajectories if traj)
         electric = sum(traj[-1].electric_used for traj in trajectories if traj)
         fixed = 0.0
-        type_ids = assignments[: len(trajectories)] or [
-            spec.vehicle_types[0].type_id for _ in trajectories if spec.vehicle_types
-        ]
+        type_ids = list(assignments)
         for type_id in type_ids:
             fixed += next((v.fixed_cost for v in spec.vehicle_types if v.type_id == type_id), 0.0)
         cost = fixed + fossil * fuel + elec * electric
@@ -202,9 +198,11 @@ def evaluate_solution_v2(spec: ProblemSpecV2, solution: SolutionV2) -> Evaluatio
     if max_travel is None:
         max_travel = spec.metadata.get("max_travel_time")
 
+    resolved_ids: list[str] = []
     try:
         for route_index, route in enumerate(solution.routes):
             vehicle = _vehicle_for_route(spec, solution, route_index, route)
+            resolved_ids.append(vehicle.type_id)
             _check_depot(spec, route, route_index, report, vehicle)
             # Fleet availability (soft count later; hard if finite and exceeded tracked via Counter at end).
             _check_pd_precedence(spec, route, route_index, report)
@@ -368,7 +366,7 @@ def evaluate_solution_v2(spec: ProblemSpecV2, solution: SolutionV2) -> Evaluatio
     }
     hard = [v for v in report.violations if v.family in hard_families]
     report.feasible = report.parse_ok and not hard
-    _objective(spec, report, report.trajectories, list(solution.vehicle_assignments))
+    _objective(spec, report, report.trajectories, resolved_ids)
     if report.first_fault is None:
         from evrptw_autolab.problem.v2.report import ViolationV2
 

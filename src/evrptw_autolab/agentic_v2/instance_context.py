@@ -40,6 +40,58 @@ def native_objective(family: str) -> str:
     return OBJECTIVES.get(family, "minimize the family's native objective")
 
 
+def problem_context(spec: ProblemSpecV2, *, include_matrices: bool = True) -> dict[str, Any]:
+    """Serializable inputs a charging or routing decision needs. No hidden solution."""
+    caps = spec.capabilities
+    technologies = []
+    for vehicle in spec.vehicle_types:
+        technologies.append(
+            {
+                "type_id": vehicle.type_id,
+                "battery_capacity": vehicle.battery_capacity,
+                "consumption_rate": vehicle.consumption_rate,
+                "fixed_cost": vehicle.fixed_cost,
+                "variable_cost": vehicle.variable_cost,
+                "departure_node": vehicle.metadata.get("departure_node"),
+                "arrival_node": vehicle.metadata.get("arrival_node"),
+                "charging_techs": vehicle.metadata.get("charging_techs") or {},
+                "charging_functions": vehicle.metadata.get("charging_functions") or {},
+            }
+        )
+    context: dict[str, Any] = {
+        "native_objective": native_objective(spec.family),
+        "initial_battery_rule": (
+            "empty_until_explicit_depot_charge"
+            if caps.multiple_charge_technologies
+            else "start_at_battery_capacity"
+        ),
+        "uses_published_matrices": bool(caps.matrix_distances),
+        "euclidean_distances": bool(caps.euclidean_distances),
+        "fleet_availability": dict(spec.fleet_availability),
+        "fixed_recharge_cost": spec.metadata.get("fixed_recharge_cost"),
+        "energy_prices": spec.metadata.get("energy_prices"),
+        "nonlinear_curves": spec.metadata.get("charging_functions"),
+        "vehicles": technologies,
+        "requests": [
+            {
+                "request_id": request.request_id,
+                "pickup_id": request.pickup_id,
+                "delivery_id": request.delivery_id,
+                "demand": request.demand,
+                "same_vehicle": request.same_vehicle,
+            }
+            for request in spec.requests
+        ],
+    }
+    if include_matrices and caps.matrix_distances:
+        context["energy_matrix"] = spec.metadata.get("energy_matrix")
+        context["travel_time_matrix"] = spec.metadata.get("travel_time_matrix")
+        context["distance_matrix"] = spec.metadata.get("distance_matrix")
+    elif caps.matrix_distances:
+        context["matrices_omitted_from_prompt"] = True
+    return context
+
+
 def agent_for_fault(family: str | None) -> str:
     if not family:
         return "architect"
@@ -150,8 +202,9 @@ def summarize_instance(spec: ProblemSpecV2, *, customer_limit: int = 40) -> dict
         ],
         "nodes": nodes,
     }
-    if len(customers) <= 15:
+    if len(customers) <= 15 and not spec.capabilities.matrix_distances:
         payload["travel"] = _travel_notes(spec, customers)
+    payload["problem"] = problem_context(spec, include_matrices=len(spec.nodes) <= 20)
     return payload
 
 
@@ -202,4 +255,5 @@ def spec_payload(spec: ProblemSpecV2) -> dict[str, Any]:
         }
         for node in spec.nodes
     ]
+    summary["problem"] = problem_context(spec, include_matrices=True)
     return summary

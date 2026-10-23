@@ -5,7 +5,7 @@ import copy
 import time
 from typing import Any
 
-from evrptw_autolab.agentic_v2.actions import apply_relocations, insert_charges, solution_from_plan
+from evrptw_autolab.agentic_v2.actions import apply_transaction, solution_from_plan
 from evrptw_autolab.agentic_v2.charge_repair import certify_charging
 from evrptw_autolab.agentic_v2.executor import execute_generated_solver
 from evrptw_autolab.agentic_v2.instance_context import (
@@ -297,7 +297,10 @@ def _explicit_loop(
             ),
         )
         trace.append({"role": "charging", "round": round_index, "output": charging})
-        charge_errors = insert_charges(spec, solution, charging)
+        trial, charge_errors, committed = apply_transaction(spec, solution, charging, acceptance="explore")
+        trace.append({"role": "controller", "action": "charging", "committed": committed, "errors": charge_errors})
+        if committed:
+            solution = trial
         report = _report_dict(spec, solution)
         report["charge_errors"] = charge_errors
         _keep(solution, report)
@@ -314,7 +317,10 @@ def _explicit_loop(
             ),
         )
         trace.append({"role": "optimization", "round": round_index, "output": optimization})
-        move_errors = apply_relocations(spec, solution, optimization)
+        trial, move_errors, committed = apply_transaction(spec, solution, optimization, acceptance="explore")
+        trace.append({"role": "controller", "action": "optimization", "committed": committed, "errors": move_errors})
+        if committed:
+            solution = trial
         report = _report_dict(spec, solution)
         report["move_errors"] = move_errors
         _keep(solution, report)
@@ -422,7 +428,10 @@ def _generated_loop(
             f"Evaluation: {report}",
         )
         trace.append({"role": "charging", "round": round_index, "output": charging})
-        insert_charges(spec, solution, charging)
+        trial, charge_errors, committed = apply_transaction(spec, solution, charging, acceptance="explore")
+        trace.append({"role": "controller", "action": "charging", "committed": committed, "errors": charge_errors})
+        if committed:
+            solution = trial
         report = _report_dict(spec, solution)
         latest_solution = _snapshot(solution)
         latest_report = report
@@ -449,14 +458,17 @@ def _generated_loop(
     )
     trace.append({"role": "optimization", "output": optimization})
     if incumbent_solution is not None:
-        trial = _snapshot(incumbent_solution)
-        apply_relocations(spec, trial, optimization)
-        report = _report_dict(spec, trial)
-        if _better(report, incumbent_report):
-            incumbent_solution = trial
-            incumbent_report = report
-            latest_solution = trial
-            latest_report = report
+        trial, move_errors, committed = apply_transaction(
+            spec, incumbent_solution, optimization, acceptance="incumbent"
+        )
+        trace.append({"role": "controller", "action": "optimization", "committed": committed, "errors": move_errors})
+        if committed:
+            report = _report_dict(spec, trial)
+            if _better(report, incumbent_report):
+                incumbent_solution = trial
+                incumbent_report = report
+                latest_solution = trial
+                latest_report = report
     if incumbent_report is not None and incumbent_report.get("feasible"):
         return incumbent_solution, incumbent_report, trace
     return latest_solution, latest_report, trace

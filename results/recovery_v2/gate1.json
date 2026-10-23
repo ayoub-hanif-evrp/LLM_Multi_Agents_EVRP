@@ -1,0 +1,21 @@
+{
+  "baseline_commit": "dd5949d0a5a7f679f3ba14a411539a23110c0d0a",
+  "track": "llm_guided_heuristic_design",
+  "direct_agent_track": "exploratory_direct_routes",
+  "gate": {
+    "ok": true,
+    "baseline": {
+      "score_changed": false,
+      "ranking_changed": false,
+      "selected_move_changed": false,
+      "load_errors": []
+    },
+    "flipped": {
+      "score_changed": true,
+      "ranking_changed": true,
+      "selected_move_changed": true,
+      "load_errors": []
+    },
+    "llm_calls": 0
+  }
+}

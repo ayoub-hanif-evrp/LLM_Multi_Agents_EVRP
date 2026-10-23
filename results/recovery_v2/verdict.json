@@ -1,0 +1,8 @@
+{
+  "verdict": "POLICY_INTERFACE_VALIDATED",
+  "runner_status_field": "LLM_POLICY_GENERATED",
+  "reason": "The runner labeled the live proof from the synthetic probe. On Schneider c101C5 the routing expression, the single-designer expression, and the wrapped seed-7 random expression left the recorded moves and the native objective equal to the default policy. The critic was not called.",
+  "llm_calls": 3,
+  "confirmation_run": false,
+  "gate3_run": false
+}

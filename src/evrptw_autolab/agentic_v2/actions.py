@@ -101,6 +101,38 @@ def solution_from_plan(spec: ProblemSpecV2, payload: dict[str, Any]) -> tuple[So
     return solution, errors
 
 
+_ALLOWED_WHERE = {None, "", "departure_depot"}
+_ALLOWED_MOVE = {None, "relocate"}
+
+
+def validate_action_payload(payload: dict[str, Any]) -> list[str]:
+    """Reject a malformed action before any route is edited."""
+    errors: list[str] = []
+    for item in payload.get("insertions") or []:
+        if not isinstance(item, dict):
+            errors.append("insertion_not_object")
+            continue
+        where = item.get("where")
+        if where not in _ALLOWED_WHERE:
+            errors.append(f"malformed_where:{where}")
+            continue
+        if where == "departure_depot":
+            if item.get("charge_amount") is None and item.get("target_soc") is None:
+                errors.append("depot_charge_missing_amount")
+            continue
+        if not str(item.get("station_id") or ""):
+            errors.append("missing_station_id")
+        if item.get("after_index") is None and not str(item.get("after_stop") or ""):
+            errors.append("missing_after_stop")
+    for item in payload.get("moves") or []:
+        if not isinstance(item, dict):
+            errors.append("move_not_object")
+            continue
+        if item.get("op") not in _ALLOWED_MOVE:
+            errors.append(f"malformed_op:{item.get('op')}")
+    return errors
+
+
 def insert_charges(spec: ProblemSpecV2, solution: SolutionV2, payload: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     for item in payload.get("insertions") or []:
@@ -222,8 +254,18 @@ def apply_transaction(
     spec: ProblemSpecV2,
     solution: SolutionV2,
     payload: dict[str, Any],
+    *,
+    acceptance: str = "incumbent",
 ) -> tuple[SolutionV2, list[str], bool]:
-    """Clone, apply, and keep the clone only when the evaluator accepts it."""
+    """Clone, apply, and commit only under the named acceptance policy.
+
+    ``incumbent`` keeps a feasible trial only when its native objective is no worse.
+    ``explore`` may accept a feasible but worse trial. The caller still stores the
+    best feasible solution separately.
+    """
+    schema_errors = validate_action_payload(payload)
+    if schema_errors:
+        return _clone_solution(solution), schema_errors, False
     trial = _clone_solution(solution)
     errors = insert_charges(spec, trial, payload)
     errors.extend(apply_relocations(spec, trial, payload))
@@ -232,8 +274,10 @@ def apply_transaction(
     before = evaluate_solution_v2(spec, solution)
     after = evaluate_solution_v2(spec, trial)
     if not after.feasible:
-        return _clone_solution(solution), ["rejected_preserve_incumbent"], False
-    if before.feasible and tuple(after.objective_key) > tuple(before.objective_key):
+        return _clone_solution(solution), ["rejected_infeasible_trial"], False
+    worse = before.feasible and tuple(after.objective_key) > tuple(before.objective_key)
+    if worse and acceptance != "explore":
         return _clone_solution(solution), ["rejected_objective_regression"], False
     trial.metadata["classical_alns"] = False
+    trial.metadata["acceptance"] = acceptance
     return trial, [], True

@@ -1,0 +1,475 @@
+{
+  "status": "LLM_POLICY_GENERATED",
+  "baseline_commit": "dd5949d0a5a7f679f3ba14a411539a23110c0d0a",
+  "track": "llm_guided_heuristic_design",
+  "model": "qwen3-coder:30b",
+  "model_digest": "sha256-1194192cf2a187eb02722edcc3f77b11d21f537048ce04b67ccf8ba78863006a",
+  "llm_calls": 3,
+  "llm_tokens": 621,
+  "wall_s": 24.086,
+  "architect": {
+    "hypothesis": "Adding delta_distance as a scheduled scoring component will reduce the total travel distance by enabling more efficient route adjustments during the optimization process",
+    "grounded": true,
+    "prediction": "vehicle count will remain constant while travel distance decreases"
+  },
+  "multi_agent": {
+    "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance + 0.01 * due_time\n",
+    "attribution": {
+      "component": "insertion_score",
+      "status": "expression_wrapped",
+      "llm_generated": true,
+      "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance + 0.01 * due_time\n",
+      "agent_role": "routing"
+    },
+    "probe": {
+      "score_changed": true,
+      "ranking_changed": true,
+      "selected_move_changed": true,
+      "load_errors": []
+    },
+    "critic_changed_source": false
+  },
+  "single_agent": {
+    "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance + 0.1 * max(0, ready_time - due_time) + 0.01 * demand\n",
+    "attribution": {
+      "component": "insertion_score",
+      "status": "expression_wrapped",
+      "llm_generated": true,
+      "source": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return delta_distance + 0.1 * max(0, ready_time - due_time) + 0.01 * demand\n",
+      "agent_role": "unified"
+    },
+    "probe": {
+      "score_changed": true,
+      "ranking_changed": true,
+      "selected_move_changed": false,
+      "load_errors": []
+    }
+  },
+  "random": {
+    "arm": "random",
+    "llm_calls": 0,
+    "sources": {
+      "insertion_score": "ready_time + 5.0 * due_time",
+      "station_score": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    \"\"\"Lower is better. Prefer reachable stations with short detour.\"\"\"\n    return detour + 0.1 * station_rate + (0.0 if battery_arrival > 0.0 else 1000.0)\n",
+      "removal_priority": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    \"\"\"Higher means remove sooner. Ignore sentinel dues (1e6).\"\"\"\n    return (0.0 if due_time >= 1000000.0 else due_time) + 10.0 * route_distance_share + 0.01 * rng_value\n"
+    },
+    "behavior_changed": false,
+    "probe": {
+      "score_changed": false,
+      "ranking_changed": false,
+      "selected_move_changed": false,
+      "load_errors": [
+        "insertion_score: missing def insertion_score"
+      ]
+    },
+    "method": "random_grammar"
+  },
+  "solves": {
+    "classical_default": {
+      "ok": true,
+      "errors": [],
+      "selected_moves": [
+        {
+          "kind": "insertion_score",
+          "chosen": "C12:0:1",
+          "order": [
+            "C12:0:1"
+          ]
+        },
+        {
+          "kind": "insertion_score",
+          "chosen": "C30:0:2",
+          "order": [
+            "C30:0:2",
+            "C30:1:2"
+          ]
+        },
+        {
+          "kind": "insertion_score",
+          "chosen": "C100:0:3",
+          "order": [
+            "C100:0:3",
+            "C100:1:2"
+          ]
+        },
+        {
+          "kind": "insertion_score",
+          "chosen": "C85:1:2",
+          "order": [
+            "C85:1:2"
+          ]
+        },
+        {
+          "kind": "station_score",
+          "chosen": "S5",
+          "order": [
+            "S5",
+            "S15"
+          ]
+        },
+        {
+          "kind": "station_score",
+          "chosen": "S5",
+          "order": [
+            "S5",
+            "S0",
+            "S15"
+          ]
+        },
+        {
+          "kind": "station_score",
+          "chosen": "S5",
+          "order": [
+            "S5",
+            "S0",
+            "S15"
+          ]
+        },
+        {
+          "kind": "station_score",
+          "chosen": "S5",
+          "order": [
+            "S5"
+          ]
+        },
+        {
+          "kind": "station_score",
+          "chosen": "S5",
+          "order": [
+            "S5",
+            "S15"
+          ]
+        },
+        {
+          "kind": "station_score",
+          "chosen": "S0",
+          "order": [
+            "S0",
+            "S15"
+          ]
+        },
+        {
+          "kind": "station_score",
+          "chosen": "S15",
+          "order": [
+            "S15",
+            "S5"
+          ]
+        },
+        {
+          "kind": "removal_priority",
+          "chosen": "C85",
+          "order": [
+            "C85",
+            "C100",
+            "C30",
+            "C64",
+            "C12"
+          ]
+        },
+        {
+          "kind": "removal_priority",
+          "chosen": "C85",
+          "order": [
+            "C85",
+            "C100",
+            "C30",
+            "C64",
+            "C12"
+          ]
+        },
+        {
+          "kind": "removal_priority",
+          "chosen": "C85",
+          "order": [
+            "C85",
+            "C100",
+            "C30",
+            "C64",
+            "C12"
+          ]
+        }
+      ],
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "method": "classical_alns",
+      "policy_origin": "supplied_expression",
+      "llm_calls": 0
+    },
+    "multi_agent": {
+      "ok": true,
+      "errors": [],
+      "selected_moves": [
+        {
+          "kind": "insertion_score",
+          "chosen": "C12:0:1",
+          "order": [
+            "C12:0:1"
+          ]
+        },
+        {
+          "kind": "insertion_score",
+          "chosen": "C30:0:2",
+          "order": [
+            "C30:0:2",
+            "C30:1:2"
+          ]
+        },
+        {
+          "kind": "insertion_score",
+          "chosen": "C100:0:3",
+          "order": [
+            "C100:0:3",
+            "C100:1:2"
+          ]
+        },
+        {
+          "kind": "insertion_score",
+          "chosen": "C85:1:2",
+          "order": [
+            "C85:1:2"
+          ]
+        },
+        {
+          "kind": "station_score",
+          "chosen": "S5",
+          "order": [
+            "S5",
+            "S15"
+          ]
+        },
+        {
+          "kind": "station_score",
+          "chosen": "S5",
+          "order": [
+            "S5",
+            "S0",
+            "S15"
+          ]
+        },
+        {
+          "kind": "station_score",
+          "chosen": "S5",
+          "order": [
+            "S5",
+            "S0",
+            "S15"
+          ]
+        },
+        {
+          "kind": "station_score",
+          "chosen": "S5",
+          "order": [
+            "S5"
+          ]
+        },
+        {
+          "kind": "station_score",
+          "chosen": "S5",
+          "order": [
+            "S5",
+            "S15"
+          ]
+        },
+        {
+          "kind": "station_score",
+          "chosen": "S0",
+          "order": [
+            "S0",
+            "S15"
+          ]
+        },
+        {
+          "kind": "station_score",
+          "chosen": "S15",
+          "order": [
+            "S15",
+            "S5"
+          ]
+        },
+        {
+          "kind": "removal_priority",
+          "chosen": "C85",
+          "order": [
+            "C85",
+            "C100",
+            "C30",
+            "C64",
+            "C12"
+          ]
+        },
+        {
+          "kind": "removal_priority",
+          "chosen": "C85",
+          "order": [
+            "C85",
+            "C100",
+            "C30",
+            "C64",
+            "C12"
+          ]
+        },
+        {
+          "kind": "removal_priority",
+          "chosen": "C85",
+          "order": [
+            "C85",
+            "C100",
+            "C30",
+            "C64",
+            "C12"
+          ]
+        }
+      ],
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "method": "classical_alns",
+      "policy_origin": "llm_insertion_expression",
+      "llm_calls": 0,
+      "charging": "classical_backbone"
+    },
+    "single_agent": {
+      "ok": true,
+      "errors": [],
+      "selected_moves": [
+        {
+          "kind": "insertion_score",
+          "chosen": "C12:0:1",
+          "order": [
+            "C12:0:1"
+          ]
+        },
+        {
+          "kind": "insertion_score",
+          "chosen": "C30:0:2",
+          "order": [
+            "C30:0:2",
+            "C30:1:2"
+          ]
+        },
+        {
+          "kind": "insertion_score",
+          "chosen": "C100:0:3",
+          "order": [
+            "C100:0:3",
+            "C100:1:2"
+          ]
+        },
+        {
+          "kind": "insertion_score",
+          "chosen": "C85:1:2",
+          "order": [
+            "C85:1:2"
+          ]
+        },
+        {
+          "kind": "station_score",
+          "chosen": "S5",
+          "order": [
+            "S5",
+            "S15"
+          ]
+        },
+        {
+          "kind": "station_score",
+          "chosen": "S5",
+          "order": [
+            "S5",
+            "S0",
+            "S15"
+          ]
+        },
+        {
+          "kind": "station_score",
+          "chosen": "S5",
+          "order": [
+            "S5",
+            "S0",
+            "S15"
+          ]
+        },
+        {
+          "kind": "station_score",
+          "chosen": "S5",
+          "order": [
+            "S5"
+          ]
+        },
+        {
+          "kind": "station_score",
+          "chosen": "S5",
+          "order": [
+            "S5",
+            "S15"
+          ]
+        },
+        {
+          "kind": "station_score",
+          "chosen": "S0",
+          "order": [
+            "S0",
+            "S15"
+          ]
+        },
+        {
+          "kind": "station_score",
+          "chosen": "S15",
+          "order": [
+            "S15",
+            "S5"
+          ]
+        },
+        {
+          "kind": "removal_priority",
+          "chosen": "C85",
+          "order": [
+            "C85",
+            "C100",
+            "C30",
+            "C64",
+            "C12"
+          ]
+        },
+        {
+          "kind": "removal_priority",
+          "chosen": "C85",
+          "order": [
+            "C85",
+            "C100",
+            "C30",
+            "C64",
+            "C12"
+          ]
+        },
+        {
+          "kind": "removal_priority",
+          "chosen": "C85",
+          "order": [
+            "C85",
+            "C100",
+            "C30",
+            "C64",
+            "C12"
+          ]
+        }
+      ],
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "method": "classical_alns",
+      "policy_origin": "llm_insertion_expression",
+      "llm_calls": 0,
+      "charging": "classical_backbone"
+    }
+  },
+  "confirmation_run": false,
+  "direct_agent_campaign": false
+}

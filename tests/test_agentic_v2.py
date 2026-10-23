@@ -63,7 +63,7 @@ def test_five_roles_produce_a_checked_solution(monkeypatch: pytest.MonkeyPatch) 
     assert record["method"] == "agentic_v2"
     assert record["feasible"] is True
     assert record["status"] == "FEASIBLE"
-    roles = [item["role"] for item in record["agent_trace"]]
+    roles = [item["role"] for item in record["agent_trace"] if item["role"] != "controller"]
     assert roles[:5] == ["architect", "routing", "charging", "optimization", "critic"]
     assert record["solution"]["routes"][0][0]["event"] == "depot"
     assert record["evaluation"]["feasible"] is True

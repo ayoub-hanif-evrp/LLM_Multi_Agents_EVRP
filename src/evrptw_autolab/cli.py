@@ -192,6 +192,35 @@ def experiments_matched_pilot(
     )
 
 
+@experiments_app.command("policy-recovery")
+def experiments_policy_recovery(
+    live: bool = typer.Option(False, "--live", help="Allow at most 12 Qwen calls after Gate 1."),
+    profile: str = typer.Option("qwen3_coder_30b", "--profile"),
+) -> None:
+    """Prove a scoring policy changes a selected move. Live calls stay capped."""
+    from evrptw_autolab.experiments.policy_recovery import (
+        MAX_LIVE_CALLS,
+        run_live_proof,
+        write_gate1,
+    )
+
+    out = ROOT / "results" / "recovery_v2"
+    gate = write_gate1(out)
+    if not gate["gate"]["ok"]:
+        typer.echo(json.dumps({"status": "ENGINEERING_BLOCKED", "out": str(out)}, indent=2))
+        raise typer.Exit(code=1)
+    if not live:
+        typer.echo(json.dumps({"status": "POLICY_INTERFACE_VALIDATED", "llm_calls": 0, "out": str(out)}, indent=2))
+        return
+    from evrptw_autolab.llm.registry import make_backend, resolve_profile
+
+    prof = resolve_profile(profile)
+    payload = run_live_proof(make_backend(prof), prof.model, out)
+    if payload["llm_calls"] > MAX_LIVE_CALLS:
+        raise typer.Exit(code=1)
+    typer.echo(json.dumps({"status": payload["status"], "llm_calls": payload["llm_calls"], "out": str(out)}, indent=2))
+
+
 @experiments_app.command("campaign")
 def experiments_campaign(
     fake: bool = typer.Option(True, "--fake/--ollama", help="FakeBackend (default) or local Ollama"),

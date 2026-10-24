@@ -25,6 +25,7 @@ from evrptw_autolab.backbone.solver import solve_classical
 from evrptw_autolab.backbone.util import evaluate
 from evrptw_autolab.components.expressions import (
     ARGUMENT_NAMES_V3,
+    ARGUMENT_NAMES_V4,
     EXPRESSION_EXAMPLES,
     argument_names,
     materialize_component,
@@ -48,6 +49,7 @@ from evrptw_autolab.experiments.policy_sensitivity import paired_feasible_outcom
 from evrptw_autolab.llm.usage import UsageCollector
 from evrptw_autolab.problem.v2.features import (
     FEATURE_SCHEMA_V3,
+    FEATURE_SCHEMA_V4,
     FEATURE_SCHEMA_VERSION,
     feature_schema_prompt,
     insertion_feature_prompt,
@@ -197,7 +199,7 @@ def _routing_brief(panel: list[Any], schema: str | None = None) -> str:
 def _hypothesis_grounded(text: str) -> bool:
     """A usable hypothesis names one scoring feature and the routing objective it should change."""
     lowered = text.lower()
-    names = [name for kind_names in ARGUMENT_NAMES_V3.values() for name in kind_names]
+    names = [name for kind_names in (*ARGUMENT_NAMES_V3.values(), *ARGUMENT_NAMES_V4.values()) for name in kind_names]
     has_feature = any(name in lowered for name in names)
     has_objective = any(word in lowered for word in _OBJECTIVE_WORDS)
     return has_feature and has_objective
@@ -213,6 +215,13 @@ def _expression_prompt(kind: ComponentKind, *, context: str, schema: str | None 
         f"Example: {EXPRESSION_EXAMPLES[kind]}\n"
         f"{schema_text}"
         + (insertion_feature_prompt() + "\n" if schema == FEATURE_SCHEMA_V3 else "")
+        + (
+            "Schema v4 ranks ALNS repair insertions. On a two-vehicle candidate set, "
+            "incremental_energy_cost can select a longer detour with a lower native cost. "
+            "A positive multiple of delta_distance alone will be rejected.\n"
+            if schema == FEATURE_SCHEMA_V4
+            else ""
+        )
         + f"{context}\n"
         + '{"component":"'
         + kind

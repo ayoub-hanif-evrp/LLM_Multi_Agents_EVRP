@@ -116,6 +116,16 @@ def call_scorer(scorer: object, values: dict[str, float], legacy: tuple[str, ...
     return float(scorer(*args))  # type: ignore[operator]
 
 
+def note_decision(policy: object | None, event: dict[str, object]) -> None:
+    """Append one compact repair event. The log stops at 64 entries."""
+    if policy is None:
+        return
+    log = getattr(policy, "decision_trace", None)
+    if not isinstance(log, list) or len(log) >= 64:
+        return
+    log.append(dict(event))
+
+
 def note_selected_move(policy: object | None, kind: str, chosen: str, order: list[str]) -> None:
     """Record one selected move and the candidate order that produced it."""
     if policy is None:

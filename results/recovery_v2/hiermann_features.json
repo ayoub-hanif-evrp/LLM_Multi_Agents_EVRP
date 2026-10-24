@@ -1,0 +1,362 @@
+{
+  "time_limit_s": 15.0,
+  "alns_iterations": 40,
+  "llm_calls": 0,
+  "promoted": [],
+  "rows": [
+    {
+      "instance_id": "c101_21",
+      "seed": 7,
+      "arm": "classical_call",
+      "origin": "classical_call",
+      "llm_calls": 0,
+      "feasible": true,
+      "objective_key": [
+        4150.872544094683
+      ],
+      "vehicles": 20,
+      "distance": 2904.746852635555,
+      "first_fault": "OK",
+      "wall_s": 10.94,
+      "completed_within_budget": true
+    },
+    {
+      "instance_id": "c101_21",
+      "seed": 7,
+      "arm": "default_bundle",
+      "origin": "hand_written_policy",
+      "llm_calls": 0,
+      "feasible": true,
+      "objective_key": [
+        4150.872544094683
+      ],
+      "vehicles": 20,
+      "distance": 2904.746852635555,
+      "first_fault": "OK",
+      "wall_s": 10.842,
+      "completed_within_budget": true
+    },
+    {
+      "instance_id": "c101_21",
+      "seed": 7,
+      "arm": "remove_long_route",
+      "origin": "hand_written_policy",
+      "llm_calls": 0,
+      "feasible": true,
+      "objective_key": [
+        4089.8333047771343
+      ],
+      "vehicles": 20,
+      "distance": 2723.4203754035516,
+      "first_fault": "OK",
+      "wall_s": 8.876,
+      "completed_within_budget": true
+    },
+    {
+      "instance_id": "c101_21",
+      "seed": 7,
+      "arm": "penalise_new_route",
+      "origin": "hand_written_policy",
+      "llm_calls": 0,
+      "feasible": true,
+      "objective_key": [
+        4150.872544094683
+      ],
+      "vehicles": 20,
+      "distance": 2904.746852635555,
+      "first_fault": "OK",
+      "wall_s": 12.979,
+      "completed_within_budget": true
+    },
+    {
+      "instance_id": "c101_21",
+      "seed": 11,
+      "arm": "classical_call",
+      "origin": "classical_call",
+      "llm_calls": 0,
+      "feasible": true,
+      "objective_key": [
+        4164.778526628387
+      ],
+      "vehicles": 20,
+      "distance": 2933.6546083947496,
+      "first_fault": "OK",
+      "wall_s": 9.12,
+      "completed_within_budget": true
+    },
+    {
+      "instance_id": "c101_21",
+      "seed": 11,
+      "arm": "default_bundle",
+      "origin": "hand_written_policy",
+      "llm_calls": 0,
+      "feasible": true,
+      "objective_key": [
+        4164.778526628387
+      ],
+      "vehicles": 20,
+      "distance": 2933.6546083947496,
+      "first_fault": "OK",
+      "wall_s": 8.793,
+      "completed_within_budget": true
+    },
+    {
+      "instance_id": "c101_21",
+      "seed": 11,
+      "arm": "remove_long_route",
+      "origin": "hand_written_policy",
+      "llm_calls": 0,
+      "feasible": true,
+      "objective_key": [
+        4164.45627408774
+      ],
+      "vehicles": 20,
+      "distance": 2919.7966104314596,
+      "first_fault": "OK",
+      "wall_s": 7.747,
+      "completed_within_budget": true
+    },
+    {
+      "instance_id": "c101_21",
+      "seed": 22,
+      "arm": "classical_call",
+      "origin": "classical_call",
+      "llm_calls": 0,
+      "feasible": true,
+      "objective_key": [
+        4154.5545883236555
+      ],
+      "vehicles": 20,
+      "distance": 2910.9300129130147,
+      "first_fault": "OK",
+      "wall_s": 9.978,
+      "completed_within_budget": true
+    },
+    {
+      "instance_id": "c101_21",
+      "seed": 22,
+      "arm": "default_bundle",
+      "origin": "hand_written_policy",
+      "llm_calls": 0,
+      "feasible": true,
+      "objective_key": [
+        4154.5545883236555
+      ],
+      "vehicles": 20,
+      "distance": 2910.9300129130147,
+      "first_fault": "OK",
+      "wall_s": 12.635,
+      "completed_within_budget": true
+    },
+    {
+      "instance_id": "c101_21",
+      "seed": 22,
+      "arm": "remove_long_route",
+      "origin": "hand_written_policy",
+      "llm_calls": 0,
+      "feasible": true,
+      "objective_key": [
+        4081.2731649230145
+      ],
+      "vehicles": 20,
+      "distance": 2700.89369157692,
+      "first_fault": "OK",
+      "wall_s": 9.012,
+      "completed_within_budget": true
+    },
+    {
+      "instance_id": "r101_21",
+      "seed": 7,
+      "arm": "classical_call",
+      "origin": "classical_call",
+      "llm_calls": 0,
+      "feasible": true,
+      "objective_key": [
+        4032.9674353081436
+      ],
+      "vehicles": 18,
+      "distance": 3365.7037771266932,
+      "first_fault": "OK",
+      "wall_s": 8.457,
+      "completed_within_budget": true
+    },
+    {
+      "instance_id": "r101_21",
+      "seed": 7,
+      "arm": "remove_long_route",
+      "origin": "hand_written_policy",
+      "llm_calls": 0,
+      "feasible": true,
+      "objective_key": [
+        4020.242642478671
+      ],
+      "vehicles": 18,
+      "distance": 3332.2174802070276,
+      "first_fault": "OK",
+      "wall_s": 9.319,
+      "completed_within_budget": true
+    },
+    {
+      "instance_id": "r101_21",
+      "seed": 11,
+      "arm": "classical_call",
+      "origin": "classical_call",
+      "llm_calls": 0,
+      "feasible": true,
+      "objective_key": [
+        4047.7217930331963
+      ],
+      "vehicles": 18,
+      "distance": 3404.531034297884,
+      "first_fault": "OK",
+      "wall_s": 9.466,
+      "completed_within_budget": true
+    },
+    {
+      "instance_id": "r101_21",
+      "seed": 11,
+      "arm": "remove_long_route",
+      "origin": "hand_written_policy",
+      "llm_calls": 0,
+      "feasible": true,
+      "objective_key": [
+        4057.05075136774
+      ],
+      "vehicles": 18,
+      "distance": 3429.0809246519466,
+      "first_fault": "OK",
+      "wall_s": 10.299,
+      "completed_within_budget": true
+    },
+    {
+      "instance_id": "r101_21",
+      "seed": 22,
+      "arm": "classical_call",
+      "origin": "classical_call",
+      "llm_calls": 0,
+      "feasible": true,
+      "objective_key": [
+        4045.143882316208
+      ],
+      "vehicles": 18,
+      "distance": 3397.747058726863,
+      "first_fault": "OK",
+      "wall_s": 8.908,
+      "completed_within_budget": true
+    },
+    {
+      "instance_id": "r101_21",
+      "seed": 22,
+      "arm": "remove_long_route",
+      "origin": "hand_written_policy",
+      "llm_calls": 0,
+      "feasible": true,
+      "objective_key": [
+        4047.4831171244487
+      ],
+      "vehicles": 18,
+      "distance": 3403.9029398011808,
+      "first_fault": "OK",
+      "wall_s": 9.697,
+      "completed_within_budget": true
+    },
+    {
+      "instance_id": "c201_21",
+      "seed": 7,
+      "arm": "classical_call",
+      "origin": "classical_call",
+      "llm_calls": 0,
+      "feasible": true,
+      "objective_key": [
+        1226.9918847018703
+      ],
+      "vehicles": 6,
+      "distance": 823.0314666991587,
+      "first_fault": "OK",
+      "wall_s": 8.322,
+      "completed_within_budget": true
+    },
+    {
+      "instance_id": "c201_21",
+      "seed": 7,
+      "arm": "remove_long_route",
+      "origin": "hand_written_policy",
+      "llm_calls": 0,
+      "feasible": true,
+      "objective_key": [
+        1234.641906684666
+      ],
+      "vehicles": 6,
+      "distance": 861.112003248502,
+      "first_fault": "OK",
+      "wall_s": 9.479,
+      "completed_within_budget": true
+    },
+    {
+      "instance_id": "c201_21",
+      "seed": 11,
+      "arm": "classical_call",
+      "origin": "classical_call",
+      "llm_calls": 0,
+      "feasible": true,
+      "objective_key": [
+        1260.5414677174158
+      ],
+      "vehicles": 6,
+      "distance": 928.1631096990719,
+      "first_fault": "OK",
+      "wall_s": 8.027,
+      "completed_within_budget": true
+    },
+    {
+      "instance_id": "c201_21",
+      "seed": 11,
+      "arm": "remove_long_route",
+      "origin": "hand_written_policy",
+      "llm_calls": 0,
+      "feasible": true,
+      "objective_key": [
+        1271.531594380405
+      ],
+      "vehicles": 6,
+      "distance": 930.3463010010659,
+      "first_fault": "OK",
+      "wall_s": 8.59,
+      "completed_within_budget": true
+    },
+    {
+      "instance_id": "c201_21",
+      "seed": 22,
+      "arm": "classical_call",
+      "origin": "classical_call",
+      "llm_calls": 0,
+      "feasible": true,
+      "objective_key": [
+        1246.15779373392
+      ],
+      "vehicles": 6,
+      "distance": 899.1980241724486,
+      "first_fault": "OK",
+      "wall_s": 8.077,
+      "completed_within_budget": true
+    },
+    {
+      "instance_id": "c201_21",
+      "seed": 22,
+      "arm": "remove_long_route",
+      "origin": "hand_written_policy",
+      "llm_calls": 0,
+      "feasible": true,
+      "objective_key": [
+        1234.032246161524
+      ],
+      "vehicles": 6,
+      "distance": 874.4960915346638,
+      "first_fault": "OK",
+      "wall_s": 8.678,
+      "completed_within_budget": true
+    }
+  ],
+  "decision": "not_confirmed",
+  "reason": "own_route_distance removal improves c101_21 on seeds 7, 11, and 22, and loses at least one seed on r101_21 and c201_21."
+}

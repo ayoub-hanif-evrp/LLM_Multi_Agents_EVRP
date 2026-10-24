@@ -112,4 +112,5 @@ def compile_component(kind: str, source: str) -> Any:
         return float(value)
 
     call.parameter_names = tuple(params)  # type: ignore[attr-defined]
+    call.referenced_names = tuple(sorted({node.id for node in ast.walk(expr) if isinstance(node, ast.Name)}))  # type: ignore[attr-defined]
     return call

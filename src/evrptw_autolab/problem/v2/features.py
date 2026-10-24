@@ -10,7 +10,10 @@ from __future__ import annotations
 FEATURE_SCHEMA_VERSION = "2026-10-18.v1"
 FEATURE_SCHEMA_V2 = "2026-10-18.v2"
 FEATURE_SCHEMA_V3 = "2026-10-19.v3"
-KNOWN_FEATURE_SCHEMAS = frozenset({FEATURE_SCHEMA_VERSION, FEATURE_SCHEMA_V2, FEATURE_SCHEMA_V3})
+FEATURE_SCHEMA_V4 = "2026-10-24.v4"
+KNOWN_FEATURE_SCHEMAS = frozenset(
+    {FEATURE_SCHEMA_VERSION, FEATURE_SCHEMA_V2, FEATURE_SCHEMA_V3, FEATURE_SCHEMA_V4}
+)
 
 # battery_arrival is vehicle energy, the same unit as VehicleTypeV2.battery_capacity.
 # On Montoya tc0c10s2cf1 that capacity is 16000 Wh, not a fraction in [0, 1].
@@ -171,7 +174,17 @@ def insertion_feature_prompt() -> str:
         "delta_distance, due_time, ready_time, demand, and capacity_slack.",
         f"{FEATURE_SCHEMA_V3} also receives vehicle_fixed_cost (money), "
         "marginal_energy (energy = consumption rate * delta_distance), and "
-        "new_route_fixed_cost (money paid only when the route has no customers yet).",
+        "new_route_fixed_cost (money paid only when the route has no customers yet). "
+        "A v3 removal expression also receives own_route_distance, the travel "
+        "distance of the route that currently contains the customer. "
+        "route_distance_share stays the historical constant.\n"
+        f"{FEATURE_SCHEMA_V4} is a separate repair contract. Its insertion names are "
+        "delta_distance and delta_travel_time, which change with the insertion position, "
+        "plus route_load_slack_after_insertion, route_customer_count, and "
+        "new_vehicle_fixed_cost from the candidate vehicle. Its removal names are due_time, "
+        "marginal_removal_distance, time_window_width, and rng_value. "
+        "v1, v2, and v3 expressions do not receive these names, and ALNS repair keeps "
+        "the historical objective ranking unless the bundle schema is v4.",
         "charge_time (time) is available to a v3 station expression. It is not an insertion feature.",
     ]
     for name, spec in INSERTION_FEATURES_V3.items():

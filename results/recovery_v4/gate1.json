@@ -1,0 +1,41 @@
+{
+  "ok": true,
+  "llm_calls": 0,
+  "schema": "2026-10-24.v4",
+  "classical_route": [
+    "D",
+    "A",
+    "B",
+    "C",
+    "D"
+  ],
+  "inverted_route": [
+    "D",
+    "A",
+    "C",
+    "B",
+    "D"
+  ],
+  "classical_objective": [
+    1.0,
+    24.0
+  ],
+  "inverted_objective": [
+    1.0,
+    30.4339811320566
+  ],
+  "due_time_expression_same_position": true,
+  "insertion_calls": 3,
+  "decision_trace": [
+    {
+      "stage": "alns_repair",
+      "customer": "C",
+      "candidates": 3,
+      "selected": "0:2",
+      "objective_best": "0:3",
+      "changed_from_objective": true,
+      "policy_score": -18.4339811320566
+    }
+  ],
+  "status": "REAL_POLICY_CONTROL_VALIDATED"
+}

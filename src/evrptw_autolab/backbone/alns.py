@@ -4,8 +4,15 @@ from __future__ import annotations
 import math
 import random
 import time
+from typing import Any
 
 from evrptw_autolab.backbone.construct import insert_customer_fast
+from evrptw_autolab.backbone.decision_features import (
+    edited_route_features,
+    insertion_features_v4,
+    marginal_removal_distance,
+    time_window_width,
+)
 from evrptw_autolab.backbone.energy_repair import repair_energy
 from evrptw_autolab.backbone.local_search import relocate_improve, two_opt_improve
 from evrptw_autolab.backbone.util import (
@@ -16,10 +23,14 @@ from evrptw_autolab.backbone.util import (
     evaluate,
     is_better,
     make_customer_stop,
+    note_decision,
     note_scorer_call,
     note_selected_move,
     served_request_nodes,
+    vehicle_for_route,
 )
+from evrptw_autolab.problem.v2.features import FEATURE_SCHEMA_V4
+from evrptw_autolab.problem.v2.transport import travel_distance
 from evrptw_autolab.problem.v2.types import ProblemSpecV2, SolutionV2
 
 
@@ -68,6 +79,15 @@ def destroy_random(spec: ProblemSpecV2, solution: SolutionV2, rng: random.Random
     return _remove_nodes(solution, nodes), removed
 
 
+def _route_travel_distance(spec: ProblemSpecV2, route: list) -> float:
+    """Length of one route. This is not the constant route_distance_share."""
+    total = 0.0
+    nodes = spec.node_map
+    for left, right in zip(route, route[1:], strict=False):
+        total += travel_distance(spec, nodes[left.node_id], nodes[right.node_id])
+    return total
+
+
 def destroy_worst(
     spec: ProblemSpecV2,
     solution: SolutionV2,
@@ -85,6 +105,12 @@ def destroy_worst(
     if not present:
         return clone_solution(solution), []
     total_dist = max(evaluate(spec, solution).total_distance, 1e-9)
+    route_length: dict[str, float] = {}
+    for route in solution.routes:
+        length = _route_travel_distance(spec, route)
+        for stop in route:
+            if stop.event != "depot":
+                route_length[stop.node_id] = length
     scorer = getattr(policy, "removal_priority", None) if policy is not None else None
     scored = []
     for unit in present:
@@ -94,6 +120,17 @@ def destroy_worst(
         due = sum(dues) / len(dues) if dues else 0.0
         share = 1.0 / max(len(present), 1)
         rng_value = rng.random()
+        own_route = max((route_length.get(node_id, 0.0) for node_id in unit), default=0.0)
+        host = next(
+            (
+                route
+                for route in solution.routes
+                if set(unit) <= {stop.node_id for stop in route}
+            ),
+            [],
+        )
+        marginal = marginal_removal_distance(spec, host, set(unit)) if host else 0.0
+        width = sum(time_window_width(spec, node_id) for node_id in unit) / max(len(unit), 1)
         if scorer is not None:
             note_scorer_call(policy, "removal_priority")
             score = call_scorer(
@@ -102,6 +139,9 @@ def destroy_worst(
                     "due_time": float(due),
                     "route_distance_share": float(share),
                     "rng_value": float(rng_value),
+                    "own_route_distance": float(own_route),
+                    "marginal_removal_distance": float(marginal),
+                    "time_window_width": float(width),
                 },
                 ("due_time", "route_distance_share", "rng_value"),
             )
@@ -122,6 +162,157 @@ def destroy_worst(
     removed = [u for _, u in scored[:k]]
     nodes = {n for unit in removed for n in unit}
     return _remove_nodes(solution, nodes), removed
+
+
+def _v4_insertion(policy: object | None) -> bool:
+    return bool(
+        policy is not None
+        and getattr(policy, "feature_schema", "") == FEATURE_SCHEMA_V4
+        and getattr(policy, "insertion_score", None) is not None
+    )
+
+
+def _repair_one_v4(
+    spec: ProblemSpecV2,
+    current: SolutionV2,
+    node_id: str,
+    policy: Any,
+    vehicle_id: str,
+    deadline: float | None,
+) -> SolutionV2:
+    """Rank screened insertions with the v4 policy. Feasibility stays outside the scorer."""
+    screened: list[tuple[float, float, int, int, SolutionV2]] = []
+    objective_best: tuple[float, int, int] | None = None
+    for r_idx, route in enumerate(current.routes):
+        if deadline is not None and time.monotonic() > deadline:
+            break
+        try:
+            vehicle = vehicle_for_route(spec, current, r_idx)
+        except ValueError:
+            continue
+        for pos in range(1, len(route)):
+            if deadline is not None and time.monotonic() > deadline:
+                break
+            trial = clone_solution(current)
+            trial.routes[r_idx].insert(pos, make_customer_stop(node_id, spec))
+            report = evaluate(spec, trial)
+            hard = {item.family for item in report.violations} - {
+                "VISIT",
+                "PAIRING",
+                "BATTERY",
+                "CHARGE_POLICY",
+                "DURATION",
+            }
+            if hard & {"PARSE", "DEPOT", "CAPACITY", "WINDOW", "PRECEDENCE"}:
+                continue
+            features = insertion_features_v4(spec, route, pos, node_id, vehicle)
+            note_scorer_call(policy, "insertion_score")
+            scorer = policy.insertion_score
+            score = call_scorer(scorer, features, ())
+            objective = _acceptance_score(report)
+            screened.append((float(score), objective, r_idx, pos, trial))
+            if objective_best is None or objective < objective_best[0]:
+                objective_best = (objective, r_idx, pos)
+    if not screened:
+        route = empty_route(spec, vehicle_id)
+        route.insert(1, make_customer_stop(node_id, spec))
+        opened = clone_solution(current)
+        opened.routes.append(route)
+        opened.vehicle_assignments.append(vehicle_id)
+        return opened
+    screened.sort(key=lambda item: (item[0], item[2], item[3]))
+    chosen = screened[0]
+    objective_label = None if objective_best is None else f"{objective_best[1]}:{objective_best[2]}"
+    note_selected_move(
+        policy,
+        "insertion_score",
+        f"{node_id}:{chosen[2]}:{chosen[3]}",
+        [f"{node_id}:{item[2]}:{item[3]}" for item in screened],
+    )
+    note_decision(
+        policy,
+        {
+            "stage": "alns_repair",
+            "customer": node_id,
+            "candidates": len(screened),
+            "selected": f"{chosen[2]}:{chosen[3]}",
+            "objective_best": objective_label,
+            "changed_from_objective": f"{chosen[2]}:{chosen[3]}" != objective_label,
+            "policy_score": chosen[0],
+        },
+    )
+    return chosen[4]
+
+
+def _repair_pair_v4(
+    spec: ProblemSpecV2,
+    current: SolutionV2,
+    pickup: str,
+    delivery: str,
+    policy: Any,
+    vehicle_id: str,
+    deadline: float | None,
+) -> SolutionV2:
+    """Rank screened pickup-delivery insertions. The pair is never split."""
+    screened: list[tuple[float, float, int, SolutionV2, str]] = []
+    objective_best: str | None = None
+    objective_score = float("inf")
+    for r_idx, route in enumerate(current.routes):
+        if deadline is not None and time.monotonic() > deadline:
+            break
+        try:
+            vehicle = vehicle_for_route(spec, current, r_idx)
+        except ValueError:
+            continue
+        for ppos in range(1, len(route)):
+            for dpos in range(ppos + 1, len(route) + 1):
+                if deadline is not None and time.monotonic() > deadline:
+                    break
+                trial = clone_solution(current)
+                trial.routes[r_idx].insert(ppos, make_customer_stop(pickup, spec))
+                trial.routes[r_idx].insert(dpos, make_customer_stop(delivery, spec))
+                report = evaluate(spec, trial)
+                hard = {item.family for item in report.violations} - {
+                    "VISIT",
+                    "PAIRING",
+                    "BATTERY",
+                    "CHARGE_POLICY",
+                    "DURATION",
+                }
+                if hard & {"PARSE", "DEPOT", "CAPACITY", "WINDOW", "PRECEDENCE"}:
+                    continue
+                features = edited_route_features(spec, route, trial.routes[r_idx], vehicle)
+                note_scorer_call(policy, "insertion_score")
+                score = float(call_scorer(policy.insertion_score, features, ()))
+                objective = _acceptance_score(report)
+                label = f"{r_idx}:{ppos}:{dpos}"
+                screened.append((score, objective, r_idx, trial, label))
+                if objective < objective_score:
+                    objective_score = objective
+                    objective_best = label
+    if not screened:
+        opened = clone_solution(current)
+        route = empty_route(spec, vehicle_id)
+        route.insert(1, make_customer_stop(pickup, spec))
+        route.insert(2, make_customer_stop(delivery, spec))
+        opened.routes.append(route)
+        opened.vehicle_assignments.append(vehicle_id)
+        return opened
+    screened.sort(key=lambda item: (item[0], item[4]))
+    chosen = screened[0]
+    note_decision(
+        policy,
+        {
+            "stage": "alns_repair_pair",
+            "customer": f"{pickup}+{delivery}",
+            "candidates": len(screened),
+            "selected": chosen[4],
+            "objective_best": objective_best,
+            "changed_from_objective": chosen[4] != objective_best,
+            "policy_score": chosen[0],
+        },
+    )
+    return chosen[3]
 
 
 def repair_greedy(
@@ -149,6 +340,9 @@ def repair_greedy(
         best_score = float("inf")
         if len(unit) == 1:
             node_id = unit[0]
+            if _v4_insertion(policy):
+                current = _repair_one_v4(spec, current, node_id, policy, vehicle_id, deadline)
+                continue
             if spec.capabilities.heterogeneous_fleet:
                 current = insert_customer_fast(spec, current, node_id, policy=policy)
                 continue
@@ -184,6 +378,9 @@ def repair_greedy(
                 current = best
         else:
             pickup, delivery = unit[0], unit[1]
+            if _v4_insertion(policy):
+                current = _repair_pair_v4(spec, current, pickup, delivery, policy, vehicle_id, deadline)
+                continue
             for r_idx, route in enumerate(current.routes):
                 if deadline is not None and time.monotonic() > deadline:
                     break

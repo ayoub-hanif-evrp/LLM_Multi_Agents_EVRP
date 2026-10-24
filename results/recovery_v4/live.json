@@ -1,0 +1,124 @@
+{
+  "status": "REAL_POLICY_CONTROL_VALIDATED",
+  "schema": "2026-10-24.v4",
+  "model": "qwen3-coder:30b",
+  "model_digest": "sha256-1194192cf2a187eb02722edcc3f77b11d21f537048ce04b67ccf8ba78863006a",
+  "llm_calls": 3,
+  "llm_tokens": 708,
+  "architect": {
+    "hypothesis": "If we modify the scoring component to prioritize routes with lower delta_distance when inserting stops, the scheduled scoring will produce more efficient vehicle routing.",
+    "grounded": true,
+    "prediction": "Fewer vehicles used in the solution"
+  },
+  "multi_agent": {
+    "attribution": {
+      "component": "insertion_score",
+      "status": "expression_wrapped",
+      "llm_generated": true,
+      "source": "def insertion_score(delta_distance: float, delta_travel_time: float, route_load_slack_after_insertion: float, route_customer_count: float, new_vehicle_fixed_cost: float) -> float:\n    return delta_distance + 0.1 * route_load_slack_after_insertion\n",
+      "agent_role": "routing"
+    },
+    "repair": {
+      "loaded": true,
+      "changed": false,
+      "feasible": true,
+      "route": [
+        "D",
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "objective_key": [
+        1.0,
+        24.0
+      ],
+      "source": "def insertion_score(delta_distance: float, delta_travel_time: float, route_load_slack_after_insertion: float, route_customer_count: float, new_vehicle_fixed_cost: float) -> float:\n    return delta_distance + 0.1 * route_load_slack_after_insertion\n"
+    }
+  },
+  "single_agent": {
+    "attribution": {
+      "component": "insertion_score",
+      "status": "expression_wrapped",
+      "llm_generated": true,
+      "source": "def insertion_score(delta_distance: float, delta_travel_time: float, route_load_slack_after_insertion: float, route_customer_count: float, new_vehicle_fixed_cost: float) -> float:\n    return delta_distance + 0.1 * route_load_slack_after_insertion - 0.05 * route_customer_count + new_vehicle_fixed_cost\n",
+      "agent_role": "unified"
+    },
+    "repair": {
+      "loaded": true,
+      "changed": false,
+      "feasible": true,
+      "route": [
+        "D",
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "objective_key": [
+        1.0,
+        24.0
+      ],
+      "source": "def insertion_score(delta_distance: float, delta_travel_time: float, route_load_slack_after_insertion: float, route_customer_count: float, new_vehicle_fixed_cost: float) -> float:\n    return delta_distance + 0.1 * route_load_slack_after_insertion - 0.05 * route_customer_count + new_vehicle_fixed_cost\n"
+    }
+  },
+  "random": {
+    "loaded": true,
+    "changed": false,
+    "feasible": true,
+    "route": [
+      "D",
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "objective_key": [
+      1.0,
+      24.0
+    ],
+    "source": "def insertion_score(delta_distance: float, delta_travel_time: float, route_load_slack_after_insertion: float, route_customer_count: float, new_vehicle_fixed_cost: float) -> float:\n    return route_load_slack_after_insertion + 5.0 * delta_travel_time\n"
+  },
+  "gate1": {
+    "ok": true,
+    "llm_calls": 0,
+    "schema": "2026-10-24.v4",
+    "classical_route": [
+      "D",
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "inverted_route": [
+      "D",
+      "A",
+      "C",
+      "B",
+      "D"
+    ],
+    "classical_objective": [
+      1.0,
+      24.0
+    ],
+    "inverted_objective": [
+      1.0,
+      30.4339811320566
+    ],
+    "due_time_expression_same_position": true,
+    "insertion_calls": 3,
+    "decision_trace": [
+      {
+        "stage": "alns_repair",
+        "customer": "C",
+        "candidates": 3,
+        "selected": "0:2",
+        "objective_best": "0:3",
+        "changed_from_objective": true,
+        "policy_score": -18.4339811320566
+      }
+    ]
+  },
+  "objective_improved": false,
+  "confirmation_run": false
+}

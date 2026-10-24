@@ -221,6 +221,36 @@ def experiments_policy_recovery(
     typer.echo(json.dumps({"status": payload["status"], "llm_calls": payload["llm_calls"], "out": str(out)}, indent=2))
 
 
+@experiments_app.command("policy-recovery-v4")
+def experiments_policy_recovery_v4(
+    live: bool = typer.Option(False, "--live", help="At most 12 model calls after Gate 1."),
+    profile: str = typer.Option("qwen3_coder_30b", "--profile"),
+) -> None:
+    """Show whether a v4 policy changes an ALNS repair insertion."""
+    from evrptw_autolab.experiments.policy_recovery_v4 import MAX_LIVE_CALLS, run_live, write_gate1
+
+    out = ROOT / "results" / "recovery_v4"
+    gate = write_gate1(out)
+    if not gate["ok"]:
+        typer.echo(json.dumps({"status": "ENGINEERING_BLOCKED", "out": str(out)}, indent=2))
+        raise typer.Exit(code=1)
+    if not live:
+        typer.echo(json.dumps({"status": gate["status"], "llm_calls": 0, "out": str(out)}, indent=2))
+        return
+    from evrptw_autolab.llm.registry import make_backend, resolve_profile
+
+    prof = resolve_profile(profile)
+    payload = run_live(make_backend(prof), prof.model, out)
+    if payload["llm_calls"] > MAX_LIVE_CALLS:
+        raise typer.Exit(code=1)
+    typer.echo(
+        json.dumps(
+            {"status": payload["status"], "llm_calls": payload["llm_calls"], "out": str(out)},
+            indent=2,
+        )
+    )
+
+
 @experiments_app.command("campaign")
 def experiments_campaign(
     fake: bool = typer.Option(True, "--fake/--ollama", help="FakeBackend (default) or local Ollama"),

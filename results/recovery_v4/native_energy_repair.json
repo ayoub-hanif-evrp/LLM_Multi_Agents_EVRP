@@ -1,0 +1,211 @@
+{
+  "origin": "classical_call",
+  "llm_calls": 0,
+  "time_limit_s": 15.0,
+  "alns_iterations": 40,
+  "decision": "mixed",
+  "wins": [
+    {
+      "instance_id": "c101_21",
+      "seed": 7
+    },
+    {
+      "instance_id": "c101_21",
+      "seed": 11
+    },
+    {
+      "instance_id": "c101_21",
+      "seed": 22
+    },
+    {
+      "instance_id": "c201_21",
+      "seed": 7
+    },
+    {
+      "instance_id": "c201_21",
+      "seed": 11
+    },
+    {
+      "instance_id": "c201_21",
+      "seed": 22
+    }
+  ],
+  "losses": [
+    {
+      "instance_id": "r101_21",
+      "seed": 7
+    },
+    {
+      "instance_id": "r101_21",
+      "seed": 11
+    },
+    {
+      "instance_id": "r101_21",
+      "seed": 22
+    }
+  ],
+  "rows": [
+    {
+      "instance_id": "c101_21",
+      "seed": 7,
+      "arm": "classical_native_energy_repair",
+      "origin": "classical_call",
+      "llm_calls": 0,
+      "feasible": true,
+      "objective_key": [
+        3199.26388161663
+      ],
+      "previous_classical": [
+        4150.872544094683
+      ],
+      "vehicles": 13,
+      "previous_vehicles": 20,
+      "wall_s": 13.446,
+      "completed_within_budget": true
+    },
+    {
+      "instance_id": "c101_21",
+      "seed": 11,
+      "arm": "classical_native_energy_repair",
+      "origin": "classical_call",
+      "llm_calls": 0,
+      "feasible": true,
+      "objective_key": [
+        3181.763873410584
+      ],
+      "previous_classical": [
+        4164.778526628387
+      ],
+      "vehicles": 13,
+      "previous_vehicles": 20,
+      "wall_s": 9.089,
+      "completed_within_budget": true
+    },
+    {
+      "instance_id": "c101_21",
+      "seed": 22,
+      "arm": "classical_native_energy_repair",
+      "origin": "classical_call",
+      "llm_calls": 0,
+      "feasible": true,
+      "objective_key": [
+        3129.97724274773
+      ],
+      "previous_classical": [
+        4154.5545883236555
+      ],
+      "vehicles": 13,
+      "previous_vehicles": 20,
+      "wall_s": 9.448,
+      "completed_within_budget": true
+    },
+    {
+      "instance_id": "r101_21",
+      "seed": 7,
+      "arm": "classical_native_energy_repair",
+      "origin": "classical_call",
+      "llm_calls": 0,
+      "feasible": true,
+      "objective_key": [
+        4060.3916494079685
+      ],
+      "previous_classical": [
+        4032.9674353081436
+      ],
+      "vehicles": 18,
+      "previous_vehicles": 18,
+      "wall_s": 7.946,
+      "completed_within_budget": true
+    },
+    {
+      "instance_id": "r101_21",
+      "seed": 11,
+      "arm": "classical_native_energy_repair",
+      "origin": "classical_call",
+      "llm_calls": 0,
+      "feasible": true,
+      "objective_key": [
+        4067.8703051713737
+      ],
+      "previous_classical": [
+        4047.7217930331963
+      ],
+      "vehicles": 18,
+      "previous_vehicles": 18,
+      "wall_s": 6.081,
+      "completed_within_budget": true
+    },
+    {
+      "instance_id": "r101_21",
+      "seed": 22,
+      "arm": "classical_native_energy_repair",
+      "origin": "classical_call",
+      "llm_calls": 0,
+      "feasible": true,
+      "objective_key": [
+        4062.7870913094894
+      ],
+      "previous_classical": [
+        4045.143882316208
+      ],
+      "vehicles": 18,
+      "previous_vehicles": 18,
+      "wall_s": 8.443,
+      "completed_within_budget": true
+    },
+    {
+      "instance_id": "c201_21",
+      "seed": 7,
+      "arm": "classical_native_energy_repair",
+      "origin": "classical_call",
+      "llm_calls": 0,
+      "feasible": true,
+      "objective_key": [
+        1162.4406210789816
+      ],
+      "previous_classical": [
+        1226.9918847018703
+      ],
+      "vehicles": 5,
+      "previous_vehicles": 6,
+      "wall_s": 7.846,
+      "completed_within_budget": true
+    },
+    {
+      "instance_id": "c201_21",
+      "seed": 11,
+      "arm": "classical_native_energy_repair",
+      "origin": "classical_call",
+      "llm_calls": 0,
+      "feasible": true,
+      "objective_key": [
+        1199.6440839880534
+      ],
+      "previous_classical": [
+        1260.5414677174158
+      ],
+      "vehicles": 5,
+      "previous_vehicles": 6,
+      "wall_s": 13.439,
+      "completed_within_budget": true
+    },
+    {
+      "instance_id": "c201_21",
+      "seed": 22,
+      "arm": "classical_native_energy_repair",
+      "origin": "classical_call",
+      "llm_calls": 0,
+      "feasible": true,
+      "objective_key": [
+        1185.6709844794495
+      ],
+      "previous_classical": [
+        1246.15779373392
+      ],
+      "vehicles": 5,
+      "previous_vehicles": 6,
+      "wall_s": 8.255,
+      "completed_within_budget": true
+    }
+  ]
+}

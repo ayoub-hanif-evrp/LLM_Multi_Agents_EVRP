@@ -55,9 +55,9 @@ _PROBES: dict[ComponentKind, tuple[dict[str, float], ...]] = {
         {"detour": 0.5, "battery_arrival": 20.0, "station_rate": 5.0, "charge_time": 0.2},
     ),
     "removal_priority": (
-        {"due_time": 10.0, "route_distance_share": 0.5, "rng_value": 0.2},
-        {"due_time": 1.0e6, "route_distance_share": 0.1, "rng_value": 0.9},
-        {"due_time": 5.0, "route_distance_share": 0.8, "rng_value": 0.1},
+        {"due_time": 10.0, "route_distance_share": 0.5, "rng_value": 0.2, "own_route_distance": 1.0},
+        {"due_time": 1.0e6, "route_distance_share": 0.1, "rng_value": 0.9, "own_route_distance": 4.0},
+        {"due_time": 5.0, "route_distance_share": 0.8, "rng_value": 0.1, "own_route_distance": 9.0},
     ),
 }
 _LOWER_IS_BETTER = {"insertion_score", "station_score"}

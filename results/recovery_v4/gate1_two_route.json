@@ -1,0 +1,38 @@
+{
+  "ok": true,
+  "llm_calls": 0,
+  "schema": "2026-10-24.v4",
+  "distance_policy": {
+    "loaded": true,
+    "changed": false,
+    "changed_from_objective": true,
+    "feasible": true,
+    "vehicle": "ICE",
+    "objective_key": [
+      72.2842712474619
+    ],
+    "source": "def insertion_score(delta_distance: float, delta_travel_time: float, route_load_slack_after_insertion: float, route_customer_count: float, new_vehicle_fixed_cost: float, incremental_energy_cost: float, battery_margin: float) -> float:\n    return delta_distance\n"
+  },
+  "energy_policy": {
+    "loaded": true,
+    "changed": true,
+    "changed_from_objective": false,
+    "feasible": true,
+    "vehicle": "BEV",
+    "objective_key": [
+      60.9685424949238
+    ],
+    "source": "def insertion_score(delta_distance: float, delta_travel_time: float, route_load_slack_after_insertion: float, route_customer_count: float, new_vehicle_fixed_cost: float, incremental_energy_cost: float, battery_margin: float) -> float:\n    return incremental_energy_cost\n"
+  },
+  "classical_objective": [
+    72.2842712474619
+  ],
+  "energy_objective": [
+    60.9685424949238
+  ],
+  "energy_costs": [
+    11.715728752538098,
+    0.40000000000000036
+  ],
+  "status": "REAL_POLICY_CONTROL_VALIDATED"
+}

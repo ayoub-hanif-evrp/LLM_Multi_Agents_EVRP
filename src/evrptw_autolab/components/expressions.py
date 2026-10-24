@@ -11,7 +11,11 @@ import ast
 
 from evrptw_autolab.components.interfaces import DEFAULT_SOURCES, ComponentKind
 from evrptw_autolab.components.interpret import UnsafeComponent, _eval
-from evrptw_autolab.problem.v2.features import FEATURE_SCHEMA_V3, feature_schema_prompt
+from evrptw_autolab.problem.v2.features import (
+    FEATURE_SCHEMA_V3,
+    FEATURE_SCHEMA_V4,
+    feature_schema_prompt,
+)
 
 ARGUMENT_NAMES: dict[ComponentKind, tuple[str, ...]] = {
     "insertion_score": (
@@ -29,7 +33,26 @@ ARGUMENT_NAMES_V3: dict[ComponentKind, tuple[str, ...]] = {
     "insertion_score": ARGUMENT_NAMES["insertion_score"]
     + ("vehicle_fixed_cost", "marginal_energy", "new_route_fixed_cost"),
     "station_score": ARGUMENT_NAMES["station_score"] + ("charge_time",),
-    "removal_priority": ARGUMENT_NAMES["removal_priority"],
+    "removal_priority": ARGUMENT_NAMES["removal_priority"] + ("own_route_distance",),
+}
+
+ARGUMENT_NAMES_V4: dict[ComponentKind, tuple[str, ...]] = {
+    "insertion_score": (
+        "delta_distance",
+        "delta_travel_time",
+        "route_load_slack_after_insertion",
+        "route_customer_count",
+        "new_vehicle_fixed_cost",
+        "incremental_energy_cost",
+        "battery_margin",
+    ),
+    "station_score": ARGUMENT_NAMES["station_score"],
+    "removal_priority": (
+        "due_time",
+        "marginal_removal_distance",
+        "time_window_width",
+        "rng_value",
+    ),
 }
 
 EXPRESSION_EXAMPLES: dict[ComponentKind, str] = {
@@ -77,6 +100,13 @@ def _check_expression(node: ast.AST, allowed: set[str], depth: int = 0) -> None:
 
 def default_sources(schema: str | None = None) -> dict[ComponentKind, str]:
     """v3 uses the same formulas as v1 and adds the new parameters unused."""
+    if schema == FEATURE_SCHEMA_V4:
+        v4_bodies: dict[ComponentKind, str] = {
+            "insertion_score": "delta_distance",
+            "station_score": "detour + 0.1 * station_rate + (0.0 if battery_arrival > 0.0 else 1000.0)",
+            "removal_priority": "marginal_removal_distance",
+        }
+        return {kind: wrap_expression(kind, body, FEATURE_SCHEMA_V4) for kind, body in v4_bodies.items()}
     if schema != FEATURE_SCHEMA_V3:
         return {kind: DEFAULT_SOURCES[kind] for kind in DEFAULT_SOURCES}
     bodies: dict[ComponentKind, str] = {
@@ -97,6 +127,8 @@ def argument_names(kind: ComponentKind, schema: str | None = None) -> tuple[str,
     """v3 names are a superset. A v1 expression cannot see the added features."""
     if schema == FEATURE_SCHEMA_V3:
         return ARGUMENT_NAMES_V3[kind]
+    if schema == FEATURE_SCHEMA_V4:
+        return ARGUMENT_NAMES_V4[kind]
     return ARGUMENT_NAMES[kind]
 
 

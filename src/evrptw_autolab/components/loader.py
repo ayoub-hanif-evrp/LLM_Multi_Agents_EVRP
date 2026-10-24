@@ -152,6 +152,7 @@ class PolicyBundle:
     # copies this onto the incumbent so a parent can see which scale was used.
     observed_battery_argument_max: float | None = None
     selected_moves: list[dict[str, Any]] = field(default_factory=list)
+    decision_trace: list[dict[str, Any]] = field(default_factory=list)
 
     def set(self, kind: ComponentKind, fn: Callable[..., float], source: str, owner: str) -> None:
         setattr(self, kind, fn)

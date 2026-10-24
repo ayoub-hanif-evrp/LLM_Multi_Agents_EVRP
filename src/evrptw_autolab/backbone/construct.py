@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import random
+from dataclasses import dataclass
 
 from evrptw_autolab.backbone.util import (
     call_scorer,
@@ -137,7 +138,29 @@ def _initialization_vehicles(spec: ProblemSpecV2) -> list[VehicleTypeV2]:
     return sorted(spec.vehicle_types, key=rank)
 
 
-def route_covers_locally(spec: ProblemSpecV2, route: list[RouteStopV2], vehicle: VehicleTypeV2) -> tuple[bool, float]:
+def _energy_prices(spec: ProblemSpecV2) -> tuple[float, float]:
+    prices = spec.metadata.get("energy_prices") or {}
+    return float(prices.get("fossil-fuel", 0.0)), float(prices.get("electricity", 0.0))
+
+
+def _route_energy_cost(spec: ProblemSpecV2, trajectory: list) -> float:
+    fossil, electric = _energy_prices(spec)
+    if not trajectory:
+        return 0.0
+    last = trajectory[-1]
+    return fossil * float(last.fuel_used) + electric * float(last.electric_used)
+
+
+def _priced_fleet(spec: ProblemSpecV2) -> bool:
+    fossil, electric = _energy_prices(spec)
+    return spec.capabilities.heterogeneous_fleet and (fossil > 0.0 or electric > 0.0)
+
+
+def route_covers_locally(
+    spec: ProblemSpecV2,
+    route: list[RouteStopV2],
+    vehicle: VehicleTypeV2,
+) -> tuple[bool, float, float]:
     """Capacity, time windows, and depot return for one route. No whole-solution evaluate."""
     load = 0.0
     for stop in route:
@@ -145,28 +168,103 @@ def route_covers_locally(spec: ProblemSpecV2, route: list[RouteStopV2], vehicle:
         if node.kind in {"customer", "pickup", "delivery"}:
             load += float(node.demand)
     if vehicle.capacity is not None and load > float(vehicle.capacity) + EPSILON:
-        return False, float("inf")
+        return False, float("inf"), float("inf")
     try:
         traj, errors = simulate_route(spec, route, vehicle)
     except (KeyError, ValueError):
-        return False, float("inf")
+        return False, float("inf"), float("inf")
     if errors:
-        return False, float("inf")
+        return False, float("inf"), float("inf")
     uses_battery = (vehicle.is_electric or vehicle.is_hybrid) and vehicle.battery_capacity is not None
     if uses_battery:
         for state in traj:
             if state.battery_arrival < -EPSILON or state.battery_departure < -EPSILON:
-                return False, float("inf")
+                return False, float("inf"), float("inf")
     if spec.capabilities.time_windows and traj:
         for state in traj:
             node = spec.node_map[state.node_id]
             if node.kind in {"customer", "pickup", "delivery"} and state.service_start > node.due_time + EPSILON:
-                return False, float("inf")
+                return False, float("inf"), float("inf")
         depot = spec.node_map[spec.depot_ids[0]]
         if traj[-1].arrival_time > depot.due_time + EPSILON:
-            return False, float("inf")
+            return False, float("inf"), float("inf")
     distance = float(traj[-1].distance_so_far) if traj else 0.0
-    return True, distance
+    return True, distance, _route_energy_cost(spec, traj)
+
+
+@dataclass
+class _RepairChoice:
+    cost: float
+    tie: float
+    route: int
+    pos: int
+    opened: str | None
+    upgrade: str | None
+
+
+def _consider_fleet_repairs(
+    spec: ProblemSpecV2,
+    solution: SolutionV2,
+    customer_id: str,
+    blocked: list[tuple[int, VehicleTypeV2, float]],
+    best: _RepairChoice,
+) -> None:
+    """Price a larger vehicle on a full route, and a new route, against the native energy cost."""
+    demand = float(spec.node_map[customer_id].demand)
+
+    def accept(
+        cost: float,
+        tie: float,
+        route: int,
+        pos: int,
+        opened: str | None,
+        upgrade: str | None,
+    ) -> None:
+        better = cost < best.cost - 1e-12 or (abs(cost - best.cost) <= 1e-12 and tie < best.tie)
+        if not better:
+            return
+        best.cost = cost
+        best.tie = tie
+        best.route = route
+        best.pos = pos
+        best.opened = opened
+        best.upgrade = upgrade
+
+    for r_idx, vehicle, base_energy in blocked:
+        route = solution.routes[r_idx]
+        load = demand
+        for stop in route:
+            kind = spec.node_map[stop.node_id].kind
+            if kind in {"customer", "pickup", "delivery"}:
+                load += float(spec.node_map[stop.node_id].demand)
+        for alt in spec.vehicle_types:
+            if alt.type_id == vehicle.type_id:
+                continue
+            if alt.capacity is not None and load > float(alt.capacity) + EPSILON:
+                continue
+            for pos in range(1, len(route)):
+                trial = list(route)
+                trial.insert(pos, make_customer_stop(customer_id, spec))
+                ok, distance, energy = route_covers_locally(spec, trial, alt)
+                if not ok:
+                    continue
+                accept(
+                    (alt.fixed_cost - float(vehicle.fixed_cost)) + (energy - base_energy),
+                    distance,
+                    r_idx,
+                    pos,
+                    None,
+                    alt.type_id,
+                )
+    for alt in _initialization_vehicles(spec):
+        if alt.capacity is not None and demand > float(alt.capacity) + EPSILON:
+            continue
+        opened = empty_route(spec, alt.type_id)
+        opened.insert(1, make_customer_stop(customer_id, spec))
+        ok, distance, energy = route_covers_locally(spec, opened, alt)
+        if not ok:
+            continue
+        accept(float(alt.fixed_cost) + energy, distance, -1, -1, alt.type_id, None)
 
 
 def insert_customer_fast(
@@ -179,29 +277,88 @@ def insert_customer_fast(
     best_route = -1
     best_pos = -1
     best_cost = float("inf")
+    best_tie = float("inf")
+    best_open: str | None = None
+    best_upgrade: str | None = None
     considered: list[tuple[float, int, int]] = []
     node = spec.node_map[customer_id]
+    priced = policy is None and _priced_fleet(spec)
+    blocked: list[tuple[int, VehicleTypeV2, float]] = []
+    priced_options: list[tuple[float, float, int, int]] = []
     for r_idx, route in enumerate(solution.routes):
         try:
             vehicle = vehicle_for_route(spec, solution, r_idx)
         except ValueError:
             continue
-        base_ok, base_distance = route_covers_locally(spec, route, vehicle)
+        base_ok, _base_distance, base_energy = route_covers_locally(spec, route, vehicle)
         if not base_ok:
-            base_distance = 0.0
+            base_energy = 0.0
+        local_cost = float("inf")
+        local_choice: tuple[float, float, int] | None = None
         for pos in range(1, len(route)):
             trial = list(route)
             trial.insert(pos, make_customer_stop(customer_id, spec))
-            ok, distance = route_covers_locally(spec, trial, vehicle)
+            ok, distance, energy = route_covers_locally(spec, trial, vehicle)
             if not ok:
                 continue
-            delta = distance - base_distance
-            cost = _insertion_cost(spec, route, pos, customer_id, policy=policy, vehicle=vehicle) if policy is not None else delta
+            delta = distance - (0.0 if not base_ok else _base_distance)
+            if policy is not None:
+                cost = _insertion_cost(spec, route, pos, customer_id, policy=policy, vehicle=vehicle)
+            else:
+                cost = delta
             considered.append((float(cost), r_idx, pos))
+            if cost < local_cost - 1e-12:
+                local_cost = cost
+                local_choice = (energy - base_energy, delta, pos)
             if cost < best_cost - 1e-12:
                 best_cost = cost
+                best_tie = delta
                 best_route = r_idx
                 best_pos = pos
+                best_open = None
+                best_upgrade = None
+        if local_choice is not None and priced:
+            energy_delta, delta, pos = local_choice
+            priced_options.append((energy_delta, delta, r_idx, pos))
+        elif priced:
+            blocked.append((r_idx, vehicle, base_energy))
+    if priced and priced_options:
+        energy_delta, delta, r_idx, pos = min(priced_options)
+        best_cost = energy_delta
+        best_tie = delta
+        best_route = r_idx
+        best_pos = pos
+        best_open = None
+        best_upgrade = None
+    elif priced and best_route < 0:
+        choice = _RepairChoice(best_cost, best_tie, best_route, best_pos, best_open, best_upgrade)
+        _consider_fleet_repairs(spec, solution, customer_id, blocked, choice)
+        best_cost = choice.cost
+        best_tie = choice.tie
+        best_route = choice.route
+        best_pos = choice.pos
+        best_open = choice.opened
+        best_upgrade = choice.upgrade
+    scorer = getattr(policy, "insertion_score", None) if policy is not None else None
+    referenced = set(getattr(scorer, "referenced_names", ()) or ())
+    if "new_route_fixed_cost" in referenced:
+        demand = float(node.demand)
+        for vehicle in _initialization_vehicles(spec):
+            if vehicle.capacity is not None and demand > float(vehicle.capacity) + EPSILON:
+                continue
+            opened = empty_route(spec, vehicle.type_id)
+            trial_route = list(opened)
+            trial_route.insert(1, make_customer_stop(customer_id, spec))
+            ok, _distance, _energy = route_covers_locally(spec, trial_route, vehicle)
+            if not ok:
+                continue
+            cost = _insertion_cost(spec, opened, 1, customer_id, policy=policy, vehicle=vehicle)
+            considered.append((float(cost), 10**6, 0))
+            if cost < best_cost - 1e-12:
+                best_cost = cost
+                best_route = -1
+                best_pos = -1
+                best_open = vehicle.type_id
     if considered and policy is not None:
         ordered = sorted(considered, key=lambda item: (item[0], item[1], item[2]))
         note_selected_move(
@@ -210,9 +367,29 @@ def insert_customer_fast(
             f"{customer_id}:{ordered[0][1]}:{ordered[0][2]}",
             [f"{customer_id}:{item[1]}:{item[2]}" for item in ordered],
         )
+    if best_open is not None:
+        updated = clone_solution(solution)
+        opened = empty_route(spec, best_open)
+        opened.insert(1, make_customer_stop(customer_id, spec))
+        updated.routes.append(opened)
+        updated.vehicle_assignments.append(best_open)
+        return updated
     if best_route >= 0:
         updated = clone_solution(solution)
         updated.routes[best_route].insert(best_pos, make_customer_stop(customer_id, spec))
+        if best_upgrade is not None:
+            updated.vehicle_assignments[best_route] = best_upgrade
+            updated.routes[best_route] = [
+                RouteStopV2(
+                    stop.node_id,
+                    best_upgrade,
+                    stop.event,
+                    stop.charge_amount,
+                    stop.charge_technology,
+                    stop.target_soc,
+                )
+                for stop in updated.routes[best_route]
+            ]
         return updated
     demand = float(node.demand)
     for vehicle in _initialization_vehicles(spec):
@@ -220,7 +397,7 @@ def insert_customer_fast(
             continue
         route = empty_route(spec, vehicle.type_id)
         route.insert(1, make_customer_stop(customer_id, spec))
-        ok, _distance = route_covers_locally(spec, route, vehicle)
+        ok, _distance, _energy = route_covers_locally(spec, route, vehicle)
         if not ok:
             continue
         updated = clone_solution(solution)

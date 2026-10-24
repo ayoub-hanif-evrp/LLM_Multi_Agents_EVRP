@@ -261,6 +261,10 @@ class ClassicalSolver:
                 heavy_local=not spec.capabilities.heterogeneous_fleet,
             )
             self._publish(tracker, spec, solution)
+        if time.monotonic() < deadline and spec.capabilities.heterogeneous_fleet:
+            # One improvement-only pass. A rejected move is discarded, so this cannot raise the native cost.
+            solution = relocate_improve(spec, solution, max_passes=1, deadline=deadline)
+            self._publish(tracker, spec, solution)
         if time.monotonic() < deadline:
             solution = _maybe_merge(
                 spec, solution, deadline=deadline, max_passes=3, enabled=self.merge_routes
@@ -346,6 +350,7 @@ class ClassicalSolver:
                 "inprocess_validated": True,
                 "scorer_calls": dict(getattr(self.policy, "call_counts", {}) or {}),
                 "selected_moves": list(getattr(self.policy, "selected_moves", []) or [])[:16],
+                "decision_trace": list(getattr(self.policy, "decision_trace", []) or [])[:64],
                 "feature_schema": str(
                     getattr(self.policy, "feature_schema", FEATURE_SCHEMA_VERSION) or FEATURE_SCHEMA_VERSION
                 ),
@@ -361,6 +366,7 @@ class ClassicalSolver:
         if isinstance(published, SolutionV2):
             published.metadata["scorer_calls"] = dict(solution.metadata["scorer_calls"])
             published.metadata["selected_moves"] = list(solution.metadata.get("selected_moves") or [])
+            published.metadata["decision_trace"] = list(solution.metadata.get("decision_trace") or [])
             published.metadata["feature_schema"] = solution.metadata["feature_schema"]
             published.metadata["station_battery_argument_max"] = solution.metadata[
                 "station_battery_argument_max"

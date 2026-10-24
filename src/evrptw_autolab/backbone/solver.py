@@ -415,16 +415,9 @@ def _read_snapshot(path: str) -> tuple[SolutionV2 | None, str]:
 
 def _solver_process_main(spec: ProblemSpecV2, config: dict[str, Any], incumbent_path: str) -> None:
     """Child process. The parent joins with a timeout and may terminate this process."""
+    # Expression bundles belonged to the archived policy pilots. This engine
+    # always runs the classical operators inside the child process.
     policy = None
-    sources = config.get("sources") or {}
-    if sources:
-        from evrptw_autolab.components.loader import load_bundle
-
-        policy, _errors = load_bundle(
-            sources,
-            config.get("owners"),
-            feature_schema=config.get("feature_schema"),
-        )
     solver = ClassicalSolver(
         seed=int(config["seed"]),
         time_limit_s=float(config["time_limit_s"]),

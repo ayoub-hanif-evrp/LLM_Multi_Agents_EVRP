@@ -1,50 +1,27 @@
-# VoltForge
+# CIPHER-EVRP
 
-Local coding models act as agents, write an EVRPTW solver, execute it, receive evaluator feedback, and improve the code. After synthesis or evolution, the solver runs with **zero LLM calls**.
+Counterexample-guided transfer of search operators across electric-vehicle routing families. The classical optimizer and the trusted evaluator are the active system. Generated agents are not on the solve path.
 
-```
-LOCAL CODING MODELS
-        ↓
-5 SPECIALIZED AGENTS
-        ↓
-GENERATED solver.py
-        ↓
-DETERMINISTIC EVRPTW EVALUATOR
-        ↓
-FEEDBACK + REPAIR
-        ↓
-FROZEN SOLVER
-        ↓
-ZERO LLM CALLS AT DEPLOYMENT
+The previous VoltForge agent, synthesis, and expression-policy stacks are archived at `archive/pre-cipher-61cdc20` (`61cdc20625061c4a11f31c0f9ddbe6f9bb6d3a78`). See `docs/MIGRATION.md`.
+
+## Commands
+
+```text
+uv run voltforge datasets validate
+uv run voltforge solver run --family schneider --instance c101C5 --time-limit 5 --iterations 20
+uv run voltforge policies validate --policy operator.json --family schneider
 ```
 
-The laboratory provides instances, the physics API, a sandbox, and an exact evaluator. It does not provide a route-construction method or a hidden fallback solver.
+`datasets validate` checks that the Schneider, Montoya, Bezzi, Goeke, and Hiermann files still parse. `solver run` uses the classical engine and prints the native objective from `evaluate_solution_v2`. A model is not called.
 
-## Experiments
+## Tests
 
-| Name | What it does |
-| --- | --- |
-| `five_agent_synthesis` | Architect, Routing, Charging, Search, Critic share one local model and create a solver. Each coding role returns a complete `solver.py` candidate. |
-| `single_agent_synthesis` | One coding agent receives the same problem and API information and creates a solver alone. |
-| `solver_evolution` | Starting from a valid generated solver, the model proposes small code patches. Only feasible improvements are kept. |
-| `evaluation` | Run a frozen solver with no language model. |
-
-```bash
-uv sync
+```text
 uv run pytest -q
 uv run ruff check src tests
 uv run mypy src/evrptw_autolab
-uv run voltforge validate-data
-uv run voltforge models list
-
-uv run python scripts/smoke_micro.py
-uv run python scripts/run_final_experiments.py
 ```
 
-Models, seeds, and the shared call budget live in `configs/models.yaml` and `configs/experiments.yaml`. A missing local model is recorded as `SKIPPED_NOT_INSTALLED` and is not replaced.
+## Status
 
-Paper tables are written to `results/paper/`. Run provenance is copied to `results/paper/raw/`. Temporary `workspace/` is gitignored. Earlier engineering-validation artifacts remain in `results/engineering_validation/`.
-
-## Dataset
-
-92 Schneider instances in `dataset/schneider/`. Discovery uses families C1 and R1. Confirmation uses C2, R2, and RC1. RC2 stays held out. See `docs/BENCHMARK_CONTRACT.md`.
+Hard capability checks, a restricted scoring language, selective fallback, and evaluator-backed regression records exist. They are not wired into ALNS, and the multi-agent discovery loop does not run. No claim is made that a generated operator improves the five benchmarks.

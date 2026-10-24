@@ -5,8 +5,6 @@ from evrptw_autolab.backbone.local_search import merge_routes_improve
 from evrptw_autolab.backbone.nonlinear_charge import optimize_route_partial_charges
 from evrptw_autolab.backbone.station_filter import rank_station_candidates
 from evrptw_autolab.backbone.util import evaluate
-from evrptw_autolab.components.expressions import wrap_expression
-from evrptw_autolab.components.loader import load_bundle
 from evrptw_autolab.problem.v2.features import (
     FEATURE_SCHEMA_V2,
     FEATURE_SCHEMA_VERSION,
@@ -67,17 +65,24 @@ def _spec(
 
 
 def _policy(expression: str):
-    source = wrap_expression("station_score", expression)
-    bundle, errors = load_bundle(
-        {
-            "insertion_score": wrap_expression("insertion_score", "delta_distance"),
-            "station_score": source,
-            "removal_priority": wrap_expression("removal_priority", "due_time"),
-        }
-    )
-    assert not errors, errors
-    bundle.station_trace = []  # type: ignore[attr-defined]
-    return bundle
+    def score(detour: float, battery_arrival: float, station_rate: float) -> float:
+        del station_rate
+        if expression == RECORDED_STATION:
+            return max(0.0, min(1.0, (battery_arrival - 0.2) * 5))
+        if expression.strip() == "-1.0 * detour":
+            return -1.0 * detour
+        raise AssertionError(expression)
+
+    score.parameter_names = ("detour", "battery_arrival", "station_rate")  # type: ignore[attr-defined]
+
+    class _Bundle:
+        station_score = staticmethod(score)
+        feature_schema = FEATURE_SCHEMA_VERSION
+        call_counts: dict[str, int] = {}
+        selected_moves: list[object] = []
+        station_trace: list[object] = []
+
+    return _Bundle()
 
 
 def _nodes_basic() -> list[NodeV2]:

@@ -1,7 +1,7 @@
 [project]
 name = "evrptw-autolab"
 version = "0.1.0"
-description = "VoltForge: five-agent autonomous synthesis of executable EVRPTW solvers"
+description = "CIPHER-EVRP: classical EVRP search with operator compatibility checks"
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }

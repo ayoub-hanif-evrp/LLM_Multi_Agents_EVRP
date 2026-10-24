@@ -1,2 +1,0 @@
-status,reason
-not_run,Neither the matched pilot nor the generational runner trains on one family and evaluates a frozen bundle on another.

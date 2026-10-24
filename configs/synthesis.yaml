@@ -1,3 +1,0 @@
-# Deprecated: wall clock lives in experiments.yaml as generated_solver_wall_clock_s.
-cycle:
-  wall_clock_s: 30

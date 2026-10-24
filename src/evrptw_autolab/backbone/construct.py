@@ -23,9 +23,9 @@ from evrptw_autolab.problem.v2.types import ProblemSpecV2, RouteStopV2, Solution
 
 
 def _finite_due(node) -> float:
-    from evrptw_autolab.components.interfaces import normalize_due_time
+    from evrptw_autolab.backbone.util import finite_due
 
-    return normalize_due_time(float(node.due_time))
+    return finite_due(float(node.due_time))
 
 
 def _insertion_features(

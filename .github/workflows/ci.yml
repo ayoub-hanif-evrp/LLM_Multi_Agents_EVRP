@@ -2,7 +2,7 @@ name: ci
 
 on:
   push:
-    branches: [master, main, research/completion-d5853ee]
+    branches: [master, main, research/cipher-evrp, research/completion-d5853ee]
   pull_request:
 
 jobs:
@@ -22,4 +22,4 @@ jobs:
       - name: Mypy
         run: uv run mypy src/evrptw_autolab
       - name: Validate data
-        run: uv run voltforge validate-data
+        run: uv run voltforge datasets validate

@@ -7,6 +7,16 @@ from evrptw_autolab.problem.v2.evaluator import evaluate_solution_v2
 from evrptw_autolab.problem.v2.report import EvaluationReportV2
 from evrptw_autolab.problem.v2.types import ProblemSpecV2, RouteStopV2, SolutionV2, VehicleTypeV2
 
+FINITE_DUE_SENTINEL = 1_000_000.0
+
+
+def finite_due(due: float) -> float:
+    """Map an infinite or missing due time to a finite sentinel."""
+    value = float(due)
+    if value != value or value in (float("inf"), float("-inf")):
+        return FINITE_DUE_SENTINEL
+    return value
+
 
 def default_vehicle_id(spec: ProblemSpecV2) -> str:
     if not spec.vehicle_types:

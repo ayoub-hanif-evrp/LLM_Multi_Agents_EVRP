@@ -1,5 +1,0 @@
-study,ablation,solver_commit,five_agent_solves,five_agent_calls,five_agent_tokens,five_agent_selected,note
-matched_qwen_20261018,primary,27278a1,20,20,7058,five_1,fresh sample on the old solver; not a replay of the 2026-10-19 generational run
-matched_qwen_20261018,no_critic,27278a1,20,16,4652,,fresh sample on the old solver; not a replay of the 2026-10-19 generational run
-matched_qwen_20261018,no_evolution,27278a1,5,5,1532,,fresh sample on the old solver; not a replay of the 2026-10-19 generational run
-matched_qwen_20261018,no_selection,27278a1,20,20,7353,five_3,fresh sample on the old solver; not a replay of the 2026-10-19 generational run

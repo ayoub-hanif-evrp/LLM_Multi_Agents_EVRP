@@ -211,16 +211,9 @@ def test_shorter_infeasible_policy_route_does_not_replace_feasible_incumbent() -
     assert [stop.node_id for stop in box["incumbent"].routes[0]] == ["D", "S", "C", "D"]
 
 
-def test_inprocess_solve_records_scorer_calls() -> None:
-    from evrptw_autolab.components.interfaces import DEFAULT_SOURCES
-    from evrptw_autolab.components.loader import load_bundle
-
-    bundle, errors = load_bundle(DEFAULT_SOURCES)
-    assert not errors
+def test_classical_solve_is_attributed_to_the_baseline() -> None:
     sol = ClassicalSolver(
-        seed=1, time_limit_s=2.0, alns_iterations=1, use_alns=False, hard_timeout=False, policy=bundle
+        seed=1, time_limit_s=2.0, alns_iterations=1, use_alns=False, hard_timeout=False
     ).solve(_easy())
-    counts = sol.metadata.get("scorer_calls") or {}
-    assert int(counts.get("insertion_score", 0)) > 0
-    assert sol.metadata["method_attribution"] == "llm_policy_search"
+    assert sol.metadata["method_attribution"] == "classical_baseline"
     assert sol.metadata["solution_feasible"] is True

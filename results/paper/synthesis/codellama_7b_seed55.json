@@ -1,1 +1,0 @@
-{"experiment": "five_agent_synthesis", "profile": "codellama_7b", "seed": 55, "failure_reason": "Ollama failed for role=search model=codellama:7b: timed out", "failure_category": "RUNTIME", "schneider_c5": false, "fully_feasible": false, "llm_calls": 0, "tokens": 0}

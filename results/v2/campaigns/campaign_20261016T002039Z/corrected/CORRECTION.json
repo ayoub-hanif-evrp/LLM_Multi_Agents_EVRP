@@ -1,8 +1,0 @@
-{
-  "source": "results\\v2\\campaigns\\campaign_20261016T002039Z",
-  "raw_files_modified": false,
-  "evolution_llm_tokens": 2621,
-  "incorrect_sum_if_repeated_per_instance": 13105,
-  "winner_status": "NO_LLM_WINNER",
-  "instances": 5
-}

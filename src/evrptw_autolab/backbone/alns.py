@@ -114,9 +114,9 @@ def destroy_worst(
     scorer = getattr(policy, "removal_priority", None) if policy is not None else None
     scored = []
     for unit in present:
-        from evrptw_autolab.components.interfaces import normalize_due_time
+        from evrptw_autolab.backbone.util import finite_due
 
-        dues = [normalize_due_time(spec.node_map[n].due_time) for n in unit]
+        dues = [finite_due(spec.node_map[n].due_time) for n in unit]
         due = sum(dues) / len(dues) if dues else 0.0
         share = 1.0 / max(len(present), 1)
         rng_value = rng.random()

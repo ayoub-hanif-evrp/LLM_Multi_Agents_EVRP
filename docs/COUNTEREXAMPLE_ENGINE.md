@@ -9,4 +9,4 @@ An improvement returns no record. `minimize_failing_case` drops elements from a 
 
 `differential_counterexample` evaluates a baseline solution and a candidate solution with `evaluate_solution_v2`. `replay_matches` evaluates that same pair again. `refuse_non_development` rejects the confirmation and held-out partitions before evaluation.
 
-These helpers do not search a benchmark panel and do not call a model. They compare solutions the caller already built.
+`repair_greedy` can mine the same kind of record from one screened insertion. It compares the applied row with the classical row of that same screen. It does not search a benchmark panel and it does not call a model. `partition="heldout"` or `partition="confirmation"` raises before a record is stored.

@@ -315,6 +315,74 @@ def _repair_pair_v4(
     return chosen[3]
 
 
+def _repair_one_selective(
+    spec: ProblemSpecV2,
+    current: SolutionV2,
+    node_id: str,
+    policy: Any,
+    vehicle_id: str,
+    deadline: float | None,
+    partition: str,
+) -> SolutionV2:
+    """Rank feasible insertions with the selective controller. Physics screening stays here."""
+    from evrptw_autolab.discovery.schemas import OperatorSpec
+    from evrptw_autolab.transfer.context_features import search_context
+    from evrptw_autolab.transfer.search_decision import ScreenedRepair, choose_screened_repair
+
+    if not isinstance(policy, OperatorSpec):
+        raise TypeError("selective repair requires an OperatorSpec")
+    rows: list[ScreenedRepair] = []
+    for r_idx, route in enumerate(current.routes):
+        if deadline is not None and time.monotonic() > deadline:
+            break
+        try:
+            vehicle = vehicle_for_route(spec, current, r_idx)
+        except ValueError:
+            continue
+        for pos in range(1, len(route)):
+            if deadline is not None and time.monotonic() > deadline:
+                break
+            trial = clone_solution(current)
+            trial.routes[r_idx].insert(pos, make_customer_stop(node_id, spec))
+            report = evaluate(spec, trial)
+            hard = {item.family for item in report.violations} - {
+                "VISIT",
+                "PAIRING",
+                "BATTERY",
+                "CHARGE_POLICY",
+                "DURATION",
+            }
+            if hard & {"PARSE", "DEPOT", "CAPACITY", "WINDOW", "PRECEDENCE"}:
+                continue
+            rows.append(
+                ScreenedRepair(
+                    label=f"{r_idx}:{pos}",
+                    features=insertion_features_v4(spec, route, pos, node_id, vehicle),
+                    solution=trial,
+                    objective=tuple(float(value) for value in report.objective_key),
+                    feasible=bool(report.feasible),
+                    acceptance=_acceptance_score(report),
+                )
+            )
+    if not rows:
+        route = empty_route(spec, vehicle_id)
+        route.insert(1, make_customer_stop(node_id, spec))
+        opened = clone_solution(current)
+        opened.routes.append(route)
+        opened.vehicle_assignments.append(vehicle_id)
+        return opened
+    decision = choose_screened_repair(
+        spec,
+        policy,
+        rows,
+        search_context(spec, current),
+        seed=0,
+        partition=partition,
+        mine=bool(policy.mine_counterexamples),
+    )
+    return decision.solution
+
+
 def repair_greedy(
     spec: ProblemSpecV2,
     solution: SolutionV2,
@@ -324,6 +392,7 @@ def repair_greedy(
     *,
     optimize_partial_charges: bool = True,
     deadline: float | None = None,
+    partition: str = "development",
 ) -> SolutionV2:
     current = clone_solution(solution)
     vehicle_id = default_vehicle_id(spec)
@@ -333,6 +402,8 @@ def repair_greedy(
 
     order = list(removed)
     rng.shuffle(order)
+    from evrptw_autolab.discovery.schemas import OperatorSpec
+
     for unit in order:
         if deadline is not None and time.monotonic() > deadline:
             break
@@ -340,6 +411,11 @@ def repair_greedy(
         best_score = float("inf")
         if len(unit) == 1:
             node_id = unit[0]
+            if isinstance(policy, OperatorSpec):
+                current = _repair_one_selective(
+                    spec, current, node_id, policy, vehicle_id, deadline, partition
+                )
+                continue
             if _v4_insertion(policy):
                 current = _repair_one_v4(spec, current, node_id, policy, vehicle_id, deadline)
                 continue

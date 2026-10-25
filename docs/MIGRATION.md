@@ -47,6 +47,7 @@ The archived tree is the previous VoltForge stack: five-agent route construction
 | `src/evrptw_autolab/transfer/hard_compatibility.py` | Capability rejection that a model cannot override. |
 | `src/evrptw_autolab/discovery/policy_language.py` | Bounded arithmetic scoring. No imports or host access. |
 | `src/evrptw_autolab/transfer/selective_controller.py` | Apply, abstain, or classical fallback. |
+| `src/evrptw_autolab/transfer/search_decision.py` | Selective insertion among screened repairs. |
 | `src/evrptw_autolab/transfer/counterexamples.py` | Evaluator-backed regression records, replay, and minimization. |
 
-The selective controller is not inside ALNS. The multi-agent discovery loop and the B0–B6 experiment campaign are not implemented on this branch.
+`repair_greedy` uses the controller for a caller-supplied `OperatorSpec`. The default solver does not pass one. The multi-agent discovery loop and the B0–B6 experiment campaign are not implemented on this branch.

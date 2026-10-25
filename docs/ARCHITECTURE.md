@@ -16,4 +16,6 @@ benchmark file
 
 ## What does not run yet
 
-The selective controller is not inside the ALNS loop. Specialist agents, a learned applicability model fitted on development runs, counterexample search over benchmark panels, and the B0–B6 comparison are not in this branch. The LLM package remains available and is not on the solver path.
+`repair_greedy` calls that controller when the caller passes an `OperatorSpec`. On one removed customer it screens feasible insertions, keeps the classical row when the rule is non-positive or the capability check fails, and otherwise ranks those rows with the restricted scoring expression. A worse applied row is stored as a counterexample. ALNS still publishes an incumbent only when `is_better` says so. Mining is refused on confirmation and held-out partitions.
+
+Specialist agents, a learned applicability model fitted on a development panel, and the B0–B6 comparison are not in this branch. The LLM package is not on the solver path. The default solver still passes no operator.

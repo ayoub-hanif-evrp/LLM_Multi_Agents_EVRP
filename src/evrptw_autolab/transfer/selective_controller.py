@@ -31,7 +31,7 @@ def select_operator(
     failures = compatibility_failures(operator, flags)
     if failures:
         return Selection(action="classical_default", reason=failures[0])
-    expression = operator.candidate_scoring_policy if rule is None else rule
+    expression = rule if rule is not None else operator.applicability_rule or operator.candidate_scoring_policy
     if not expression:
         return Selection(action="classical_default", reason="no applicability rule")
     try:

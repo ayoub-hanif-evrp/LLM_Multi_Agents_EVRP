@@ -24,4 +24,4 @@ uv run mypy src/evrptw_autolab
 
 ## Status
 
-Hard capability checks, a restricted scoring language, selective fallback, and evaluator-backed regression records exist. They are not wired into ALNS, and the multi-agent discovery loop does not run. No claim is made that a generated operator improves the five benchmarks.
+Hard capability checks, a restricted scoring language, and selective insertion repair exist. A harmful applied insertion is recorded as a counterexample and does not replace a better incumbent. The multi-agent discovery loop does not run. No claim is made that a generated operator improves the five benchmarks.

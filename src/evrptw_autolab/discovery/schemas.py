@@ -23,5 +23,7 @@ class OperatorSpec(BaseModel):
     required_features: list[str] = Field(default_factory=list)
     hard_preconditions: list[str] = Field(default_factory=list)
     candidate_scoring_policy: str | None = None
+    applicability_rule: str | None = None
+    mine_counterexamples: bool = False
     fallback_operator: str = "classical_default"
     source_hash: str = ""

@@ -10,6 +10,10 @@ The previous VoltForge agent, synthesis, and expression-policy stacks are archiv
 uv run voltforge datasets validate
 uv run voltforge solver run --family schneider --instance c101C5 --time-limit 5 --iterations 20
 uv run voltforge policies validate --policy operator.json --family schneider
+uv run voltforge counterexamples generate
+uv run voltforge discovery run
+uv run voltforge transfer evaluate
+uv run voltforge research report
 ```
 
 `datasets validate` checks that the Schneider, Montoya, Bezzi, Goeke, and Hiermann files still parse. `solver run` uses the classical engine and prints the native objective from `evaluate_solution_v2`. A model is not called.
@@ -24,4 +28,4 @@ uv run mypy src/evrptw_autolab
 
 ## Status
 
-Hard capability checks, a restricted scoring language, and selective insertion repair exist. A harmful applied insertion is recorded as a counterexample and does not replace a better incumbent. The multi-agent discovery loop does not run. No claim is made that a generated operator improves the five benchmarks.
+Selective repair, destroy, charging, and fleet decisions exist. A development stump can abstain where an operator failed. One scripted discovery cycle revises that rule after a measured regression. The B0–B6 report on the four-node repair uses no live model: the always-applied harmful arm is worse, and the selective arms tie the classical objective. That is one repair, not a significant result. Schneider RC2 is not a blind final test. No claim is made that a generated operator improves the five benchmarks.

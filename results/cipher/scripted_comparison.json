@@ -1,0 +1,28 @@
+{
+  "family": "schneider",
+  "instance_id": "four_node",
+  "partition": "development",
+  "seed": 1,
+  "llm_calls": 0,
+  "backend": "scripted",
+  "objectives": {
+    "B0": [1.0, 24.0],
+    "B1": [1.0, 24.0],
+    "B2": [1.0, 24.0],
+    "B3": [1.0, 30.4339811320566],
+    "B4": [1.0, 24.0],
+    "B5": [1.0, 24.0],
+    "B6": [1.0, 24.0]
+  },
+  "paired_against_b0": {
+    "B1": "tie",
+    "B2": "tie",
+    "B3": "loss",
+    "B4": "tie",
+    "B5": "tie",
+    "B6": "tie"
+  },
+  "applicability_rule": "0",
+  "significant": false,
+  "final_test": "No untouched final set is declared. Schneider RC2 was already inspected and is not a blind test."
+}

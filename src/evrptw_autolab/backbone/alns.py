@@ -411,7 +411,7 @@ def repair_greedy(
         best_score = float("inf")
         if len(unit) == 1:
             node_id = unit[0]
-            if isinstance(policy, OperatorSpec):
+            if isinstance(policy, OperatorSpec) and policy.operator_family == "repair":
                 current = _repair_one_selective(
                     spec, current, node_id, policy, vehicle_id, deadline, partition
                 )
@@ -502,6 +502,38 @@ def repair_greedy(
     return optimize_solution_partial_charges(spec, current)
 
 
+def _select_destroy(
+    spec: ProblemSpecV2,
+    solution: SolutionV2,
+    policy: object | None,
+    rng: random.Random,
+    weights: dict[str, float],
+    trace: list[dict[str, str]],
+) -> str:
+    """Classical roulette, unless a destroy operator is selected."""
+    from evrptw_autolab.discovery.schemas import OperatorSpec
+    from evrptw_autolab.transfer.operators import choose_destroy
+
+    if not isinstance(policy, OperatorSpec) or policy.operator_family != "destroy":
+        return _roulette_destroy(rng, weights)
+    name, action = choose_destroy(spec, policy, solution, rng, weights)
+    trace.append({"name": name, "action": action})
+    return name
+
+
+def _roulette_destroy(rng: random.Random, weights: dict[str, float]) -> str:
+    total = sum(weights.values())
+    pick = rng.random() * total
+    acc = 0.0
+    chosen = "random"
+    for name, weight in weights.items():
+        acc += weight
+        if pick <= acc:
+            chosen = name
+            break
+    return chosen
+
+
 def alns_improve(
     spec: ProblemSpecV2,
     solution: SolutionV2,
@@ -527,6 +559,7 @@ def alns_improve(
     best_report = current_report
 
     weights = {"random": 1.0, "worst": 1.0}
+    destroy_trace: list[dict[str, str]] = []
     temperature = 1.0
     cooling = 0.95
     it = -1
@@ -536,16 +569,7 @@ def alns_improve(
             break
         n_units = len(_request_units(spec))
         k = max(1, min(3, n_units // 3 or 1))
-        # Roulette on destroy operators.
-        total_w = sum(weights.values())
-        pick = rng.random() * total_w
-        acc = 0.0
-        destroy_name = "random"
-        for name, w in weights.items():
-            acc += w
-            if pick <= acc:
-                destroy_name = name
-                break
+        destroy_name = _select_destroy(spec, current, policy, rng, weights, destroy_trace)
         if destroy_name == "worst":
             destroyed, removed = destroy_worst(spec, current, rng, k, policy=policy)
         else:
@@ -614,6 +638,8 @@ def alns_improve(
     else:
         best = incumbent
         best_report = incumbent_report
+    if destroy_trace:
+        best.metadata["destroy_trace"] = destroy_trace
     best.metadata["alns_best_feasible"] = bool(best_report.feasible)
     best.metadata["alns_iterations"] = it + 1 if iterations else 0
     return best

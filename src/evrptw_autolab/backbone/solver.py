@@ -38,15 +38,85 @@ def _deadline_remaining(started: float, time_limit_s: float) -> float:
     return max(0.0, float(time_limit_s) - (time.monotonic() - started))
 
 
+def _reassign_with_operator(
+    spec: ProblemSpecV2,
+    solution: SolutionV2,
+    policy: object,
+    *,
+    deadline: float | None,
+) -> SolutionV2:
+    """Reassign one route only when the fleet operator is selected."""
+    from evrptw_autolab.discovery.schemas import OperatorSpec
+    from evrptw_autolab.transfer.context_features import search_context
+    from evrptw_autolab.transfer.search_decision import ScreenedRepair, choose_screened_repair
+
+    if not isinstance(policy, OperatorSpec):
+        raise TypeError("fleet reassignment requires an OperatorSpec")
+    current = clone_solution(solution)
+    for r_idx in range(len(current.routes)):
+        if deadline is not None and time.monotonic() > deadline:
+            break
+        rows: list[ScreenedRepair] = []
+        for type_id in candidate_vehicle_ids(spec):
+            trial = clone_solution(current)
+            if r_idx < len(trial.vehicle_assignments):
+                trial.vehicle_assignments[r_idx] = type_id
+            else:
+                trial.vehicle_assignments.append(type_id)
+            trial.routes[r_idx] = [
+                RouteStopV2(
+                    node_id=stop.node_id,
+                    vehicle_type_id=type_id,
+                    event=stop.event,
+                    charge_amount=stop.charge_amount,
+                    charge_technology=stop.charge_technology,
+                    target_soc=stop.target_soc,
+                )
+                for stop in trial.routes[r_idx]
+            ]
+            report = evaluate(spec, trial)
+            vehicle = next(item for item in spec.vehicle_types if item.type_id == type_id)
+            penalty = 0.0 if report.feasible else 1.0e12
+            primary = float(report.objective_key[0]) if report.objective_key else 1.0e9
+            rows.append(
+                ScreenedRepair(
+                    label=type_id,
+                    features={"fixed_cost": float(vehicle.fixed_cost), "delta_distance": primary},
+                    solution=trial,
+                    objective=tuple(float(value) for value in report.objective_key),
+                    feasible=bool(report.feasible),
+                    acceptance=penalty + primary,
+                )
+            )
+        if not rows:
+            continue
+        decision = choose_screened_repair(
+            spec,
+            policy,
+            rows,
+            search_context(spec, current),
+            seed=0,
+            partition="development",
+            mine=bool(policy.mine_counterexamples),
+        )
+        current = decision.solution
+    return current
+
+
 def _reassign_vehicles(
     spec: ProblemSpecV2,
     solution: SolutionV2,
     *,
     deadline: float | None = None,
+    policy: object | None = None,
 ) -> SolutionV2:
     """Try cheaper vehicle types per route on heterogeneous fleets."""
+    from evrptw_autolab.discovery.schemas import OperatorSpec
+
     if not spec.capabilities.heterogeneous_fleet:
         return solution
+    if isinstance(policy, OperatorSpec) and policy.operator_family == "fleet":
+        return _reassign_with_operator(spec, solution, policy, deadline=deadline)
     current = clone_solution(solution)
     current_report = evaluate(spec, current)
     for r_idx in range(len(current.routes)):
@@ -300,7 +370,7 @@ class ClassicalSolver:
                 solution = _apply_partial_charges(
                     spec, solution, enabled=self.optimize_partial_charges
                 )
-            solution = _reassign_vehicles(spec, solution, deadline=deadline)
+            solution = _reassign_vehicles(spec, solution, deadline=deadline, policy=self.policy)
             if time.monotonic() < deadline:
                 solution = _maybe_merge(
                     spec, solution, deadline=deadline, max_passes=2, enabled=self.merge_routes

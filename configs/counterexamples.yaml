@@ -1,0 +1,3 @@
+partition: development
+instance_id: four_node
+seed: 1

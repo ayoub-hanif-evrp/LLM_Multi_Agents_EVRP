@@ -18,4 +18,4 @@ benchmark file
 
 `repair_greedy` calls that controller when the caller passes an `OperatorSpec`. On one removed customer it screens feasible insertions, keeps the classical row when the rule is non-positive or the capability check fails, and otherwise ranks those rows with the restricted scoring expression. A worse applied row is stored as a counterexample. ALNS still publishes an incumbent only when `is_better` says so. Mining is refused on confirmation and held-out partitions.
 
-Specialist agents, a learned applicability model fitted on a development panel, and the B0–B6 comparison are not in this branch. The LLM package is not on the solver path. The default solver still passes no operator.
+Destroy, charging, and fleet operators use the same controller when their family matches. A one-feature stump can be fit on development labels. A scripted discovery cycle can revise an applicability rule after a counterexample, under a call budget. The default solver still passes no operator. The B0–B6 numbers in `docs/MANUSCRIPT.md` are that scripted four-node repair, not a live-model campaign.

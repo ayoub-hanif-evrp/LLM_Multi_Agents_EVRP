@@ -1,0 +1,3 @@
+train_partition: development
+confirmation_partition: confirmation
+final_test: blocked

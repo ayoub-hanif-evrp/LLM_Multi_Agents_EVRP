@@ -132,6 +132,30 @@ def rank_station_candidates(
             item.station_id,
         )
     )
+    from evrptw_autolab.discovery.schemas import OperatorSpec
+
+    if isinstance(policy, OperatorSpec) and policy.operator_family == "charging" and scored:
+        from evrptw_autolab.transfer.operators import choose_station_id
+
+        station_rows = [
+            (
+                item.station_id,
+                {
+                    "detour": float(item.detour),
+                    "battery_arrival": float(item.battery_at_station),
+                    "station_rate": float(_rate(spec, item.station_id)),
+                    "delta_distance": float(item.detour),
+                },
+            )
+            for item in scored
+        ]
+        selected, _classical, _action = choose_station_id(
+            spec,
+            policy,
+            station_rows,
+            {"route_utilization": 1.0, "customer_count": 1.0, "route_count": 1.0, "station_count": float(len(scored))},
+        )
+        scored.sort(key=lambda item: (item.station_id != selected, item.detour, item.station_id))
     if scored:
         note_selected_move(
             policy,

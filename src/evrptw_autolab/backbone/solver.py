@@ -6,6 +6,7 @@ import os
 import pickle
 import random
 import tempfile
+import threading
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -646,8 +647,64 @@ def _finalize_process_result(
     return solution
 
 
+_WORKER_LOCK = threading.Lock()
+_WARM_WORKER: dict[str, Any] = {
+    "proc": None,
+    "job_q": None,
+    "done_q": None,
+}
+
+
+def _warm_worker_loop(job_q: Any, done_q: Any) -> None:
+    """Long-lived child: run one hard-timeout job at a time until poisoned."""
+    while True:
+        item = job_q.get()
+        if item is None:
+            return
+        spec, config, incumbent_path = item
+        try:
+            _solver_process_main(spec, config, incumbent_path)
+            done_q.put(("ok", None))
+        except BaseException as exc:  # noqa: BLE001 — report to parent; keep loop unless killed
+            done_q.put(("err", f"{type(exc).__name__}: {exc}"))
+
+
+def _kill_warm_worker_unlocked() -> None:
+    proc = _WARM_WORKER.get("proc")
+    job_q = _WARM_WORKER.get("job_q")
+    if job_q is not None and proc is not None and proc.is_alive():
+        try:
+            job_q.put_nowait(None)
+        except Exception:  # noqa: BLE001 — best-effort poison
+            pass
+    if proc is not None and proc.is_alive():
+        proc.terminate()
+        proc.join(2)
+        if proc.is_alive():
+            proc.kill()
+            proc.join(1)
+    _WARM_WORKER["proc"] = None
+    _WARM_WORKER["job_q"] = None
+    _WARM_WORKER["done_q"] = None
+
+
+def _ensure_warm_worker(ctx: Any) -> dict[str, Any]:
+    proc = _WARM_WORKER.get("proc")
+    if proc is not None and proc.is_alive():
+        return _WARM_WORKER
+    _kill_warm_worker_unlocked()
+    job_q = ctx.Queue()
+    done_q = ctx.Queue()
+    proc = ctx.Process(target=_warm_worker_loop, args=(job_q, done_q), daemon=True)
+    proc.start()
+    _WARM_WORKER["proc"] = proc
+    _WARM_WORKER["job_q"] = job_q
+    _WARM_WORKER["done_q"] = done_q
+    return _WARM_WORKER
+
+
 def _solve_in_process(solver: ClassicalSolver, spec: ProblemSpecV2) -> SolutionV2:
-    """Run the solver in a child process and terminate it when the budget expires."""
+    """Run the solver in a reused child process; kill it when the budget expires."""
     ctx = mp.get_context("spawn")
     from evrptw_autolab.discovery.policy_codec import encode_policy
 
@@ -672,36 +729,45 @@ def _solve_in_process(solver: ClassicalSolver, spec: ProblemSpecV2) -> SolutionV
     }
     fd, incumbent_path = tempfile.mkstemp(prefix="voltforge-incumbent-", suffix=".pkl")
     os.close(fd)
-    proc = ctx.Process(
-        target=_solver_process_main,
-        args=(spec, config, incumbent_path),
-        daemon=True,
-    )
     started = time.monotonic()
     config["parent_started"] = started
     limit = float(solver.time_limit_s)
     deadline = started + limit
-    proc.start()
-    if solver.debug_parent_delay_s > 0:
-        time.sleep(solver.debug_parent_delay_s)
-    remaining = deadline - time.monotonic()
-    if remaining <= 0:
-        timed_out = proc.is_alive()
-    else:
-        proc.join(remaining)
-        timed_out = proc.is_alive()
-    worker_wait_s = time.monotonic() - started
-    if timed_out:
-        proc.terminate()
-        proc.join(2)
-        if proc.is_alive():
-            proc.kill()
-            proc.join(1)
-    wall = time.monotonic() - started
+    timed_out = False
+    crashed = False
+    with _WORKER_LOCK:
+        worker = _ensure_warm_worker(ctx)
+        proc = worker["proc"]
+        job_q = worker["job_q"]
+        done_q = worker["done_q"]
+        job_q.put((spec, config, incumbent_path))
+        if solver.debug_parent_delay_s > 0:
+            time.sleep(solver.debug_parent_delay_s)
+        remaining = deadline - time.monotonic()
+        result: tuple[str, str | None] | None = None
+        try:
+            if remaining <= 0:
+                # Parent-side delay can exhaust the budget after the child already finished.
+                result = done_q.get_nowait()
+            else:
+                result = done_q.get(timeout=max(0.001, remaining))
+        except Exception:  # noqa: BLE001 — queue.Empty / broken pipe after kill
+            timed_out = proc is not None and proc.is_alive()
+            if not timed_out:
+                crashed = True
+        worker_wait_s = time.monotonic() - started
+        if timed_out or (result is not None and result[0] == "err"):
+            if result is not None and result[0] == "err":
+                crashed = True
+            _kill_warm_worker_unlocked()
+        elif result is None:
+            # Worker exited without a reply.
+            crashed = True
+            _kill_warm_worker_unlocked()
+        wall = time.monotonic() - started
     latest, snapshot_status = _read_snapshot(incumbent_path)
     Path(incumbent_path).unlink(missing_ok=True)
     Path(incumbent_path + ".tmp").unlink(missing_ok=True)
-    crashed = proc.exitcode not in (0, None) and not timed_out
     # Attribution follows the policy that was serialized into the child, not a parent-only object.
     attribution = (
         "llm_policy_search"
@@ -751,6 +817,8 @@ def _solve_in_process(solver: ClassicalSolver, spec: ProblemSpecV2) -> SolutionV
     overrun = worker_wait_s > limit + _BUDGET_TOLERANCE_S
     if timed_out:
         status = "timeout_with_feasible_incumbent" if preview.feasible else "timeout_no_feasible_incumbent"
+    elif crashed:
+        status = "worker_crash"
     elif overrun:
         status = (
             "budget_overrun_with_feasible_incumbent"

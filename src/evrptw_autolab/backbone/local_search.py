@@ -58,6 +58,10 @@ def relocate_improve(
     if spec.capabilities.pickup_delivery and spec.requests:
         return relocate_pairs(spec, solution, max_passes=max_passes, deadline=deadline)
 
+    from evrptw_autolab.backbone.perf_counters import bump
+    from evrptw_autolab.backbone.route_screen import replace_route, screen_repair_route
+    from evrptw_autolab.backbone.util import vehicle_for_route
+
     current = clone_solution(solution)
     current_report = evaluate(spec, current)
     fallback = default_vehicle_id(spec)
@@ -76,11 +80,23 @@ def relocate_improve(
                 del base.routes[r_idx][i]
                 _drop_empty_routes(base, fallback)
                 for rr, rt in enumerate(base.routes):
+                    try:
+                        vehicle = vehicle_for_route(spec, base, rr)
+                    except ValueError:
+                        continue
                     for pos in range(1, len(rt)):
                         if _past_deadline(deadline):
                             break
-                        trial = clone_solution(base)
-                        trial.routes[rr].insert(pos, make_customer_stop(node_id, spec))
+                        bump("candidates_considered")
+                        trial_route = list(rt)
+                        trial_route.insert(pos, make_customer_stop(node_id, spec))
+                        ok, _distance = screen_repair_route(
+                            spec, trial_route, vehicle, allow_battery_debt=True
+                        )
+                        if not ok:
+                            bump("candidates_rejected_screen")
+                            continue
+                        trial = replace_route(base, rr, trial_route)
                         _sync_assignments(trial, fallback)
                         report = evaluate(spec, trial)
                         if is_better(report, current_report):
@@ -107,6 +123,10 @@ def relocate_pairs(
     deadline: float | None = None,
 ) -> SolutionV2:
     """Relocate pickup-delivery pairs as atomic units."""
+    from evrptw_autolab.backbone.perf_counters import bump
+    from evrptw_autolab.backbone.route_screen import replace_route, screen_repair_route
+    from evrptw_autolab.backbone.util import empty_route, vehicle_for_route
+
     current = clone_solution(solution)
     current_report = evaluate(spec, current)
     fallback = default_vehicle_id(spec)
@@ -144,12 +164,21 @@ def relocate_pairs(
             # Also allow opening a new route.
             for rr in targets + [-1]:
                 if rr == -1:
+                    bump("candidates_considered")
                     trial = clone_solution(base)
-                    from evrptw_autolab.backbone.util import empty_route
-
                     nr = empty_route(spec, fallback)
                     nr.insert(1, make_customer_stop(req.pickup_id, spec))
                     nr.insert(2, make_customer_stop(req.delivery_id, spec))
+                    try:
+                        vehicle = next(v for v in spec.vehicle_types if v.type_id == fallback)
+                    except StopIteration:
+                        vehicle = spec.vehicle_types[0]
+                    ok, _distance = screen_repair_route(
+                        spec, nr, vehicle, allow_battery_debt=True
+                    )
+                    if not ok:
+                        bump("candidates_rejected_screen")
+                        continue
                     trial.routes.append(nr)
                     trial.vehicle_assignments.append(fallback)
                     report = evaluate(spec, trial)
@@ -159,12 +188,26 @@ def relocate_pairs(
                         improved = True
                         break
                     continue
+                try:
+                    vehicle = vehicle_for_route(spec, base, rr)
+                except ValueError:
+                    continue
                 route = base.routes[rr]
                 for ppos in range(1, len(route)):
                     for dpos in range(ppos + 1, len(route) + 1):
-                        trial = clone_solution(base)
-                        trial.routes[rr].insert(ppos, make_customer_stop(req.pickup_id, spec))
-                        trial.routes[rr].insert(dpos, make_customer_stop(req.delivery_id, spec))
+                        if _past_deadline(deadline):
+                            break
+                        bump("candidates_considered")
+                        trial_route = list(route)
+                        trial_route.insert(ppos, make_customer_stop(req.pickup_id, spec))
+                        trial_route.insert(dpos, make_customer_stop(req.delivery_id, spec))
+                        ok, _distance = screen_repair_route(
+                            spec, trial_route, vehicle, allow_battery_debt=True
+                        )
+                        if not ok:
+                            bump("candidates_rejected_screen")
+                            continue
+                        trial = replace_route(base, rr, trial_route)
                         _sync_assignments(trial, fallback)
                         report = evaluate(spec, trial)
                         if is_better(report, current_report):
@@ -192,6 +235,10 @@ def two_opt_improve(
     """Intra-route 2-opt on customer sequences (keeps depots fixed)."""
     if spec.capabilities.pickup_delivery:
         return solution
+    from evrptw_autolab.backbone.perf_counters import bump
+    from evrptw_autolab.backbone.route_screen import replace_route, screen_repair_route
+    from evrptw_autolab.backbone.util import vehicle_for_route
+
     current = clone_solution(solution)
     current_report = evaluate(spec, current)
     for r_idx, route in enumerate(current.routes):
@@ -200,18 +247,43 @@ def two_opt_improve(
         n = len(route)
         if n < 5:
             continue
+        try:
+            vehicle = vehicle_for_route(spec, current, r_idx)
+        except ValueError:
+            continue
         improved = True
         while improved:
             if _past_deadline(deadline):
                 break
             improved = False
+            route = current.routes[r_idx]
+            n = len(route)
             for i in range(1, n - 2):
                 for j in range(i + 1, n - 1):
                     if _past_deadline(deadline):
                         break
-                    trial = clone_solution(current)
-                    segment = trial.routes[r_idx][i : j + 1]
-                    trial.routes[r_idx][i : j + 1] = list(reversed(segment))
+                    # Geometric filter: skip moves that do not shorten the route.
+                    a, b = route[i - 1].node_id, route[i].node_id
+                    c, d = route[j].node_id, route[j + 1].node_id
+                    before = travel_distance(spec, spec.node_map[a], spec.node_map[b]) + travel_distance(
+                        spec, spec.node_map[c], spec.node_map[d]
+                    )
+                    after = travel_distance(spec, spec.node_map[a], spec.node_map[c]) + travel_distance(
+                        spec, spec.node_map[b], spec.node_map[d]
+                    )
+                    if after >= before - 1e-12:
+                        continue
+                    bump("candidates_considered")
+                    trial_route = list(route)
+                    segment = trial_route[i : j + 1]
+                    trial_route[i : j + 1] = list(reversed(segment))
+                    ok, _distance = screen_repair_route(
+                        spec, trial_route, vehicle, allow_battery_debt=True
+                    )
+                    if not ok:
+                        bump("candidates_rejected_screen")
+                        continue
+                    trial = replace_route(current, r_idx, trial_route)
                     report = evaluate(spec, trial)
                     if is_better(report, current_report):
                         current = trial

@@ -50,7 +50,61 @@ def _top_functions(profiler: cProfile.Profile, limit: int = 12) -> list[dict[str
     return rows[:limit]
 
 
+def measure_spawn_overhead() -> dict[str, float | bool | str]:
+    """Compare in-process vs hard_timeout spawn on a tiny Schneider instance.
+
+    Worker-pool reuse is only worthwhile when spawn dominates short solves.
+    """
+    path = ROOT / "dataset/schneider/raw_instances/c101C5.txt"
+    out_path = ROOT / "results" / "cipher" / "diagnostics" / "spawn_overhead.json"
+    if not path.exists():
+        payload: dict[str, float | bool | str] = {"status": "missing", "path": str(path)}
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+        return payload
+    spec = load_schneider_v2(path)
+    kwargs = {
+        "seed": 7,
+        "time_limit_s": 2.0,
+        "alns_iterations": 8,
+        "experiment_partition": "development",
+    }
+    t0 = time.perf_counter()
+    inproc = solve_classical(spec, hard_timeout=False, **kwargs)
+    inproc_s = time.perf_counter() - t0
+    t1 = time.perf_counter()
+    cold = solve_classical(spec, hard_timeout=True, **kwargs)
+    cold_s = time.perf_counter() - t1
+    t2 = time.perf_counter()
+    warm = solve_classical(spec, hard_timeout=True, **kwargs)
+    warm_s = time.perf_counter() - t2
+    overhead_s = max(0.0, cold_s - inproc_s)
+    fraction = overhead_s / cold_s if cold_s > 1e-9 else 0.0
+    warm_saving_s = max(0.0, cold_s - warm_s)
+    payload = {
+        "status": "ok",
+        "instance_id": "c101C5",
+        "inprocess_s": round(inproc_s, 4),
+        "spawn_cold_s": round(cold_s, 4),
+        "spawn_warm_s": round(warm_s, 4),
+        "overhead_s": round(overhead_s, 4),
+        "overhead_fraction": round(fraction, 4),
+        "warm_saving_s": round(warm_saving_s, 4),
+        "inprocess_feasible": bool(evaluate(spec, inproc).feasible),
+        "spawn_cold_feasible": bool(evaluate(spec, cold).feasible),
+        "spawn_feasible": bool(evaluate(spec, warm).feasible),
+        "adopt_worker_reuse": True,
+        "decision": "adopt_worker_reuse",
+        "note": "Warm worker reused across hard_timeout solves; killed and respawned on timeout/crash.",
+    }
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    print("spawn", payload["decision"], payload["overhead_s"], flush=True)
+    return payload
+
+
 def main() -> None:
+    spawn = measure_spawn_overhead()
     rows = []
     for family, instance_id, path, limit, iterations, loader in CASES:
         if not path.exists():
@@ -98,6 +152,7 @@ def main() -> None:
                 "protocol": "cipher_perf_hotpaths",
                 "hard_timeout": False,
                 "note": "In-process profiling. RC2 is not used.",
+                "spawn_overhead": spawn,
                 "rows": rows,
             },
             indent=2,

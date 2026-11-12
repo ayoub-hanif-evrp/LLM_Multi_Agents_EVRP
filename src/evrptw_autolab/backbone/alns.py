@@ -181,6 +181,9 @@ def _repair_one_v4(
     deadline: float | None,
 ) -> SolutionV2:
     """Rank screened insertions with the v4 policy. Feasibility stays outside the scorer."""
+    from evrptw_autolab.backbone.perf_counters import bump
+    from evrptw_autolab.backbone.route_screen import replace_route, screen_repair_route
+
     screened: list[tuple[float, float, int, int, SolutionV2]] = []
     objective_best: tuple[float, int, int] | None = None
     for r_idx, route in enumerate(current.routes):
@@ -193,8 +196,14 @@ def _repair_one_v4(
         for pos in range(1, len(route)):
             if deadline is not None and time.monotonic() > deadline:
                 break
-            trial = clone_solution(current)
-            trial.routes[r_idx].insert(pos, make_customer_stop(node_id, spec))
+            bump("candidates_considered")
+            trial_route = list(route)
+            trial_route.insert(pos, make_customer_stop(node_id, spec))
+            ok, _distance = screen_repair_route(spec, trial_route, vehicle, allow_battery_debt=True)
+            if not ok:
+                bump("candidates_rejected_screen")
+                continue
+            trial = replace_route(current, r_idx, trial_route)
             report = evaluate(spec, trial)
             hard = {item.family for item in report.violations} - {
                 "VISIT",
@@ -254,6 +263,9 @@ def _repair_pair_v4(
     deadline: float | None,
 ) -> SolutionV2:
     """Rank screened pickup-delivery insertions. The pair is never split."""
+    from evrptw_autolab.backbone.perf_counters import bump
+    from evrptw_autolab.backbone.route_screen import replace_route, screen_repair_route
+
     screened: list[tuple[float, float, int, SolutionV2, str]] = []
     objective_best: str | None = None
     objective_score = float("inf")
@@ -268,9 +280,17 @@ def _repair_pair_v4(
             for dpos in range(ppos + 1, len(route) + 1):
                 if deadline is not None and time.monotonic() > deadline:
                     break
-                trial = clone_solution(current)
-                trial.routes[r_idx].insert(ppos, make_customer_stop(pickup, spec))
-                trial.routes[r_idx].insert(dpos, make_customer_stop(delivery, spec))
+                bump("candidates_considered")
+                trial_route = list(route)
+                trial_route.insert(ppos, make_customer_stop(pickup, spec))
+                trial_route.insert(dpos, make_customer_stop(delivery, spec))
+                ok, _distance = screen_repair_route(
+                    spec, trial_route, vehicle, allow_battery_debt=True
+                )
+                if not ok:
+                    bump("candidates_rejected_screen")
+                    continue
+                trial = replace_route(current, r_idx, trial_route)
                 report = evaluate(spec, trial)
                 hard = {item.family for item in report.violations} - {
                     "VISIT",

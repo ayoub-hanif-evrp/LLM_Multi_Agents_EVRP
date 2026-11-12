@@ -94,9 +94,17 @@ class CallBudget:
         self.used = 0
         self.prompt_tokens = 0
         self.completion_tokens = 0
+        self.cache_hits = 0
         self.started = time.monotonic()
 
     def charge(self, backend: Any, role: str, prompt: str) -> str:
+        from evrptw_autolab.discovery.proposal_cache import (
+            cache_key,
+            default_cache_dir,
+            lookup,
+            store,
+        )
+
         if self.used >= self.limit:
             raise RuntimeError("llm budget exhausted")
         if time.monotonic() - self.started > self.wall_s:
@@ -106,6 +114,12 @@ class CallBudget:
         remaining_s = self.wall_s - (time.monotonic() - self.started)
         if remaining_s <= 0:
             raise RuntimeError("discovery wall clock exhausted")
+        cache_dir = default_cache_dir()
+        key = cache_key(model=self.model, role=role, prompt=prompt)
+        cached = lookup(cache_dir, key)
+        if cached is not None:
+            self.cache_hits += 1
+            return cached
         # Bound backend HTTP timeout to the remaining discovery wall budget when possible.
         prior_timeout = getattr(backend, "timeout_s", None)
         if isinstance(prior_timeout, (int, float)) and prior_timeout > 0:
@@ -130,6 +144,12 @@ class CallBudget:
                 self.completion_tokens += int(getattr(usage, "completion_tokens", 0) or 0)
         if self.prompt_tokens + self.completion_tokens > self.max_tokens:
             raise RuntimeError("token budget exhausted")
+        store(
+            cache_dir,
+            key,
+            text,
+            meta={"model": self.model, "role": role},
+        )
         return text
 
 

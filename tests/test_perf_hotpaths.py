@@ -107,3 +107,39 @@ def test_route_local_repair_inserts_without_raising() -> None:
     )
     assert repaired.routes
     assert len(repaired.routes[0]) >= 3
+
+
+def test_two_opt_geometric_filter_runs() -> None:
+    from evrptw_autolab.backbone.local_search import two_opt_improve
+
+    root = Path(__file__).resolve().parents[1]
+    spec = load_schneider_v2(root / "dataset" / "schneider" / "raw_instances" / "c101C5.txt")
+    start = SolutionV2(
+        routes=[
+            [
+                RouteStopV2(spec.depot_ids[0], event="depot"),
+                *[RouteStopV2(node.id, event="visit") for node in spec.nodes if node.kind == "customer"][:4],
+                RouteStopV2(spec.depot_ids[0], event="depot"),
+            ]
+        ],
+        vehicle_assignments=[spec.vehicle_types[0].type_id],
+    )
+    improved = two_opt_improve(spec, start)
+    assert improved.routes
+
+
+def test_proposal_cache_roundtrip(tmp_path: Path, monkeypatch) -> None:
+    from evrptw_autolab.discovery import proposal_cache as pc
+    from evrptw_autolab.discovery.controller import CallBudget
+    from evrptw_autolab.llm.registry import FakeBackend
+
+    monkeypatch.setenv("CIPHER_PROPOSAL_CACHE", str(tmp_path))
+    backend = FakeBackend({"architect": '{"hypothesis":"h"}'})
+    budget = CallBudget(2, model="cache-test")
+    first = budget.charge(backend, "architect", "prompt-a")
+    second = budget.charge(backend, "architect", "prompt-a")
+    assert first == second == '{"hypothesis":"h"}'
+    assert budget.used == 1
+    assert budget.cache_hits == 1
+    key = pc.cache_key(model="cache-test", role="architect", prompt="prompt-a")
+    assert (tmp_path / f"{key}.json").is_file()

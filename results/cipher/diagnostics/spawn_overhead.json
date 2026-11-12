@@ -1,0 +1,16 @@
+{
+  "status": "ok",
+  "instance_id": "c101C5",
+  "inprocess_s": 0.2824,
+  "spawn_cold_s": 0.8502,
+  "spawn_warm_s": 0.0933,
+  "overhead_s": 0.5678,
+  "overhead_fraction": 0.6679,
+  "warm_saving_s": 0.757,
+  "inprocess_feasible": true,
+  "spawn_cold_feasible": true,
+  "spawn_feasible": true,
+  "adopt_worker_reuse": true,
+  "decision": "adopt_worker_reuse",
+  "note": "Warm worker reused across hard_timeout solves; killed and respawned on timeout/crash."
+}

@@ -317,7 +317,7 @@ def _repair_pair_v4(
 
 def _accumulate_repair_decision(current: SolutionV2, decision: Any) -> SolutionV2:
     """Keep a running changed-decision count across insertions and ALNS iterations."""
-    out = decision.solution
+    out: SolutionV2 = decision.solution
     previous = int(current.metadata.get("changed_decisions") or 0)
     out.metadata["changed_decisions"] = previous + (1 if decision.changed else 0)
     if current.metadata.get("experiment_partition") is not None:

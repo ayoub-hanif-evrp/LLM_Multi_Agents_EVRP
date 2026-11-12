@@ -24,3 +24,7 @@ _recover_diag.py
 results/v2/runs/
 workspace/components/
 
+# Local full-repo backups (create with git bundle create)
+archive/backups/*.bundle
+archive/backups/
+

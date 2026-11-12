@@ -1,4 +1,4 @@
-# VoltForge EVRPTW benchmark contract
+# Schneider EVRPTW benchmark contract
 
 Primary experimental set: the original **92 Schneider E-VRPTW instances** (36 small + 56 large). Expanded 25/50/100-customer or 168-instance variants are secondary and are not used for ranking.
 
@@ -9,7 +9,7 @@ Primary experimental set: the original **92 Schneider E-VRPTW instances** (36 sm
 - Hashes: `results/manifests/instance_hashes.json` (SHA-256 of raw bytes)
 - Split: `results/manifests/split.json`
 
-Regenerate both with `uv run voltforge validate-data`.
+Regenerate both with `uv run voltforge datasets validate`.
 
 ## Charging policy
 

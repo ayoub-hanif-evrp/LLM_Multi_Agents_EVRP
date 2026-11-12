@@ -1,4 +1,4 @@
-# Variant Contracts (VoltForge 2.0)
+# Variant contracts (five EVRP families)
 
 Formal problem contracts for each supported benchmark family.  
 **Do not** claim two families are equivalent merely because they share Solomon-like coordinates.

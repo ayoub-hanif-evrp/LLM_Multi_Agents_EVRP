@@ -1,0 +1,718 @@
+{
+  "status": "random_done",
+  "classical": [
+    {
+      "arm": "classical",
+      "candidate_id": "default",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 19,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "duration": 1728.8110030239563,
+      "runtime_s": 2.387931400036905,
+      "time_limit_s": 8.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 0
+    },
+    {
+      "arm": "classical",
+      "candidate_id": "default",
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 19,
+      "feasible": true,
+      "objective_key": [
+        25.285322313276744
+      ],
+      "vehicles": 3,
+      "distance": 760.5111182174095,
+      "duration": 25.285322313276744,
+      "runtime_s": 5.054486499982886,
+      "time_limit_s": 10.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 0
+    },
+    {
+      "arm": "classical",
+      "candidate_id": "default",
+      "family": "bezzi",
+      "instance_id": "C101-5",
+      "seed": 19,
+      "feasible": true,
+      "objective_key": [
+        227.0
+      ],
+      "vehicles": 1,
+      "distance": 227.0,
+      "duration": 1197.5014999999999,
+      "runtime_s": 5.280457099957857,
+      "time_limit_s": 12.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 0
+    },
+    {
+      "arm": "classical",
+      "candidate_id": "default",
+      "family": "goeke",
+      "instance_id": "c101C6",
+      "seed": 19,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "distance": 267.3289940850671,
+      "duration": 1728.8110030239563,
+      "runtime_s": 2.5921668999944814,
+      "time_limit_s": 10.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 0
+    },
+    {
+      "arm": "classical",
+      "candidate_id": "default",
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 19,
+      "feasible": true,
+      "objective_key": [
+        4103.503590550043
+      ],
+      "vehicles": 20,
+      "distance": 2771.2606653156454,
+      "duration": 24756.33165736952,
+      "runtime_s": 8.321771799994167,
+      "time_limit_s": 15.0,
+      "first_fault": "OK: feasible",
+      "completed_within_budget": true,
+      "load_errors": [],
+      "feature_schema": "2026-10-18.v1",
+      "llm_generated_components": 0
+    }
+  ],
+  "random_evolution": [
+    {
+      "arm": "random_evolution",
+      "generation": 0,
+      "oneshot": true,
+      "parent_id": "classical",
+      "candidate_id": "random_g0",
+      "mutation": "insertion_score: max(0.0, delta_distance - 0.01 * capacity_slack)",
+      "origin": "grammar",
+      "behavior_changed": true,
+      "decision": {
+        "accepted": false,
+        "reason": "no_strict_improvement",
+        "wins": 0,
+        "losses": 0,
+        "ties": 5,
+        "tie_infeasible": 0,
+        "n_pairs": 5,
+        "rule": "conservative"
+      },
+      "accepted": false,
+      "sources": {
+        "insertion_score": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return max(0.0, delta_distance - 0.01 * capacity_slack)\n",
+        "station_score": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    \"\"\"Lower is better. Prefer reachable stations with short detour.\"\"\"\n    return detour + 0.1 * station_rate + (0.0 if battery_arrival > 0.0 else 1000.0)\n",
+        "removal_priority": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    \"\"\"Higher means remove sooner. Ignore sentinel dues (1e6).\"\"\"\n    return (0.0 if due_time >= 1000000.0 else due_time) + 10.0 * route_distance_share + 0.01 * rng_value\n"
+      },
+      "feature_schema": "2026-10-18.v1",
+      "source_hashes": {
+        "insertion_score": "583f624b0d77885e",
+        "station_score": "bd521b1497c17535",
+        "removal_priority": "a7dd4341ff0bc613"
+      },
+      "rows": [
+        {
+          "arm": "random_evolution",
+          "candidate_id": "random_g0",
+          "family": "schneider",
+          "instance_id": "c101C5",
+          "seed": 19,
+          "feasible": true,
+          "objective_key": [
+            2.0,
+            267.3289940850671
+          ],
+          "vehicles": 2,
+          "distance": 267.3289940850671,
+          "duration": 1728.8110030239563,
+          "runtime_s": 2.1981866999994963,
+          "time_limit_s": 8.0,
+          "first_fault": "OK: feasible",
+          "completed_within_budget": true,
+          "load_errors": [],
+          "feature_schema": "2026-10-18.v1",
+          "llm_generated_components": 0,
+          "generation": 0,
+          "origin": "grammar"
+        },
+        {
+          "arm": "random_evolution",
+          "candidate_id": "random_g0",
+          "family": "montoya",
+          "instance_id": "tc0c10s2cf1",
+          "seed": 19,
+          "feasible": true,
+          "objective_key": [
+            25.285322313276744
+          ],
+          "vehicles": 3,
+          "distance": 760.5111182174095,
+          "duration": 25.285322313276744,
+          "runtime_s": 5.970504299970344,
+          "time_limit_s": 10.0,
+          "first_fault": "OK: feasible",
+          "completed_within_budget": true,
+          "load_errors": [],
+          "feature_schema": "2026-10-18.v1",
+          "llm_generated_components": 0,
+          "generation": 0,
+          "origin": "grammar"
+        },
+        {
+          "arm": "random_evolution",
+          "candidate_id": "random_g0",
+          "family": "bezzi",
+          "instance_id": "C101-5",
+          "seed": 19,
+          "feasible": true,
+          "objective_key": [
+            227.0
+          ],
+          "vehicles": 1,
+          "distance": 227.0,
+          "duration": 1197.5014999999999,
+          "runtime_s": 5.504620999970939,
+          "time_limit_s": 12.0,
+          "first_fault": "OK: feasible",
+          "completed_within_budget": true,
+          "load_errors": [],
+          "feature_schema": "2026-10-18.v1",
+          "llm_generated_components": 0,
+          "generation": 0,
+          "origin": "grammar"
+        },
+        {
+          "arm": "random_evolution",
+          "candidate_id": "random_g0",
+          "family": "goeke",
+          "instance_id": "c101C6",
+          "seed": 19,
+          "feasible": true,
+          "objective_key": [
+            2.0,
+            267.3289940850671
+          ],
+          "vehicles": 2,
+          "distance": 267.3289940850671,
+          "duration": 1728.8110030239563,
+          "runtime_s": 2.2854092000052333,
+          "time_limit_s": 10.0,
+          "first_fault": "OK: feasible",
+          "completed_within_budget": true,
+          "load_errors": [],
+          "feature_schema": "2026-10-18.v1",
+          "llm_generated_components": 0,
+          "generation": 0,
+          "origin": "grammar"
+        },
+        {
+          "arm": "random_evolution",
+          "candidate_id": "random_g0",
+          "family": "hiermann",
+          "instance_id": "c101_21",
+          "seed": 19,
+          "feasible": true,
+          "objective_key": [
+            4103.503590550043
+          ],
+          "vehicles": 20,
+          "distance": 2771.2606653156454,
+          "duration": 24756.33165736952,
+          "runtime_s": 8.277572599996347,
+          "time_limit_s": 15.0,
+          "first_fault": "OK: feasible",
+          "completed_within_budget": true,
+          "load_errors": [],
+          "feature_schema": "2026-10-18.v1",
+          "llm_generated_components": 0,
+          "generation": 0,
+          "origin": "grammar"
+        }
+      ]
+    },
+    {
+      "arm": "random_evolution",
+      "generation": 1,
+      "oneshot": false,
+      "parent_id": "classical",
+      "candidate_id": "random_g1",
+      "mutation": "station_score: max(0.0, battery_arrival - 10.0 * battery_arrival)",
+      "origin": "grammar",
+      "behavior_changed": true,
+      "decision": {
+        "accepted": false,
+        "reason": "no_strict_improvement",
+        "wins": 0,
+        "losses": 0,
+        "ties": 5,
+        "tie_infeasible": 0,
+        "n_pairs": 5,
+        "rule": "conservative"
+      },
+      "accepted": false,
+      "sources": {
+        "insertion_score": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    \"\"\"Lower is better. Single arithmetic return for the bounded interpreter.\"\"\"\n    return delta_distance + (0.0 if due_time >= 1000000.0 else (0.01 * due_time + 1.0 / max(due_time - ready_time, 1.0))) + (0.0 if capacity_slack >= demand else 1000000.0)\n",
+        "station_score": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    return max(0.0, battery_arrival - 10.0 * battery_arrival)\n",
+        "removal_priority": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    \"\"\"Higher means remove sooner. Ignore sentinel dues (1e6).\"\"\"\n    return (0.0 if due_time >= 1000000.0 else due_time) + 10.0 * route_distance_share + 0.01 * rng_value\n"
+      },
+      "feature_schema": "2026-10-18.v1",
+      "source_hashes": {
+        "insertion_score": "1e87fb83dd434a35",
+        "station_score": "537d51f4485ad63e",
+        "removal_priority": "a7dd4341ff0bc613"
+      },
+      "rows": [
+        {
+          "arm": "random_evolution",
+          "candidate_id": "random_g1",
+          "family": "schneider",
+          "instance_id": "c101C5",
+          "seed": 19,
+          "feasible": true,
+          "objective_key": [
+            2.0,
+            267.3289940850671
+          ],
+          "vehicles": 2,
+          "distance": 267.3289940850671,
+          "duration": 1728.8110030239563,
+          "runtime_s": 2.1634622999699786,
+          "time_limit_s": 8.0,
+          "first_fault": "OK: feasible",
+          "completed_within_budget": true,
+          "load_errors": [],
+          "feature_schema": "2026-10-18.v1",
+          "llm_generated_components": 0,
+          "generation": 1,
+          "origin": "grammar"
+        },
+        {
+          "arm": "random_evolution",
+          "candidate_id": "random_g1",
+          "family": "montoya",
+          "instance_id": "tc0c10s2cf1",
+          "seed": 19,
+          "feasible": true,
+          "objective_key": [
+            25.285322313276744
+          ],
+          "vehicles": 3,
+          "distance": 760.5111182174095,
+          "duration": 25.285322313276744,
+          "runtime_s": 5.748890899994876,
+          "time_limit_s": 10.0,
+          "first_fault": "OK: feasible",
+          "completed_within_budget": true,
+          "load_errors": [],
+          "feature_schema": "2026-10-18.v1",
+          "llm_generated_components": 0,
+          "generation": 1,
+          "origin": "grammar"
+        },
+        {
+          "arm": "random_evolution",
+          "candidate_id": "random_g1",
+          "family": "bezzi",
+          "instance_id": "C101-5",
+          "seed": 19,
+          "feasible": true,
+          "objective_key": [
+            227.0
+          ],
+          "vehicles": 1,
+          "distance": 227.0,
+          "duration": 1197.5014999999999,
+          "runtime_s": 5.875664699997287,
+          "time_limit_s": 12.0,
+          "first_fault": "OK: feasible",
+          "completed_within_budget": true,
+          "load_errors": [],
+          "feature_schema": "2026-10-18.v1",
+          "llm_generated_components": 0,
+          "generation": 1,
+          "origin": "grammar"
+        },
+        {
+          "arm": "random_evolution",
+          "candidate_id": "random_g1",
+          "family": "goeke",
+          "instance_id": "c101C6",
+          "seed": 19,
+          "feasible": true,
+          "objective_key": [
+            2.0,
+            267.3289940850671
+          ],
+          "vehicles": 2,
+          "distance": 267.3289940850671,
+          "duration": 1728.8110030239563,
+          "runtime_s": 2.8697802000097,
+          "time_limit_s": 10.0,
+          "first_fault": "OK: feasible",
+          "completed_within_budget": true,
+          "load_errors": [],
+          "feature_schema": "2026-10-18.v1",
+          "llm_generated_components": 0,
+          "generation": 1,
+          "origin": "grammar"
+        },
+        {
+          "arm": "random_evolution",
+          "candidate_id": "random_g1",
+          "family": "hiermann",
+          "instance_id": "c101_21",
+          "seed": 19,
+          "feasible": true,
+          "objective_key": [
+            4103.503590550043
+          ],
+          "vehicles": 20,
+          "distance": 2771.2606653156454,
+          "duration": 24756.33165736952,
+          "runtime_s": 8.586550200008787,
+          "time_limit_s": 15.0,
+          "first_fault": "OK: feasible",
+          "completed_within_budget": true,
+          "load_errors": [],
+          "feature_schema": "2026-10-18.v1",
+          "llm_generated_components": 0,
+          "generation": 1,
+          "origin": "grammar"
+        }
+      ]
+    },
+    {
+      "arm": "random_evolution",
+      "generation": 2,
+      "oneshot": false,
+      "parent_id": "classical",
+      "candidate_id": "random_g2",
+      "mutation": "removal_priority: min(rng_value, 0.01 * route_distance_share)",
+      "origin": "grammar",
+      "behavior_changed": true,
+      "decision": {
+        "accepted": false,
+        "reason": "objective_regression",
+        "wins": 0,
+        "losses": 1,
+        "ties": 4,
+        "tie_infeasible": 0,
+        "n_pairs": 5,
+        "rule": "conservative"
+      },
+      "accepted": false,
+      "sources": {
+        "insertion_score": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    \"\"\"Lower is better. Single arithmetic return for the bounded interpreter.\"\"\"\n    return delta_distance + (0.0 if due_time >= 1000000.0 else (0.01 * due_time + 1.0 / max(due_time - ready_time, 1.0))) + (0.0 if capacity_slack >= demand else 1000000.0)\n",
+        "station_score": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    \"\"\"Lower is better. Prefer reachable stations with short detour.\"\"\"\n    return detour + 0.1 * station_rate + (0.0 if battery_arrival > 0.0 else 1000.0)\n",
+        "removal_priority": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    return min(rng_value, 0.01 * route_distance_share)\n"
+      },
+      "feature_schema": "2026-10-18.v1",
+      "source_hashes": {
+        "insertion_score": "1e87fb83dd434a35",
+        "station_score": "bd521b1497c17535",
+        "removal_priority": "0fec142a1e3cd483"
+      },
+      "rows": [
+        {
+          "arm": "random_evolution",
+          "candidate_id": "random_g2",
+          "family": "schneider",
+          "instance_id": "c101C5",
+          "seed": 19,
+          "feasible": true,
+          "objective_key": [
+            2.0,
+            267.3289940850671
+          ],
+          "vehicles": 2,
+          "distance": 267.3289940850671,
+          "duration": 1728.8110030239563,
+          "runtime_s": 2.2520990000339225,
+          "time_limit_s": 8.0,
+          "first_fault": "OK: feasible",
+          "completed_within_budget": true,
+          "load_errors": [],
+          "feature_schema": "2026-10-18.v1",
+          "llm_generated_components": 0,
+          "generation": 2,
+          "origin": "grammar"
+        },
+        {
+          "arm": "random_evolution",
+          "candidate_id": "random_g2",
+          "family": "montoya",
+          "instance_id": "tc0c10s2cf1",
+          "seed": 19,
+          "feasible": true,
+          "objective_key": [
+            29.272518080456486
+          ],
+          "vehicles": 4,
+          "distance": 917.6865576891281,
+          "duration": 29.272518080456486,
+          "runtime_s": 6.089338899997529,
+          "time_limit_s": 10.0,
+          "first_fault": "OK: feasible",
+          "completed_within_budget": true,
+          "load_errors": [],
+          "feature_schema": "2026-10-18.v1",
+          "llm_generated_components": 0,
+          "generation": 2,
+          "origin": "grammar"
+        },
+        {
+          "arm": "random_evolution",
+          "candidate_id": "random_g2",
+          "family": "bezzi",
+          "instance_id": "C101-5",
+          "seed": 19,
+          "feasible": true,
+          "objective_key": [
+            227.0
+          ],
+          "vehicles": 1,
+          "distance": 227.0,
+          "duration": 1197.5014999999999,
+          "runtime_s": 4.182316599995829,
+          "time_limit_s": 12.0,
+          "first_fault": "OK: feasible",
+          "completed_within_budget": true,
+          "load_errors": [],
+          "feature_schema": "2026-10-18.v1",
+          "llm_generated_components": 0,
+          "generation": 2,
+          "origin": "grammar"
+        },
+        {
+          "arm": "random_evolution",
+          "candidate_id": "random_g2",
+          "family": "goeke",
+          "instance_id": "c101C6",
+          "seed": 19,
+          "feasible": true,
+          "objective_key": [
+            2.0,
+            267.3289940850671
+          ],
+          "vehicles": 2,
+          "distance": 267.3289940850671,
+          "duration": 1728.8110030239563,
+          "runtime_s": 2.0666505999979563,
+          "time_limit_s": 10.0,
+          "first_fault": "OK: feasible",
+          "completed_within_budget": true,
+          "load_errors": [],
+          "feature_schema": "2026-10-18.v1",
+          "llm_generated_components": 0,
+          "generation": 2,
+          "origin": "grammar"
+        },
+        {
+          "arm": "random_evolution",
+          "candidate_id": "random_g2",
+          "family": "hiermann",
+          "instance_id": "c101_21",
+          "seed": 19,
+          "feasible": true,
+          "objective_key": [
+            4103.503590550043
+          ],
+          "vehicles": 20,
+          "distance": 2771.2606653156454,
+          "duration": 24756.33165736952,
+          "runtime_s": 8.198826699983329,
+          "time_limit_s": 15.0,
+          "first_fault": "OK: feasible",
+          "completed_within_budget": true,
+          "load_errors": [],
+          "feature_schema": "2026-10-18.v1",
+          "llm_generated_components": 0,
+          "generation": 2,
+          "origin": "grammar"
+        }
+      ]
+    },
+    {
+      "arm": "random_evolution",
+      "generation": 3,
+      "oneshot": false,
+      "parent_id": "classical",
+      "candidate_id": "random_g3",
+      "mutation": "insertion_score: 0.01 * ready_time + 1.0 * ready_time",
+      "origin": "grammar",
+      "behavior_changed": true,
+      "decision": {
+        "accepted": false,
+        "reason": "objective_regression",
+        "wins": 0,
+        "losses": 2,
+        "ties": 3,
+        "tie_infeasible": 0,
+        "n_pairs": 5,
+        "rule": "conservative"
+      },
+      "accepted": false,
+      "sources": {
+        "insertion_score": "def insertion_score(delta_distance: float, due_time: float, ready_time: float, demand: float, capacity_slack: float) -> float:\n    return 0.01 * ready_time + 1.0 * ready_time\n",
+        "station_score": "def station_score(detour: float, battery_arrival: float, station_rate: float) -> float:\n    \"\"\"Lower is better. Prefer reachable stations with short detour.\"\"\"\n    return detour + 0.1 * station_rate + (0.0 if battery_arrival > 0.0 else 1000.0)\n",
+        "removal_priority": "def removal_priority(due_time: float, route_distance_share: float, rng_value: float) -> float:\n    \"\"\"Higher means remove sooner. Ignore sentinel dues (1e6).\"\"\"\n    return (0.0 if due_time >= 1000000.0 else due_time) + 10.0 * route_distance_share + 0.01 * rng_value\n"
+      },
+      "feature_schema": "2026-10-18.v1",
+      "source_hashes": {
+        "insertion_score": "69943f02a7393052",
+        "station_score": "bd521b1497c17535",
+        "removal_priority": "a7dd4341ff0bc613"
+      },
+      "rows": [
+        {
+          "arm": "random_evolution",
+          "candidate_id": "random_g3",
+          "family": "schneider",
+          "instance_id": "c101C5",
+          "seed": 19,
+          "feasible": true,
+          "objective_key": [
+            2.0,
+            267.3289940850671
+          ],
+          "vehicles": 2,
+          "distance": 267.3289940850671,
+          "duration": 1728.8110030239563,
+          "runtime_s": 2.200046400015708,
+          "time_limit_s": 8.0,
+          "first_fault": "OK: feasible",
+          "completed_within_budget": true,
+          "load_errors": [],
+          "feature_schema": "2026-10-18.v1",
+          "llm_generated_components": 0,
+          "generation": 3,
+          "origin": "grammar"
+        },
+        {
+          "arm": "random_evolution",
+          "candidate_id": "random_g3",
+          "family": "montoya",
+          "instance_id": "tc0c10s2cf1",
+          "seed": 19,
+          "feasible": true,
+          "objective_key": [
+            29.22964437330537
+          ],
+          "vehicles": 4,
+          "distance": 917.6865576891281,
+          "duration": 29.22964437330537,
+          "runtime_s": 7.107752800046001,
+          "time_limit_s": 10.0,
+          "first_fault": "OK: feasible",
+          "completed_within_budget": true,
+          "load_errors": [],
+          "feature_schema": "2026-10-18.v1",
+          "llm_generated_components": 0,
+          "generation": 3,
+          "origin": "grammar"
+        },
+        {
+          "arm": "random_evolution",
+          "candidate_id": "random_g3",
+          "family": "bezzi",
+          "instance_id": "C101-5",
+          "seed": 19,
+          "feasible": true,
+          "objective_key": [
+            227.0
+          ],
+          "vehicles": 1,
+          "distance": 227.0,
+          "duration": 1197.5014999999999,
+          "runtime_s": 5.616743299993686,
+          "time_limit_s": 12.0,
+          "first_fault": "OK: feasible",
+          "completed_within_budget": true,
+          "load_errors": [],
+          "feature_schema": "2026-10-18.v1",
+          "llm_generated_components": 0,
+          "generation": 3,
+          "origin": "grammar"
+        },
+        {
+          "arm": "random_evolution",
+          "candidate_id": "random_g3",
+          "family": "goeke",
+          "instance_id": "c101C6",
+          "seed": 19,
+          "feasible": true,
+          "objective_key": [
+            2.0,
+            267.3289940850671
+          ],
+          "vehicles": 2,
+          "distance": 267.3289940850671,
+          "duration": 1728.8110030239563,
+          "runtime_s": 2.7952508999733254,
+          "time_limit_s": 10.0,
+          "first_fault": "OK: feasible",
+          "completed_within_budget": true,
+          "load_errors": [],
+          "feature_schema": "2026-10-18.v1",
+          "llm_generated_components": 0,
+          "generation": 3,
+          "origin": "grammar"
+        },
+        {
+          "arm": "random_evolution",
+          "candidate_id": "random_g3",
+          "family": "hiermann",
+          "instance_id": "c101_21",
+          "seed": 19,
+          "feasible": true,
+          "objective_key": [
+            4834.201503795961
+          ],
+          "vehicles": 21,
+          "distance": 4276.05897636541,
+          "duration": 27229.84538313589,
+          "runtime_s": 10.535343000025023,
+          "time_limit_s": 15.0,
+          "first_fault": "OK: feasible",
+          "completed_within_budget": true,
+          "load_errors": [],
+          "feature_schema": "2026-10-18.v1",
+          "llm_generated_components": 0,
+          "generation": 3,
+          "origin": "grammar"
+        }
+      ]
+    }
+  ]
+}

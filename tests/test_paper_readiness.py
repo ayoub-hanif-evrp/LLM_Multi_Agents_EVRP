@@ -45,7 +45,9 @@ def test_fake_live_signal_writes_paired_outcomes() -> None:
     payload = run_signal(backend="fake", max_calls=4)
     assert payload["backend"] == "fake"
     assert payload["llm_calls"] == 3
-    assert payload["gate"] == "ok"
+    # Scripted long-detour is worse on Hiermann; that must not be labeled successful.
+    assert payload["gate"] == "objective_regression"
     assert len(payload["paired"]) == 2
     assert all(row["policy_executed"] for row in payload["paired"])
     assert all(row["source_hash"] for row in payload["paired"])
+    assert all("outcome" in row for row in payload["paired"])

@@ -7,7 +7,11 @@ from typing import Literal
 
 from pydantic import BaseModel
 
-from evrptw_autolab.discovery.policy_language import PolicyError, evaluate_policy
+from evrptw_autolab.discovery.policy_language import (
+    PolicyError,
+    evaluate_policy,
+    normalize_expression,
+)
 from evrptw_autolab.discovery.schemas import OperatorSpec
 from evrptw_autolab.problem.v2.types import CapabilityFlags
 from evrptw_autolab.transfer.hard_compatibility import compatibility_failures
@@ -28,14 +32,19 @@ def select_operator(
     rule: str | None = None,
 ) -> Selection:
     """A positive rule score applies the operator. Incompatibility always falls back."""
-    failures = compatibility_failures(operator, flags)
+    failures = compatibility_failures(
+        operator,
+        flags,
+        available_features=set(features),
+        context=features,
+    )
     if failures:
         return Selection(action="classical_default", reason=failures[0])
     expression = rule if rule is not None else operator.applicability_rule or operator.candidate_scoring_policy
     if not expression:
         return Selection(action="classical_default", reason="no applicability rule")
     try:
-        score = evaluate_policy(expression, features)
+        score = evaluate_policy(normalize_expression(expression), features)
     except PolicyError as exc:
         return Selection(action="abstain", reason=str(exc))
     if score > 0.0:

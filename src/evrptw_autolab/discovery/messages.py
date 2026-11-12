@@ -81,5 +81,6 @@ def validate_hypothesis(hypothesis: Hypothesis) -> None:
 def validate_operator(operator: OperatorSpec) -> None:
     if not operator.operator_id.strip() or not operator.candidate_scoring_policy:
         raise ValueError("operator is incomplete")
-    if operator.candidate_scoring_policy.strip() in {"0", "0.0"}:
+    scoring = operator.candidate_scoring_policy.strip().lower()
+    if scoring in {"0", "0.0", "false"}:
         raise ValueError("no-op scoring policy")

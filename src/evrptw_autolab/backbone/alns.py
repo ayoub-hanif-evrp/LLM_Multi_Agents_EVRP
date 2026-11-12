@@ -336,7 +336,7 @@ def _repair_one_selective(
 ) -> SolutionV2:
     """Rank feasible insertions with the selective controller. Physics screening stays here."""
     from evrptw_autolab.discovery.schemas import OperatorSpec
-    from evrptw_autolab.transfer.context_features import search_context
+    from evrptw_autolab.transfer.context_features import context_for_operator
     from evrptw_autolab.transfer.search_decision import ScreenedRepair, choose_screened_repair
 
     if not isinstance(policy, OperatorSpec):
@@ -386,7 +386,7 @@ def _repair_one_selective(
         spec,
         policy,
         rows,
-        search_context(spec, current),
+        context_for_operator(spec, current, policy),
         seed=0,
         partition=partition,
         mine=bool(policy.mine_counterexamples),
@@ -409,7 +409,7 @@ def _repair_one_hetero_selective(
         route_covers_locally,
     )
     from evrptw_autolab.discovery.schemas import OperatorSpec
-    from evrptw_autolab.transfer.context_features import search_context
+    from evrptw_autolab.transfer.context_features import context_for_operator
     from evrptw_autolab.transfer.search_decision import ScreenedRepair, choose_screened_repair
 
     if not isinstance(policy, OperatorSpec):
@@ -469,7 +469,7 @@ def _repair_one_hetero_selective(
         spec,
         policy,
         rows,
-        search_context(spec, current),
+        context_for_operator(spec, current, policy),
         seed=0,
         partition=partition,
         mine=bool(policy.mine_counterexamples),
@@ -497,7 +497,7 @@ def repair_greedy(
     order = list(removed)
     rng.shuffle(order)
     from evrptw_autolab.discovery.schemas import OperatorSpec
-    from evrptw_autolab.transfer.context_features import search_context
+    from evrptw_autolab.transfer.context_features import context_for_operator
     from evrptw_autolab.transfer.selective_controller import select_operator
 
     # Decide once per repair call. Re-checking on every customer burns the ALNS budget.
@@ -505,7 +505,10 @@ def repair_greedy(
     classical_policy: object | None = policy
     if isinstance(policy, OperatorSpec) and policy.operator_family == "repair":
         selection = select_operator(
-            policy, spec.capabilities, search_context(spec, current), rule=policy.applicability_rule
+            policy,
+            spec.capabilities,
+            context_for_operator(spec, current, policy),
+            rule=policy.applicability_rule,
         )
         apply_selective = selection.action == "apply"
         if not apply_selective:

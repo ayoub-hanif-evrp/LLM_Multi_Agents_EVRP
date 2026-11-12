@@ -20,26 +20,72 @@ FORBIDDEN_FEATURE_NAMES = frozenset(
         "benchmark",
     }
 )
+EXPENSIVE_CONTEXT_FEATURES = frozenset({"battery_slack", "time_window_slack"})
 
 
 class PolicyError(ValueError):
     """The expression is not a legal bounded policy."""
 
 
+def normalize_expression(source: str) -> str:
+    """Map boolean literals to numeric constants. Everything else is left unchanged."""
+    if not isinstance(source, str):
+        raise PolicyError("empty policy")
+    text = source.strip()
+    if not text:
+        raise PolicyError("empty policy")
+    lowered = text.lower()
+    if lowered == "true":
+        return "1"
+    if lowered == "false":
+        return "0"
+    return text
+
+
+def referenced_features(source: str) -> set[str]:
+    """Feature names referenced by a legal expression."""
+    tree = _parse_policy(normalize_expression(source))
+    names: set[str] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load) and node.id not in _FUNCTIONS:
+            names.add(node.id)
+    return names
+
+
+def validate_expression(source: str, allowed_features: set[str] | frozenset[str]) -> str:
+    """Reject illegal syntax or unknown features before the solver runs. Returns the normalized source."""
+    normalized = normalize_expression(source)
+    tree = _parse_policy(normalized)
+    for name in referenced_features(normalized):
+        if name in FORBIDDEN_FEATURE_NAMES:
+            raise PolicyError(f"forbidden feature {name}")
+        if name not in allowed_features:
+            raise PolicyError(f"unknown feature {name}")
+    # Constant-only expressions are legal (e.g. normalized ``1``).
+    _ = tree
+    return normalized
+
+
+def needs_expensive_context(*expressions: str | None) -> bool:
+    """True when any expression needs battery or time-window slack from route simulation."""
+    for expression in expressions:
+        if not expression:
+            continue
+        try:
+            names = referenced_features(expression)
+        except PolicyError:
+            continue
+        if names & EXPENSIVE_CONTEXT_FEATURES:
+            return True
+    return False
+
+
 def evaluate_policy(source: str, features: Mapping[str, float]) -> float:
     """Evaluate one expression. The result is a finite float."""
-    if not isinstance(source, str) or not source.strip():
-        raise PolicyError("empty policy")
-    if len(source) > _MAX_SOURCE_CHARS:
-        raise PolicyError("policy exceeds the length bound")
+    normalized = normalize_expression(source)
     if any(name in features for name in FORBIDDEN_FEATURE_NAMES):
         raise PolicyError("forbidden feature supplied")
-    try:
-        tree = ast.parse(source, mode="eval")
-    except SyntaxError as exc:
-        raise PolicyError("policy syntax rejected") from exc
-    if sum(1 for _ in ast.walk(tree)) > _MAX_NODES:
-        raise PolicyError("policy exceeds the node bound")
+    tree = _parse_policy(normalized)
     value = _eval(tree.body, features)
     if isinstance(value, bool) or not isinstance(value, int | float):
         raise PolicyError("policy did not return a number")
@@ -47,6 +93,20 @@ def evaluate_policy(source: str, features: Mapping[str, float]) -> float:
     if not math.isfinite(number):
         raise PolicyError("policy returned a non-finite number")
     return number
+
+
+def _parse_policy(source: str) -> ast.Expression:
+    if len(source) > _MAX_SOURCE_CHARS:
+        raise PolicyError("policy exceeds the length bound")
+    try:
+        tree = ast.parse(source, mode="eval")
+    except SyntaxError as exc:
+        raise PolicyError("policy syntax rejected") from exc
+    if not isinstance(tree, ast.Expression):
+        raise PolicyError("policy syntax rejected")
+    if sum(1 for _ in ast.walk(tree)) > _MAX_NODES:
+        raise PolicyError("policy exceeds the node bound")
+    return tree
 
 
 def choose_minimum(source: str, rows: Sequence[Mapping[str, float]]) -> int:

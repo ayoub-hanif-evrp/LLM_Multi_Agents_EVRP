@@ -7,7 +7,7 @@ import random
 from evrptw_autolab.discovery.policy_language import PolicyError, choose_minimum
 from evrptw_autolab.discovery.schemas import OperatorSpec
 from evrptw_autolab.problem.v2.types import ProblemSpecV2, SolutionV2
-from evrptw_autolab.transfer.context_features import search_context
+from evrptw_autolab.transfer.context_features import context_for_operator
 from evrptw_autolab.transfer.selective_controller import select_operator
 
 DESTROY_REFERENCES = {"destroy_random": "random", "destroy_worst": "worst"}
@@ -24,7 +24,7 @@ def choose_destroy(
     selection = select_operator(
         operator,
         spec.capabilities,
-        search_context(spec, solution),
+        context_for_operator(spec, solution, operator),
         rule=operator.applicability_rule,
     )
     mapped = DESTROY_REFERENCES.get(operator.implementation_reference)

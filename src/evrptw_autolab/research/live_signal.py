@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from evrptw_autolab.backbone.solver import solve_classical
-from evrptw_autolab.backbone.util import evaluate
+from evrptw_autolab.backbone.util import evaluate, is_better
 from evrptw_autolab.discovery.controller import (
     operator_fingerprint,
     run_live_cycle,
@@ -17,6 +17,7 @@ from evrptw_autolab.discovery.controller import (
 from evrptw_autolab.discovery.schemas import OperatorSpec
 from evrptw_autolab.problem.datasets.hiermann import load_hiermann
 from evrptw_autolab.problem.datasets.schneider_v2 import load_schneider_v2
+from evrptw_autolab.problem.v2.report import EvaluationReportV2
 
 ROOT = Path(__file__).resolve().parents[3]
 
@@ -25,6 +26,22 @@ CASES = (
     ("hiermann", "c101_21", ROOT / "dataset" / "hiermann-et-al-2017-set-1" / "c101_21.txt", 8.0, 10, load_hiermann),
 )
 SEED = 7
+
+
+def paired_outcome(
+    classical: EvaluationReportV2,
+    candidate: EvaluationReportV2,
+) -> str:
+    """Classify one family comparison. Families are never averaged together."""
+    if classical.feasible and not candidate.feasible:
+        return "feasibility_regression"
+    if candidate.feasible and not classical.feasible:
+        return "improved"
+    if is_better(candidate, classical):
+        return "improved"
+    if is_better(classical, candidate):
+        return "objective_regression"
+    return "tie"
 
 
 def run_signal(
@@ -77,19 +94,16 @@ def run_signal(
         gate = "no_search_decision"
         diagnosis = "discovery produced no search_decision"
     elif not decision.get("changed") and not discovery.get("counterexamples"):
-        # Scripted long-detour always changes; a live no-op stops here.
-        if backend == "ollama" and not decision.get("changed"):
-            gate = "behaviorally_inert"
-            diagnosis = (
-                f"operator did not change the development repair "
-                f"(action={decision.get('action')}, reason={decision.get('reason')})"
-            )
+        gate = "behaviorally_inert"
+        diagnosis = (
+            f"operator did not change the development repair "
+            f"(action={decision.get('action')}, reason={decision.get('reason')})"
+        )
 
     paired: list[dict[str, Any]] = []
     if gate == "ok":
         for family, instance_id, path, time_limit, iterations, loader in CASES:
             spec = loader(path)
-            # In-process solves keep identical iteration counts for the paired comparison.
             classical = solve_classical(
                 spec,
                 seed=SEED,
@@ -110,6 +124,7 @@ def run_signal(
             )
             classical_report = evaluate(spec, classical)
             candidate_report = evaluate(spec, candidate)
+            outcome = paired_outcome(classical_report, candidate_report)
             paired.append(
                 {
                     "family": family,
@@ -119,15 +134,33 @@ def run_signal(
                     "candidate_feasible": bool(candidate_report.feasible),
                     "classical_objective_key": [float(v) for v in classical_report.objective_key],
                     "candidate_objective_key": [float(v) for v in candidate_report.objective_key],
+                    "outcome": outcome,
                     "policy_executed": bool(candidate.metadata.get("policy_executed")),
                     "changed_decisions": int(candidate.metadata.get("changed_decisions") or 0),
                     "source_hash": candidate.metadata.get("source_hash"),
                     "method_attribution": candidate.metadata.get("method_attribution"),
                 }
             )
-            if classical_report.feasible and not candidate_report.feasible:
-                gate = "feasibility_regression"
-                break
+
+        outcomes = [row["outcome"] for row in paired]
+        changed_total = sum(int(row["changed_decisions"]) for row in paired)
+        if "feasibility_regression" in outcomes:
+            gate = "feasibility_regression"
+            diagnosis = "candidate lost feasibility on a development instance"
+        elif "objective_regression" in outcomes:
+            gate = "objective_regression"
+            worse = [row["family"] for row in paired if row["outcome"] == "objective_regression"]
+            diagnosis = f"feasible but worse native objective on: {', '.join(worse)}"
+        elif changed_total == 0 and all(outcome == "tie" for outcome in outcomes):
+            gate = "behaviorally_inert"
+            diagnosis = "paired solves matched classical with zero changed decisions"
+        elif "improved" in outcomes:
+            gate = "beneficial"
+            improved = [row["family"] for row in paired if row["outcome"] == "improved"]
+            diagnosis = f"native objective improved on: {', '.join(improved)}"
+        else:
+            gate = "no_improvement"
+            diagnosis = "operator ran without native-objective improvement"
 
     payload = {
         "created_at": datetime.now(UTC).isoformat(),

@@ -3,8 +3,28 @@
 from __future__ import annotations
 
 from evrptw_autolab.backbone.util import vehicle_for_route
+from evrptw_autolab.discovery.policy_language import needs_expensive_context
+from evrptw_autolab.discovery.schemas import OperatorSpec
 from evrptw_autolab.problem.v2.route_simulator import simulate_route
 from evrptw_autolab.problem.v2.types import ProblemSpecV2, SolutionV2
+
+
+def context_for_operator(
+    spec: ProblemSpecV2,
+    solution: SolutionV2,
+    operator: OperatorSpec | None = None,
+) -> dict[str, float]:
+    """Build search context, enabling expensive slack features when the operator needs them."""
+    from evrptw_autolab.discovery.policy_language import EXPENSIVE_CONTEXT_FEATURES
+
+    expensive = False
+    if operator is not None:
+        expensive = needs_expensive_context(
+            operator.applicability_rule,
+            operator.candidate_scoring_policy,
+            *operator.hard_preconditions,
+        ) or bool(set(operator.required_features) & EXPENSIVE_CONTEXT_FEATURES)
+    return search_context(spec, solution, expensive=expensive)
 
 
 def search_context(

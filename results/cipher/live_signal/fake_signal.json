@@ -1,12 +1,12 @@
 {
-  "created_at": "2026-11-10T16:03:11.326768+00:00",
+  "created_at": "2026-11-12T13:59:07.175478+00:00",
   "backend": "fake",
   "model_id": "fake",
   "llm_calls": 3,
   "prompt_tokens": 0,
   "completion_tokens": 0,
-  "gate": "ok",
-  "diagnosis": null,
+  "gate": "objective_regression",
+  "diagnosis": "feasible but worse native objective on: hiermann",
   "operator": {
     "operator_id": "long_detour",
     "version": "1.1",
@@ -24,7 +24,7 @@
     "applicability_rule": "route_utilization - 0.9",
     "mine_counterexamples": false,
     "fallback_operator": "classical_default",
-    "source_hash": "16184c8907fb906c"
+    "source_hash": "3ef2d0199b5bd990"
   },
   "discovery_decision": {
     "action": "classical_default",
@@ -34,7 +34,7 @@
     "changed": false,
     "operator_id": "long_detour",
     "operator_version": "1.1",
-    "source_hash": "16184c8907fb906c"
+    "source_hash": "3ef2d0199b5bd990"
   },
   "counterexamples": [
     {
@@ -72,9 +72,10 @@
         2.0,
         267.3289940850671
       ],
+      "outcome": "tie",
       "policy_executed": true,
       "changed_decisions": 0,
-      "source_hash": "16184c8907fb906c",
+      "source_hash": "3ef2d0199b5bd990",
       "method_attribution": "llm_policy_search"
     },
     {
@@ -89,9 +90,10 @@
       "candidate_objective_key": [
         3276.6685354298506
       ],
+      "outcome": "objective_regression",
       "policy_executed": true,
       "changed_decisions": 17,
-      "source_hash": "16184c8907fb906c",
+      "source_hash": "3ef2d0199b5bd990",
       "method_attribution": "llm_policy_search"
     }
   ],

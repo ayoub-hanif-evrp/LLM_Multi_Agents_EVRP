@@ -47,7 +47,7 @@ def _reassign_with_operator(
 ) -> SolutionV2:
     """Reassign one route only when the fleet operator is selected."""
     from evrptw_autolab.discovery.schemas import OperatorSpec
-    from evrptw_autolab.transfer.context_features import search_context
+    from evrptw_autolab.transfer.context_features import context_for_operator
     from evrptw_autolab.transfer.search_decision import ScreenedRepair, choose_screened_repair
 
     if not isinstance(policy, OperatorSpec):
@@ -94,7 +94,7 @@ def _reassign_with_operator(
             spec,
             policy,
             rows,
-            search_context(spec, current),
+            context_for_operator(spec, current, policy),
             seed=0,
             partition="development",
             mine=bool(policy.mine_counterexamples),

@@ -18,7 +18,15 @@ Schneider RC2 remains previously inspected and is never labeled blind.
 
 `uv run voltforge research live-signal [--backend fake|ollama] [--live]` discovers one capped operator and, when the discovery decision changes behavior, compares classical vs policy on Schneider `c101C5` and Hiermann `c101_21`.
 
-Stop rules: schema/capability failure, no behavior change, or feasibility regression. Do not raise call caps to force a positive result. The recorded Ollama artifact may be an honest `behaviorally_inert` or `discovery_failed` gate.
+Gate labels are fail-closed:
+
+- `beneficial` — at least one development family improves and none regress
+- `objective_regression` — feasible but worse native objective on any paired family
+- `feasibility_regression` — candidate loses feasibility
+- `behaviorally_inert` / `no_improvement` — no useful decision change
+- `discovery_failed` — schema, budget, or compatibility failure
+
+Do not raise call caps to force a positive result. Native objectives are never averaged across families.
 
 ## Scripted B0–B6
 

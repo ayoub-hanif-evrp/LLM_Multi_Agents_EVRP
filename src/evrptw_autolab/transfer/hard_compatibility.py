@@ -12,7 +12,12 @@ def capability_names() -> set[str]:
     return {item.name for item in fields(CapabilityFlags)}
 
 
-def compatibility_failures(operator: OperatorSpec, flags: CapabilityFlags) -> list[str]:
+def compatibility_failures(
+    operator: OperatorSpec,
+    flags: CapabilityFlags,
+    *,
+    available_features: set[str] | None = None,
+) -> list[str]:
     """Return the reasons an operator must not run. An empty list means it may run."""
     known = capability_names()
     failures: list[str] = []
@@ -26,4 +31,11 @@ def compatibility_failures(operator: OperatorSpec, flags: CapabilityFlags) -> li
             failures.append(f"unknown forbidden capability {name}")
         elif bool(getattr(flags, name)):
             failures.append(f"forbidden capability {name} is present")
+    if available_features is not None:
+        for name in operator.required_features:
+            if name not in available_features:
+                failures.append(f"missing required feature {name}")
+    for precondition in operator.hard_preconditions:
+        if not precondition.strip():
+            failures.append("empty hard precondition")
     return failures

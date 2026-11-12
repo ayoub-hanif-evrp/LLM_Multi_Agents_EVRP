@@ -1,0 +1,99 @@
+{
+  "created_at": "2026-11-10T16:03:11.326768+00:00",
+  "backend": "fake",
+  "model_id": "fake",
+  "llm_calls": 3,
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "gate": "ok",
+  "diagnosis": null,
+  "operator": {
+    "operator_id": "long_detour",
+    "version": "1.1",
+    "source_agent": "scripted",
+    "description": "Prefer the longer detour.",
+    "operator_family": "repair",
+    "implementation_reference": "repair_greedy",
+    "required_capabilities": [
+      "time_windows"
+    ],
+    "forbidden_capabilities": [],
+    "required_features": [],
+    "hard_preconditions": [],
+    "candidate_scoring_policy": "-1 * delta_distance",
+    "applicability_rule": "route_utilization - 0.9",
+    "mine_counterexamples": false,
+    "fallback_operator": "classical_default",
+    "source_hash": "16184c8907fb906c"
+  },
+  "discovery_decision": {
+    "action": "classical_default",
+    "reason": "applicability score non-positive",
+    "selected": "classical_path",
+    "classical": "classical_path",
+    "changed": false,
+    "operator_id": "long_detour",
+    "operator_version": "1.1",
+    "source_hash": "16184c8907fb906c"
+  },
+  "counterexamples": [
+    {
+      "counterexample_id": "long_detour-0:2",
+      "operator_id": "long_detour",
+      "operator_version": "1",
+      "family": "schneider",
+      "seed": 0,
+      "counterexample_type": "objective_regression",
+      "baseline_feasible": true,
+      "candidate_feasible": true,
+      "baseline_native_objective": [
+        1.0,
+        24.0
+      ],
+      "candidate_native_objective": [
+        1.0,
+        30.4339811320566
+      ],
+      "reproduction_command": "repair long_detour@1 seed=0 partition=development label=0:2"
+    }
+  ],
+  "paired": [
+    {
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "classical_feasible": true,
+      "candidate_feasible": true,
+      "classical_objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "candidate_objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "policy_executed": true,
+      "changed_decisions": 0,
+      "source_hash": "16184c8907fb906c",
+      "method_attribution": "llm_policy_search"
+    },
+    {
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "classical_feasible": true,
+      "candidate_feasible": true,
+      "classical_objective_key": [
+        3272.221784555277
+      ],
+      "candidate_objective_key": [
+        3276.6685354298506
+      ],
+      "policy_executed": true,
+      "changed_decisions": 17,
+      "source_hash": "16184c8907fb906c",
+      "method_attribution": "llm_policy_search"
+    }
+  ],
+  "final_test": "No untouched final set is declared. Schneider RC2 is not a blind test."
+}

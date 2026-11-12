@@ -315,6 +315,16 @@ def _repair_pair_v4(
     return chosen[3]
 
 
+def _accumulate_repair_decision(current: SolutionV2, decision: Any) -> SolutionV2:
+    """Keep a running changed-decision count across insertions and ALNS iterations."""
+    out = decision.solution
+    previous = int(current.metadata.get("changed_decisions") or 0)
+    out.metadata["changed_decisions"] = previous + (1 if decision.changed else 0)
+    if current.metadata.get("experiment_partition") is not None:
+        out.metadata.setdefault("experiment_partition", current.metadata["experiment_partition"])
+    return out
+
+
 def _repair_one_selective(
     spec: ProblemSpecV2,
     current: SolutionV2,
@@ -370,6 +380,7 @@ def _repair_one_selective(
         opened = clone_solution(current)
         opened.routes.append(route)
         opened.vehicle_assignments.append(vehicle_id)
+        opened.metadata["changed_decisions"] = int(current.metadata.get("changed_decisions") or 0)
         return opened
     decision = choose_screened_repair(
         spec,
@@ -380,7 +391,90 @@ def _repair_one_selective(
         partition=partition,
         mine=bool(policy.mine_counterexamples),
     )
-    return decision.solution
+    return _accumulate_repair_decision(current, decision)
+
+
+def _repair_one_hetero_selective(
+    spec: ProblemSpecV2,
+    current: SolutionV2,
+    node_id: str,
+    policy: Any,
+    deadline: float | None,
+    partition: str,
+) -> SolutionV2:
+    """Re-rank Hiermann/priced insertions without disabling the classical fleet cost model."""
+    from evrptw_autolab.backbone.construct import (
+        _priced_fleet,
+        insert_customer_fast,
+        route_covers_locally,
+    )
+    from evrptw_autolab.discovery.schemas import OperatorSpec
+    from evrptw_autolab.transfer.context_features import search_context
+    from evrptw_autolab.transfer.search_decision import ScreenedRepair, choose_screened_repair
+
+    if not isinstance(policy, OperatorSpec):
+        raise TypeError("selective repair requires an OperatorSpec")
+    priced = _priced_fleet(spec)
+    rows: list[ScreenedRepair] = []
+    for r_idx, route in enumerate(current.routes):
+        if deadline is not None and time.monotonic() > deadline:
+            break
+        try:
+            vehicle = vehicle_for_route(spec, current, r_idx)
+        except ValueError:
+            continue
+        base_ok, base_distance, base_energy = route_covers_locally(spec, route, vehicle)
+        if not base_ok:
+            base_energy = 0.0
+            base_distance = 0.0
+        for pos in range(1, len(route)):
+            if deadline is not None and time.monotonic() > deadline:
+                break
+            trial_route = list(route)
+            trial_route.insert(pos, make_customer_stop(node_id, spec))
+            ok, distance, energy = route_covers_locally(spec, trial_route, vehicle)
+            if not ok:
+                continue
+            trial = clone_solution(current)
+            trial.routes[r_idx] = trial_route
+            delta = distance - base_distance
+            energy_delta = energy - base_energy
+            acceptance = float(energy_delta if priced else delta)
+            rows.append(
+                ScreenedRepair(
+                    label=f"{r_idx}:{pos}",
+                    features=insertion_features_v4(spec, route, pos, node_id, vehicle),
+                    solution=trial,
+                    objective=(acceptance,),
+                    feasible=True,
+                    acceptance=acceptance,
+                )
+            )
+    if not rows:
+        # Preserve priced open-route / upgrade repairs from the classical constructor.
+        classical = insert_customer_fast(spec, current, node_id, policy=None)
+        classical.metadata["changed_decisions"] = int(current.metadata.get("changed_decisions") or 0)
+        classical.metadata["search_decision"] = {
+            "action": "apply",
+            "reason": "hetero_fallback_classical_fleet_repair",
+            "selected": "classical_path",
+            "classical": "classical_path",
+            "changed": False,
+            "operator_id": policy.operator_id,
+            "operator_version": policy.version,
+            "source_hash": policy.source_hash,
+        }
+        return classical
+    decision = choose_screened_repair(
+        spec,
+        policy,
+        rows,
+        search_context(spec, current),
+        seed=0,
+        partition=partition,
+        mine=bool(policy.mine_counterexamples),
+    )
+    return _accumulate_repair_decision(current, decision)
 
 
 def repair_greedy(
@@ -403,6 +497,29 @@ def repair_greedy(
     order = list(removed)
     rng.shuffle(order)
     from evrptw_autolab.discovery.schemas import OperatorSpec
+    from evrptw_autolab.transfer.context_features import search_context
+    from evrptw_autolab.transfer.selective_controller import select_operator
+
+    # Decide once per repair call. Re-checking on every customer burns the ALNS budget.
+    apply_selective = False
+    classical_policy: object | None = policy
+    if isinstance(policy, OperatorSpec) and policy.operator_family == "repair":
+        selection = select_operator(
+            policy, spec.capabilities, search_context(spec, current), rule=policy.applicability_rule
+        )
+        apply_selective = selection.action == "apply"
+        if not apply_selective:
+            classical_policy = None
+        current.metadata["search_decision"] = {
+            "action": selection.action,
+            "reason": selection.reason,
+            "selected": "pending" if apply_selective else "classical_path",
+            "classical": "classical_path",
+            "changed": False,
+            "operator_id": policy.operator_id,
+            "operator_version": policy.version,
+            "source_hash": policy.source_hash,
+        }
 
     for unit in order:
         if deadline is not None and time.monotonic() > deadline:
@@ -411,16 +528,21 @@ def repair_greedy(
         best_score = float("inf")
         if len(unit) == 1:
             node_id = unit[0]
-            if isinstance(policy, OperatorSpec) and policy.operator_family == "repair":
-                current = _repair_one_selective(
-                    spec, current, node_id, policy, vehicle_id, deadline, partition
-                )
+            if apply_selective:
+                if spec.capabilities.heterogeneous_fleet:
+                    current = _repair_one_hetero_selective(
+                        spec, current, node_id, policy, deadline, partition
+                    )
+                else:
+                    current = _repair_one_selective(
+                        spec, current, node_id, policy, vehicle_id, deadline, partition
+                    )
                 continue
-            if _v4_insertion(policy):
-                current = _repair_one_v4(spec, current, node_id, policy, vehicle_id, deadline)
+            if _v4_insertion(classical_policy):
+                current = _repair_one_v4(spec, current, node_id, classical_policy, vehicle_id, deadline)
                 continue
             if spec.capabilities.heterogeneous_fleet:
-                current = insert_customer_fast(spec, current, node_id, policy=policy)
+                current = insert_customer_fast(spec, current, node_id, policy=classical_policy)
                 continue
             for r_idx, route in enumerate(current.routes):
                 if deadline is not None and time.monotonic() > deadline:
@@ -454,8 +576,9 @@ def repair_greedy(
                 current = best
         else:
             pickup, delivery = unit[0], unit[1]
-            if _v4_insertion(policy):
-                current = _repair_pair_v4(spec, current, pickup, delivery, policy, vehicle_id, deadline)
+            pair_policy = policy if apply_selective else classical_policy
+            if _v4_insertion(pair_policy):
+                current = _repair_pair_v4(spec, current, pickup, delivery, pair_policy, vehicle_id, deadline)
                 continue
             for r_idx, route in enumerate(current.routes):
                 if deadline is not None and time.monotonic() > deadline:
@@ -492,7 +615,8 @@ def repair_greedy(
                 current.vehicle_assignments.append(vehicle_id)
             else:
                 current = best
-    current = repair_energy(spec, current, policy=policy, deadline=deadline)
+    energy_policy = policy if apply_selective else classical_policy
+    current = repair_energy(spec, current, policy=energy_policy, deadline=deadline)
     from evrptw_autolab.backbone.charge_completion import complete_solution_charges
     from evrptw_autolab.backbone.nonlinear_charge import optimize_solution_partial_charges
 
@@ -546,14 +670,21 @@ def alns_improve(
     optimize_partial_charges: bool = True,
     adaptive_destroy: bool = True,
     heavy_local: bool = True,
+    partition: str = "development",
 ) -> SolutionV2:
     """ALNS with random/worst destroy + greedy repair + SA acceptance."""
+    from evrptw_autolab.discovery.schemas import OperatorSpec
+    from evrptw_autolab.transfer.counterexamples import refuse_non_development
+
+    if isinstance(policy, OperatorSpec) and policy.mine_counterexamples:
+        refuse_non_development(partition)
     start = time.monotonic()
     end_by = start + float(time_limit_s)
     if deadline is not None:
         end_by = min(end_by, float(deadline))
     current = clone_solution(solution)
-    current = repair_energy(spec, current, policy=policy, deadline=end_by)
+    energy_policy = None if isinstance(policy, OperatorSpec) else policy
+    current = repair_energy(spec, current, policy=energy_policy, deadline=end_by)
     current_report = evaluate(spec, current)
     best = clone_solution(current)
     best_report = current_report
@@ -563,6 +694,7 @@ def alns_improve(
     temperature = 1.0
     cooling = 0.95
     it = -1
+    changed_total = int(current.metadata.get("changed_decisions") or 0)
 
     for it in range(iterations):
         if time.monotonic() > end_by:
@@ -571,11 +703,12 @@ def alns_improve(
         k = max(1, min(3, n_units // 3 or 1))
         destroy_name = _select_destroy(spec, current, policy, rng, weights, destroy_trace)
         if destroy_name == "worst":
-            destroyed, removed = destroy_worst(spec, current, rng, k, policy=policy)
+            destroyed, removed = destroy_worst(spec, current, rng, k, policy=energy_policy)
         else:
             destroyed, removed = destroy_random(spec, current, rng, k)
         if not removed:
             continue
+        prior_changed = int(destroyed.metadata.get("changed_decisions") or 0)
         candidate = repair_greedy(
             spec,
             destroyed,
@@ -584,7 +717,11 @@ def alns_improve(
             policy=policy,
             optimize_partial_charges=optimize_partial_charges,
             deadline=end_by,
+            partition=partition,
         )
+        delta_changed = int(candidate.metadata.get("changed_decisions") or 0) - prior_changed
+        if delta_changed > 0:
+            changed_total += delta_changed
         if it % 5 == 0 and heavy_local:
             candidate = relocate_improve(spec, candidate, max_passes=1, deadline=end_by)
             candidate = two_opt_improve(spec, candidate, deadline=end_by)
@@ -595,6 +732,11 @@ def alns_improve(
             accept = True
             if adaptive_destroy:
                 weights[destroy_name] += 0.5
+        elif _fleet_worsened(spec, cand_report, current_report):
+            # Schneider/Goeke are vehicles-then-distance. Scalar Metropolis must not
+            # trade a longer short-haul for an extra vehicle.
+            if adaptive_destroy:
+                weights[destroy_name] = max(0.2, weights[destroy_name] * 0.95)
         else:
             # Metropolis on variant objective scalar + normalized violation count.
             cur_score = _acceptance_score(current_report)
@@ -624,7 +766,7 @@ def alns_improve(
     if time.monotonic() < end_by and heavy_local:
         polished = relocate_improve(spec, best, max_passes=2, deadline=end_by)
         polished = two_opt_improve(spec, polished, deadline=end_by)
-        polished = repair_energy(spec, polished, policy=policy, deadline=end_by)
+        polished = repair_energy(spec, polished, policy=energy_policy, deadline=end_by)
         polished = complete_solution_charges(spec, polished)
         if optimize_partial_charges:
             polished = optimize_solution_partial_charges(spec, polished)
@@ -640,9 +782,26 @@ def alns_improve(
         best_report = incumbent_report
     if destroy_trace:
         best.metadata["destroy_trace"] = destroy_trace
+    best.metadata["experiment_partition"] = partition
     best.metadata["alns_best_feasible"] = bool(best_report.feasible)
     best.metadata["alns_iterations"] = it + 1 if iterations else 0
+    best.metadata["changed_decisions"] = changed_total
+    if isinstance(policy, OperatorSpec):
+        latest = current.metadata.get("search_decision") or best.metadata.get("search_decision")
+        if isinstance(latest, dict):
+            best.metadata["search_decision"] = latest
     return best
+
+
+def _fleet_worsened(spec: ProblemSpecV2, candidate, current) -> bool:
+    """True when a fleet-first family candidate uses more vehicles while both are feasible."""
+    if spec.family not in {"schneider", "goeke"}:
+        return False
+    if not (candidate.feasible and current.feasible):
+        return False
+    if not candidate.objective_key or not current.objective_key:
+        return False
+    return float(candidate.objective_key[0]) > float(current.objective_key[0])
 
 
 def _acceptance_score(report) -> float:

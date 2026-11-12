@@ -64,14 +64,19 @@ def choose_screened_repair(
     record = _regression(spec, operator, classical, chosen, selection.action, seed, partition) if mine else None
     if record is not None:
         chosen.solution.metadata.setdefault("counterexamples", []).append(record.model_dump())
+    changed = chosen.label != classical.label
+    previous = int(chosen.solution.metadata.get("changed_decisions") or 0)
+    chosen.solution.metadata["changed_decisions"] = previous + (1 if changed else 0)
+    chosen.solution.metadata["experiment_partition"] = partition
     chosen.solution.metadata["search_decision"] = {
         "action": selection.action,
         "reason": selection.reason,
         "selected": chosen.label,
         "classical": classical.label,
-        "changed": chosen.label != classical.label,
+        "changed": changed,
         "operator_id": operator.operator_id,
         "operator_version": operator.version,
+        "source_hash": operator.source_hash,
     }
     return RepairDecision(
         action=selection.action,

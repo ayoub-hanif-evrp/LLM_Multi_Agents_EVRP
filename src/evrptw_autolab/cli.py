@@ -75,10 +75,13 @@ def solver_run(
     seed: int = typer.Option(1, "--seed"),
     time_limit_s: float = typer.Option(5.0, "--time-limit"),
     iterations: int = typer.Option(20, "--iterations"),
+    partition: str = typer.Option(..., "--partition", help="development|discovery|confirmation|heldout"),
 ) -> None:
     """Solve one instance with the classical engine and the trusted evaluator."""
     if family not in _LOADERS:
         raise typer.BadParameter(f"family must be one of {sorted(_LOADERS)}")
+    if partition not in {"development", "discovery", "confirmation", "heldout"}:
+        raise typer.BadParameter("partition must be development, discovery, confirmation, or heldout")
     path = _find_instance(family, instance)
     _discover, loader = _LOADERS[family]
     spec = loader(path)
@@ -87,6 +90,7 @@ def solver_run(
         seed=seed,
         time_limit_s=time_limit_s,
         alns_iterations=iterations,
+        experiment_partition=partition,
     )
     report = evaluate(spec, solution)
     typer.echo(
@@ -178,27 +182,46 @@ def counterexamples_generate() -> None:
 
 
 @discovery_app.command("run")
-def discovery_run(max_calls: int | None = typer.Option(None, "--max-calls")) -> None:
-    """Run the fake-backend cycle. A live model is not called."""
-    from evrptw_autolab.discovery.controller import run_scripted_cycle
+def discovery_run(
+    max_calls: int | None = typer.Option(None, "--max-calls"),
+    backend: str | None = typer.Option(None, "--backend"),
+    model_id: str | None = typer.Option(None, "--model-id"),
+    live: bool = typer.Option(False, "--live", help="Allow a live Ollama backend."),
+) -> None:
+    """Run discovery. Default backend is fake. Live Ollama requires --live."""
+    from evrptw_autolab.discovery.controller import run_live_cycle, run_scripted_cycle
 
     config = _load_yaml("discovery.yaml")
-    if str(config.get("backend", "fake")) != "fake":
-        raise typer.BadParameter("live model calls are not launched; Gate 5 was not run")
+    chosen = str(backend or config.get("backend") or "fake")
     configured = config.get("max_llm_calls", 4)
     limit = max_calls if max_calls is not None else int(configured)
     if limit > 20:
         raise typer.BadParameter("the discovery cap is 20 calls")
-    result = run_scripted_cycle(max_calls=limit)
+    if chosen == "fake":
+        result = run_scripted_cycle(max_calls=limit)
+    elif chosen == "ollama":
+        if not live and str(config.get("allow_live", "false")).lower() not in {"1", "true", "yes"}:
+            raise typer.BadParameter("live Ollama discovery requires --live or allow_live: true")
+        result = run_live_cycle(
+            model_id=str(model_id or config.get("model_id") or "qwen25_coder_14b"),
+            max_calls=limit,
+            wall_s=float(config.get("wall_s", 600)),
+            max_tokens=int(config.get("max_tokens", 8000)),
+        )
+    else:
+        raise typer.BadParameter("backend must be fake or ollama")
     typer.echo(
         json.dumps(
             {
-                "backend": "fake",
+                "backend": result.get("backend", chosen),
+                "model_id": result.get("model_id"),
                 "llm_calls": result["llm_calls"],
-                "roles": result["roles"],
+                "prompt_tokens": result.get("prompt_tokens", 0),
+                "completion_tokens": result.get("completion_tokens", 0),
+                "roles": result.get("roles"),
                 "applicability_rule": result["operator"]["applicability_rule"],
-                "action": result["decision"]["action"],
-                "counterexamples": len(result["counterexamples"]),
+                "action": (result.get("decision") or {}).get("action"),
+                "counterexamples": len(result.get("counterexamples") or []),
             },
             indent=2,
         )
@@ -232,6 +255,44 @@ def research_report() -> None:
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_text(json.dumps(report, indent=2), encoding="utf-8")
     typer.echo(json.dumps(report, indent=2))
+
+
+@research_app.command("freeze-classical")
+def research_freeze_classical() -> None:
+    """Freeze the Schneider+Hiermann classical development panel. Zero LLM calls."""
+    from evrptw_autolab.research.classical_freeze import freeze_panel
+
+    payload = freeze_panel()
+    typer.echo(json.dumps({"rows": len(payload["rows"]), "llm_calls": 0, "path": "results/cipher/classical/development_panel.json"}, indent=2))
+
+
+@research_app.command("live-signal")
+def research_live_signal(
+    backend: str = typer.Option("fake", "--backend"),
+    model_id: str = typer.Option("qwen25_coder_14b", "--model-id"),
+    max_calls: int = typer.Option(4, "--max-calls"),
+    live: bool = typer.Option(False, "--live"),
+) -> None:
+    """One capped discovery then paired Schneider/Hiermann solves."""
+    from evrptw_autolab.research.live_signal import run_signal
+
+    if backend == "ollama" and not live:
+        raise typer.BadParameter("live Ollama signal requires --live")
+    if max_calls > 20:
+        raise typer.BadParameter("the discovery cap is 20 calls")
+    payload = run_signal(backend=backend, model_id=model_id, max_calls=max_calls)
+    typer.echo(
+        json.dumps(
+            {
+                "gate": payload["gate"],
+                "backend": payload["backend"],
+                "llm_calls": payload["llm_calls"],
+                "paired": len(payload["paired"]),
+                "path": f"results/cipher/live_signal/{backend}_signal.json",
+            },
+            indent=2,
+        )
+    )
 
 
 def _default_probe(family: str) -> str:

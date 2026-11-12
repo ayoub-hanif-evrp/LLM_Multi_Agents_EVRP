@@ -229,6 +229,7 @@ class ClassicalSolver:
     use_alns: bool = True
     policy: object | None = None
     hard_timeout: bool = True
+    experiment_partition: str = "development"
     debug_sleep_s: float = 0.0
     debug_publish_before_sleep: bool = True
     debug_crash: bool = False
@@ -294,7 +295,13 @@ class ClassicalSolver:
             deadline = min(deadline, started + max(0.5, float(self.time_limit_s) - 2.0))
         rng = random.Random(int(self.seed))
         construct_started = time.monotonic()
-        solution = construct_greedy(spec, rng, policy=self.policy)
+        # OperatorSpec is applied only through the selective ALNS/repair path.
+        # Construction always uses the classical operators so a present-but-abstaining
+        # policy cannot disable priced-fleet insertion.
+        from evrptw_autolab.discovery.schemas import OperatorSpec
+
+        construct_policy = None if isinstance(self.policy, OperatorSpec) else self.policy
+        solution = construct_greedy(spec, rng, policy=construct_policy)
         construction_s = time.monotonic() - construct_started
         first_feasible_s: float | None = None
         self._publish(tracker, spec, solution)
@@ -329,6 +336,7 @@ class ClassicalSolver:
                 optimize_partial_charges=self.optimize_partial_charges and self.partial_charges_in_search,
                 adaptive_destroy=self.adaptive_destroy,
                 heavy_local=not spec.capabilities.heterogeneous_fleet,
+                partition=self.experiment_partition,
             )
             self._publish(tracker, spec, solution)
         if time.monotonic() < deadline and spec.capabilities.heterogeneous_fleet:
@@ -389,6 +397,14 @@ class ClassicalSolver:
             solution = clone_solution(published)
             report = published_report
         elapsed = time.monotonic() - started
+        from evrptw_autolab.discovery.policy_codec import attribution_fields
+
+        solution.metadata["experiment_partition"] = self.experiment_partition
+        changed = int(solution.metadata.get("changed_decisions") or 0)
+        decision = solution.metadata.get("search_decision")
+        if isinstance(decision, dict) and decision.get("changed"):
+            changed = max(changed, 1)
+        solution.metadata["changed_decisions"] = changed
         solution.metadata.update(
             {
                 "solver": "classical_backbone",
@@ -403,10 +419,6 @@ class ClassicalSolver:
                 "deadline_exceeded": elapsed > float(self.time_limit_s) + 0.05,
                 "first_fault": report.first_fault.as_dict() if report.first_fault else None,
                 "incumbent_class": "feasible" if report.feasible else "no_feasible_incumbent",
-                "policy_applied": self.policy is not None,
-                "method_attribution": (
-                    "llm_policy_search" if self.policy is not None else "classical_baseline"
-                ),
                 "solution_feasible": bool(report.feasible),
                 "completed_within_budget": elapsed <= float(self.time_limit_s) + _BUDGET_TOLERANCE_S,
                 "budget_overrun": elapsed > float(self.time_limit_s) + _BUDGET_TOLERANCE_S,
@@ -430,20 +442,36 @@ class ClassicalSolver:
                 "stage_construction_s": construction_s,
                 "time_to_first_feasible_s": first_feasible_s,
                 "deadline_margin_s": tracker.get("deadline_margin_s"),
+                **attribution_fields(self.policy, solution.metadata),
             }
         )
         published = tracker.get("incumbent")
         if isinstance(published, SolutionV2):
-            published.metadata["scorer_calls"] = dict(solution.metadata["scorer_calls"])
-            published.metadata["selected_moves"] = list(solution.metadata.get("selected_moves") or [])
-            published.metadata["decision_trace"] = list(solution.metadata.get("decision_trace") or [])
-            published.metadata["feature_schema"] = solution.metadata["feature_schema"]
-            published.metadata["station_battery_argument_max"] = solution.metadata[
-                "station_battery_argument_max"
-            ]
-            published.metadata["stage_construction_s"] = solution.metadata["stage_construction_s"]
-            published.metadata["time_to_first_feasible_s"] = solution.metadata["time_to_first_feasible_s"]
-            published.metadata["deadline_margin_s"] = solution.metadata.get("deadline_margin_s")
+            for key in (
+                "scorer_calls",
+                "selected_moves",
+                "decision_trace",
+                "feature_schema",
+                "station_battery_argument_max",
+                "stage_construction_s",
+                "time_to_first_feasible_s",
+                "deadline_margin_s",
+                "policy_executed",
+                "policy_applied",
+                "method_attribution",
+                "operator_id",
+                "operator_version",
+                "source_hash",
+                "selected_move_changed",
+                "changed_decisions",
+                "experiment_partition",
+                "llm_calls",
+                "prompt_tokens",
+                "completion_tokens",
+                "search_decision",
+            ):
+                if key in solution.metadata:
+                    published.metadata[key] = solution.metadata[key]
             sink = tracker.get("sink")
             if sink is not None:
                 sink.put(published)
@@ -485,9 +513,9 @@ def _read_snapshot(path: str) -> tuple[SolutionV2 | None, str]:
 
 def _solver_process_main(spec: ProblemSpecV2, config: dict[str, Any], incumbent_path: str) -> None:
     """Child process. The parent joins with a timeout and may terminate this process."""
-    # Expression bundles belonged to the archived policy pilots. This engine
-    # always runs the classical operators inside the child process.
-    policy = None
+    from evrptw_autolab.discovery.policy_codec import decode_policy
+
+    policy = decode_policy(config.get("operator_spec"))
     solver = ClassicalSolver(
         seed=int(config["seed"]),
         time_limit_s=float(config["time_limit_s"]),
@@ -495,6 +523,7 @@ def _solver_process_main(spec: ProblemSpecV2, config: dict[str, Any], incumbent_
         use_alns=bool(config["use_alns"]),
         policy=policy,
         hard_timeout=False,
+        experiment_partition=str(config["experiment_partition"]),
         optimize_partial_charges=bool(config.get("optimize_partial_charges", True)),
         partial_charges_in_search=bool(config.get("partial_charges_in_search", False)),
         merge_routes=bool(config.get("merge_routes", True)),
@@ -620,6 +649,8 @@ def _finalize_process_result(
 def _solve_in_process(solver: ClassicalSolver, spec: ProblemSpecV2) -> SolutionV2:
     """Run the solver in a child process and terminate it when the budget expires."""
     ctx = mp.get_context("spawn")
+    from evrptw_autolab.discovery.policy_codec import encode_policy
+
     config = {
         "seed": int(solver.seed),
         "time_limit_s": float(solver.time_limit_s),
@@ -629,8 +660,8 @@ def _solve_in_process(solver: ClassicalSolver, spec: ProblemSpecV2) -> SolutionV
         "debug_publish_before_sleep": bool(solver.debug_publish_before_sleep),
         "debug_crash": bool(solver.debug_crash),
         "debug_invalid_snapshot": bool(solver.debug_invalid_snapshot),
-        "sources": dict(getattr(solver.policy, "sources", {}) or {}),
-        "owners": dict(getattr(solver.policy, "owners", {}) or {}),
+        "operator_spec": encode_policy(solver.policy),
+        "experiment_partition": str(solver.experiment_partition),
         "feature_schema": str(
             getattr(solver.policy, "feature_schema", FEATURE_SCHEMA_VERSION) or FEATURE_SCHEMA_VERSION
         ),
@@ -671,7 +702,12 @@ def _solve_in_process(solver: ClassicalSolver, spec: ProblemSpecV2) -> SolutionV
     Path(incumbent_path).unlink(missing_ok=True)
     Path(incumbent_path + ".tmp").unlink(missing_ok=True)
     crashed = proc.exitcode not in (0, None) and not timed_out
-    attribution = "llm_policy_search" if solver.policy is not None else "classical_baseline"
+    # Attribution follows the policy that was serialized into the child, not a parent-only object.
+    attribution = (
+        "llm_policy_search"
+        if config.get("operator_spec")
+        else "classical_baseline"
+    )
     if latest is None:
         vid = spec.vehicle_types[0].type_id if spec.vehicle_types else None
         latest = SolutionV2(routes=[empty_route(spec, vid)], vehicle_assignments=[vid or ""])
@@ -747,6 +783,7 @@ def solve_classical(
     use_alns: bool = True,
     policy: object | None = None,
     hard_timeout: bool = True,
+    experiment_partition: str = "development",
     optimize_partial_charges: bool = True,
     partial_charges_in_search: bool = False,
     merge_routes: bool = True,
@@ -759,6 +796,7 @@ def solve_classical(
         use_alns=use_alns,
         policy=policy,
         hard_timeout=hard_timeout,
+        experiment_partition=experiment_partition,
         optimize_partial_charges=optimize_partial_charges,
         partial_charges_in_search=partial_charges_in_search,
         merge_routes=merge_routes,

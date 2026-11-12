@@ -1,0 +1,42 @@
+{
+  "created_at": "2026-11-10T16:03:00.050015+00:00",
+  "backend": "ollama",
+  "model_id": "qwen25_coder_14b",
+  "llm_calls": 2,
+  "prompt_tokens": 298,
+  "completion_tokens": 308,
+  "gate": "behaviorally_inert",
+  "diagnosis": "operator did not change the development repair (action=abstain, reason=unknown feature true)",
+  "operator": {
+    "operator_id": "repair_greedy",
+    "version": "1.0",
+    "source_agent": "Alibaba Cloud",
+    "description": "A repair operator that uses a greedy approach to fix issues in the route.",
+    "operator_family": "repair",
+    "implementation_reference": "repair_greedy",
+    "required_capabilities": [
+      "time_windows"
+    ],
+    "forbidden_capabilities": [],
+    "required_features": [],
+    "hard_preconditions": [],
+    "candidate_scoring_policy": "delta_distance + incremental_energy_cost - battery_margin + route_customer_count * delta_travel_time",
+    "applicability_rule": "true",
+    "mine_counterexamples": false,
+    "fallback_operator": "classical_default",
+    "source_hash": "ace86692e284e01b"
+  },
+  "discovery_decision": {
+    "action": "abstain",
+    "reason": "unknown feature true",
+    "selected": "classical_path",
+    "classical": "classical_path",
+    "changed": false,
+    "operator_id": "repair_greedy",
+    "operator_version": "1.0",
+    "source_hash": "ace86692e284e01b"
+  },
+  "counterexamples": [],
+  "paired": [],
+  "final_test": "No untouched final set is declared. Schneider RC2 is not a blind test."
+}

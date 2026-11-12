@@ -1,0 +1,113 @@
+{
+  "created_at": "2026-11-10T15:58:41.700614+00:00",
+  "partition": "development",
+  "llm_calls": 0,
+  "rows": [
+    {
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "time_limit_s": 5.0,
+      "alns_iterations": 20,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "runtime_s": 0.5965451000001849,
+      "policy_executed": false,
+      "method_attribution": "classical_baseline",
+      "changed_decisions": 0,
+      "llm_calls": 0
+    },
+    {
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 11,
+      "time_limit_s": 5.0,
+      "alns_iterations": 20,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "runtime_s": 0.5969133999997212,
+      "policy_executed": false,
+      "method_attribution": "classical_baseline",
+      "changed_decisions": 0,
+      "llm_calls": 0
+    },
+    {
+      "family": "schneider",
+      "instance_id": "r105C5",
+      "seed": 7,
+      "time_limit_s": 5.0,
+      "alns_iterations": 20,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        156.08206946417084
+      ],
+      "vehicles": 2,
+      "runtime_s": 0.5753153999994538,
+      "policy_executed": false,
+      "method_attribution": "classical_baseline",
+      "changed_decisions": 0,
+      "llm_calls": 0
+    },
+    {
+      "family": "schneider",
+      "instance_id": "r105C5",
+      "seed": 11,
+      "time_limit_s": 5.0,
+      "alns_iterations": 20,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        156.08206946417084
+      ],
+      "vehicles": 2,
+      "runtime_s": 0.5411396999998033,
+      "policy_executed": false,
+      "method_attribution": "classical_baseline",
+      "changed_decisions": 0,
+      "llm_calls": 0
+    },
+    {
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "time_limit_s": 8.0,
+      "alns_iterations": 10,
+      "feasible": true,
+      "objective_key": [
+        3272.221784555277
+      ],
+      "vehicles": 13,
+      "runtime_s": 5.559067299999697,
+      "policy_executed": false,
+      "method_attribution": "classical_baseline",
+      "changed_decisions": 0,
+      "llm_calls": 0
+    },
+    {
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 11,
+      "time_limit_s": 8.0,
+      "alns_iterations": 10,
+      "feasible": true,
+      "objective_key": [
+        3276.6685354298506
+      ],
+      "vehicles": 13,
+      "runtime_s": 6.077578000000358,
+      "policy_executed": false,
+      "method_attribution": "classical_baseline",
+      "changed_decisions": 0,
+      "llm_calls": 0
+    }
+  ]
+}

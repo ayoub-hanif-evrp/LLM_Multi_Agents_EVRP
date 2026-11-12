@@ -1,3 +1,7 @@
 partition: development
 max_llm_calls: 4
 backend: fake
+allow_live: false
+model_id: qwen25_coder_14b
+wall_s: 600
+max_tokens: 8000

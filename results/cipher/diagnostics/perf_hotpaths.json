@@ -1,0 +1,466 @@
+{
+  "protocol": "cipher_perf_hotpaths",
+  "hard_timeout": false,
+  "note": "In-process profiling. RC2 is not used.",
+  "rows": [
+    {
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "time_limit_s": 5.0,
+      "alns_iterations": 20,
+      "runtime_s": 0.4307,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "vehicles": 2,
+      "alns_iterations_done": 20,
+      "stage_construction_s": 0.1875889000002644,
+      "time_to_first_feasible_s": 0.19130240000049525,
+      "counters": {
+        "clones": 818,
+        "full_evaluations": 783,
+        "route_simulations": 308,
+        "route_screens": 308,
+        "charge_dp_calls": 0,
+        "candidates_considered": 308,
+        "candidates_rejected_screen": 242,
+        "node_map_hits": 0
+      },
+      "cprofile_top": [
+        {
+          "function": "<frozen importlib._bootstrap>:304:acquire",
+          "cumtime_s": 0.0008
+        },
+        {
+          "function": "<frozen importlib._bootstrap>:1240:_find_spec",
+          "cumtime_s": 0.0008
+        },
+        {
+          "function": "<frozen importlib._bootstrap>:1349:_find_and_load",
+          "cumtime_s": 0.0006
+        },
+        {
+          "function": "<frozen importlib._bootstrap>:426:_get_module_lock",
+          "cumtime_s": 0.0004
+        },
+        {
+          "function": "<frozen importlib._bootstrap>:733:_init_module_attrs",
+          "cumtime_s": 0.0004
+        },
+        {
+          "function": "<frozen importlib._bootstrap>:911:_load_unlocked",
+          "cumtime_s": 0.0004
+        },
+        {
+          "function": "<frozen importlib._bootstrap>:1304:_find_and_load_unlocked",
+          "cumtime_s": 0.0004
+        },
+        {
+          "function": "<frozen importlib._bootstrap>:372:release",
+          "cumtime_s": 0.0003
+        },
+        {
+          "function": "<frozen importlib._bootstrap_external>:698:_classify_pyc",
+          "cumtime_s": 0.0002
+        },
+        {
+          "function": "<frozen importlib._bootstrap>:1390:_handle_fromlist",
+          "cumtime_s": 0.0002
+        },
+        {
+          "function": "<frozen importlib._bootstrap>:662:spec_from_loader",
+          "cumtime_s": 0.0
+        },
+        {
+          "function": "<frozen importlib._bootstrap>:1103:_resolve_filename",
+          "cumtime_s": 0.0
+        }
+      ]
+    },
+    {
+      "family": "schneider",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "time_limit_s": 12.0,
+      "alns_iterations": 30,
+      "runtime_s": 10.0113,
+      "feasible": true,
+      "objective_key": [
+        38.0,
+        3266.1222048304453
+      ],
+      "vehicles": 38,
+      "alns_iterations_done": 30,
+      "stage_construction_s": 0.4104256999999052,
+      "time_to_first_feasible_s": 0.5685262999995757,
+      "counters": {
+        "clones": 3207,
+        "full_evaluations": 2759,
+        "route_simulations": 14218,
+        "route_screens": 14229,
+        "charge_dp_calls": 0,
+        "candidates_considered": 14229,
+        "candidates_rejected_screen": 11639,
+        "node_map_hits": 0
+      },
+      "cprofile_top": [
+        {
+          "function": "__init__.py:599:__init__",
+          "cumtime_s": 0.0106
+        },
+        {
+          "function": "__init__.py:673:update",
+          "cumtime_s": 0.0059
+        },
+        {
+          "function": "evaluator.py:110:_objective",
+          "cumtime_s": 0.0045
+        },
+        {
+          "function": "<frozen abc>:117:__instancecheck__",
+          "cumtime_s": 0.0029
+        },
+        {
+          "function": "energy_repair.py:205:_find_station_insertions",
+          "cumtime_s": 0.0028
+        },
+        {
+          "function": "local_search.py:26:_sync_assignments",
+          "cumtime_s": 0.0015
+        },
+        {
+          "function": "dataclasses.py:1580:replace",
+          "cumtime_s": 0.0003
+        },
+        {
+          "function": "dataclasses.py:1326:_is_dataclass_instance",
+          "cumtime_s": 0.0001
+        },
+        {
+          "function": "dataclasses.py:1308:fields",
+          "cumtime_s": 0.0
+        },
+        {
+          "function": "dataclasses.py:1323:<genexpr>",
+          "cumtime_s": 0.0
+        },
+        {
+          "function": "dataclasses.py:1338:asdict",
+          "cumtime_s": 0.0
+        },
+        {
+          "function": "solver.py:251:_publish",
+          "cumtime_s": 0.0
+        }
+      ]
+    },
+    {
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "time_limit_s": 8.0,
+      "alns_iterations": 10,
+      "runtime_s": 1.6782,
+      "feasible": true,
+      "objective_key": [
+        3272.221784555277
+      ],
+      "vehicles": 13,
+      "alns_iterations_done": 10,
+      "stage_construction_s": 0.7462159999995492,
+      "time_to_first_feasible_s": 0.7472920000000158,
+      "counters": {
+        "clones": 882,
+        "full_evaluations": 751,
+        "route_simulations": 0,
+        "route_screens": 0,
+        "charge_dp_calls": 0,
+        "candidates_considered": 0,
+        "candidates_rejected_screen": 0,
+        "node_map_hits": 0
+      },
+      "cprofile_top": [
+        {
+          "function": "evaluator.py:110:_objective",
+          "cumtime_s": 0.0066
+        },
+        {
+          "function": "__init__.py:599:__init__",
+          "cumtime_s": 0.0017
+        },
+        {
+          "function": "__init__.py:673:update",
+          "cumtime_s": 0.001
+        },
+        {
+          "function": "<frozen abc>:117:__instancecheck__",
+          "cumtime_s": 0.0005
+        },
+        {
+          "function": "local_search.py:26:_sync_assignments",
+          "cumtime_s": 0.0004
+        },
+        {
+          "function": "solver.py:272:_solve_body",
+          "cumtime_s": 0.0002
+        },
+        {
+          "function": "dataclasses.py:1308:fields",
+          "cumtime_s": 0.0
+        },
+        {
+          "function": "dataclasses.py:1326:_is_dataclass_instance",
+          "cumtime_s": 0.0
+        },
+        {
+          "function": "dataclasses.py:1323:<genexpr>",
+          "cumtime_s": 0.0
+        },
+        {
+          "function": "dataclasses.py:1338:asdict",
+          "cumtime_s": 0.0
+        },
+        {
+          "function": "solver.py:251:_publish",
+          "cumtime_s": 0.0
+        },
+        {
+          "function": "energy_repair.py:319:remove_redundant_stations",
+          "cumtime_s": 0.0
+        }
+      ]
+    },
+    {
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 7,
+      "time_limit_s": 8.0,
+      "alns_iterations": 20,
+      "runtime_s": 0.6068,
+      "feasible": true,
+      "objective_key": [
+        25.474377354140188
+      ],
+      "vehicles": 3,
+      "alns_iterations_done": 20,
+      "stage_construction_s": 0.010416300001452328,
+      "time_to_first_feasible_s": 0.09599010000056296,
+      "counters": {
+        "clones": 1096,
+        "full_evaluations": 964,
+        "route_simulations": 1257,
+        "route_screens": 1257,
+        "charge_dp_calls": 0,
+        "candidates_considered": 1257,
+        "candidates_rejected_screen": 0,
+        "node_map_hits": 0
+      },
+      "cprofile_top": [
+        {
+          "function": "energy_repair.py:205:_find_station_insertions",
+          "cumtime_s": 0.0029
+        },
+        {
+          "function": "__init__.py:599:__init__",
+          "cumtime_s": 0.0021
+        },
+        {
+          "function": "__init__.py:673:update",
+          "cumtime_s": 0.0012
+        },
+        {
+          "function": "evaluator.py:110:_objective",
+          "cumtime_s": 0.001
+        },
+        {
+          "function": "<frozen abc>:117:__instancecheck__",
+          "cumtime_s": 0.0006
+        },
+        {
+          "function": "dataclasses.py:1580:replace",
+          "cumtime_s": 0.0004
+        },
+        {
+          "function": "dataclasses.py:1326:_is_dataclass_instance",
+          "cumtime_s": 0.0002
+        },
+        {
+          "function": "dataclasses.py:1308:fields",
+          "cumtime_s": 0.0
+        },
+        {
+          "function": "dataclasses.py:1323:<genexpr>",
+          "cumtime_s": 0.0
+        },
+        {
+          "function": "dataclasses.py:1338:asdict",
+          "cumtime_s": 0.0
+        },
+        {
+          "function": "solver.py:251:_publish",
+          "cumtime_s": 0.0
+        },
+        {
+          "function": "energy_repair.py:319:remove_redundant_stations",
+          "cumtime_s": 0.0
+        }
+      ]
+    },
+    {
+      "family": "bezzi",
+      "instance_id": "C101-5",
+      "seed": 7,
+      "time_limit_s": 10.0,
+      "alns_iterations": 15,
+      "runtime_s": 0.3196,
+      "feasible": true,
+      "objective_key": [
+        227.0
+      ],
+      "vehicles": 1,
+      "alns_iterations_done": 15,
+      "stage_construction_s": 0.0020237000007909955,
+      "time_to_first_feasible_s": 0.0252980999994179,
+      "counters": {
+        "clones": 579,
+        "full_evaluations": 434,
+        "route_simulations": 132,
+        "route_screens": 132,
+        "charge_dp_calls": 13,
+        "candidates_considered": 132,
+        "candidates_rejected_screen": 0,
+        "node_map_hits": 0
+      },
+      "cprofile_top": [
+        {
+          "function": "evaluator.py:110:_objective",
+          "cumtime_s": 0.0027
+        },
+        {
+          "function": "__init__.py:599:__init__",
+          "cumtime_s": 0.0008
+        },
+        {
+          "function": "__init__.py:673:update",
+          "cumtime_s": 0.0005
+        },
+        {
+          "function": "<frozen abc>:117:__instancecheck__",
+          "cumtime_s": 0.0003
+        },
+        {
+          "function": "energy_repair.py:205:_find_station_insertions",
+          "cumtime_s": 0.0002
+        },
+        {
+          "function": "dataclasses.py:1308:fields",
+          "cumtime_s": 0.0
+        },
+        {
+          "function": "dataclasses.py:1326:_is_dataclass_instance",
+          "cumtime_s": 0.0
+        },
+        {
+          "function": "dataclasses.py:1323:<genexpr>",
+          "cumtime_s": 0.0
+        },
+        {
+          "function": "dataclasses.py:1338:asdict",
+          "cumtime_s": 0.0
+        },
+        {
+          "function": "dataclasses.py:1580:replace",
+          "cumtime_s": 0.0
+        },
+        {
+          "function": "solver.py:251:_publish",
+          "cumtime_s": 0.0
+        },
+        {
+          "function": "energy_repair.py:319:remove_redundant_stations",
+          "cumtime_s": 0.0
+        }
+      ]
+    },
+    {
+      "family": "goeke",
+      "instance_id": "c101C6",
+      "seed": 7,
+      "time_limit_s": 8.0,
+      "alns_iterations": 15,
+      "runtime_s": 0.2105,
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "alns_iterations_done": 15,
+      "stage_construction_s": 0.0029012000013608485,
+      "time_to_first_feasible_s": 0.006898499999806518,
+      "counters": {
+        "clones": 642,
+        "full_evaluations": 616,
+        "route_simulations": 675,
+        "route_screens": 675,
+        "charge_dp_calls": 0,
+        "candidates_considered": 675,
+        "candidates_rejected_screen": 603,
+        "node_map_hits": 0
+      },
+      "cprofile_top": [
+        {
+          "function": "__init__.py:599:__init__",
+          "cumtime_s": 0.0011
+        },
+        {
+          "function": "__init__.py:673:update",
+          "cumtime_s": 0.0007
+        },
+        {
+          "function": "evaluator.py:110:_objective",
+          "cumtime_s": 0.0006
+        },
+        {
+          "function": "<frozen abc>:117:__instancecheck__",
+          "cumtime_s": 0.0004
+        },
+        {
+          "function": "energy_repair.py:205:_find_station_insertions",
+          "cumtime_s": 0.0003
+        },
+        {
+          "function": "dataclasses.py:1308:fields",
+          "cumtime_s": 0.0
+        },
+        {
+          "function": "dataclasses.py:1326:_is_dataclass_instance",
+          "cumtime_s": 0.0
+        },
+        {
+          "function": "dataclasses.py:1323:<genexpr>",
+          "cumtime_s": 0.0
+        },
+        {
+          "function": "dataclasses.py:1338:asdict",
+          "cumtime_s": 0.0
+        },
+        {
+          "function": "dataclasses.py:1580:replace",
+          "cumtime_s": 0.0
+        },
+        {
+          "function": "solver.py:251:_publish",
+          "cumtime_s": 0.0
+        },
+        {
+          "function": "energy_repair.py:319:remove_redundant_stations",
+          "cumtime_s": 0.0
+        }
+      ]
+    }
+  ]
+}

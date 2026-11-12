@@ -1,8 +1,6 @@
 """Solution helpers for the classical backbone."""
 from __future__ import annotations
 
-from copy import deepcopy
-
 from evrptw_autolab.problem.v2.evaluator import evaluate_solution_v2
 from evrptw_autolab.problem.v2.report import EvaluationReportV2
 from evrptw_autolab.problem.v2.types import ProblemSpecV2, RouteStopV2, SolutionV2, VehicleTypeV2
@@ -70,8 +68,15 @@ def empty_route(spec: ProblemSpecV2, vehicle_id: str | None = None) -> list[Rout
 
 
 def clone_solution(solution: SolutionV2) -> SolutionV2:
+    """Shallow-copy route lists while sharing frozen ``RouteStopV2`` objects.
+
+    Stops are immutable; callers replace list entries instead of mutating fields.
+    """
+    from evrptw_autolab.backbone.perf_counters import bump
+
+    bump("clones")
     return SolutionV2(
-        routes=[[deepcopy(s) for s in route] for route in solution.routes],
+        routes=[list(route) for route in solution.routes],
         vehicle_assignments=list(solution.vehicle_assignments),
         metadata=dict(solution.metadata),
     )
@@ -93,6 +98,9 @@ def make_customer_stop(node_id: str, spec: ProblemSpecV2) -> RouteStopV2:
 
 
 def evaluate(spec: ProblemSpecV2, solution: SolutionV2) -> EvaluationReportV2:
+    from evrptw_autolab.backbone.perf_counters import bump
+
+    bump("full_evaluations")
     return evaluate_solution_v2(spec, solution)
 
 

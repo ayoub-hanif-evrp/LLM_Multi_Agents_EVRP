@@ -117,6 +117,7 @@ class ModelProfile:
     enabled: bool = True
     timeout_s: float = 300.0
     num_ctx: int = 8192
+    num_predict: int | None = None
     temperatures: dict[str, float] | None = None
     base_url: str | None = None
     api_key_env: str | None = None
@@ -149,6 +150,7 @@ def list_profiles(config: dict[str, Any] | None = None) -> list[ModelProfile]:
                     )
                 ),
                 num_ctx=int(raw.get("num_ctx", 8192)),
+                num_predict=int(raw["num_predict"]) if raw.get("num_predict") is not None else None,
                 temperatures=dict(raw.get("temperature_defaults") or {}),
                 base_url=raw.get("base_url"),
                 api_key_env=str(raw["api_key_env"]) if raw.get("api_key_env") else None,
@@ -201,7 +203,12 @@ def _resolve_openai_base_url(profile: ModelProfile) -> str:
 
 def make_backend(profile: ModelProfile, *, ollama_host: str = "http://127.0.0.1:11434") -> Any:
     if profile.provider == "ollama":
-        return OllamaBackend(host=ollama_host, timeout_s=profile.timeout_s, num_ctx=profile.num_ctx)
+        return OllamaBackend(
+            host=ollama_host,
+            timeout_s=profile.timeout_s,
+            num_ctx=profile.num_ctx,
+            num_predict=profile.num_predict,
+        )
     if profile.provider == "openai_compatible":
         return OpenAICompatibleBackend(
             base_url=_resolve_openai_base_url(profile),

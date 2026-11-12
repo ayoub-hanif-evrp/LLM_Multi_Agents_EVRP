@@ -334,7 +334,9 @@ def _repair_one_selective(
     deadline: float | None,
     partition: str,
 ) -> SolutionV2:
-    """Rank feasible insertions with the selective controller. Physics screening stays here."""
+    """Rank screened insertions with the selective controller. Full evaluate only the chosen trial."""
+    from evrptw_autolab.backbone.perf_counters import bump
+    from evrptw_autolab.backbone.route_screen import replace_route, screen_repair_route
     from evrptw_autolab.discovery.schemas import OperatorSpec
     from evrptw_autolab.transfer.context_features import context_for_operator
     from evrptw_autolab.transfer.search_decision import ScreenedRepair, choose_screened_repair
@@ -352,26 +354,22 @@ def _repair_one_selective(
         for pos in range(1, len(route)):
             if deadline is not None and time.monotonic() > deadline:
                 break
-            trial = clone_solution(current)
-            trial.routes[r_idx].insert(pos, make_customer_stop(node_id, spec))
-            report = evaluate(spec, trial)
-            hard = {item.family for item in report.violations} - {
-                "VISIT",
-                "PAIRING",
-                "BATTERY",
-                "CHARGE_POLICY",
-                "DURATION",
-            }
-            if hard & {"PARSE", "DEPOT", "CAPACITY", "WINDOW", "PRECEDENCE"}:
+            bump("candidates_considered")
+            trial_route = list(route)
+            trial_route.insert(pos, make_customer_stop(node_id, spec))
+            ok, distance = screen_repair_route(spec, trial_route, vehicle, allow_battery_debt=True)
+            if not ok:
+                bump("candidates_rejected_screen")
                 continue
+            trial = replace_route(current, r_idx, trial_route)
             rows.append(
                 ScreenedRepair(
                     label=f"{r_idx}:{pos}",
                     features=insertion_features_v4(spec, route, pos, node_id, vehicle),
                     solution=trial,
-                    objective=tuple(float(value) for value in report.objective_key),
-                    feasible=bool(report.feasible),
-                    acceptance=_acceptance_score(report),
+                    objective=(float(distance),),
+                    feasible=True,
+                    acceptance=float(distance),
                 )
             )
     if not rows:
@@ -547,28 +545,29 @@ def repair_greedy(
             if spec.capabilities.heterogeneous_fleet:
                 current = insert_customer_fast(spec, current, node_id, policy=classical_policy)
                 continue
+            from evrptw_autolab.backbone.perf_counters import bump
+            from evrptw_autolab.backbone.route_screen import replace_route, screen_repair_route
+
             for r_idx, route in enumerate(current.routes):
                 if deadline is not None and time.monotonic() > deadline:
                     break
+                try:
+                    vehicle = vehicle_for_route(spec, current, r_idx)
+                except ValueError:
+                    continue
                 for pos in range(1, len(route)):
                     if deadline is not None and time.monotonic() > deadline:
                         break
-                    trial = clone_solution(current)
-                    trial.routes[r_idx].insert(pos, make_customer_stop(node_id, spec))
-                    report = evaluate(spec, trial)
-                    hard = {v.family for v in report.violations} - {
-                        "VISIT",
-                        "PAIRING",
-                        "BATTERY",
-                        "CHARGE_POLICY",
-                        "DURATION",
-                    }
-                    if hard & {"PARSE", "DEPOT", "CAPACITY", "WINDOW", "PRECEDENCE"}:
+                    bump("candidates_considered")
+                    trial_route = list(route)
+                    trial_route.insert(pos, make_customer_stop(node_id, spec))
+                    ok, distance = screen_repair_route(spec, trial_route, vehicle, allow_battery_debt=True)
+                    if not ok:
+                        bump("candidates_rejected_screen")
                         continue
-                    score = _acceptance_score(report)
-                    if score < best_score:
-                        best_score = score
-                        best = trial
+                    if distance < best_score:
+                        best_score = distance
+                        best = replace_route(current, r_idx, trial_route)
             if best is None:
                 route = empty_route(spec, vehicle_id)
                 route.insert(1, make_customer_stop(node_id, spec))
@@ -583,32 +582,35 @@ def repair_greedy(
             if _v4_insertion(pair_policy):
                 current = _repair_pair_v4(spec, current, pickup, delivery, pair_policy, vehicle_id, deadline)
                 continue
+            from evrptw_autolab.backbone.perf_counters import bump
+            from evrptw_autolab.backbone.route_screen import replace_route, screen_repair_route
+
             for r_idx, route in enumerate(current.routes):
                 if deadline is not None and time.monotonic() > deadline:
                     break
+                try:
+                    vehicle = vehicle_for_route(spec, current, r_idx)
+                except ValueError:
+                    continue
                 for ppos in range(1, len(route)):
                     if deadline is not None and time.monotonic() > deadline:
                         break
                     for dpos in range(ppos + 1, len(route) + 1):
                         if deadline is not None and time.monotonic() > deadline:
                             break
-                        trial = clone_solution(current)
-                        trial.routes[r_idx].insert(ppos, make_customer_stop(pickup, spec))
-                        trial.routes[r_idx].insert(dpos, make_customer_stop(delivery, spec))
-                        report = evaluate(spec, trial)
-                        hard = {v.family for v in report.violations} - {
-                            "VISIT",
-                            "PAIRING",
-                            "BATTERY",
-                            "CHARGE_POLICY",
-                            "DURATION",
-                        }
-                        if hard & {"PARSE", "DEPOT", "CAPACITY", "WINDOW", "PRECEDENCE"}:
+                        bump("candidates_considered")
+                        trial_route = list(route)
+                        trial_route.insert(ppos, make_customer_stop(pickup, spec))
+                        trial_route.insert(dpos, make_customer_stop(delivery, spec))
+                        ok, distance = screen_repair_route(
+                            spec, trial_route, vehicle, allow_battery_debt=True
+                        )
+                        if not ok:
+                            bump("candidates_rejected_screen")
                             continue
-                        score = _acceptance_score(report)
-                        if score < best_score:
-                            best_score = score
-                            best = trial
+                        if distance < best_score:
+                            best_score = distance
+                            best = replace_route(current, r_idx, trial_route)
             if best is None:
                 route = empty_route(spec, vehicle_id)
                 route.insert(1, make_customer_stop(pickup, spec))

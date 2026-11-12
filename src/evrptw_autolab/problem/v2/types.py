@@ -88,10 +88,15 @@ class ProblemSpecV2:
     fleet_availability: dict[str, int] = field(default_factory=dict)
     objective: str = "minimize_distance"
     metadata: dict[str, Any] = field(default_factory=dict)
+    _node_map: dict[str, NodeV2] = field(default_factory=dict, init=False, repr=False, compare=False)
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "_node_map", {node.id: node for node in self.nodes})
 
     @property
     def node_map(self) -> dict[str, NodeV2]:
-        return {n.id: n for n in self.nodes}
+        """Cached node index. Built once; safe for repeated lookups in hot loops."""
+        return self._node_map
 
 
 @dataclass(frozen=True, slots=True)

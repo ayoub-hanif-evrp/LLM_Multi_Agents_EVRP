@@ -7,15 +7,66 @@ from __future__ import annotations
 
 import time
 
+from evrptw_autolab.backbone.perf_counters import bump
 from evrptw_autolab.backbone.util import clone_solution, vehicle_for_route
 from evrptw_autolab.problem.v2.bezzi_recharge import plan_bezzi_recharges
 from evrptw_autolab.problem.v2.types import ProblemSpecV2, RouteStopV2, SolutionV2
+
+_ROUTE_CHARGE_CACHE: dict[
+    tuple[str, str, bool, tuple[tuple[str, str], ...]],
+    tuple[tuple[str, str, float | None, str | None], ...] | None,
+] = {}
 
 
 def route_needs_charge_completion(spec: ProblemSpecV2, stops: list[RouteStopV2]) -> bool:
     if not spec.capabilities.multiple_charge_technologies:
         return False
     return all(stop.charge_amount is None and stop.target_soc is None for stop in stops)
+
+
+def clear_charge_plan_cache() -> None:
+    _ROUTE_CHARGE_CACHE.clear()
+
+
+def _plan_with_cache(
+    spec: ProblemSpecV2,
+    stops: list[RouteStopV2],
+    vehicle,
+    *,
+    drop_idle_stations: bool,
+    deadline: float | None = None,
+) -> list[RouteStopV2] | None:
+    signature = tuple((stop.node_id, stop.event) for stop in stops)
+    key = (spec.instance_id, vehicle.type_id, bool(drop_idle_stations), signature)
+    if key in _ROUTE_CHARGE_CACHE:
+        cached = _ROUTE_CHARGE_CACHE[key]
+        if cached is None:
+            return None
+        return [
+            RouteStopV2(
+                node_id=node_id,
+                vehicle_type_id=vehicle.type_id,
+                event=event,  # type: ignore[arg-type]
+                charge_amount=amount,
+                charge_technology=tech,
+            )
+            for node_id, event, amount, tech in cached
+        ]
+    bump("charge_dp_calls")
+    planned = plan_bezzi_recharges(
+        spec,
+        stops,
+        vehicle,
+        drop_idle_stations=drop_idle_stations,
+        deadline=deadline,
+    )
+    if planned is None:
+        _ROUTE_CHARGE_CACHE[key] = None
+        return None
+    _ROUTE_CHARGE_CACHE[key] = tuple(
+        (stop.node_id, stop.event, stop.charge_amount, stop.charge_technology) for stop in planned
+    )
+    return planned
 
 
 def complete_route_charges(
@@ -35,7 +86,7 @@ def complete_route_charges(
         vehicle = spec.vehicle_types[0]
     if vehicle is None:
         return None
-    return plan_bezzi_recharges(spec, stops, vehicle, drop_idle_stations=drop_idle_stations)
+    return _plan_with_cache(spec, stops, vehicle, drop_idle_stations=drop_idle_stations)
 
 
 def complete_solution_charges(
@@ -72,7 +123,7 @@ def complete_solution_charges(
         ]
         if deadline is not None and time.monotonic() > deadline:
             break
-        planned = plan_bezzi_recharges(
+        planned = _plan_with_cache(
             spec,
             cleared,
             vehicle,

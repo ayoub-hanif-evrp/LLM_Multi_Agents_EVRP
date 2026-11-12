@@ -103,14 +103,31 @@ class CallBudget:
             raise RuntimeError("discovery wall clock exhausted")
         if self.prompt_tokens + self.completion_tokens >= self.max_tokens:
             raise RuntimeError("token budget exhausted")
+        remaining_s = self.wall_s - (time.monotonic() - self.started)
+        if remaining_s <= 0:
+            raise RuntimeError("discovery wall clock exhausted")
+        # Bound backend HTTP timeout to the remaining discovery wall budget when possible.
+        prior_timeout = getattr(backend, "timeout_s", None)
+        if isinstance(prior_timeout, (int, float)) and prior_timeout > 0:
+            backend.timeout_s = min(float(prior_timeout), max(1.0, remaining_s))
         self.used += 1
-        text = str(
-            backend.complete(prompt=prompt, role=role, temperature=0.0, model=self.model)
-        )
-        usage = getattr(backend, "last_usage", None)
-        if usage is not None:
-            self.prompt_tokens += int(getattr(usage, "prompt_tokens", 0) or 0)
-            self.completion_tokens += int(getattr(usage, "completion_tokens", 0) or 0)
+        try:
+            text = str(
+                backend.complete(prompt=prompt, role=role, temperature=0.0, model=self.model)
+            )
+        finally:
+            if prior_timeout is not None:
+                backend.timeout_s = prior_timeout
+        pending = list(getattr(backend, "pending_usages", None) or [])
+        if pending:
+            for usage in pending:
+                self.prompt_tokens += int(getattr(usage, "prompt_tokens", 0) or 0)
+                self.completion_tokens += int(getattr(usage, "completion_tokens", 0) or 0)
+        else:
+            usage = getattr(backend, "last_usage", None)
+            if usage is not None:
+                self.prompt_tokens += int(getattr(usage, "prompt_tokens", 0) or 0)
+                self.completion_tokens += int(getattr(usage, "completion_tokens", 0) or 0)
         if self.prompt_tokens + self.completion_tokens > self.max_tokens:
             raise RuntimeError("token budget exhausted")
         return text

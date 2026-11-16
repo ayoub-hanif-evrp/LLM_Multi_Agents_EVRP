@@ -1,5 +1,5 @@
 {
-  "created_at": "2026-11-16T15:01:50.085350+00:00",
+  "created_at": "2026-11-16T15:09:46.084082+00:00",
   "protocol": "cipher_transfer_oracle_v1",
   "operator": {
     "operator_id": "oracle_short",
@@ -20,7 +20,7 @@
     "fallback_operator": "classical_default",
     "source_hash": "ac9cb91d77913853"
   },
-  "note": "Handcrafted oracle frozen from development wins. Not LLM-discovered.",
+  "note": "Handcrafted oracle frozen from development wins. Not LLM-discovered. Modes: always_on, selective_high_util, classical_fallback.",
   "rows": [
     {
       "mode": "always_on",
@@ -58,6 +58,74 @@
     },
     {
       "mode": "always_on",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 22,
+      "outcome": "tie",
+      "classical_objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "candidate_objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "changed_decisions": 0,
+      "policy_executed": true
+    },
+    {
+      "mode": "always_on",
+      "family": "schneider",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "outcome": "improved",
+      "classical_objective_key": [
+        33.0,
+        2929.8805885658785
+      ],
+      "candidate_objective_key": [
+        33.0,
+        2856.9746742048765
+      ],
+      "changed_decisions": 51,
+      "policy_executed": true
+    },
+    {
+      "mode": "always_on",
+      "family": "schneider",
+      "instance_id": "c101_21",
+      "seed": 11,
+      "outcome": "improved",
+      "classical_objective_key": [
+        33.0,
+        2759.3861950604482
+      ],
+      "candidate_objective_key": [
+        32.0,
+        2807.839833979903
+      ],
+      "changed_decisions": 37,
+      "policy_executed": true
+    },
+    {
+      "mode": "always_on",
+      "family": "schneider",
+      "instance_id": "c101_21",
+      "seed": 22,
+      "outcome": "improved",
+      "classical_objective_key": [
+        34.0,
+        3004.481154755148
+      ],
+      "candidate_objective_key": [
+        32.0,
+        2583.775522655965
+      ],
+      "changed_decisions": 56,
+      "policy_executed": true
+    },
+    {
+      "mode": "always_on",
       "family": "hiermann",
       "instance_id": "c101_21",
       "seed": 7,
@@ -82,6 +150,21 @@
       ],
       "candidate_objective_key": [
         3276.6685354298506
+      ],
+      "changed_decisions": 0,
+      "policy_executed": true
+    },
+    {
+      "mode": "always_on",
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 22,
+      "outcome": "tie",
+      "classical_objective_key": [
+        3185.247444999076
+      ],
+      "candidate_objective_key": [
+        3185.247444999076
       ],
       "changed_decisions": 0,
       "policy_executed": true
@@ -118,6 +201,21 @@
     },
     {
       "mode": "always_on",
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 22,
+      "outcome": "tie",
+      "classical_objective_key": [
+        29.27238669046548
+      ],
+      "candidate_objective_key": [
+        29.27238669046548
+      ],
+      "changed_decisions": 0,
+      "policy_executed": true
+    },
+    {
+      "mode": "always_on",
       "family": "goeke",
       "instance_id": "c101C6",
       "seed": 7,
@@ -138,6 +236,23 @@
       "family": "goeke",
       "instance_id": "c101C6",
       "seed": 11,
+      "outcome": "tie",
+      "classical_objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "candidate_objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "changed_decisions": 0,
+      "policy_executed": true
+    },
+    {
+      "mode": "always_on",
+      "family": "goeke",
+      "instance_id": "c101C6",
+      "seed": 22,
       "outcome": "tie",
       "classical_objective_key": [
         2.0,
@@ -186,6 +301,74 @@
     },
     {
       "mode": "selective_high_util",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 22,
+      "outcome": "tie",
+      "classical_objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "candidate_objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "changed_decisions": 0,
+      "policy_executed": true
+    },
+    {
+      "mode": "selective_high_util",
+      "family": "schneider",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "outcome": "tie",
+      "classical_objective_key": [
+        33.0,
+        2929.8805885658785
+      ],
+      "candidate_objective_key": [
+        33.0,
+        2929.8805885658785
+      ],
+      "changed_decisions": 0,
+      "policy_executed": true
+    },
+    {
+      "mode": "selective_high_util",
+      "family": "schneider",
+      "instance_id": "c101_21",
+      "seed": 11,
+      "outcome": "tie",
+      "classical_objective_key": [
+        33.0,
+        2759.3861950604482
+      ],
+      "candidate_objective_key": [
+        33.0,
+        2759.3861950604482
+      ],
+      "changed_decisions": 0,
+      "policy_executed": true
+    },
+    {
+      "mode": "selective_high_util",
+      "family": "schneider",
+      "instance_id": "c101_21",
+      "seed": 22,
+      "outcome": "tie",
+      "classical_objective_key": [
+        34.0,
+        3004.481154755148
+      ],
+      "candidate_objective_key": [
+        34.0,
+        3004.481154755148
+      ],
+      "changed_decisions": 0,
+      "policy_executed": true
+    },
+    {
+      "mode": "selective_high_util",
       "family": "hiermann",
       "instance_id": "c101_21",
       "seed": 7,
@@ -216,6 +399,21 @@
     },
     {
       "mode": "selective_high_util",
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 22,
+      "outcome": "tie",
+      "classical_objective_key": [
+        3185.247444999076
+      ],
+      "candidate_objective_key": [
+        3185.247444999076
+      ],
+      "changed_decisions": 0,
+      "policy_executed": true
+    },
+    {
+      "mode": "selective_high_util",
       "family": "montoya",
       "instance_id": "tc0c10s2cf1",
       "seed": 7,
@@ -240,6 +438,21 @@
       ],
       "candidate_objective_key": [
         26.976544297483272
+      ],
+      "changed_decisions": 0,
+      "policy_executed": true
+    },
+    {
+      "mode": "selective_high_util",
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 22,
+      "outcome": "tie",
+      "classical_objective_key": [
+        29.27238669046548
+      ],
+      "candidate_objective_key": [
+        29.27238669046548
       ],
       "changed_decisions": 0,
       "policy_executed": true
@@ -277,54 +490,430 @@
       ],
       "changed_decisions": 0,
       "policy_executed": true
+    },
+    {
+      "mode": "selective_high_util",
+      "family": "goeke",
+      "instance_id": "c101C6",
+      "seed": 22,
+      "outcome": "tie",
+      "classical_objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "candidate_objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "changed_decisions": 0,
+      "policy_executed": true
+    },
+    {
+      "mode": "classical_fallback",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "outcome": "tie",
+      "classical_objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "candidate_objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "changed_decisions": 0,
+      "policy_executed": false
+    },
+    {
+      "mode": "classical_fallback",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 11,
+      "outcome": "tie",
+      "classical_objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "candidate_objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "changed_decisions": 0,
+      "policy_executed": false
+    },
+    {
+      "mode": "classical_fallback",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 22,
+      "outcome": "tie",
+      "classical_objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "candidate_objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "changed_decisions": 0,
+      "policy_executed": false
+    },
+    {
+      "mode": "classical_fallback",
+      "family": "schneider",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "outcome": "tie",
+      "classical_objective_key": [
+        33.0,
+        2929.8805885658785
+      ],
+      "candidate_objective_key": [
+        33.0,
+        2929.8805885658785
+      ],
+      "changed_decisions": 0,
+      "policy_executed": false
+    },
+    {
+      "mode": "classical_fallback",
+      "family": "schneider",
+      "instance_id": "c101_21",
+      "seed": 11,
+      "outcome": "tie",
+      "classical_objective_key": [
+        33.0,
+        2759.3861950604482
+      ],
+      "candidate_objective_key": [
+        33.0,
+        2759.3861950604482
+      ],
+      "changed_decisions": 0,
+      "policy_executed": false
+    },
+    {
+      "mode": "classical_fallback",
+      "family": "schneider",
+      "instance_id": "c101_21",
+      "seed": 22,
+      "outcome": "tie",
+      "classical_objective_key": [
+        34.0,
+        3004.481154755148
+      ],
+      "candidate_objective_key": [
+        34.0,
+        3004.481154755148
+      ],
+      "changed_decisions": 0,
+      "policy_executed": false
+    },
+    {
+      "mode": "classical_fallback",
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "outcome": "tie",
+      "classical_objective_key": [
+        3272.221784555277
+      ],
+      "candidate_objective_key": [
+        3272.221784555277
+      ],
+      "changed_decisions": 0,
+      "policy_executed": false
+    },
+    {
+      "mode": "classical_fallback",
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 11,
+      "outcome": "tie",
+      "classical_objective_key": [
+        3276.6685354298506
+      ],
+      "candidate_objective_key": [
+        3276.6685354298506
+      ],
+      "changed_decisions": 0,
+      "policy_executed": false
+    },
+    {
+      "mode": "classical_fallback",
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 22,
+      "outcome": "tie",
+      "classical_objective_key": [
+        3185.247444999076
+      ],
+      "candidate_objective_key": [
+        3185.247444999076
+      ],
+      "changed_decisions": 0,
+      "policy_executed": false
+    },
+    {
+      "mode": "classical_fallback",
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 7,
+      "outcome": "tie",
+      "classical_objective_key": [
+        25.474377354140188
+      ],
+      "candidate_objective_key": [
+        25.474377354140188
+      ],
+      "changed_decisions": 0,
+      "policy_executed": false
+    },
+    {
+      "mode": "classical_fallback",
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 11,
+      "outcome": "tie",
+      "classical_objective_key": [
+        26.976544297483272
+      ],
+      "candidate_objective_key": [
+        26.976544297483272
+      ],
+      "changed_decisions": 0,
+      "policy_executed": false
+    },
+    {
+      "mode": "classical_fallback",
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 22,
+      "outcome": "tie",
+      "classical_objective_key": [
+        29.27238669046548
+      ],
+      "candidate_objective_key": [
+        29.27238669046548
+      ],
+      "changed_decisions": 0,
+      "policy_executed": false
+    },
+    {
+      "mode": "classical_fallback",
+      "family": "goeke",
+      "instance_id": "c101C6",
+      "seed": 7,
+      "outcome": "tie",
+      "classical_objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "candidate_objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "changed_decisions": 0,
+      "policy_executed": false
+    },
+    {
+      "mode": "classical_fallback",
+      "family": "goeke",
+      "instance_id": "c101C6",
+      "seed": 11,
+      "outcome": "tie",
+      "classical_objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "candidate_objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "changed_decisions": 0,
+      "policy_executed": false
+    },
+    {
+      "mode": "classical_fallback",
+      "family": "goeke",
+      "instance_id": "c101C6",
+      "seed": 22,
+      "outcome": "tie",
+      "classical_objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "candidate_objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "changed_decisions": 0,
+      "policy_executed": false
     }
   ],
   "summary": {
     "always_on/schneider": {
-      "improved": 0,
-      "tie": 2,
+      "improved": 3,
+      "tie": 3,
       "objective_regression": 0,
       "feasibility_regression": 0
     },
     "always_on/hiermann": {
       "improved": 0,
-      "tie": 2,
+      "tie": 3,
       "objective_regression": 0,
       "feasibility_regression": 0
     },
     "always_on/montoya": {
       "improved": 0,
-      "tie": 2,
+      "tie": 3,
       "objective_regression": 0,
       "feasibility_regression": 0
     },
     "always_on/goeke": {
       "improved": 0,
-      "tie": 2,
+      "tie": 3,
       "objective_regression": 0,
       "feasibility_regression": 0
     },
     "selective_high_util/schneider": {
       "improved": 0,
-      "tie": 2,
+      "tie": 6,
       "objective_regression": 0,
       "feasibility_regression": 0
     },
     "selective_high_util/hiermann": {
       "improved": 0,
-      "tie": 2,
+      "tie": 3,
       "objective_regression": 0,
       "feasibility_regression": 0
     },
     "selective_high_util/montoya": {
       "improved": 0,
-      "tie": 2,
+      "tie": 3,
       "objective_regression": 0,
       "feasibility_regression": 0
     },
     "selective_high_util/goeke": {
       "improved": 0,
-      "tie": 2,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "classical_fallback/schneider": {
+      "improved": 0,
+      "tie": 6,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "classical_fallback/hiermann": {
+      "improved": 0,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "classical_fallback/montoya": {
+      "improved": 0,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "classical_fallback/goeke": {
+      "improved": 0,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    }
+  },
+  "summary_by_instance": {
+    "always_on/schneider/c101C5": {
+      "improved": 0,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "always_on/schneider/c101_21": {
+      "improved": 3,
+      "tie": 0,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "always_on/hiermann/c101_21": {
+      "improved": 0,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "always_on/montoya/tc0c10s2cf1": {
+      "improved": 0,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "always_on/goeke/c101C6": {
+      "improved": 0,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "selective_high_util/schneider/c101C5": {
+      "improved": 0,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "selective_high_util/schneider/c101_21": {
+      "improved": 0,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "selective_high_util/hiermann/c101_21": {
+      "improved": 0,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "selective_high_util/montoya/tc0c10s2cf1": {
+      "improved": 0,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "selective_high_util/goeke/c101C6": {
+      "improved": 0,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "classical_fallback/schneider/c101C5": {
+      "improved": 0,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "classical_fallback/schneider/c101_21": {
+      "improved": 0,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "classical_fallback/hiermann/c101_21": {
+      "improved": 0,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "classical_fallback/montoya/tc0c10s2cf1": {
+      "improved": 0,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "classical_fallback/goeke/c101C6": {
+      "improved": 0,
+      "tie": 3,
       "objective_regression": 0,
       "feasibility_regression": 0
     }

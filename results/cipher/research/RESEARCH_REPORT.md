@@ -11,7 +11,7 @@ Priority: measured scientific signal, not infrastructure.
 2. Simple non-LLM policies already exploit part of that headroom on Schneider development seeds.
 3. Evidence-guided Qwen2.5-Coder 14B proposals (single-LLM and multi-role) were valid and behavior-changing, but **regressed** native objectives.
 4. Multi-role did not beat an equally budgeted single-LLM baseline (both converged to the same harmful `battery_margin` rule).
-5. No LLM-discovered policy is frozen for confirmation transfer. Cross-family transfer of a handcrafted oracle on the small transfer panel was mostly ties.
+5. No LLM-discovered policy is frozen for confirmation transfer. The handcrafted `delta_distance` oracle reproduces Schneider `c101_21` development wins under always-on use, but selective gating and cross-family transfer remain ties.
 
 ---
 
@@ -75,10 +75,27 @@ Synthetic four-node unchanged decisions no longer block paired real-instance eva
 ## Experiment 4 — Transfer (oracle diagnostic only)
 
 Artifact: `transfer_oracle.json`  
-Frozen operator: handcrafted `delta_distance` (not LLM).
+Frozen operator: handcrafted `delta_distance` (not LLM).  
+Panel: Schneider `c101C5`, Schneider `c101_21`, Hiermann `c101_21`, Montoya `tc0c10s2cf1`, Goeke `c101C6` × seeds `{7,11,22}`.  
+Modes: always-on (`applicability=1`), selective (`route_utilization - 0.5`), classical_fallback (null policy reference).
 
-On `{c101C5, hiermann c101_21, montoya tc0c10s2cf1, goeke c101C6}` × seeds `{7,11}`, both always-on and selective modes produced **ties**.  
-Interpretation: the Schneider `c101_21` development wins did not automatically appear on this smaller transfer panel; transfer remains unproven even for the oracle.
+### Table C — Oracle transfer by instance (wins / ties / losses vs classical)
+
+| Mode | Family / instance | Wins | Ties | Losses |
+|------|-------------------|-----:|-----:|-------:|
+| always_on | Schneider `c101C5` | 0 | 3 | 0 |
+| always_on | Schneider `c101_21` | **3** | 0 | 0 |
+| always_on | Hiermann `c101_21` | 0 | 3 | 0 |
+| always_on | Montoya `tc0c10s2cf1` | 0 | 3 | 0 |
+| always_on | Goeke `c101C6` | 0 | 3 | 0 |
+| selective_high_util | Schneider `c101C5` | 0 | 3 | 0 |
+| selective_high_util | Schneider `c101_21` | 0 | 3 | 0 |
+| selective_high_util | Hiermann `c101_21` | 0 | 3 | 0 |
+| selective_high_util | Montoya `tc0c10s2cf1` | 0 | 3 | 0 |
+| selective_high_util | Goeke `c101C6` | 0 | 3 | 0 |
+| classical_fallback | all five instances | 0 | 15 | 0 |
+
+Interpretation: always-on reproduces the Schneider `c101_21` development signal (3/3 improved). Selective applicability nullifies that gain (ties). Cross-family rows stay ties. Classical fallback is identically tied by construction. **No beneficial LLM policy exists to freeze**; cross-family transfer remains unproven even for the oracle.
 
 ---
 
@@ -93,6 +110,7 @@ Interpretation: the Schneider `c101_21` development wins did not automatically a
 - That the current multi-agent LLM workflow discovers beneficial EVRP policies.
 - That multi-agent collaboration beats a budget-matched single LLM.
 - That selective transfer of an LLM policy helps across families.
+- That the handcrafted oracle transfers outside Schneider `c101_21` (always-on wins stay instance-local; selective mode ties).
 
 **Decision rules fired**
 - Headroom found → continued to live discovery.

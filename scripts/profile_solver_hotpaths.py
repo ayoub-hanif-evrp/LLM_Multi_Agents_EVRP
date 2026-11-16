@@ -39,15 +39,29 @@ CASES = (
 
 
 def _top_functions(profiler: cProfile.Profile, limit: int = 12) -> list[dict[str, float | str]]:
+    """Return the highest cumulative-time functions from sorted cProfile data."""
     stream = StringIO()
-    stats = pstats.Stats(profiler, stream=stream).sort_stats("cumtime")
-    stats.print_stats(limit)
+    stats = pstats.Stats(profiler, stream=stream)
+    stats.sort_stats("cumtime")
+    # sort_stats populates fcn_list; do not slice the unsorted stats dict.
+    ordered = list(getattr(stats, "fcn_list", None) or [])
+    if not ordered:
+        ordered = sorted(
+            stats.stats.keys(),  # type: ignore[attr-defined]
+            key=lambda key: float(stats.stats[key][3]),  # type: ignore[attr-defined]
+            reverse=True,
+        )
     rows: list[dict[str, float | str]] = []
-    for (path, line, func), values in list(stats.stats.items())[:limit]:  # type: ignore[attr-defined]
-        _, _, cumtime, _, _ = values
-        rows.append({"function": f"{Path(path).name}:{line}:{func}", "cumtime_s": round(float(cumtime), 4)})
-    rows.sort(key=lambda item: float(item["cumtime_s"]), reverse=True)
-    return rows[:limit]
+    for key in ordered[:limit]:
+        path, line, func = key
+        _cc, _nc, _tt, cumtime, _callers = stats.stats[key]  # type: ignore[attr-defined]
+        rows.append(
+            {
+                "function": f"{Path(path).name}:{line}:{func}",
+                "cumtime_s": round(float(cumtime), 4),
+            }
+        )
+    return rows
 
 
 def measure_spawn_overhead() -> dict[str, float | bool | str]:
@@ -81,6 +95,9 @@ def measure_spawn_overhead() -> dict[str, float | bool | str]:
     overhead_s = max(0.0, cold_s - inproc_s)
     fraction = overhead_s / cold_s if cold_s > 1e-9 else 0.0
     warm_saving_s = max(0.0, cold_s - warm_s)
+    in_report = evaluate(spec, inproc)
+    cold_report = evaluate(spec, cold)
+    warm_report = evaluate(spec, warm)
     payload = {
         "status": "ok",
         "instance_id": "c101C5",
@@ -90,9 +107,17 @@ def measure_spawn_overhead() -> dict[str, float | bool | str]:
         "overhead_s": round(overhead_s, 4),
         "overhead_fraction": round(fraction, 4),
         "warm_saving_s": round(warm_saving_s, 4),
-        "inprocess_feasible": bool(evaluate(spec, inproc).feasible),
-        "spawn_cold_feasible": bool(evaluate(spec, cold).feasible),
-        "spawn_feasible": bool(evaluate(spec, warm).feasible),
+        "inprocess_feasible": bool(in_report.feasible),
+        "spawn_cold_feasible": bool(cold_report.feasible),
+        "spawn_feasible": bool(warm_report.feasible),
+        "inprocess_objective_key": [float(v) for v in in_report.objective_key],
+        "spawn_cold_objective_key": [float(v) for v in cold_report.objective_key],
+        "spawn_warm_objective_key": [float(v) for v in warm_report.objective_key],
+        "cold_warm_objectives_equal": list(cold_report.objective_key) == list(warm_report.objective_key),
+        "cold_alns_iterations": cold.metadata.get("alns_iterations"),
+        "warm_alns_iterations": warm.metadata.get("alns_iterations"),
+        "cold_return_status": cold.metadata.get("return_status"),
+        "warm_return_status": warm.metadata.get("return_status"),
         "adopt_worker_reuse": True,
         "decision": "adopt_worker_reuse",
         "note": "Warm worker reused across hard_timeout solves; killed and respawned on timeout/crash.",

@@ -141,5 +141,77 @@ def test_proposal_cache_roundtrip(tmp_path: Path, monkeypatch) -> None:
     assert first == second == '{"hypothesis":"h"}'
     assert budget.used == 1
     assert budget.cache_hits == 1
-    key = pc.cache_key(model="cache-test", role="architect", prompt="prompt-a")
+    key = pc.cache_key(
+        model="cache-test",
+        role="architect",
+        prompt="prompt-a",
+        model_digest="",
+        temperature=0.0,
+        seed=None,
+        num_ctx=None,
+        num_predict=None,
+    )
     assert (tmp_path / f"{key}.json").is_file()
+    # Provenance: different digests must not collide.
+    other = pc.cache_key(
+        model="cache-test",
+        role="architect",
+        prompt="prompt-a",
+        model_digest="sha256:other",
+        temperature=0.0,
+    )
+    assert other != key
+
+
+def test_failed_backend_attempt_still_charges_tokens() -> None:
+    from evrptw_autolab.discovery.controller import CallBudget
+    from evrptw_autolab.llm.registry import FakeBackend
+
+    backend = FakeBackend({"architect": '{"hypothesis":"h"}'}, token_sequence=[11, 7], fail_first_n=1)
+    budget = CallBudget(2, model="cache-test", max_tokens=8_000)
+    text = budget.charge(backend, "architect", "prompt-b")
+    assert text == '{"hypothesis":"h"}'
+    assert budget.used == 1
+    assert budget.completion_tokens == 18
+
+
+def test_warm_worker_matches_cold_on_objective_and_fingerprint() -> None:
+    import hashlib
+    import json
+
+    from evrptw_autolab.backbone.solver import reset_warm_worker, solve_classical
+    from evrptw_autolab.backbone.util import evaluate
+
+    root = Path(__file__).resolve().parents[1]
+    spec = load_schneider_v2(root / "dataset" / "schneider" / "raw_instances" / "c101C5.txt")
+    kwargs = {
+        "seed": 7,
+        "time_limit_s": 2.0,
+        "alns_iterations": 8,
+        "experiment_partition": "development",
+        "hard_timeout": True,
+    }
+
+    def fingerprint(sol: SolutionV2) -> str:
+        routes = [[(s.node_id, s.event) for s in route] for route in sol.routes]
+        blob = json.dumps(
+            {
+                "routes": routes,
+                "assignments": list(sol.vehicle_assignments),
+                "changed": sol.metadata.get("changed_decisions"),
+                "iters": sol.metadata.get("alns_iterations"),
+            },
+            sort_keys=True,
+        )
+        return hashlib.sha256(blob.encode("utf-8")).hexdigest()
+
+    reset_warm_worker()
+    cold = solve_classical(spec, **kwargs)
+    warm = solve_classical(spec, **kwargs)
+    cold_report = evaluate(spec, cold)
+    warm_report = evaluate(spec, warm)
+    assert cold_report.objective_key == warm_report.objective_key
+    assert fingerprint(cold) == fingerprint(warm)
+    assert cold.metadata.get("hard_timeout_triggered") is False
+    assert warm.metadata.get("hard_timeout_triggered") is False
+    assert cold.metadata.get("method_attribution") == warm.metadata.get("method_attribution")

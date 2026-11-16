@@ -77,6 +77,8 @@ class OllamaBackend:
         seed: int | None = None,
         scheduler: OllamaScheduler | None = None,
         serialize_calls: bool = True,
+        temperatures: dict[str, float] | None = None,
+        digest: str | None = None,
     ) -> None:
         self.host = host.rstrip("/")
         self.timeout_s = timeout_s
@@ -85,6 +87,8 @@ class OllamaBackend:
         self.top_p = top_p
         self.keep_alive = keep_alive
         self.seed = seed
+        self.temperatures = dict(temperatures or {})
+        self.digest = digest
         self.diversify_calls = False
         self.serialize_calls = serialize_calls
         self.scheduler = scheduler or _GLOBAL_SCHEDULER

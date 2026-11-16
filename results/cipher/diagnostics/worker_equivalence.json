@@ -1,0 +1,237 @@
+{
+  "protocol": "cipher_worker_equivalence",
+  "rows": [
+    {
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "policy": false,
+      "inprocess": {
+        "runtime_s": 0.1206,
+        "feasible": true,
+        "objective_key": [
+          2.0,
+          267.3289940850671
+        ],
+        "vehicles": 2,
+        "alns_iterations_done": 8,
+        "changed_decisions": 0,
+        "policy_executed": false,
+        "method_attribution": "classical_baseline",
+        "source_hash": null,
+        "hard_timeout_triggered": false,
+        "return_status": null,
+        "fingerprint": "f6461a4ff7a3cbe5"
+      },
+      "cold": {
+        "runtime_s": 0.9579,
+        "feasible": true,
+        "objective_key": [
+          2.0,
+          267.3289940850671
+        ],
+        "vehicles": 2,
+        "alns_iterations_done": null,
+        "changed_decisions": 0,
+        "policy_executed": false,
+        "method_attribution": "classical_baseline",
+        "source_hash": null,
+        "hard_timeout_triggered": false,
+        "return_status": "feasible_incumbent",
+        "fingerprint": "0707df3fc61a0dad"
+      },
+      "warm": {
+        "runtime_s": 0.1064,
+        "feasible": true,
+        "objective_key": [
+          2.0,
+          267.3289940850671
+        ],
+        "vehicles": 2,
+        "alns_iterations_done": null,
+        "changed_decisions": 0,
+        "policy_executed": false,
+        "method_attribution": "classical_baseline",
+        "source_hash": null,
+        "hard_timeout_triggered": false,
+        "return_status": "feasible_incumbent",
+        "fingerprint": "0707df3fc61a0dad"
+      },
+      "after_timeout_crash_recovery": {
+        "runtime_s": 0.8542,
+        "feasible": true,
+        "objective_key": [
+          2.0,
+          267.3289940850671
+        ],
+        "vehicles": 2,
+        "alns_iterations_done": null,
+        "changed_decisions": 0,
+        "policy_executed": false,
+        "method_attribution": "classical_baseline",
+        "source_hash": null,
+        "hard_timeout_triggered": false,
+        "return_status": "feasible_incumbent",
+        "fingerprint": "0707df3fc61a0dad"
+      },
+      "timeout_status": "timeout_no_feasible_incumbent",
+      "crash_status": "worker_crash",
+      "spawn_modes_equivalent": true,
+      "inprocess_matches_spawn": false,
+      "equivalent": true
+    },
+    {
+      "family": "schneider",
+      "instance_id": "c101C5-policy",
+      "policy": true,
+      "inprocess": {
+        "runtime_s": 0.0706,
+        "feasible": true,
+        "objective_key": [
+          2.0,
+          267.3289940850671
+        ],
+        "vehicles": 2,
+        "alns_iterations_done": 8,
+        "changed_decisions": 0,
+        "policy_executed": true,
+        "method_attribution": "llm_policy_search",
+        "source_hash": "handcrafted-verify",
+        "hard_timeout_triggered": false,
+        "return_status": null,
+        "fingerprint": "0a8ef357584121e8"
+      },
+      "cold": {
+        "runtime_s": 0.8688,
+        "feasible": true,
+        "objective_key": [
+          2.0,
+          267.3289940850671
+        ],
+        "vehicles": 2,
+        "alns_iterations_done": null,
+        "changed_decisions": 0,
+        "policy_executed": true,
+        "method_attribution": "llm_policy_search",
+        "source_hash": "handcrafted-verify",
+        "hard_timeout_triggered": false,
+        "return_status": "feasible_incumbent",
+        "fingerprint": "af59bec2b0f351c4"
+      },
+      "warm": {
+        "runtime_s": 0.1013,
+        "feasible": true,
+        "objective_key": [
+          2.0,
+          267.3289940850671
+        ],
+        "vehicles": 2,
+        "alns_iterations_done": null,
+        "changed_decisions": 0,
+        "policy_executed": true,
+        "method_attribution": "llm_policy_search",
+        "source_hash": "handcrafted-verify",
+        "hard_timeout_triggered": false,
+        "return_status": "feasible_incumbent",
+        "fingerprint": "af59bec2b0f351c4"
+      },
+      "after_timeout_crash_recovery": {
+        "runtime_s": 0.8451,
+        "feasible": true,
+        "objective_key": [
+          2.0,
+          267.3289940850671
+        ],
+        "vehicles": 2,
+        "alns_iterations_done": null,
+        "changed_decisions": 0,
+        "policy_executed": true,
+        "method_attribution": "llm_policy_search",
+        "source_hash": "handcrafted-verify",
+        "hard_timeout_triggered": false,
+        "return_status": "feasible_incumbent",
+        "fingerprint": "af59bec2b0f351c4"
+      },
+      "timeout_status": "timeout_no_feasible_incumbent",
+      "crash_status": "worker_crash",
+      "spawn_modes_equivalent": true,
+      "inprocess_matches_spawn": false,
+      "equivalent": true
+    },
+    {
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "policy": false,
+      "inprocess": {
+        "runtime_s": 0.8519,
+        "feasible": true,
+        "objective_key": [
+          3276.6685354298506
+        ],
+        "vehicles": 13,
+        "alns_iterations_done": 5,
+        "changed_decisions": 0,
+        "policy_executed": false,
+        "method_attribution": "classical_baseline",
+        "source_hash": null,
+        "hard_timeout_triggered": false,
+        "return_status": null,
+        "fingerprint": "9ae8db26f9a96280"
+      },
+      "cold": {
+        "runtime_s": 1.6178,
+        "feasible": true,
+        "objective_key": [
+          3276.6685354298506
+        ],
+        "vehicles": 13,
+        "alns_iterations_done": 5,
+        "changed_decisions": 0,
+        "policy_executed": false,
+        "method_attribution": "classical_baseline",
+        "source_hash": null,
+        "hard_timeout_triggered": false,
+        "return_status": "feasible_incumbent",
+        "fingerprint": "9ae8db26f9a96280"
+      },
+      "warm": {
+        "runtime_s": 0.8976,
+        "feasible": true,
+        "objective_key": [
+          3276.6685354298506
+        ],
+        "vehicles": 13,
+        "alns_iterations_done": 5,
+        "changed_decisions": 0,
+        "policy_executed": false,
+        "method_attribution": "classical_baseline",
+        "source_hash": null,
+        "hard_timeout_triggered": false,
+        "return_status": "feasible_incumbent",
+        "fingerprint": "9ae8db26f9a96280"
+      },
+      "after_timeout_crash_recovery": {
+        "runtime_s": 1.6028,
+        "feasible": true,
+        "objective_key": [
+          3276.6685354298506
+        ],
+        "vehicles": 13,
+        "alns_iterations_done": 5,
+        "changed_decisions": 0,
+        "policy_executed": false,
+        "method_attribution": "classical_baseline",
+        "source_hash": null,
+        "hard_timeout_triggered": false,
+        "return_status": "feasible_incumbent",
+        "fingerprint": "9ae8db26f9a96280"
+      },
+      "timeout_status": "timeout_no_snapshot",
+      "crash_status": "worker_crash",
+      "spawn_modes_equivalent": true,
+      "inprocess_matches_spawn": true,
+      "equivalent": true
+    }
+  ],
+  "all_equivalent": true,
+  "note": "Primary check is cold/warm/recovery under hard_timeout=True. In-process may differ due to deadline margins."
+}

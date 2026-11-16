@@ -97,6 +97,19 @@ class CallBudget:
         self.cache_hits = 0
         self.started = time.monotonic()
 
+    def _absorb_usages(self, backend: Any) -> None:
+        """Charge every pending/last usage record, including failed or repaired attempts."""
+        pending = list(getattr(backend, "pending_usages", None) or [])
+        if pending:
+            for usage in pending:
+                self.prompt_tokens += int(getattr(usage, "prompt_tokens", 0) or 0)
+                self.completion_tokens += int(getattr(usage, "completion_tokens", 0) or 0)
+            return
+        usage = getattr(backend, "last_usage", None)
+        if usage is not None:
+            self.prompt_tokens += int(getattr(usage, "prompt_tokens", 0) or 0)
+            self.completion_tokens += int(getattr(usage, "completion_tokens", 0) or 0)
+
     def charge(self, backend: Any, role: str, prompt: str) -> str:
         from evrptw_autolab.discovery.proposal_cache import (
             cache_key,
@@ -114,8 +127,27 @@ class CallBudget:
         remaining_s = self.wall_s - (time.monotonic() - self.started)
         if remaining_s <= 0:
             raise RuntimeError("discovery wall clock exhausted")
+        temperature = 0.0
+        temps = getattr(backend, "temperatures", None)
+        if isinstance(temps, dict) and role in temps:
+            temperature = float(temps[role])
+        model_digest = str(getattr(backend, "digest", None) or getattr(backend, "model_digest", None) or "")
+        seed = getattr(backend, "seed", None)
+        if seed is not None:
+            seed = int(seed)
+        num_ctx = getattr(backend, "num_ctx", None)
+        num_predict = getattr(backend, "num_predict", None)
         cache_dir = default_cache_dir()
-        key = cache_key(model=self.model, role=role, prompt=prompt)
+        key = cache_key(
+            model=self.model,
+            role=role,
+            prompt=prompt,
+            model_digest=model_digest,
+            temperature=temperature,
+            seed=seed,
+            num_ctx=int(num_ctx) if num_ctx is not None else None,
+            num_predict=int(num_predict) if num_predict is not None else None,
+        )
         cached = lookup(cache_dir, key)
         if cached is not None:
             self.cache_hits += 1
@@ -127,28 +159,39 @@ class CallBudget:
         self.used += 1
         try:
             text = str(
-                backend.complete(prompt=prompt, role=role, temperature=0.0, model=self.model)
+                backend.complete(
+                    prompt=prompt,
+                    role=role,
+                    temperature=temperature,
+                    model=self.model,
+                )
             )
         finally:
             if prior_timeout is not None:
                 backend.timeout_s = prior_timeout
-        pending = list(getattr(backend, "pending_usages", None) or [])
-        if pending:
-            for usage in pending:
-                self.prompt_tokens += int(getattr(usage, "prompt_tokens", 0) or 0)
-                self.completion_tokens += int(getattr(usage, "completion_tokens", 0) or 0)
-        else:
-            usage = getattr(backend, "last_usage", None)
-            if usage is not None:
-                self.prompt_tokens += int(getattr(usage, "prompt_tokens", 0) or 0)
-                self.completion_tokens += int(getattr(usage, "completion_tokens", 0) or 0)
+            # Failed/interrupted attempts still count against the token budget.
+            self._absorb_usages(backend)
         if self.prompt_tokens + self.completion_tokens > self.max_tokens:
             raise RuntimeError("token budget exhausted")
+        # Prefer the digest recorded on the successful usage when available.
+        for usage in list(getattr(backend, "pending_usages", None) or []):
+            digest = getattr(usage, "digest", None)
+            if digest:
+                model_digest = str(digest)
+                break
         store(
             cache_dir,
             key,
             text,
-            meta={"model": self.model, "role": role},
+            meta={
+                "model": self.model,
+                "model_digest": model_digest,
+                "role": role,
+                "temperature": temperature,
+                "seed": seed,
+                "num_ctx": num_ctx,
+                "num_predict": num_predict,
+            },
         )
         return text
 
@@ -298,19 +341,31 @@ def run_live_cycle(
             "backend": "ollama",
             "model_id": model_id,
             "model": profile.model,
+            "model_digest": getattr(backend, "digest", None),
+            "num_ctx": getattr(backend, "num_ctx", None),
+            "num_predict": getattr(backend, "num_predict", None),
+            "seed": getattr(backend, "seed", None),
             "llm_calls": budget.used,
             "prompt_tokens": budget.prompt_tokens,
             "completion_tokens": budget.completion_tokens,
+            "cache_hits": budget.cache_hits,
             "error": f"{type(exc).__name__}: {exc}",
             "operator": None,
             "decision": {},
             "counterexamples": [],
+            "critic_revision_scope": "applicability_rule_only",
         }
     result["backend"] = "ollama"
     result["model_id"] = model_id
     result["model"] = profile.model
+    result["model_digest"] = getattr(backend, "digest", None)
+    result["num_ctx"] = getattr(backend, "num_ctx", None)
+    result["num_predict"] = getattr(backend, "num_predict", None)
+    result["seed"] = getattr(backend, "seed", None)
     result["prompt_tokens"] = budget.prompt_tokens
     result["completion_tokens"] = budget.completion_tokens
+    result["cache_hits"] = budget.cache_hits
+    result["critic_revision_scope"] = "applicability_rule_only"
     return result
 
 

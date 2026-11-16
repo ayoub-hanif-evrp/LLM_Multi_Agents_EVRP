@@ -5,15 +5,32 @@
   "spawn_overhead": {
     "status": "ok",
     "instance_id": "c101C5",
-    "inprocess_s": 0.2824,
-    "spawn_cold_s": 0.8502,
-    "spawn_warm_s": 0.0933,
-    "overhead_s": 0.5678,
-    "overhead_fraction": 0.6679,
-    "warm_saving_s": 0.757,
+    "inprocess_s": 0.343,
+    "spawn_cold_s": 0.7627,
+    "spawn_warm_s": 0.1071,
+    "overhead_s": 0.4196,
+    "overhead_fraction": 0.5502,
+    "warm_saving_s": 0.6555,
     "inprocess_feasible": true,
     "spawn_cold_feasible": true,
     "spawn_feasible": true,
+    "inprocess_objective_key": [
+      2.0,
+      267.3289940850671
+    ],
+    "spawn_cold_objective_key": [
+      2.0,
+      267.3289940850671
+    ],
+    "spawn_warm_objective_key": [
+      2.0,
+      267.3289940850671
+    ],
+    "cold_warm_objectives_equal": true,
+    "cold_alns_iterations": null,
+    "warm_alns_iterations": null,
+    "cold_return_status": "feasible_incumbent",
+    "warm_return_status": "feasible_incumbent",
     "adopt_worker_reuse": true,
     "decision": "adopt_worker_reuse",
     "note": "Warm worker reused across hard_timeout solves; killed and respawned on timeout/crash."
@@ -25,7 +42,7 @@
       "seed": 7,
       "time_limit_s": 5.0,
       "alns_iterations": 20,
-      "runtime_s": 0.261,
+      "runtime_s": 0.2632,
       "feasible": true,
       "objective_key": [
         2.0,
@@ -33,8 +50,8 @@
       ],
       "vehicles": 2,
       "alns_iterations_done": 20,
-      "stage_construction_s": 0.005016199998863158,
-      "time_to_first_feasible_s": 0.012012400000458001,
+      "stage_construction_s": 0.005067699996288866,
+      "time_to_first_feasible_s": 0.012136900040786713,
       "counters": {
         "clones": 289,
         "full_evaluations": 254,
@@ -47,52 +64,52 @@
       },
       "cprofile_top": [
         {
+          "function": "solver.py:851:solve_classical",
+          "cumtime_s": 0.2613
+        },
+        {
+          "function": "solver.py:247:solve",
+          "cumtime_s": 0.2613
+        },
+        {
+          "function": "solver.py:273:_solve_body",
+          "cumtime_s": 0.2613
+        },
+        {
+          "function": "alns.py:686:alns_improve",
+          "cumtime_s": 0.2036
+        },
+        {
+          "function": "route_simulator.py:10:simulate_route",
+          "cumtime_s": 0.161
+        },
+        {
+          "function": "route_screen.py:22:screen_repair_route",
+          "cumtime_s": 0.116
+        },
+        {
+          "function": "alns.py:498:repair_greedy",
+          "cumtime_s": 0.0928
+        },
+        {
+          "function": "util.py:100:evaluate",
+          "cumtime_s": 0.0843
+        },
+        {
+          "function": "evaluator.py:182:evaluate_solution_v2",
+          "cumtime_s": 0.0829
+        },
+        {
           "function": "local_search.py:50:relocate_improve",
-          "cumtime_s": 0.0021
+          "cumtime_s": 0.0818
         },
         {
-          "function": "__init__.py:599:__init__",
-          "cumtime_s": 0.001
+          "function": "energy_repair.py:47:repair_energy",
+          "cumtime_s": 0.0635
         },
         {
-          "function": "energy_repair.py:205:_find_station_insertions",
-          "cumtime_s": 0.0009
-        },
-        {
-          "function": "__init__.py:673:update",
-          "cumtime_s": 0.0006
-        },
-        {
-          "function": "evaluator.py:110:_objective",
-          "cumtime_s": 0.0005
-        },
-        {
-          "function": "<frozen abc>:117:__instancecheck__",
-          "cumtime_s": 0.0003
-        },
-        {
-          "function": "construct.py:91:_try_insert",
-          "cumtime_s": 0.0001
-        },
-        {
-          "function": "util.py:157:served_request_nodes",
-          "cumtime_s": 0.0001
-        },
-        {
-          "function": "dataclasses.py:1308:fields",
-          "cumtime_s": 0.0
-        },
-        {
-          "function": "dataclasses.py:1326:_is_dataclass_instance",
-          "cumtime_s": 0.0
-        },
-        {
-          "function": "construct.py:115:_customer_order",
-          "cumtime_s": 0.0
-        },
-        {
-          "function": "dataclasses.py:1323:<genexpr>",
-          "cumtime_s": 0.0
+          "function": "transport.py:15:travel_distance",
+          "cumtime_s": 0.0328
         }
       ]
     },
@@ -102,7 +119,7 @@
       "seed": 7,
       "time_limit_s": 12.0,
       "alns_iterations": 30,
-      "runtime_s": 8.1575,
+      "runtime_s": 6.2586,
       "feasible": true,
       "objective_key": [
         33.0,
@@ -110,8 +127,8 @@
       ],
       "vehicles": 33,
       "alns_iterations_done": 30,
-      "stage_construction_s": 0.7696796000000177,
-      "time_to_first_feasible_s": 1.068381600000066,
+      "stage_construction_s": 0.7733036000281572,
+      "time_to_first_feasible_s": 1.0698930000071414,
       "counters": {
         "clones": 1259,
         "full_evaluations": 934,
@@ -124,52 +141,52 @@
       },
       "cprofile_top": [
         {
-          "function": "energy_repair.py:205:_find_station_insertions",
-          "cumtime_s": 0.0534
+          "function": "solver.py:851:solve_classical",
+          "cumtime_s": 6.2585
         },
         {
-          "function": "local_search.py:50:relocate_improve",
-          "cumtime_s": 0.0125
+          "function": "solver.py:247:solve",
+          "cumtime_s": 6.2585
         },
         {
-          "function": "__init__.py:599:__init__",
-          "cumtime_s": 0.0049
+          "function": "solver.py:273:_solve_body",
+          "cumtime_s": 6.2584
         },
         {
-          "function": "__init__.py:673:update",
-          "cumtime_s": 0.0026
+          "function": "route_simulator.py:10:simulate_route",
+          "cumtime_s": 3.9957
         },
         {
-          "function": "dataclasses.py:1326:_is_dataclass_instance",
-          "cumtime_s": 0.0026
+          "function": "alns.py:686:alns_improve",
+          "cumtime_s": 3.027
         },
         {
-          "function": "evaluator.py:110:_objective",
-          "cumtime_s": 0.002
+          "function": "energy_repair.py:47:repair_energy",
+          "cumtime_s": 2.3186
         },
         {
-          "function": "<frozen abc>:117:__instancecheck__",
-          "cumtime_s": 0.0013
+          "function": "util.py:100:evaluate",
+          "cumtime_s": 2.2123
         },
         {
-          "function": "util.py:157:served_request_nodes",
-          "cumtime_s": 0.0005
+          "function": "evaluator.py:182:evaluate_solution_v2",
+          "cumtime_s": 2.2058
         },
         {
-          "function": "dataclasses.py:1308:fields",
-          "cumtime_s": 0.0
+          "function": "solver.py:204:_maybe_merge",
+          "cumtime_s": 2.0963
         },
         {
-          "function": "construct.py:115:_customer_order",
-          "cumtime_s": 0.0
+          "function": "local_search.py:298:merge_routes_improve",
+          "cumtime_s": 2.0876
         },
         {
-          "function": "dataclasses.py:1323:<genexpr>",
-          "cumtime_s": 0.0
+          "function": "alns.py:498:repair_greedy",
+          "cumtime_s": 1.8541
         },
         {
-          "function": "dataclasses.py:1338:asdict",
-          "cumtime_s": 0.0
+          "function": "route_screen.py:22:screen_repair_route",
+          "cumtime_s": 1.7054
         }
       ]
     },
@@ -179,15 +196,15 @@
       "seed": 7,
       "time_limit_s": 8.0,
       "alns_iterations": 10,
-      "runtime_s": 2.4087,
+      "runtime_s": 1.244,
       "feasible": true,
       "objective_key": [
         3272.221784555277
       ],
       "vehicles": 13,
       "alns_iterations_done": 10,
-      "stage_construction_s": 1.3757795999990776,
-      "time_to_first_feasible_s": 1.3777931999993598,
+      "stage_construction_s": 0.7157004000036977,
+      "time_to_first_feasible_s": 0.7167516999761574,
       "counters": {
         "clones": 458,
         "full_evaluations": 327,
@@ -200,52 +217,52 @@
       },
       "cprofile_top": [
         {
-          "function": "evaluator.py:110:_objective",
-          "cumtime_s": 0.0056
+          "function": "solver.py:851:solve_classical",
+          "cumtime_s": 1.2439
         },
         {
-          "function": "local_search.py:50:relocate_improve",
-          "cumtime_s": 0.0022
+          "function": "solver.py:247:solve",
+          "cumtime_s": 1.2439
         },
         {
-          "function": "__init__.py:599:__init__",
-          "cumtime_s": 0.0015
+          "function": "solver.py:273:_solve_body",
+          "cumtime_s": 1.2438
         },
         {
-          "function": "__init__.py:673:update",
-          "cumtime_s": 0.0008
+          "function": "route_simulator.py:10:simulate_route",
+          "cumtime_s": 0.9536
         },
         {
-          "function": "<frozen abc>:117:__instancecheck__",
-          "cumtime_s": 0.0004
+          "function": "construct.py:270:insert_customer_fast",
+          "cumtime_s": 0.8812
         },
         {
-          "function": "util.py:157:served_request_nodes",
-          "cumtime_s": 0.0002
+          "function": "construct.py:159:route_covers_locally",
+          "cumtime_s": 0.8114
         },
         {
-          "function": "dataclasses.py:1308:fields",
-          "cumtime_s": 0.0
+          "function": "construct.py:455:construct_greedy",
+          "cumtime_s": 0.7157
         },
         {
-          "function": "dataclasses.py:1326:_is_dataclass_instance",
-          "cumtime_s": 0.0
+          "function": "construct.py:416:_construct_heterogeneous",
+          "cumtime_s": 0.7157
         },
         {
-          "function": "construct.py:115:_customer_order",
-          "cumtime_s": 0.0
+          "function": "construct.py:205:_consider_fleet_repairs",
+          "cumtime_s": 0.5487
         },
         {
-          "function": "dataclasses.py:1323:<genexpr>",
-          "cumtime_s": 0.0
+          "function": "util.py:100:evaluate",
+          "cumtime_s": 0.3077
         },
         {
-          "function": "dataclasses.py:1338:asdict",
-          "cumtime_s": 0.0
+          "function": "evaluator.py:182:evaluate_solution_v2",
+          "cumtime_s": 0.3062
         },
         {
-          "function": "solver.py:252:_publish",
-          "cumtime_s": 0.0
+          "function": "alns.py:686:alns_improve",
+          "cumtime_s": 0.2108
         }
       ]
     },
@@ -255,15 +272,15 @@
       "seed": 7,
       "time_limit_s": 8.0,
       "alns_iterations": 20,
-      "runtime_s": 1.145,
+      "runtime_s": 0.7641,
       "feasible": true,
       "objective_key": [
         25.474377354140188
       ],
       "vehicles": 3,
       "alns_iterations_done": 20,
-      "stage_construction_s": 0.019733999999516527,
-      "time_to_first_feasible_s": 0.19080339999891294,
+      "stage_construction_s": 0.01007050002226606,
+      "time_to_first_feasible_s": 0.09990730002755299,
       "counters": {
         "clones": 1043,
         "full_evaluations": 911,
@@ -276,52 +293,52 @@
       },
       "cprofile_top": [
         {
+          "function": "solver.py:851:solve_classical",
+          "cumtime_s": 0.7639
+        },
+        {
+          "function": "solver.py:247:solve",
+          "cumtime_s": 0.7639
+        },
+        {
+          "function": "solver.py:273:_solve_body",
+          "cumtime_s": 0.7639
+        },
+        {
+          "function": "route_simulator.py:10:simulate_route",
+          "cumtime_s": 0.4154
+        },
+        {
+          "function": "util.py:100:evaluate",
+          "cumtime_s": 0.3577
+        },
+        {
+          "function": "energy_repair.py:47:repair_energy",
+          "cumtime_s": 0.3576
+        },
+        {
+          "function": "evaluator.py:182:evaluate_solution_v2",
+          "cumtime_s": 0.3541
+        },
+        {
+          "function": "solver.py:204:_maybe_merge",
+          "cumtime_s": 0.3434
+        },
+        {
+          "function": "local_search.py:298:merge_routes_improve",
+          "cumtime_s": 0.342
+        },
+        {
+          "function": "alns.py:686:alns_improve",
+          "cumtime_s": 0.3121
+        },
+        {
           "function": "local_search.py:50:relocate_improve",
-          "cumtime_s": 0.0058
+          "cumtime_s": 0.1924
         },
         {
           "function": "energy_repair.py:205:_find_station_insertions",
-          "cumtime_s": 0.0056
-        },
-        {
-          "function": "__init__.py:599:__init__",
-          "cumtime_s": 0.0038
-        },
-        {
-          "function": "__init__.py:673:update",
-          "cumtime_s": 0.002
-        },
-        {
-          "function": "evaluator.py:110:_objective",
-          "cumtime_s": 0.0017
-        },
-        {
-          "function": "<frozen abc>:117:__instancecheck__",
-          "cumtime_s": 0.0011
-        },
-        {
-          "function": "dataclasses.py:1326:_is_dataclass_instance",
-          "cumtime_s": 0.0003
-        },
-        {
-          "function": "construct.py:91:_try_insert",
-          "cumtime_s": 0.0003
-        },
-        {
-          "function": "util.py:157:served_request_nodes",
-          "cumtime_s": 0.0001
-        },
-        {
-          "function": "dataclasses.py:1308:fields",
-          "cumtime_s": 0.0
-        },
-        {
-          "function": "construct.py:115:_customer_order",
-          "cumtime_s": 0.0
-        },
-        {
-          "function": "dataclasses.py:1323:<genexpr>",
-          "cumtime_s": 0.0
+          "cumtime_s": 0.1838
         }
       ]
     },
@@ -331,15 +348,15 @@
       "seed": 7,
       "time_limit_s": 10.0,
       "alns_iterations": 15,
-      "runtime_s": 0.6024,
+      "runtime_s": 0.6053,
       "feasible": true,
       "objective_key": [
         227.0
       ],
       "vehicles": 1,
       "alns_iterations_done": 15,
-      "stage_construction_s": 0.0037931000006210525,
-      "time_to_first_feasible_s": 0.04859379999834346,
+      "stage_construction_s": 0.0037395000108517706,
+      "time_to_first_feasible_s": 0.04838930000551045,
       "counters": {
         "clones": 454,
         "full_evaluations": 309,
@@ -352,52 +369,52 @@
       },
       "cprofile_top": [
         {
-          "function": "evaluator.py:110:_objective",
-          "cumtime_s": 0.0037
+          "function": "solver.py:851:solve_classical",
+          "cumtime_s": 0.6052
+        },
+        {
+          "function": "solver.py:247:solve",
+          "cumtime_s": 0.6051
+        },
+        {
+          "function": "solver.py:273:_solve_body",
+          "cumtime_s": 0.6051
+        },
+        {
+          "function": "alns.py:686:alns_improve",
+          "cumtime_s": 0.5479
+        },
+        {
+          "function": "energy_repair.py:47:repair_energy",
+          "cumtime_s": 0.4519
+        },
+        {
+          "function": "alns.py:498:repair_greedy",
+          "cumtime_s": 0.4346
+        },
+        {
+          "function": "charge_completion.py:92:complete_solution_charges",
+          "cumtime_s": 0.4312
+        },
+        {
+          "function": "charge_completion.py:31:_plan_with_cache",
+          "cumtime_s": 0.4275
+        },
+        {
+          "function": "bezzi_recharge.py:86:plan_bezzi_recharges",
+          "cumtime_s": 0.4246
+        },
+        {
+          "function": "bezzi_recharge.py:125:_plan_fixed_sequence",
+          "cumtime_s": 0.4243
+        },
+        {
+          "function": "route_simulator.py:10:simulate_route",
+          "cumtime_s": 0.1027
         },
         {
           "function": "local_search.py:50:relocate_improve",
-          "cumtime_s": 0.002
-        },
-        {
-          "function": "__init__.py:599:__init__",
-          "cumtime_s": 0.0012
-        },
-        {
-          "function": "__init__.py:673:update",
-          "cumtime_s": 0.0007
-        },
-        {
-          "function": "<frozen abc>:117:__instancecheck__",
-          "cumtime_s": 0.0004
-        },
-        {
-          "function": "energy_repair.py:205:_find_station_insertions",
-          "cumtime_s": 0.0003
-        },
-        {
-          "function": "construct.py:91:_try_insert",
-          "cumtime_s": 0.0001
-        },
-        {
-          "function": "dataclasses.py:1308:fields",
-          "cumtime_s": 0.0
-        },
-        {
-          "function": "dataclasses.py:1326:_is_dataclass_instance",
-          "cumtime_s": 0.0
-        },
-        {
-          "function": "construct.py:115:_customer_order",
-          "cumtime_s": 0.0
-        },
-        {
-          "function": "util.py:157:served_request_nodes",
-          "cumtime_s": 0.0
-        },
-        {
-          "function": "dataclasses.py:1323:<genexpr>",
-          "cumtime_s": 0.0
+          "cumtime_s": 0.0856
         }
       ]
     },
@@ -407,7 +424,7 @@
       "seed": 7,
       "time_limit_s": 8.0,
       "alns_iterations": 15,
-      "runtime_s": 0.3226,
+      "runtime_s": 0.3274,
       "feasible": true,
       "objective_key": [
         2.0,
@@ -415,8 +432,8 @@
       ],
       "vehicles": 2,
       "alns_iterations_done": 15,
-      "stage_construction_s": 0.005237999999735621,
-      "time_to_first_feasible_s": 0.012979900000573252,
+      "stage_construction_s": 0.005261900019831955,
+      "time_to_first_feasible_s": 0.013116400048602372,
       "counters": {
         "clones": 213,
         "full_evaluations": 187,
@@ -429,52 +446,52 @@
       },
       "cprofile_top": [
         {
-          "function": "__init__.py:599:__init__",
-          "cumtime_s": 0.0008
+          "function": "solver.py:851:solve_classical",
+          "cumtime_s": 0.3273
         },
         {
-          "function": "energy_repair.py:205:_find_station_insertions",
-          "cumtime_s": 0.0006
+          "function": "solver.py:247:solve",
+          "cumtime_s": 0.3273
         },
         {
-          "function": "__init__.py:673:update",
-          "cumtime_s": 0.0004
+          "function": "solver.py:273:_solve_body",
+          "cumtime_s": 0.3273
         },
         {
-          "function": "evaluator.py:110:_objective",
-          "cumtime_s": 0.0004
+          "function": "alns.py:686:alns_improve",
+          "cumtime_s": 0.2933
         },
         {
-          "function": "<frozen abc>:117:__instancecheck__",
-          "cumtime_s": 0.0002
+          "function": "route_simulator.py:10:simulate_route",
+          "cumtime_s": 0.2154
+        },
+        {
+          "function": "route_screen.py:22:screen_repair_route",
+          "cumtime_s": 0.2
+        },
+        {
+          "function": "alns.py:498:repair_greedy",
+          "cumtime_s": 0.1596
         },
         {
           "function": "local_search.py:50:relocate_improve",
-          "cumtime_s": 0.0001
+          "cumtime_s": 0.1219
         },
         {
-          "function": "dataclasses.py:1580:replace",
-          "cumtime_s": 0.0001
+          "function": "local_search.py:118:relocate_pairs",
+          "cumtime_s": 0.1217
         },
         {
-          "function": "dataclasses.py:1308:fields",
-          "cumtime_s": 0.0
+          "function": "util.py:100:evaluate",
+          "cumtime_s": 0.0652
         },
         {
-          "function": "dataclasses.py:1326:_is_dataclass_instance",
-          "cumtime_s": 0.0
+          "function": "evaluator.py:182:evaluate_solution_v2",
+          "cumtime_s": 0.0641
         },
         {
-          "function": "dataclasses.py:1323:<genexpr>",
-          "cumtime_s": 0.0
-        },
-        {
-          "function": "dataclasses.py:1338:asdict",
-          "cumtime_s": 0.0
-        },
-        {
-          "function": "solver.py:252:_publish",
-          "cumtime_s": 0.0
+          "function": "energy_repair.py:47:repair_energy",
+          "cumtime_s": 0.0519
         }
       ]
     }

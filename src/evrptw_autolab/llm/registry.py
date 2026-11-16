@@ -203,11 +203,23 @@ def _resolve_openai_base_url(profile: ModelProfile) -> str:
 
 def make_backend(profile: ModelProfile, *, ollama_host: str = "http://127.0.0.1:11434") -> Any:
     if profile.provider == "ollama":
+        digest: str | None = None
+        # Capture the installed model digest for proposal-cache provenance.
+        probe = OllamaBackend(host=ollama_host, timeout_s=min(30.0, profile.timeout_s))
+        try:
+            info = next((m for m in probe.list_model_info() if m.name == profile.model), None)
+            if info is not None and info.digest:
+                digest = str(info.digest)
+        except Exception:  # noqa: BLE001 — digest is best-effort provenance
+            digest = None
         return OllamaBackend(
             host=ollama_host,
             timeout_s=profile.timeout_s,
             num_ctx=profile.num_ctx,
             num_predict=profile.num_predict,
+            seed=0,
+            temperatures=dict(profile.temperatures or {}),
+            digest=digest,
         )
     if profile.provider == "openai_compatible":
         return OpenAICompatibleBackend(

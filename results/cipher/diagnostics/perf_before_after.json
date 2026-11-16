@@ -1,0 +1,976 @@
+{
+  "protocol": "cipher_perf_before_after",
+  "baseline_sha": "e6d94cfd5b0766f833a73caf6ee680ecf2ffdd8d",
+  "current_sha": "2252513189758da0e99d3762aa72d8d2ffa34130",
+  "seeds": [
+    7,
+    11,
+    22
+  ],
+  "hard_timeout": false,
+  "baseline": {
+    "label": "e6d94cf",
+    "rows": [
+      {
+        "family": "schneider",
+        "instance_id": "c101C5",
+        "seed": 7,
+        "status": "ok",
+        "runtime_s": 0.7981,
+        "feasible": true,
+        "objective_key": [
+          2.0,
+          267.3289940850671
+        ],
+        "vehicles": 2,
+        "alns_iterations_done": 20,
+        "time_to_first_feasible_s": 0.4491666000103578,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "schneider",
+        "instance_id": "c101C5",
+        "seed": 11,
+        "status": "ok",
+        "runtime_s": 0.1147,
+        "feasible": true,
+        "objective_key": [
+          2.0,
+          267.3289940850671
+        ],
+        "vehicles": 2,
+        "alns_iterations_done": 20,
+        "time_to_first_feasible_s": 0.008242399955634028,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "schneider",
+        "instance_id": "c101C5",
+        "seed": 22,
+        "status": "ok",
+        "runtime_s": 0.11,
+        "feasible": true,
+        "objective_key": [
+          2.0,
+          267.3289940850671
+        ],
+        "vehicles": 2,
+        "alns_iterations_done": 20,
+        "time_to_first_feasible_s": 0.0043803000007756054,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "schneider",
+        "instance_id": "c101_21",
+        "seed": 7,
+        "status": "ok",
+        "runtime_s": 10.0236,
+        "feasible": true,
+        "objective_key": [
+          39.0,
+          3288.5515290324365
+        ],
+        "vehicles": 39,
+        "alns_iterations_done": 4,
+        "time_to_first_feasible_s": 0.7815802000113763,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "schneider",
+        "instance_id": "c101_21",
+        "seed": 11,
+        "status": "ok",
+        "runtime_s": 10.0264,
+        "feasible": true,
+        "objective_key": [
+          39.0,
+          3333.274906517796
+        ],
+        "vehicles": 39,
+        "alns_iterations_done": 3,
+        "time_to_first_feasible_s": 1.5564408999634907,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "schneider",
+        "instance_id": "c101_21",
+        "seed": 22,
+        "status": "ok",
+        "runtime_s": 10.0231,
+        "feasible": true,
+        "objective_key": [
+          39.0,
+          3352.7396539901897
+        ],
+        "vehicles": 39,
+        "alns_iterations_done": 3,
+        "time_to_first_feasible_s": 1.4647797999787144,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "hiermann",
+        "instance_id": "c101_21",
+        "seed": 7,
+        "status": "ok",
+        "runtime_s": 5.519,
+        "feasible": true,
+        "objective_key": [
+          3272.221784555277
+        ],
+        "vehicles": 13,
+        "alns_iterations_done": 10,
+        "time_to_first_feasible_s": 1.9987205000361428,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "hiermann",
+        "instance_id": "c101_21",
+        "seed": 11,
+        "status": "ok",
+        "runtime_s": 4.8513,
+        "feasible": true,
+        "objective_key": [
+          3276.6685354298506
+        ],
+        "vehicles": 13,
+        "alns_iterations_done": 10,
+        "time_to_first_feasible_s": 2.26332300005015,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "hiermann",
+        "instance_id": "c101_21",
+        "seed": 22,
+        "status": "ok",
+        "runtime_s": 6.0104,
+        "feasible": true,
+        "objective_key": [
+          3242.440412959122
+        ],
+        "vehicles": 13,
+        "alns_iterations_done": 10,
+        "time_to_first_feasible_s": 2.349269099999219,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "montoya",
+        "instance_id": "tc0c10s2cf1",
+        "seed": 7,
+        "status": "ok",
+        "runtime_s": 1.6139,
+        "feasible": true,
+        "objective_key": [
+          25.285322313276744
+        ],
+        "vehicles": 3,
+        "alns_iterations_done": 20,
+        "time_to_first_feasible_s": 0.16106310003669932,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "montoya",
+        "instance_id": "tc0c10s2cf1",
+        "seed": 11,
+        "status": "ok",
+        "runtime_s": 1.6326,
+        "feasible": true,
+        "objective_key": [
+          25.285322313276744
+        ],
+        "vehicles": 3,
+        "alns_iterations_done": 20,
+        "time_to_first_feasible_s": 0.16144319996237755,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "montoya",
+        "instance_id": "tc0c10s2cf1",
+        "seed": 22,
+        "status": "ok",
+        "runtime_s": 1.6391,
+        "feasible": true,
+        "objective_key": [
+          25.285322313276744
+        ],
+        "vehicles": 3,
+        "alns_iterations_done": 20,
+        "time_to_first_feasible_s": 0.16082039999309927,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "bezzi",
+        "instance_id": "C101-5",
+        "seed": 7,
+        "status": "ok",
+        "runtime_s": 0.9043,
+        "feasible": true,
+        "objective_key": [
+          227.0
+        ],
+        "vehicles": 1,
+        "alns_iterations_done": 15,
+        "time_to_first_feasible_s": 0.04640649998327717,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "bezzi",
+        "instance_id": "C101-5",
+        "seed": 11,
+        "status": "ok",
+        "runtime_s": 0.9616,
+        "feasible": true,
+        "objective_key": [
+          227.0
+        ],
+        "vehicles": 1,
+        "alns_iterations_done": 15,
+        "time_to_first_feasible_s": 0.045512599986977875,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "bezzi",
+        "instance_id": "C101-5",
+        "seed": 22,
+        "status": "ok",
+        "runtime_s": 0.9903,
+        "feasible": true,
+        "objective_key": [
+          227.0
+        ],
+        "vehicles": 1,
+        "alns_iterations_done": 15,
+        "time_to_first_feasible_s": 0.046330399985890836,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "goeke",
+        "instance_id": "c101C6",
+        "seed": 7,
+        "status": "ok",
+        "runtime_s": 0.2972,
+        "feasible": true,
+        "objective_key": [
+          2.0,
+          267.3289940850671
+        ],
+        "vehicles": 2,
+        "alns_iterations_done": 15,
+        "time_to_first_feasible_s": 0.009577899996656924,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "goeke",
+        "instance_id": "c101C6",
+        "seed": 11,
+        "status": "ok",
+        "runtime_s": 0.2777,
+        "feasible": true,
+        "objective_key": [
+          2.0,
+          267.3289940850671
+        ],
+        "vehicles": 2,
+        "alns_iterations_done": 15,
+        "time_to_first_feasible_s": 0.009454899991396815,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "goeke",
+        "instance_id": "c101C6",
+        "seed": 22,
+        "status": "ok",
+        "runtime_s": 0.2838,
+        "feasible": true,
+        "objective_key": [
+          2.0,
+          267.3289940850671
+        ],
+        "vehicles": 2,
+        "alns_iterations_done": 15,
+        "time_to_first_feasible_s": 0.009467799973208457,
+        "hard_timeout_triggered": false
+      }
+    ],
+    "by_case": {
+      "schneider/c101C5": {
+        "n": 3,
+        "median_runtime_s": 0.1147,
+        "mean_runtime_s": 0.3409,
+        "feasible_count": 3,
+        "objective_keys": [
+          [
+            2.0,
+            267.3289940850671
+          ],
+          [
+            2.0,
+            267.3289940850671
+          ],
+          [
+            2.0,
+            267.3289940850671
+          ]
+        ],
+        "alns_iterations_done": [
+          20,
+          20,
+          20
+        ],
+        "time_to_first_feasible_s": [
+          0.4491666000103578,
+          0.008242399955634028,
+          0.0043803000007756054
+        ]
+      },
+      "schneider/c101_21": {
+        "n": 3,
+        "median_runtime_s": 10.0236,
+        "mean_runtime_s": 10.0244,
+        "feasible_count": 3,
+        "objective_keys": [
+          [
+            39.0,
+            3288.5515290324365
+          ],
+          [
+            39.0,
+            3333.274906517796
+          ],
+          [
+            39.0,
+            3352.7396539901897
+          ]
+        ],
+        "alns_iterations_done": [
+          4,
+          3,
+          3
+        ],
+        "time_to_first_feasible_s": [
+          0.7815802000113763,
+          1.5564408999634907,
+          1.4647797999787144
+        ]
+      },
+      "hiermann/c101_21": {
+        "n": 3,
+        "median_runtime_s": 5.519,
+        "mean_runtime_s": 5.4602,
+        "feasible_count": 3,
+        "objective_keys": [
+          [
+            3272.221784555277
+          ],
+          [
+            3276.6685354298506
+          ],
+          [
+            3242.440412959122
+          ]
+        ],
+        "alns_iterations_done": [
+          10,
+          10,
+          10
+        ],
+        "time_to_first_feasible_s": [
+          1.9987205000361428,
+          2.26332300005015,
+          2.349269099999219
+        ]
+      },
+      "montoya/tc0c10s2cf1": {
+        "n": 3,
+        "median_runtime_s": 1.6326,
+        "mean_runtime_s": 1.6285,
+        "feasible_count": 3,
+        "objective_keys": [
+          [
+            25.285322313276744
+          ],
+          [
+            25.285322313276744
+          ],
+          [
+            25.285322313276744
+          ]
+        ],
+        "alns_iterations_done": [
+          20,
+          20,
+          20
+        ],
+        "time_to_first_feasible_s": [
+          0.16106310003669932,
+          0.16144319996237755,
+          0.16082039999309927
+        ]
+      },
+      "bezzi/C101-5": {
+        "n": 3,
+        "median_runtime_s": 0.9616,
+        "mean_runtime_s": 0.9521,
+        "feasible_count": 3,
+        "objective_keys": [
+          [
+            227.0
+          ],
+          [
+            227.0
+          ],
+          [
+            227.0
+          ]
+        ],
+        "alns_iterations_done": [
+          15,
+          15,
+          15
+        ],
+        "time_to_first_feasible_s": [
+          0.04640649998327717,
+          0.045512599986977875,
+          0.046330399985890836
+        ]
+      },
+      "goeke/c101C6": {
+        "n": 3,
+        "median_runtime_s": 0.2838,
+        "mean_runtime_s": 0.2862,
+        "feasible_count": 3,
+        "objective_keys": [
+          [
+            2.0,
+            267.3289940850671
+          ],
+          [
+            2.0,
+            267.3289940850671
+          ],
+          [
+            2.0,
+            267.3289940850671
+          ]
+        ],
+        "alns_iterations_done": [
+          15,
+          15,
+          15
+        ],
+        "time_to_first_feasible_s": [
+          0.009577899996656924,
+          0.009454899991396815,
+          0.009467799973208457
+        ]
+      }
+    }
+  },
+  "current": {
+    "label": "master",
+    "rows": [
+      {
+        "family": "schneider",
+        "instance_id": "c101C5",
+        "seed": 7,
+        "status": "ok",
+        "runtime_s": 0.4134,
+        "feasible": true,
+        "objective_key": [
+          2.0,
+          257.7474518641999
+        ],
+        "vehicles": 2,
+        "alns_iterations_done": 20,
+        "time_to_first_feasible_s": 0.28324629995040596,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "schneider",
+        "instance_id": "c101C5",
+        "seed": 11,
+        "status": "ok",
+        "runtime_s": 0.0769,
+        "feasible": true,
+        "objective_key": [
+          2.0,
+          257.7474518641999
+        ],
+        "vehicles": 2,
+        "alns_iterations_done": 20,
+        "time_to_first_feasible_s": 0.004760699986945838,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "schneider",
+        "instance_id": "c101C5",
+        "seed": 22,
+        "status": "ok",
+        "runtime_s": 0.054,
+        "feasible": true,
+        "objective_key": [
+          2.0,
+          257.7474518641999
+        ],
+        "vehicles": 2,
+        "alns_iterations_done": 20,
+        "time_to_first_feasible_s": 0.004709300003014505,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "schneider",
+        "instance_id": "c101_21",
+        "seed": 7,
+        "status": "ok",
+        "runtime_s": 3.1605,
+        "feasible": true,
+        "objective_key": [
+          33.0,
+          2929.8805885658785
+        ],
+        "vehicles": 33,
+        "alns_iterations_done": 30,
+        "time_to_first_feasible_s": 0.43269270000746474,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "schneider",
+        "instance_id": "c101_21",
+        "seed": 11,
+        "status": "ok",
+        "runtime_s": 2.3974,
+        "feasible": true,
+        "objective_key": [
+          33.0,
+          2786.470625764741
+        ],
+        "vehicles": 33,
+        "alns_iterations_done": 30,
+        "time_to_first_feasible_s": 0.4153683999902569,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "schneider",
+        "instance_id": "c101_21",
+        "seed": 22,
+        "status": "ok",
+        "runtime_s": 7.7145,
+        "feasible": true,
+        "objective_key": [
+          36.0,
+          3134.4308534558427
+        ],
+        "vehicles": 36,
+        "alns_iterations_done": 30,
+        "time_to_first_feasible_s": 0.4217248000204563,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "hiermann",
+        "instance_id": "c101_21",
+        "seed": 7,
+        "status": "ok",
+        "runtime_s": 1.0002,
+        "feasible": true,
+        "objective_key": [
+          3272.221784555277
+        ],
+        "vehicles": 13,
+        "alns_iterations_done": 10,
+        "time_to_first_feasible_s": 0.568656999967061,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "hiermann",
+        "instance_id": "c101_21",
+        "seed": 11,
+        "status": "ok",
+        "runtime_s": 0.9037,
+        "feasible": true,
+        "objective_key": [
+          3276.6685354298506
+        ],
+        "vehicles": 13,
+        "alns_iterations_done": 10,
+        "time_to_first_feasible_s": 0.5510725000058301,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "hiermann",
+        "instance_id": "c101_21",
+        "seed": 22,
+        "status": "ok",
+        "runtime_s": 0.9407,
+        "feasible": true,
+        "objective_key": [
+          3185.247444999076
+        ],
+        "vehicles": 13,
+        "alns_iterations_done": 10,
+        "time_to_first_feasible_s": 0.5511374000343494,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "montoya",
+        "instance_id": "tc0c10s2cf1",
+        "seed": 7,
+        "status": "ok",
+        "runtime_s": 0.4348,
+        "feasible": true,
+        "objective_key": [
+          25.474377354140188
+        ],
+        "vehicles": 3,
+        "alns_iterations_done": 20,
+        "time_to_first_feasible_s": 0.08013600000413135,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "montoya",
+        "instance_id": "tc0c10s2cf1",
+        "seed": 11,
+        "status": "ok",
+        "runtime_s": 0.4014,
+        "feasible": true,
+        "objective_key": [
+          26.976544297483272
+        ],
+        "vehicles": 3,
+        "alns_iterations_done": 20,
+        "time_to_first_feasible_s": 0.07357010000851005,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "montoya",
+        "instance_id": "tc0c10s2cf1",
+        "seed": 22,
+        "status": "ok",
+        "runtime_s": 0.4671,
+        "feasible": true,
+        "objective_key": [
+          29.27238669046548
+        ],
+        "vehicles": 4,
+        "alns_iterations_done": 20,
+        "time_to_first_feasible_s": 0.07618560001719743,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "bezzi",
+        "instance_id": "C101-5",
+        "seed": 7,
+        "status": "ok",
+        "runtime_s": 0.2544,
+        "feasible": true,
+        "objective_key": [
+          227.0
+        ],
+        "vehicles": 1,
+        "alns_iterations_done": 15,
+        "time_to_first_feasible_s": 0.027123899955768138,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "bezzi",
+        "instance_id": "C101-5",
+        "seed": 11,
+        "status": "ok",
+        "runtime_s": 0.0661,
+        "feasible": true,
+        "objective_key": [
+          227.0
+        ],
+        "vehicles": 1,
+        "alns_iterations_done": 15,
+        "time_to_first_feasible_s": 0.004374200012534857,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "bezzi",
+        "instance_id": "C101-5",
+        "seed": 22,
+        "status": "ok",
+        "runtime_s": 0.1711,
+        "feasible": true,
+        "objective_key": [
+          227.0
+        ],
+        "vehicles": 1,
+        "alns_iterations_done": 15,
+        "time_to_first_feasible_s": 0.004442300007212907,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "goeke",
+        "instance_id": "c101C6",
+        "seed": 7,
+        "status": "ok",
+        "runtime_s": 0.121,
+        "feasible": true,
+        "objective_key": [
+          2.0,
+          267.3289940850671
+        ],
+        "vehicles": 2,
+        "alns_iterations_done": 15,
+        "time_to_first_feasible_s": 0.005375500011723489,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "goeke",
+        "instance_id": "c101C6",
+        "seed": 11,
+        "status": "ok",
+        "runtime_s": 0.0935,
+        "feasible": true,
+        "objective_key": [
+          2.0,
+          267.3289940850671
+        ],
+        "vehicles": 2,
+        "alns_iterations_done": 15,
+        "time_to_first_feasible_s": 0.005285699968226254,
+        "hard_timeout_triggered": false
+      },
+      {
+        "family": "goeke",
+        "instance_id": "c101C6",
+        "seed": 22,
+        "status": "ok",
+        "runtime_s": 0.0922,
+        "feasible": true,
+        "objective_key": [
+          2.0,
+          267.3289940850671
+        ],
+        "vehicles": 2,
+        "alns_iterations_done": 15,
+        "time_to_first_feasible_s": 0.005218799982685596,
+        "hard_timeout_triggered": false
+      }
+    ],
+    "by_case": {
+      "schneider/c101C5": {
+        "n": 3,
+        "median_runtime_s": 0.0769,
+        "mean_runtime_s": 0.1814,
+        "feasible_count": 3,
+        "objective_keys": [
+          [
+            2.0,
+            257.7474518641999
+          ],
+          [
+            2.0,
+            257.7474518641999
+          ],
+          [
+            2.0,
+            257.7474518641999
+          ]
+        ],
+        "alns_iterations_done": [
+          20,
+          20,
+          20
+        ],
+        "time_to_first_feasible_s": [
+          0.28324629995040596,
+          0.004760699986945838,
+          0.004709300003014505
+        ]
+      },
+      "schneider/c101_21": {
+        "n": 3,
+        "median_runtime_s": 3.1605,
+        "mean_runtime_s": 4.4241,
+        "feasible_count": 3,
+        "objective_keys": [
+          [
+            33.0,
+            2929.8805885658785
+          ],
+          [
+            33.0,
+            2786.470625764741
+          ],
+          [
+            36.0,
+            3134.4308534558427
+          ]
+        ],
+        "alns_iterations_done": [
+          30,
+          30,
+          30
+        ],
+        "time_to_first_feasible_s": [
+          0.43269270000746474,
+          0.4153683999902569,
+          0.4217248000204563
+        ]
+      },
+      "hiermann/c101_21": {
+        "n": 3,
+        "median_runtime_s": 0.9407,
+        "mean_runtime_s": 0.9482,
+        "feasible_count": 3,
+        "objective_keys": [
+          [
+            3272.221784555277
+          ],
+          [
+            3276.6685354298506
+          ],
+          [
+            3185.247444999076
+          ]
+        ],
+        "alns_iterations_done": [
+          10,
+          10,
+          10
+        ],
+        "time_to_first_feasible_s": [
+          0.568656999967061,
+          0.5510725000058301,
+          0.5511374000343494
+        ]
+      },
+      "montoya/tc0c10s2cf1": {
+        "n": 3,
+        "median_runtime_s": 0.4348,
+        "mean_runtime_s": 0.4344,
+        "feasible_count": 3,
+        "objective_keys": [
+          [
+            25.474377354140188
+          ],
+          [
+            26.976544297483272
+          ],
+          [
+            29.27238669046548
+          ]
+        ],
+        "alns_iterations_done": [
+          20,
+          20,
+          20
+        ],
+        "time_to_first_feasible_s": [
+          0.08013600000413135,
+          0.07357010000851005,
+          0.07618560001719743
+        ]
+      },
+      "bezzi/C101-5": {
+        "n": 3,
+        "median_runtime_s": 0.1711,
+        "mean_runtime_s": 0.1639,
+        "feasible_count": 3,
+        "objective_keys": [
+          [
+            227.0
+          ],
+          [
+            227.0
+          ],
+          [
+            227.0
+          ]
+        ],
+        "alns_iterations_done": [
+          15,
+          15,
+          15
+        ],
+        "time_to_first_feasible_s": [
+          0.027123899955768138,
+          0.004374200012534857,
+          0.004442300007212907
+        ]
+      },
+      "goeke/c101C6": {
+        "n": 3,
+        "median_runtime_s": 0.0935,
+        "mean_runtime_s": 0.1022,
+        "feasible_count": 3,
+        "objective_keys": [
+          [
+            2.0,
+            267.3289940850671
+          ],
+          [
+            2.0,
+            267.3289940850671
+          ],
+          [
+            2.0,
+            267.3289940850671
+          ]
+        ],
+        "alns_iterations_done": [
+          15,
+          15,
+          15
+        ],
+        "time_to_first_feasible_s": [
+          0.005375500011723489,
+          0.005285699968226254,
+          0.005218799982685596
+        ]
+      }
+    }
+  },
+  "comparisons": {
+    "schneider/c101C5": {
+      "baseline_median_runtime_s": 0.1147,
+      "current_median_runtime_s": 0.0769,
+      "speedup_x": 1.492,
+      "baseline_feasible": 3,
+      "current_feasible": 3,
+      "objective_keys_match_seed_order": false
+    },
+    "schneider/c101_21": {
+      "baseline_median_runtime_s": 10.0236,
+      "current_median_runtime_s": 3.1605,
+      "speedup_x": 3.172,
+      "baseline_feasible": 3,
+      "current_feasible": 3,
+      "objective_keys_match_seed_order": false
+    },
+    "hiermann/c101_21": {
+      "baseline_median_runtime_s": 5.519,
+      "current_median_runtime_s": 0.9407,
+      "speedup_x": 5.867,
+      "baseline_feasible": 3,
+      "current_feasible": 3,
+      "objective_keys_match_seed_order": false
+    },
+    "montoya/tc0c10s2cf1": {
+      "baseline_median_runtime_s": 1.6326,
+      "current_median_runtime_s": 0.4348,
+      "speedup_x": 3.755,
+      "baseline_feasible": 3,
+      "current_feasible": 3,
+      "objective_keys_match_seed_order": false
+    },
+    "bezzi/C101-5": {
+      "baseline_median_runtime_s": 0.9616,
+      "current_median_runtime_s": 0.1711,
+      "speedup_x": 5.62,
+      "baseline_feasible": 3,
+      "current_feasible": 3,
+      "objective_keys_match_seed_order": true
+    },
+    "goeke/c101C6": {
+      "baseline_median_runtime_s": 0.2838,
+      "current_median_runtime_s": 0.0935,
+      "speedup_x": 3.035,
+      "baseline_feasible": 3,
+      "current_feasible": 3,
+      "objective_keys_match_seed_order": true
+    }
+  },
+  "note": "Native objectives are reported per family; never average across families."
+}

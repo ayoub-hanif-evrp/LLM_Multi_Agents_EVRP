@@ -688,6 +688,12 @@ def _kill_warm_worker_unlocked() -> None:
     _WARM_WORKER["done_q"] = None
 
 
+def reset_warm_worker() -> None:
+    """Test/diagnostic helper: drop any reused hard-timeout worker."""
+    with _WORKER_LOCK:
+        _kill_warm_worker_unlocked()
+
+
 def _ensure_warm_worker(ctx: Any) -> dict[str, Any]:
     proc = _WARM_WORKER.get("proc")
     if proc is not None and proc.is_alive():

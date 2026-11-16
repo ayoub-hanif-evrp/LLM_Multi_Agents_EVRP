@@ -1,0 +1,1886 @@
+{
+  "created_at": "2026-11-16T14:54:45.719042+00:00",
+  "protocol": "cipher_evidence_discovery_v1",
+  "model_id": "qwen25_coder_14b",
+  "model": "qwen2.5-coder:14b",
+  "model_digest": "9ec8897f747e246e970bc5cfdda85d22f1123dc2e3d34978a010a75968716849",
+  "headroom_decision": "continue_to_live_discovery",
+  "evidence_examples_used": 8,
+  "llm_budget": {
+    "max_proposals": 3,
+    "calls_per_proposal": 3,
+    "total_calls": 10,
+    "prompt_tokens": 34934,
+    "completion_tokens": 1152
+  },
+  "proposals": [
+    {
+      "status": "ok",
+      "proposal_index": 0,
+      "hypothesis": {
+        "hypothesis": "Using better features reduces downstream vehicle distance and travel time, improving overall route quality.",
+        "target_bottleneck": "route_distance",
+        "affected_capabilities": [
+          "time_windows",
+          "route_optimization"
+        ],
+        "proposed_operator_id": "feature_selector",
+        "expected_useful_conditions": "instances with high classical acceptance",
+        "expected_failure_conditions": "instances with low battery margin",
+        "measurable_prediction": "reduced delta_distance and delta_travel_time in better_final_objective"
+      },
+      "operator": {
+        "operator_id": "repair_greedy",
+        "version": "1.0.1",
+        "source_agent": "Qwen",
+        "description": "A repair operator that uses a greedy approach to improve route quality by reducing downstream vehicle distance and travel time.",
+        "operator_family": "repair",
+        "implementation_reference": "repair_greedy",
+        "required_capabilities": [
+          "time_windows"
+        ],
+        "forbidden_capabilities": [],
+        "required_features": [],
+        "hard_preconditions": [],
+        "candidate_scoring_policy": "battery_margin",
+        "applicability_rule": "1",
+        "mine_counterexamples": false,
+        "fallback_operator": "classical_default",
+        "source_hash": "f7ce493379c08c68"
+      },
+      "critique": {
+        "what_failed": "battery_margin",
+        "operator_should_change": false,
+        "applicability_should_change": true,
+        "evidence_too_weak": false,
+        "revised_applicability_rule": "1",
+        "scoring_should_change": true,
+        "revised_candidate_scoring_policy": "battery_margin"
+      },
+      "critic_revised_parts": [
+        "applicability_rule",
+        "candidate_scoring_policy"
+      ],
+      "synthetic_decision": {
+        "action": "apply",
+        "reason": "applicability score positive",
+        "selected": "0:3",
+        "classical": "0:3",
+        "changed": false,
+        "operator_id": "repair_greedy",
+        "operator_version": "1.0",
+        "source_hash": "026ba9da1f3b9855"
+      },
+      "llm_calls": 3,
+      "prompt_tokens": 10488,
+      "completion_tokens": 343
+    },
+    {
+      "status": "ok",
+      "proposal_index": 1,
+      "hypothesis": {
+        "hypothesis": "Using better features reduces downstream vehicle distance and travel time, improving overall route quality.",
+        "target_bottleneck": "route_quality",
+        "affected_capabilities": [
+          "distance_quality",
+          "travel_time_quality"
+        ],
+        "proposed_operator_id": "feature_optimizer",
+        "expected_useful_conditions": "instances with high classical acceptance values",
+        "expected_failure_conditions": "instances with low battery margin",
+        "measurable_prediction": "reduced delta_distance and delta_travel_time in better_features"
+      },
+      "operator": {
+        "operator_id": "repair_greedy",
+        "version": "1.0.1",
+        "source_agent": "Qwen",
+        "description": "A repair operator that uses a greedy approach to improve route quality by reducing downstream vehicle distance and travel time.",
+        "operator_family": "repair",
+        "implementation_reference": "repair_greedy",
+        "required_capabilities": [
+          "time_windows"
+        ],
+        "forbidden_capabilities": [],
+        "required_features": [],
+        "hard_preconditions": [],
+        "candidate_scoring_policy": "battery_margin",
+        "applicability_rule": "1",
+        "mine_counterexamples": false,
+        "fallback_operator": "classical_default",
+        "source_hash": "f7ce493379c08c68"
+      },
+      "critique": {
+        "what_failed": "battery_margin",
+        "operator_should_change": false,
+        "applicability_should_change": true,
+        "evidence_too_weak": false,
+        "revised_applicability_rule": "1",
+        "scoring_should_change": true,
+        "revised_candidate_scoring_policy": "battery_margin"
+      },
+      "critic_revised_parts": [
+        "applicability_rule",
+        "candidate_scoring_policy"
+      ],
+      "synthetic_decision": {
+        "action": "apply",
+        "reason": "applicability score positive",
+        "selected": "0:3",
+        "classical": "0:3",
+        "changed": false,
+        "operator_id": "repair_greedy",
+        "operator_version": "1.0",
+        "source_hash": "026ba9da1f3b9855"
+      },
+      "llm_calls": 3,
+      "prompt_tokens": 10488,
+      "completion_tokens": 342
+    },
+    {
+      "status": "ok",
+      "proposal_index": 2,
+      "hypothesis": {
+        "hypothesis": "Using better features reduces downstream vehicle distance and travel time, improving overall route quality.",
+        "target_bottleneck": "route_quality",
+        "affected_capabilities": [
+          "distance_quality",
+          "travel_time_quality"
+        ],
+        "proposed_operator_id": "feature_optimizer",
+        "expected_useful_conditions": "instances with high classical acceptance values",
+        "expected_failure_conditions": "instances with low battery margin",
+        "measurable_prediction": "reduced delta_distance and delta_travel_time in better_features"
+      },
+      "operator": {
+        "operator_id": "repair_greedy",
+        "version": "1.0.1",
+        "source_agent": "Qwen",
+        "description": "A repair operator that uses a greedy approach to improve route quality by reducing downstream vehicle distance and travel time.",
+        "operator_family": "repair",
+        "implementation_reference": "repair_greedy",
+        "required_capabilities": [
+          "time_windows"
+        ],
+        "forbidden_capabilities": [],
+        "required_features": [],
+        "hard_preconditions": [],
+        "candidate_scoring_policy": "battery_margin",
+        "applicability_rule": "1",
+        "mine_counterexamples": false,
+        "fallback_operator": "classical_default",
+        "source_hash": "f7ce493379c08c68"
+      },
+      "critique": {
+        "what_failed": "battery_margin",
+        "operator_should_change": false,
+        "applicability_should_change": true,
+        "evidence_too_weak": false,
+        "revised_applicability_rule": "1",
+        "scoring_should_change": true,
+        "revised_candidate_scoring_policy": "battery_margin"
+      },
+      "critic_revised_parts": [
+        "applicability_rule",
+        "candidate_scoring_policy"
+      ],
+      "synthetic_decision": {
+        "action": "apply",
+        "reason": "applicability score positive",
+        "selected": "0:3",
+        "classical": "0:3",
+        "changed": false,
+        "operator_id": "repair_greedy",
+        "operator_version": "1.0",
+        "source_hash": "026ba9da1f3b9855"
+      },
+      "llm_calls": 3,
+      "prompt_tokens": 10488,
+      "completion_tokens": 342
+    }
+  ],
+  "single_llm_proposal": {
+    "status": "ok",
+    "operator": {
+      "operator_id": "repair_greedy",
+      "version": "1.0",
+      "source_agent": "Qwen",
+      "description": "A greedy repair operator for vehicle routing problems",
+      "operator_family": "repair",
+      "implementation_reference": "repair_greedy",
+      "required_capabilities": [
+        "time_windows"
+      ],
+      "forbidden_capabilities": [],
+      "required_features": [],
+      "hard_preconditions": [],
+      "candidate_scoring_policy": "battery_margin",
+      "applicability_rule": "1",
+      "mine_counterexamples": false,
+      "fallback_operator": "classical_default",
+      "source_hash": "f7ce493379c08c68"
+    },
+    "llm_calls": 1
+  },
+  "evaluations": [
+    {
+      "name": "classical",
+      "operator": null,
+      "gate": "behaviorally_inert",
+      "wins": 0,
+      "ties": 9,
+      "losses": 0,
+      "changed_decisions_total": 0,
+      "paired": [
+        {
+          "family": "schneider",
+          "instance_id": "c101C5",
+          "seed": 7,
+          "outcome": "tie",
+          "classical_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "candidate_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 0,
+          "policy_executed": false
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101C5",
+          "seed": 11,
+          "outcome": "tie",
+          "classical_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "candidate_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 0,
+          "policy_executed": false
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101C5",
+          "seed": 22,
+          "outcome": "tie",
+          "classical_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "candidate_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 0,
+          "policy_executed": false
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101_21",
+          "seed": 7,
+          "outcome": "tie",
+          "classical_objective_key": [
+            33.0,
+            2929.8805885658785
+          ],
+          "candidate_objective_key": [
+            33.0,
+            2929.8805885658785
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 0,
+          "policy_executed": false
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101_21",
+          "seed": 11,
+          "outcome": "tie",
+          "classical_objective_key": [
+            33.0,
+            2759.3861950604482
+          ],
+          "candidate_objective_key": [
+            33.0,
+            2759.3861950604482
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 0,
+          "policy_executed": false
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101_21",
+          "seed": 22,
+          "outcome": "tie",
+          "classical_objective_key": [
+            34.0,
+            3004.481154755148
+          ],
+          "candidate_objective_key": [
+            34.0,
+            3004.481154755148
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 0,
+          "policy_executed": false
+        },
+        {
+          "family": "hiermann",
+          "instance_id": "c101_21",
+          "seed": 7,
+          "outcome": "tie",
+          "classical_objective_key": [
+            3272.221784555277
+          ],
+          "candidate_objective_key": [
+            3272.221784555277
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 0,
+          "policy_executed": false
+        },
+        {
+          "family": "hiermann",
+          "instance_id": "c101_21",
+          "seed": 11,
+          "outcome": "tie",
+          "classical_objective_key": [
+            3276.6685354298506
+          ],
+          "candidate_objective_key": [
+            3276.6685354298506
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 0,
+          "policy_executed": false
+        },
+        {
+          "family": "hiermann",
+          "instance_id": "c101_21",
+          "seed": 22,
+          "outcome": "tie",
+          "classical_objective_key": [
+            3185.247444999076
+          ],
+          "candidate_objective_key": [
+            3185.247444999076
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 0,
+          "policy_executed": false
+        }
+      ]
+    },
+    {
+      "name": "handcrafted_short",
+      "operator": {
+        "operator_id": "handcrafted_short",
+        "version": "1",
+        "source_agent": "experiment",
+        "description": "delta_distance",
+        "operator_family": "repair",
+        "implementation_reference": "repair_greedy",
+        "required_capabilities": [
+          "time_windows"
+        ],
+        "forbidden_capabilities": [],
+        "required_features": [],
+        "hard_preconditions": [],
+        "candidate_scoring_policy": "delta_distance",
+        "applicability_rule": "1",
+        "mine_counterexamples": false,
+        "fallback_operator": "classical_default",
+        "source_hash": "ac9cb91d77913853"
+      },
+      "gate": "beneficial",
+      "wins": 3,
+      "ties": 6,
+      "losses": 0,
+      "changed_decisions_total": 150,
+      "paired": [
+        {
+          "family": "schneider",
+          "instance_id": "c101C5",
+          "seed": 7,
+          "outcome": "tie",
+          "classical_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "candidate_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 6,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101C5",
+          "seed": 11,
+          "outcome": "tie",
+          "classical_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "candidate_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 0,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101C5",
+          "seed": 22,
+          "outcome": "tie",
+          "classical_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "candidate_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 0,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101_21",
+          "seed": 7,
+          "outcome": "improved",
+          "classical_objective_key": [
+            33.0,
+            2929.8805885658785
+          ],
+          "candidate_objective_key": [
+            33.0,
+            2856.9746742048765
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 51,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101_21",
+          "seed": 11,
+          "outcome": "improved",
+          "classical_objective_key": [
+            33.0,
+            2759.3861950604482
+          ],
+          "candidate_objective_key": [
+            32.0,
+            2807.839833979903
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 37,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101_21",
+          "seed": 22,
+          "outcome": "improved",
+          "classical_objective_key": [
+            34.0,
+            3004.481154755148
+          ],
+          "candidate_objective_key": [
+            32.0,
+            2583.775522655965
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 56,
+          "policy_executed": true
+        },
+        {
+          "family": "hiermann",
+          "instance_id": "c101_21",
+          "seed": 7,
+          "outcome": "tie",
+          "classical_objective_key": [
+            3272.221784555277
+          ],
+          "candidate_objective_key": [
+            3272.221784555277
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 0,
+          "policy_executed": true
+        },
+        {
+          "family": "hiermann",
+          "instance_id": "c101_21",
+          "seed": 11,
+          "outcome": "tie",
+          "classical_objective_key": [
+            3276.6685354298506
+          ],
+          "candidate_objective_key": [
+            3276.6685354298506
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 0,
+          "policy_executed": true
+        },
+        {
+          "family": "hiermann",
+          "instance_id": "c101_21",
+          "seed": 22,
+          "outcome": "tie",
+          "classical_objective_key": [
+            3185.247444999076
+          ],
+          "candidate_objective_key": [
+            3185.247444999076
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 0,
+          "policy_executed": true
+        }
+      ]
+    },
+    {
+      "name": "handcrafted_long",
+      "operator": {
+        "operator_id": "handcrafted_long",
+        "version": "1",
+        "source_agent": "experiment",
+        "description": "-1 * delta_distance",
+        "operator_family": "repair",
+        "implementation_reference": "repair_greedy",
+        "required_capabilities": [
+          "time_windows"
+        ],
+        "forbidden_capabilities": [],
+        "required_features": [],
+        "hard_preconditions": [],
+        "candidate_scoring_policy": "-1 * delta_distance",
+        "applicability_rule": "1",
+        "mine_counterexamples": false,
+        "fallback_operator": "classical_default",
+        "source_hash": "ee63c5a284f75cb1"
+      },
+      "gate": "objective_regression",
+      "wins": 0,
+      "ties": 1,
+      "losses": 8,
+      "changed_decisions_total": 315,
+      "paired": [
+        {
+          "family": "schneider",
+          "instance_id": "c101C5",
+          "seed": 7,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "candidate_objective_key": [
+            2.0,
+            267.3289940850671
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 15,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101C5",
+          "seed": 11,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "candidate_objective_key": [
+            2.0,
+            267.3289940850671
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 16,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101C5",
+          "seed": 22,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "candidate_objective_key": [
+            2.0,
+            267.3289940850671
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 16,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101_21",
+          "seed": 7,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            33.0,
+            2929.8805885658785
+          ],
+          "candidate_objective_key": [
+            34.0,
+            3154.1294091142063
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 72,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101_21",
+          "seed": 11,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            33.0,
+            2759.3861950604482
+          ],
+          "candidate_objective_key": [
+            33.0,
+            3030.9202936043075
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 72,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101_21",
+          "seed": 22,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            34.0,
+            3004.481154755148
+          ],
+          "candidate_objective_key": [
+            34.0,
+            3031.791538895709
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 72,
+          "policy_executed": true
+        },
+        {
+          "family": "hiermann",
+          "instance_id": "c101_21",
+          "seed": 7,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            3272.221784555277
+          ],
+          "candidate_objective_key": [
+            3276.6685354298506
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 17,
+          "policy_executed": true
+        },
+        {
+          "family": "hiermann",
+          "instance_id": "c101_21",
+          "seed": 11,
+          "outcome": "tie",
+          "classical_objective_key": [
+            3276.6685354298506
+          ],
+          "candidate_objective_key": [
+            3276.6685354298506
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 18,
+          "policy_executed": true
+        },
+        {
+          "family": "hiermann",
+          "instance_id": "c101_21",
+          "seed": 22,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            3185.247444999076
+          ],
+          "candidate_objective_key": [
+            3276.6685354298506
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 17,
+          "policy_executed": true
+        }
+      ]
+    },
+    {
+      "name": "handcrafted_downstream_proxy",
+      "operator": {
+        "operator_id": "handcrafted_downstream_proxy",
+        "version": "1",
+        "source_agent": "experiment",
+        "description": "delta_distance - 0.01 * battery_margin",
+        "operator_family": "repair",
+        "implementation_reference": "repair_greedy",
+        "required_capabilities": [
+          "time_windows"
+        ],
+        "forbidden_capabilities": [],
+        "required_features": [],
+        "hard_preconditions": [],
+        "candidate_scoring_policy": "delta_distance - 0.01 * battery_margin",
+        "applicability_rule": "1",
+        "mine_counterexamples": false,
+        "fallback_operator": "classical_default",
+        "source_hash": "29f2f3bce34b3013"
+      },
+      "gate": "beneficial",
+      "wins": 3,
+      "ties": 6,
+      "losses": 0,
+      "changed_decisions_total": 156,
+      "paired": [
+        {
+          "family": "schneider",
+          "instance_id": "c101C5",
+          "seed": 7,
+          "outcome": "tie",
+          "classical_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "candidate_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 6,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101C5",
+          "seed": 11,
+          "outcome": "tie",
+          "classical_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "candidate_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 0,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101C5",
+          "seed": 22,
+          "outcome": "tie",
+          "classical_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "candidate_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 0,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101_21",
+          "seed": 7,
+          "outcome": "improved",
+          "classical_objective_key": [
+            33.0,
+            2929.8805885658785
+          ],
+          "candidate_objective_key": [
+            33.0,
+            2891.632788339026
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 51,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101_21",
+          "seed": 11,
+          "outcome": "improved",
+          "classical_objective_key": [
+            33.0,
+            2759.3861950604482
+          ],
+          "candidate_objective_key": [
+            32.0,
+            2851.848063089333
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 43,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101_21",
+          "seed": 22,
+          "outcome": "improved",
+          "classical_objective_key": [
+            34.0,
+            3004.481154755148
+          ],
+          "candidate_objective_key": [
+            32.0,
+            2583.775522655965
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 56,
+          "policy_executed": true
+        },
+        {
+          "family": "hiermann",
+          "instance_id": "c101_21",
+          "seed": 7,
+          "outcome": "tie",
+          "classical_objective_key": [
+            3272.221784555277
+          ],
+          "candidate_objective_key": [
+            3272.221784555277
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 0,
+          "policy_executed": true
+        },
+        {
+          "family": "hiermann",
+          "instance_id": "c101_21",
+          "seed": 11,
+          "outcome": "tie",
+          "classical_objective_key": [
+            3276.6685354298506
+          ],
+          "candidate_objective_key": [
+            3276.6685354298506
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 0,
+          "policy_executed": true
+        },
+        {
+          "family": "hiermann",
+          "instance_id": "c101_21",
+          "seed": 22,
+          "outcome": "tie",
+          "classical_objective_key": [
+            3185.247444999076
+          ],
+          "candidate_objective_key": [
+            3185.247444999076
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 0,
+          "policy_executed": true
+        }
+      ]
+    },
+    {
+      "name": "random_valid",
+      "operator": {
+        "operator_id": "random_valid",
+        "version": "1",
+        "source_agent": "experiment",
+        "description": "delta_distance + incremental_energy_cost",
+        "operator_family": "repair",
+        "implementation_reference": "repair_greedy",
+        "required_capabilities": [
+          "time_windows"
+        ],
+        "forbidden_capabilities": [],
+        "required_features": [],
+        "hard_preconditions": [],
+        "candidate_scoring_policy": "delta_distance + incremental_energy_cost",
+        "applicability_rule": "1",
+        "mine_counterexamples": false,
+        "fallback_operator": "classical_default",
+        "source_hash": "6de21fbbe26c0852"
+      },
+      "gate": "beneficial",
+      "wins": 3,
+      "ties": 6,
+      "losses": 0,
+      "changed_decisions_total": 150,
+      "paired": [
+        {
+          "family": "schneider",
+          "instance_id": "c101C5",
+          "seed": 7,
+          "outcome": "tie",
+          "classical_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "candidate_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 6,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101C5",
+          "seed": 11,
+          "outcome": "tie",
+          "classical_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "candidate_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 0,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101C5",
+          "seed": 22,
+          "outcome": "tie",
+          "classical_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "candidate_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 0,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101_21",
+          "seed": 7,
+          "outcome": "improved",
+          "classical_objective_key": [
+            33.0,
+            2929.8805885658785
+          ],
+          "candidate_objective_key": [
+            33.0,
+            2856.9746742048765
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 51,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101_21",
+          "seed": 11,
+          "outcome": "improved",
+          "classical_objective_key": [
+            33.0,
+            2759.3861950604482
+          ],
+          "candidate_objective_key": [
+            32.0,
+            2807.839833979903
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 37,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101_21",
+          "seed": 22,
+          "outcome": "improved",
+          "classical_objective_key": [
+            34.0,
+            3004.481154755148
+          ],
+          "candidate_objective_key": [
+            32.0,
+            2583.775522655965
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 56,
+          "policy_executed": true
+        },
+        {
+          "family": "hiermann",
+          "instance_id": "c101_21",
+          "seed": 7,
+          "outcome": "tie",
+          "classical_objective_key": [
+            3272.221784555277
+          ],
+          "candidate_objective_key": [
+            3272.221784555277
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 0,
+          "policy_executed": true
+        },
+        {
+          "family": "hiermann",
+          "instance_id": "c101_21",
+          "seed": 11,
+          "outcome": "tie",
+          "classical_objective_key": [
+            3276.6685354298506
+          ],
+          "candidate_objective_key": [
+            3276.6685354298506
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 0,
+          "policy_executed": true
+        },
+        {
+          "family": "hiermann",
+          "instance_id": "c101_21",
+          "seed": 22,
+          "outcome": "tie",
+          "classical_objective_key": [
+            3185.247444999076
+          ],
+          "candidate_objective_key": [
+            3185.247444999076
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 0,
+          "policy_executed": true
+        }
+      ],
+      "scoring": "delta_distance + incremental_energy_cost"
+    },
+    {
+      "name": "single_llm",
+      "operator": {
+        "operator_id": "repair_greedy",
+        "version": "1.0",
+        "source_agent": "Qwen",
+        "description": "A greedy repair operator for vehicle routing problems",
+        "operator_family": "repair",
+        "implementation_reference": "repair_greedy",
+        "required_capabilities": [
+          "time_windows"
+        ],
+        "forbidden_capabilities": [],
+        "required_features": [],
+        "hard_preconditions": [],
+        "candidate_scoring_policy": "battery_margin",
+        "applicability_rule": "1",
+        "mine_counterexamples": false,
+        "fallback_operator": "classical_default",
+        "source_hash": "f7ce493379c08c68"
+      },
+      "gate": "objective_regression",
+      "wins": 0,
+      "ties": 1,
+      "losses": 8,
+      "changed_decisions_total": 234,
+      "paired": [
+        {
+          "family": "schneider",
+          "instance_id": "c101C5",
+          "seed": 7,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "candidate_objective_key": [
+            2.0,
+            267.3289940850671
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 3,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101C5",
+          "seed": 11,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "candidate_objective_key": [
+            2.0,
+            267.3289940850671
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 4,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101C5",
+          "seed": 22,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "candidate_objective_key": [
+            2.0,
+            267.3289940850671
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 2,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101_21",
+          "seed": 7,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            33.0,
+            2929.8805885658785
+          ],
+          "candidate_objective_key": [
+            34.0,
+            3031.791538895709
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 72,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101_21",
+          "seed": 11,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            33.0,
+            2759.3861950604482
+          ],
+          "candidate_objective_key": [
+            34.0,
+            3031.791538895709
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 72,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101_21",
+          "seed": 22,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            34.0,
+            3004.481154755148
+          ],
+          "candidate_objective_key": [
+            34.0,
+            3031.791538895709
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 72,
+          "policy_executed": true
+        },
+        {
+          "family": "hiermann",
+          "instance_id": "c101_21",
+          "seed": 7,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            3272.221784555277
+          ],
+          "candidate_objective_key": [
+            3276.6685354298506
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 3,
+          "policy_executed": true
+        },
+        {
+          "family": "hiermann",
+          "instance_id": "c101_21",
+          "seed": 11,
+          "outcome": "tie",
+          "classical_objective_key": [
+            3276.6685354298506
+          ],
+          "candidate_objective_key": [
+            3276.6685354298506
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 1,
+          "policy_executed": true
+        },
+        {
+          "family": "hiermann",
+          "instance_id": "c101_21",
+          "seed": 22,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            3185.247444999076
+          ],
+          "candidate_objective_key": [
+            3253.09727744468
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 5,
+          "policy_executed": true
+        }
+      ]
+    },
+    {
+      "name": "multi_role_0",
+      "operator": {
+        "operator_id": "repair_greedy",
+        "version": "1.0.1",
+        "source_agent": "Qwen",
+        "description": "A repair operator that uses a greedy approach to improve route quality by reducing downstream vehicle distance and travel time.",
+        "operator_family": "repair",
+        "implementation_reference": "repair_greedy",
+        "required_capabilities": [
+          "time_windows"
+        ],
+        "forbidden_capabilities": [],
+        "required_features": [],
+        "hard_preconditions": [],
+        "candidate_scoring_policy": "battery_margin",
+        "applicability_rule": "1",
+        "mine_counterexamples": false,
+        "fallback_operator": "classical_default",
+        "source_hash": "f7ce493379c08c68"
+      },
+      "gate": "objective_regression",
+      "wins": 0,
+      "ties": 1,
+      "losses": 8,
+      "changed_decisions_total": 234,
+      "paired": [
+        {
+          "family": "schneider",
+          "instance_id": "c101C5",
+          "seed": 7,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "candidate_objective_key": [
+            2.0,
+            267.3289940850671
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 3,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101C5",
+          "seed": 11,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "candidate_objective_key": [
+            2.0,
+            267.3289940850671
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 4,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101C5",
+          "seed": 22,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "candidate_objective_key": [
+            2.0,
+            267.3289940850671
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 2,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101_21",
+          "seed": 7,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            33.0,
+            2929.8805885658785
+          ],
+          "candidate_objective_key": [
+            34.0,
+            3031.791538895709
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 72,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101_21",
+          "seed": 11,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            33.0,
+            2759.3861950604482
+          ],
+          "candidate_objective_key": [
+            34.0,
+            3031.791538895709
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 72,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101_21",
+          "seed": 22,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            34.0,
+            3004.481154755148
+          ],
+          "candidate_objective_key": [
+            34.0,
+            3031.791538895709
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 72,
+          "policy_executed": true
+        },
+        {
+          "family": "hiermann",
+          "instance_id": "c101_21",
+          "seed": 7,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            3272.221784555277
+          ],
+          "candidate_objective_key": [
+            3276.6685354298506
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 3,
+          "policy_executed": true
+        },
+        {
+          "family": "hiermann",
+          "instance_id": "c101_21",
+          "seed": 11,
+          "outcome": "tie",
+          "classical_objective_key": [
+            3276.6685354298506
+          ],
+          "candidate_objective_key": [
+            3276.6685354298506
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 1,
+          "policy_executed": true
+        },
+        {
+          "family": "hiermann",
+          "instance_id": "c101_21",
+          "seed": 22,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            3185.247444999076
+          ],
+          "candidate_objective_key": [
+            3253.09727744468
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 5,
+          "policy_executed": true
+        }
+      ],
+      "proposal_index": 0
+    },
+    {
+      "name": "multi_role_1",
+      "operator": {
+        "operator_id": "repair_greedy",
+        "version": "1.0.1",
+        "source_agent": "Qwen",
+        "description": "A repair operator that uses a greedy approach to improve route quality by reducing downstream vehicle distance and travel time.",
+        "operator_family": "repair",
+        "implementation_reference": "repair_greedy",
+        "required_capabilities": [
+          "time_windows"
+        ],
+        "forbidden_capabilities": [],
+        "required_features": [],
+        "hard_preconditions": [],
+        "candidate_scoring_policy": "battery_margin",
+        "applicability_rule": "1",
+        "mine_counterexamples": false,
+        "fallback_operator": "classical_default",
+        "source_hash": "f7ce493379c08c68"
+      },
+      "gate": "objective_regression",
+      "wins": 0,
+      "ties": 1,
+      "losses": 8,
+      "changed_decisions_total": 234,
+      "paired": [
+        {
+          "family": "schneider",
+          "instance_id": "c101C5",
+          "seed": 7,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "candidate_objective_key": [
+            2.0,
+            267.3289940850671
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 3,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101C5",
+          "seed": 11,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "candidate_objective_key": [
+            2.0,
+            267.3289940850671
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 4,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101C5",
+          "seed": 22,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "candidate_objective_key": [
+            2.0,
+            267.3289940850671
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 2,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101_21",
+          "seed": 7,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            33.0,
+            2929.8805885658785
+          ],
+          "candidate_objective_key": [
+            34.0,
+            3031.791538895709
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 72,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101_21",
+          "seed": 11,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            33.0,
+            2759.3861950604482
+          ],
+          "candidate_objective_key": [
+            34.0,
+            3031.791538895709
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 72,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101_21",
+          "seed": 22,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            34.0,
+            3004.481154755148
+          ],
+          "candidate_objective_key": [
+            34.0,
+            3031.791538895709
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 72,
+          "policy_executed": true
+        },
+        {
+          "family": "hiermann",
+          "instance_id": "c101_21",
+          "seed": 7,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            3272.221784555277
+          ],
+          "candidate_objective_key": [
+            3276.6685354298506
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 3,
+          "policy_executed": true
+        },
+        {
+          "family": "hiermann",
+          "instance_id": "c101_21",
+          "seed": 11,
+          "outcome": "tie",
+          "classical_objective_key": [
+            3276.6685354298506
+          ],
+          "candidate_objective_key": [
+            3276.6685354298506
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 1,
+          "policy_executed": true
+        },
+        {
+          "family": "hiermann",
+          "instance_id": "c101_21",
+          "seed": 22,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            3185.247444999076
+          ],
+          "candidate_objective_key": [
+            3253.09727744468
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 5,
+          "policy_executed": true
+        }
+      ],
+      "proposal_index": 1
+    },
+    {
+      "name": "multi_role_2",
+      "operator": {
+        "operator_id": "repair_greedy",
+        "version": "1.0.1",
+        "source_agent": "Qwen",
+        "description": "A repair operator that uses a greedy approach to improve route quality by reducing downstream vehicle distance and travel time.",
+        "operator_family": "repair",
+        "implementation_reference": "repair_greedy",
+        "required_capabilities": [
+          "time_windows"
+        ],
+        "forbidden_capabilities": [],
+        "required_features": [],
+        "hard_preconditions": [],
+        "candidate_scoring_policy": "battery_margin",
+        "applicability_rule": "1",
+        "mine_counterexamples": false,
+        "fallback_operator": "classical_default",
+        "source_hash": "f7ce493379c08c68"
+      },
+      "gate": "objective_regression",
+      "wins": 0,
+      "ties": 1,
+      "losses": 8,
+      "changed_decisions_total": 234,
+      "paired": [
+        {
+          "family": "schneider",
+          "instance_id": "c101C5",
+          "seed": 7,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "candidate_objective_key": [
+            2.0,
+            267.3289940850671
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 3,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101C5",
+          "seed": 11,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "candidate_objective_key": [
+            2.0,
+            267.3289940850671
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 4,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101C5",
+          "seed": 22,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "candidate_objective_key": [
+            2.0,
+            267.3289940850671
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 2,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101_21",
+          "seed": 7,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            33.0,
+            2929.8805885658785
+          ],
+          "candidate_objective_key": [
+            34.0,
+            3031.791538895709
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 72,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101_21",
+          "seed": 11,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            33.0,
+            2759.3861950604482
+          ],
+          "candidate_objective_key": [
+            34.0,
+            3031.791538895709
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 72,
+          "policy_executed": true
+        },
+        {
+          "family": "schneider",
+          "instance_id": "c101_21",
+          "seed": 22,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            34.0,
+            3004.481154755148
+          ],
+          "candidate_objective_key": [
+            34.0,
+            3031.791538895709
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 72,
+          "policy_executed": true
+        },
+        {
+          "family": "hiermann",
+          "instance_id": "c101_21",
+          "seed": 7,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            3272.221784555277
+          ],
+          "candidate_objective_key": [
+            3276.6685354298506
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 3,
+          "policy_executed": true
+        },
+        {
+          "family": "hiermann",
+          "instance_id": "c101_21",
+          "seed": 11,
+          "outcome": "tie",
+          "classical_objective_key": [
+            3276.6685354298506
+          ],
+          "candidate_objective_key": [
+            3276.6685354298506
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 1,
+          "policy_executed": true
+        },
+        {
+          "family": "hiermann",
+          "instance_id": "c101_21",
+          "seed": 22,
+          "outcome": "objective_regression",
+          "classical_objective_key": [
+            3185.247444999076
+          ],
+          "candidate_objective_key": [
+            3253.09727744468
+          ],
+          "classical_feasible": true,
+          "candidate_feasible": true,
+          "changed_decisions": 5,
+          "policy_executed": true
+        }
+      ],
+      "proposal_index": 2
+    }
+  ],
+  "beneficial_operators": [
+    "handcrafted_short",
+    "handcrafted_downstream_proxy",
+    "random_valid"
+  ],
+  "wall_s": 175.97,
+  "research_signal": "search_space_go_llm_no_go",
+  "note": "Synthetic four-node unchanged decisions do not block paired development evaluation. Families are never averaged.",
+  "llm_beneficial_operators": []
+}

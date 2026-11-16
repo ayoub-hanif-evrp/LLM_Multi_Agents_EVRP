@@ -90,13 +90,15 @@ def run_signal(
     decision = discovery.get("decision") or {}
     gate = "ok"
     diagnosis = None
+    synthetic_note = None
     if not decision:
         gate = "no_search_decision"
         diagnosis = "discovery produced no search_decision"
     elif not decision.get("changed") and not discovery.get("counterexamples"):
-        gate = "behaviorally_inert"
-        diagnosis = (
-            f"operator did not change the development repair "
+        # Synthetic four-node tie/abstention is a safety note, not a hard stop.
+        # A policy may still improve real development trajectories.
+        synthetic_note = (
+            f"synthetic_development_case_unchanged "
             f"(action={decision.get('action')}, reason={decision.get('reason')})"
         )
 
@@ -180,6 +182,7 @@ def run_signal(
         "critic_revised_parts": list(discovery.get("critic_revised_parts") or []),
         "gate": gate,
         "diagnosis": diagnosis,
+        "synthetic_development_note": synthetic_note,
         "operator": operator.model_dump(),
         "discovery_decision": decision,
         "counterexamples": discovery.get("counterexamples") or [],

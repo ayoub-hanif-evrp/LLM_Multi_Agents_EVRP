@@ -1,0 +1,4697 @@
+{
+  "created_at": "2026-11-16T14:50:18.954992+00:00",
+  "protocol": "cipher_headroom_audit_v1",
+  "base_commit": "0344694",
+  "seeds": [
+    7,
+    11,
+    22
+  ],
+  "continuation_iters": 8,
+  "continuation_limit_s": 2.0,
+  "max_alternatives": 4,
+  "selection_procedure": "classical=min acceptance distance; alternatives=farthest, median, best battery_margin, random fills; equal continuation seed/budget",
+  "rows": [
+    {
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "status": "ok",
+      "runtime_s": 0.561,
+      "checkpoints": [
+        {
+          "checkpoint": 0,
+          "node_id": "C30",
+          "n_feasible_insertions": 4,
+          "n_rollouts": 4,
+          "classical_label": "0:1",
+          "classical_objective_key": [
+            3.0,
+            292.0994081647517
+          ],
+          "classical_feasible": true,
+          "improving_alternative_labels": [
+            "0:2",
+            "0:3",
+            "1:2"
+          ],
+          "has_improvement_opportunity": true,
+          "rollouts": [
+            {
+              "label": "0:1",
+              "is_classical": true,
+              "acceptance": 113.73134279487812,
+              "features": {
+                "delta_distance": 16.460642176492,
+                "delta_travel_time": 16.460642176492,
+                "route_load_slack_after_insertion": 170.0,
+                "route_customer_count": 3.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 15.650310171751826
+              },
+              "feasible": true,
+              "objective_key": [
+                3.0,
+                292.0994081647517
+              ],
+              "vehicles": 3,
+              "distance": 292.0994081647517
+            },
+            {
+              "label": "0:2",
+              "is_classical": false,
+              "acceptance": 159.30295029546943,
+              "features": {
+                "delta_distance": 62.03224967708329,
+                "delta_travel_time": 62.03224967708329,
+                "route_load_slack_after_insertion": 170.0,
+                "route_customer_count": 3.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 15.650310171751826
+              },
+              "feasible": true,
+              "objective_key": [
+                2.0,
+                260.92235965531654
+              ],
+              "vehicles": 2,
+              "distance": 260.92235965531654
+            },
+            {
+              "label": "0:3",
+              "is_classical": false,
+              "acceptance": 150.36372344446357,
+              "features": {
+                "delta_distance": 53.09302282607746,
+                "delta_travel_time": 53.09302282607746,
+                "route_load_slack_after_insertion": 170.0,
+                "route_customer_count": 3.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -37.442712654325625
+              },
+              "feasible": true,
+              "objective_key": [
+                2.0,
+                260.92235965531654
+              ],
+              "vehicles": 2,
+              "distance": 260.92235965531654
+            },
+            {
+              "label": "1:2",
+              "is_classical": false,
+              "acceptance": 139.15711110414725,
+              "features": {
+                "delta_distance": 36.61151765779721,
+                "delta_travel_time": 36.61151765779721,
+                "route_load_slack_after_insertion": 150.0,
+                "route_customer_count": 3.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": true,
+              "objective_key": [
+                2.0,
+                257.7474518641999
+              ],
+              "vehicles": 2,
+              "distance": 257.7474518641999
+            }
+          ]
+        },
+        {
+          "checkpoint": 1,
+          "node_id": "C64",
+          "n_feasible_insertions": 3,
+          "n_rollouts": 3,
+          "classical_label": "1:2",
+          "classical_objective_key": [
+            3.0,
+            295.60957509098387
+          ],
+          "classical_feasible": true,
+          "improving_alternative_labels": [],
+          "has_improvement_opportunity": false,
+          "rollouts": [
+            {
+              "label": "1:2",
+              "is_classical": true,
+              "acceptance": 87.32830947781493,
+              "features": {
+                "delta_distance": 27.8640344885409,
+                "delta_travel_time": 27.8640344885409,
+                "route_load_slack_after_insertion": 160.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -9.578309477814923
+              },
+              "feasible": true,
+              "objective_key": [
+                3.0,
+                295.60957509098387
+              ],
+              "vehicles": 3,
+              "distance": 295.60957509098387
+            },
+            {
+              "label": "0:1",
+              "is_classical": false,
+              "acceptance": 125.26444361546453,
+              "features": {
+                "delta_distance": 38.46177985869663,
+                "delta_travel_time": 38.46177985869663,
+                "route_load_slack_after_insertion": 180.0,
+                "route_customer_count": 3.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": true,
+              "objective_key": [
+                3.0,
+                328.0894734444758
+              ],
+              "vehicles": 3,
+              "distance": 328.0894734444758
+            },
+            {
+              "label": "1:1",
+              "is_classical": false,
+              "acceptance": 102.54559344635005,
+              "features": {
+                "delta_distance": 43.08131845707603,
+                "delta_travel_time": 43.08131845707603,
+                "route_load_slack_after_insertion": 160.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 18.285725010725972
+              },
+              "feasible": true,
+              "objective_key": [
+                3.0,
+                295.60957509098387
+              ],
+              "vehicles": 3,
+              "distance": 295.60957509098387
+            }
+          ]
+        },
+        {
+          "checkpoint": 2,
+          "node_id": "C30",
+          "n_feasible_insertions": 6,
+          "n_rollouts": 5,
+          "classical_label": "0:1",
+          "classical_objective_key": [
+            3.0,
+            295.60957509098387
+          ],
+          "classical_feasible": true,
+          "improving_alternative_labels": [],
+          "has_improvement_opportunity": false,
+          "rollouts": [
+            {
+              "label": "0:1",
+              "is_classical": true,
+              "acceptance": 86.8026637567679,
+              "features": {
+                "delta_distance": 16.460642176492,
+                "delta_travel_time": 16.460642176492,
+                "route_load_slack_after_insertion": 190.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 26.118347033370053
+              },
+              "feasible": true,
+              "objective_key": [
+                3.0,
+                295.60957509098387
+              ],
+              "vehicles": 3,
+              "distance": 295.60957509098387
+            },
+            {
+              "label": "2:2",
+              "is_classical": false,
+              "acceptance": 150.36372344446357,
+              "features": {
+                "delta_distance": 53.09302282607746,
+                "delta_travel_time": 53.09302282607746,
+                "route_load_slack_after_insertion": 170.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -37.442712654325625
+              },
+              "feasible": true,
+              "objective_key": [
+                3.0,
+                295.60957509098387
+              ],
+              "vehicles": 3,
+              "distance": 295.60957509098387
+            },
+            {
+              "label": "0:2",
+              "is_classical": false,
+              "acceptance": 132.3742712573592,
+              "features": {
+                "delta_distance": 62.03224967708329,
+                "delta_travel_time": 62.03224967708329,
+                "route_load_slack_after_insertion": 190.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 15.71775032291671
+              },
+              "feasible": true,
+              "objective_key": [
+                3.0,
+                295.60957509098387
+              ],
+              "vehicles": 3,
+              "distance": 295.60957509098387
+            },
+            {
+              "label": "2:1",
+              "is_classical": false,
+              "acceptance": 113.73134279487812,
+              "features": {
+                "delta_distance": 16.460642176492,
+                "delta_travel_time": 16.460642176492,
+                "route_load_slack_after_insertion": 170.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 15.650310171751826
+              },
+              "feasible": true,
+              "objective_key": [
+                3.0,
+                295.60957509098387
+              ],
+              "vehicles": 3,
+              "distance": 295.60957509098387
+            },
+            {
+              "label": "1:3",
+              "is_classical": false,
+              "acceptance": 139.15711110414725,
+              "features": {
+                "delta_distance": 36.61151765779721,
+                "delta_travel_time": 36.61151765779721,
+                "route_load_slack_after_insertion": 150.0,
+                "route_customer_count": 4.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": true,
+              "objective_key": [
+                3.0,
+                307.2884793021007
+              ],
+              "vehicles": 3,
+              "distance": 307.2884793021007
+            }
+          ]
+        },
+        {
+          "checkpoint": 3,
+          "node_id": "C12",
+          "n_feasible_insertions": 3,
+          "n_rollouts": 3,
+          "classical_label": "2:1",
+          "classical_objective_key": [
+            3.0,
+            295.60957509098387
+          ],
+          "classical_feasible": true,
+          "improving_alternative_labels": [],
+          "has_improvement_opportunity": false,
+          "rollouts": [
+            {
+              "label": "2:1",
+              "is_classical": true,
+              "acceptance": 106.26131788786593,
+              "features": {
+                "delta_distance": 8.990617269479813,
+                "delta_travel_time": 8.990617269479813,
+                "route_load_slack_after_insertion": 160.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 15.650310171751826
+              },
+              "feasible": true,
+              "objective_key": [
+                3.0,
+                295.60957509098387
+              ],
+              "vehicles": 3,
+              "distance": 295.60957509098387
+            },
+            {
+              "label": "0:1",
+              "is_classical": false,
+              "acceptance": 134.67981380949024,
+              "features": {
+                "delta_distance": 47.87715005272234,
+                "delta_travel_time": 47.87715005272234,
+                "route_load_slack_after_insertion": 170.0,
+                "route_customer_count": 3.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": true,
+              "objective_key": [
+                3.0,
+                295.60957509098387
+              ],
+              "vehicles": 3,
+              "distance": 295.60957509098387
+            },
+            {
+              "label": "2:2",
+              "is_classical": false,
+              "acceptance": 109.33263884975571,
+              "features": {
+                "delta_distance": 12.061938231369592,
+                "delta_travel_time": 12.061938231369592,
+                "route_load_slack_after_insertion": 160.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 3.588371940382231
+              },
+              "feasible": true,
+              "objective_key": [
+                3.0,
+                295.60957509098387
+              ],
+              "vehicles": 3,
+              "distance": 295.60957509098387
+            }
+          ]
+        }
+      ],
+      "n_checkpoints": 4,
+      "n_with_opportunity": 1
+    },
+    {
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 11,
+      "status": "ok",
+      "runtime_s": 0.086,
+      "checkpoints": [
+        {
+          "checkpoint": 2,
+          "node_id": "C85",
+          "n_feasible_insertions": 3,
+          "n_rollouts": 3,
+          "classical_label": "1:5",
+          "classical_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "classical_feasible": true,
+          "improving_alternative_labels": [],
+          "has_improvement_opportunity": false,
+          "rollouts": [
+            {
+              "label": "1:5",
+              "is_classical": true,
+              "acceptance": 138.7704990630104,
+              "features": {
+                "delta_distance": 59.464274989274024,
+                "delta_travel_time": 59.464274989274024,
+                "route_load_slack_after_insertion": 160.0,
+                "route_customer_count": 6.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 18.285725010725972
+              },
+              "feasible": true,
+              "objective_key": [
+                2.0,
+                257.7474518641999
+              ],
+              "vehicles": 2,
+              "distance": 257.7474518641999
+            },
+            {
+              "label": "1:7",
+              "is_classical": false,
+              "acceptance": 138.7704990630104,
+              "features": {
+                "delta_distance": 59.464274989274024,
+                "delta_travel_time": 59.464274989274024,
+                "route_load_slack_after_insertion": 160.0,
+                "route_customer_count": 6.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 18.285725010725972
+              },
+              "feasible": true,
+              "objective_key": [
+                2.0,
+                257.7474518641999
+              ],
+              "vehicles": 2,
+              "distance": 257.7474518641999
+            },
+            {
+              "label": "1:6",
+              "is_classical": false,
+              "acceptance": 138.7704990630104,
+              "features": {
+                "delta_distance": 59.464274989274024,
+                "delta_travel_time": 59.464274989274024,
+                "route_load_slack_after_insertion": 160.0,
+                "route_customer_count": 6.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 18.285725010725972
+              },
+              "feasible": true,
+              "objective_key": [
+                2.0,
+                257.7474518641999
+              ],
+              "vehicles": 2,
+              "distance": 257.7474518641999
+            }
+          ]
+        },
+        {
+          "checkpoint": 3,
+          "node_id": "C30",
+          "n_feasible_insertions": 3,
+          "n_rollouts": 3,
+          "classical_label": "0:4",
+          "classical_objective_key": [
+            2.0,
+            264.4407329887187
+          ],
+          "classical_feasible": true,
+          "improving_alternative_labels": [
+            "1:4"
+          ],
+          "has_improvement_opportunity": true,
+          "rollouts": [
+            {
+              "label": "0:4",
+              "is_classical": true,
+              "acceptance": 98.96818881736434,
+              "features": {
+                "delta_distance": 16.460642176492,
+                "delta_travel_time": 16.460642176492,
+                "route_load_slack_after_insertion": 170.0,
+                "route_customer_count": 3.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 26.118347033370053
+              },
+              "feasible": true,
+              "objective_key": [
+                2.0,
+                264.4407329887187
+              ],
+              "vehicles": 2,
+              "distance": 264.4407329887187
+            },
+            {
+              "label": "1:4",
+              "is_classical": false,
+              "acceptance": 151.48613397633397,
+              "features": {
+                "delta_distance": 36.61151765779721,
+                "delta_travel_time": 36.61151765779721,
+                "route_load_slack_after_insertion": 150.0,
+                "route_customer_count": 7.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 9.748965311868677
+              },
+              "feasible": true,
+              "objective_key": [
+                2.0,
+                257.7474518641999
+              ],
+              "vehicles": 2,
+              "distance": 257.7474518641999
+            },
+            {
+              "label": "0:3",
+              "is_classical": false,
+              "acceptance": 137.85472160060687,
+              "features": {
+                "delta_distance": 55.347174959734524,
+                "delta_travel_time": 55.347174959734524,
+                "route_load_slack_after_insertion": 170.0,
+                "route_customer_count": 3.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 10.237299979669029
+              },
+              "feasible": true,
+              "objective_key": [
+                2.0,
+                264.4407329887187
+              ],
+              "vehicles": 2,
+              "distance": 264.4407329887187
+            }
+          ]
+        }
+      ],
+      "n_checkpoints": 2,
+      "n_with_opportunity": 1
+    },
+    {
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 22,
+      "status": "ok",
+      "runtime_s": 0.06,
+      "checkpoints": [
+        {
+          "checkpoint": 0,
+          "node_id": "C12",
+          "n_feasible_insertions": 3,
+          "n_rollouts": 3,
+          "classical_label": "0:1",
+          "classical_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "classical_feasible": true,
+          "improving_alternative_labels": [],
+          "has_improvement_opportunity": false,
+          "rollouts": [
+            {
+              "label": "0:1",
+              "is_classical": true,
+              "acceptance": 106.26131788786593,
+              "features": {
+                "delta_distance": 8.990617269479813,
+                "delta_travel_time": 8.990617269479813,
+                "route_load_slack_after_insertion": 160.0,
+                "route_customer_count": 3.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 15.650310171751826
+              },
+              "feasible": true,
+              "objective_key": [
+                2.0,
+                257.7474518641999
+              ],
+              "vehicles": 2,
+              "distance": 257.7474518641999
+            },
+            {
+              "label": "0:2",
+              "is_classical": false,
+              "acceptance": 109.43622567898255,
+              "features": {
+                "delta_distance": 12.165525060596439,
+                "delta_travel_time": 12.165525060596439,
+                "route_load_slack_after_insertion": 160.0,
+                "route_customer_count": 3.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 15.650310171751826
+              },
+              "feasible": true,
+              "objective_key": [
+                2.0,
+                257.7474518641999
+              ],
+              "vehicles": 2,
+              "distance": 257.7474518641999
+            },
+            {
+              "label": "0:3",
+              "is_classical": false,
+              "acceptance": 109.33263884975571,
+              "features": {
+                "delta_distance": 12.061938231369592,
+                "delta_travel_time": 12.061938231369592,
+                "route_load_slack_after_insertion": 160.0,
+                "route_customer_count": 3.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 3.588371940382231
+              },
+              "feasible": true,
+              "objective_key": [
+                2.0,
+                257.7474518641999
+              ],
+              "vehicles": 2,
+              "distance": 257.7474518641999
+            }
+          ]
+        },
+        {
+          "checkpoint": 1,
+          "node_id": "C12",
+          "n_feasible_insertions": 3,
+          "n_rollouts": 3,
+          "classical_label": "0:1",
+          "classical_objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "classical_feasible": true,
+          "improving_alternative_labels": [],
+          "has_improvement_opportunity": false,
+          "rollouts": [
+            {
+              "label": "0:1",
+              "is_classical": true,
+              "acceptance": 106.26131788786593,
+              "features": {
+                "delta_distance": 8.990617269479813,
+                "delta_travel_time": 8.990617269479813,
+                "route_load_slack_after_insertion": 160.0,
+                "route_customer_count": 3.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 15.650310171751826
+              },
+              "feasible": true,
+              "objective_key": [
+                2.0,
+                257.7474518641999
+              ],
+              "vehicles": 2,
+              "distance": 257.7474518641999
+            },
+            {
+              "label": "0:2",
+              "is_classical": false,
+              "acceptance": 109.43622567898255,
+              "features": {
+                "delta_distance": 12.165525060596439,
+                "delta_travel_time": 12.165525060596439,
+                "route_load_slack_after_insertion": 160.0,
+                "route_customer_count": 3.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 15.650310171751826
+              },
+              "feasible": true,
+              "objective_key": [
+                2.0,
+                257.7474518641999
+              ],
+              "vehicles": 2,
+              "distance": 257.7474518641999
+            },
+            {
+              "label": "0:3",
+              "is_classical": false,
+              "acceptance": 109.33263884975571,
+              "features": {
+                "delta_distance": 12.061938231369592,
+                "delta_travel_time": 12.061938231369592,
+                "route_load_slack_after_insertion": 160.0,
+                "route_customer_count": 3.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 3.588371940382231
+              },
+              "feasible": true,
+              "objective_key": [
+                2.0,
+                257.7474518641999
+              ],
+              "vehicles": 2,
+              "distance": 257.7474518641999
+            }
+          ]
+        }
+      ],
+      "n_checkpoints": 2,
+      "n_with_opportunity": 0
+    },
+    {
+      "family": "schneider",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "status": "ok",
+      "runtime_s": 5.625,
+      "checkpoints": [
+        {
+          "checkpoint": 0,
+          "node_id": "C3",
+          "n_feasible_insertions": 28,
+          "n_rollouts": 5,
+          "classical_label": "38:1",
+          "classical_objective_key": [
+            39.0,
+            3377.482904542729
+          ],
+          "classical_feasible": true,
+          "improving_alternative_labels": [],
+          "has_improvement_opportunity": false,
+          "rollouts": [
+            {
+              "label": "38:1",
+              "is_classical": true,
+              "acceptance": 41.892140022364316,
+              "features": {
+                "delta_distance": 1.681618503847698,
+                "delta_travel_time": 1.681618503847698,
+                "route_load_slack_after_insertion": 160.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 37.79785997763568
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3377.482904542729
+              ],
+              "vehicles": 39,
+              "distance": 3377.482904542729
+            },
+            {
+              "label": "33:2",
+              "is_classical": false,
+              "acceptance": 142.91748156883205,
+              "features": {
+                "delta_distance": 63.62541260391606,
+                "delta_travel_time": 63.62541260391606,
+                "route_load_slack_after_insertion": 170.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -63.22748156883203
+              },
+              "feasible": false,
+              "objective_key": [
+                39.0,
+                3442.3305814290047
+              ],
+              "vehicles": 39,
+              "distance": 3442.3305814290047
+            },
+            {
+              "label": "0:6",
+              "is_classical": false,
+              "acceptance": 105.68434015098471,
+              "features": {
+                "delta_distance": 27.13683465399118,
+                "delta_travel_time": 27.13683465399118,
+                "route_load_slack_after_insertion": 130.0,
+                "route_customer_count": 5.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -25.994340150984712
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3402.285568649328
+              ],
+              "vehicles": 39,
+              "distance": 3402.285568649328
+            },
+            {
+              "label": "21:3",
+              "is_classical": false,
+              "acceptance": 122.90668421915122,
+              "features": {
+                "delta_distance": 32.22655404665724,
+                "delta_travel_time": 32.22655404665724,
+                "route_load_slack_after_insertion": 170.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 8.036167417946473
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3402.683121041929
+              ],
+              "vehicles": 39,
+              "distance": 3402.683121041929
+            },
+            {
+              "label": "1:5",
+              "is_classical": false,
+              "acceptance": 103.18959729704417,
+              "features": {
+                "delta_distance": 25.400275386182066,
+                "delta_travel_time": 25.400275386182066,
+                "route_load_slack_after_insertion": 90.0,
+                "route_customer_count": 4.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -23.49959729704417
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3398.6230414341894
+              ],
+              "vehicles": 39,
+              "distance": 3398.6230414341894
+            }
+          ]
+        },
+        {
+          "checkpoint": 1,
+          "node_id": "C79",
+          "n_feasible_insertions": 23,
+          "n_rollouts": 5,
+          "classical_label": "20:1",
+          "classical_objective_key": [
+            38.0,
+            3307.0400686228977
+          ],
+          "classical_feasible": true,
+          "improving_alternative_labels": [
+            "28:1",
+            "29:1"
+          ],
+          "has_improvement_opportunity": true,
+          "rollouts": [
+            {
+              "label": "20:1",
+              "is_classical": true,
+              "acceptance": 102.70208571779713,
+              "features": {
+                "delta_distance": 25.76054947111175,
+                "delta_travel_time": 25.76054947111175,
+                "route_load_slack_after_insertion": 190.0,
+                "route_customer_count": 1.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 15.458682405545556
+              },
+              "feasible": true,
+              "objective_key": [
+                38.0,
+                3307.0400686228977
+              ],
+              "vehicles": 38,
+              "distance": 3307.0400686228977
+            },
+            {
+              "label": "13:2",
+              "is_classical": false,
+              "acceptance": 204.51287695554868,
+              "features": {
+                "delta_distance": 125.37075616655692,
+                "delta_travel_time": 125.37075616655692,
+                "route_load_slack_after_insertion": 170.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -124.82287695554868
+              },
+              "feasible": false,
+              "objective_key": [
+                38.0,
+                3390.4760318422327
+              ],
+              "vehicles": 38,
+              "distance": 3390.4760318422327
+            },
+            {
+              "label": "6:4",
+              "is_classical": false,
+              "acceptance": 145.92342275033047,
+              "features": {
+                "delta_distance": 71.84714898255012,
+                "delta_travel_time": 71.84714898255012,
+                "route_load_slack_after_insertion": 150.0,
+                "route_customer_count": 3.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -66.23342275033048
+              },
+              "feasible": true,
+              "objective_key": [
+                38.0,
+                3361.6366375750595
+              ],
+              "vehicles": 38,
+              "distance": 3361.6366375750595
+            },
+            {
+              "label": "28:1",
+              "is_classical": false,
+              "acceptance": 111.65891177077623,
+              "features": {
+                "delta_distance": 4.7077905067810875,
+                "delta_travel_time": 4.7077905067810875,
+                "route_load_slack_after_insertion": 180.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 6.501856352566456
+              },
+              "feasible": true,
+              "objective_key": [
+                38.0,
+                3285.987309658567
+              ],
+              "vehicles": 38,
+              "distance": 3285.987309658567
+            },
+            {
+              "label": "29:1",
+              "is_classical": false,
+              "acceptance": 107.97270889737104,
+              "features": {
+                "delta_distance": 4.985385258688034,
+                "delta_travel_time": 4.985385258688034,
+                "route_load_slack_after_insertion": 180.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 10.188059225971658
+              },
+              "feasible": true,
+              "objective_key": [
+                38.0,
+                3286.2649044104737
+              ],
+              "vehicles": 38,
+              "distance": 3286.2649044104737
+            }
+          ]
+        },
+        {
+          "checkpoint": 2,
+          "node_id": "C11",
+          "n_feasible_insertions": 27,
+          "n_rollouts": 5,
+          "classical_label": "16:2",
+          "classical_objective_key": [
+            38.0,
+            3311.119996696277
+          ],
+          "classical_feasible": true,
+          "improving_alternative_labels": [],
+          "has_improvement_opportunity": false,
+          "rollouts": [
+            {
+              "label": "16:2",
+              "is_classical": true,
+              "acceptance": 70.40758259962153,
+              "features": {
+                "delta_distance": 1.4438240013548764,
+                "delta_travel_time": 1.4438240013548764,
+                "route_load_slack_after_insertion": 190.0,
+                "route_customer_count": 1.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 43.76429669951179
+              },
+              "feasible": true,
+              "objective_key": [
+                38.0,
+                3311.119996696277
+              ],
+              "vehicles": 38,
+              "distance": 3311.119996696277
+            },
+            {
+              "label": "19:3",
+              "is_classical": false,
+              "acceptance": 153.02412559057805,
+              "features": {
+                "delta_distance": 34.93483480390827,
+                "delta_travel_time": 34.93483480390827,
+                "route_load_slack_after_insertion": 160.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 0.07147733667288136
+              },
+              "feasible": true,
+              "objective_key": [
+                38.0,
+                3344.7875253378284
+              ],
+              "vehicles": 38,
+              "distance": 3344.7875253378284
+            },
+            {
+              "label": "1:4",
+              "is_classical": false,
+              "acceptance": 103.18093251952061,
+              "features": {
+                "delta_distance": 25.743998988225982,
+                "delta_travel_time": 25.743998988225982,
+                "route_load_slack_after_insertion": 130.0,
+                "route_customer_count": 3.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -23.49093251952061
+              },
+              "feasible": true,
+              "objective_key": [
+                38.0,
+                3336.8131810231184
+              ],
+              "vehicles": 38,
+              "distance": 3336.8131810231184
+            },
+            {
+              "label": "21:3",
+              "is_classical": false,
+              "acceptance": 129.5106616355276,
+              "features": {
+                "delta_distance": 38.83053146303365,
+                "delta_travel_time": 38.83053146303365,
+                "route_load_slack_after_insertion": 170.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 8.036167417946473
+              },
+              "feasible": true,
+              "objective_key": [
+                38.0,
+                3348.683221996954
+              ],
+              "vehicles": 38,
+              "distance": 3348.683221996954
+            },
+            {
+              "label": "10:3",
+              "is_classical": false,
+              "acceptance": 87.76413700237376,
+              "features": {
+                "delta_distance": 9.477834599233802,
+                "delta_travel_time": 9.477834599233802,
+                "route_load_slack_after_insertion": 150.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -8.074137002373755
+              },
+              "feasible": true,
+              "objective_key": [
+                38.0,
+                3319.8499290229734
+              ],
+              "vehicles": 38,
+              "distance": 3319.8499290229734
+            }
+          ]
+        },
+        {
+          "checkpoint": 3,
+          "node_id": "C30",
+          "n_feasible_insertions": 25,
+          "n_rollouts": 5,
+          "classical_label": "37:2",
+          "classical_objective_key": [
+            38.0,
+            3303.8374512501705
+          ],
+          "classical_feasible": true,
+          "improving_alternative_labels": [],
+          "has_improvement_opportunity": false,
+          "rollouts": [
+            {
+              "label": "37:2",
+              "is_classical": true,
+              "acceptance": 74.74998487796546,
+              "features": {
+                "delta_distance": 7.572495028803434,
+                "delta_travel_time": 7.572495028803434,
+                "route_load_slack_after_insertion": 90.0,
+                "route_customer_count": 5.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 4.940015122034541
+              },
+              "feasible": true,
+              "objective_key": [
+                38.0,
+                3303.8374512501705
+              ],
+              "vehicles": 38,
+              "distance": 3303.8374512501705
+            },
+            {
+              "label": "3:3",
+              "is_classical": false,
+              "acceptance": 168.72373414338216,
+              "features": {
+                "delta_distance": 92.0,
+                "delta_travel_time": 92.0,
+                "route_load_slack_after_insertion": 30.0,
+                "route_customer_count": 9.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -89.03373414338219
+              },
+              "feasible": false,
+              "objective_key": [
+                38.0,
+                3439.7639328734604
+              ],
+              "vehicles": 38,
+              "distance": 3439.7639328734604
+            },
+            {
+              "label": "27:1",
+              "is_classical": false,
+              "acceptance": 119.01035648436775,
+              "features": {
+                "delta_distance": 31.687170924835,
+                "delta_travel_time": 31.687170924835,
+                "route_load_slack_after_insertion": 150.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": true,
+              "objective_key": [
+                38.0,
+                3336.895426625024
+              ],
+              "vehicles": 38,
+              "distance": 3336.895426625024
+            },
+            {
+              "label": "32:1",
+              "is_classical": false,
+              "acceptance": 92.68381503692267,
+              "features": {
+                "delta_distance": 4.752511747031271,
+                "delta_travel_time": 4.752511747031271,
+                "route_load_slack_after_insertion": 150.0,
+                "route_customer_count": 4.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 20.868499039347277
+              },
+              "feasible": true,
+              "objective_key": [
+                38.0,
+                3309.0193152239826
+              ],
+              "vehicles": 38,
+              "distance": 3309.0193152239826
+            },
+            {
+              "label": "9:2",
+              "is_classical": false,
+              "acceptance": 147.11521155570819,
+              "features": {
+                "delta_distance": 56.506095398648874,
+                "delta_travel_time": 56.506095398648874,
+                "route_load_slack_after_insertion": 170.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": true,
+              "objective_key": [
+                38.0,
+                3370.66364714449
+              ],
+              "vehicles": 38,
+              "distance": 3370.66364714449
+            }
+          ]
+        }
+      ],
+      "n_checkpoints": 4,
+      "n_with_opportunity": 1
+    },
+    {
+      "family": "schneider",
+      "instance_id": "c101_21",
+      "seed": 11,
+      "status": "ok",
+      "runtime_s": 5.721,
+      "checkpoints": [
+        {
+          "checkpoint": 0,
+          "node_id": "C69",
+          "n_feasible_insertions": 27,
+          "n_rollouts": 5,
+          "classical_label": "5:6",
+          "classical_objective_key": [
+            39.0,
+            3337.1051523466217
+          ],
+          "classical_feasible": true,
+          "improving_alternative_labels": [
+            "36:1"
+          ],
+          "has_improvement_opportunity": true,
+          "rollouts": [
+            {
+              "label": "5:6",
+              "is_classical": true,
+              "acceptance": 71.21984848292361,
+              "features": {
+                "delta_distance": 6.433981132056603,
+                "delta_travel_time": 6.433981132056603,
+                "route_load_slack_after_insertion": 60.0,
+                "route_customer_count": 8.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 8.470151517076388
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3337.1051523466217
+              ],
+              "vehicles": 39,
+              "distance": 3337.1051523466217
+            },
+            {
+              "label": "16:2",
+              "is_classical": false,
+              "acceptance": 180.7847866235936,
+              "features": {
+                "delta_distance": 100.16066668812222,
+                "delta_travel_time": 100.16066668812222,
+                "route_load_slack_after_insertion": 150.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3431.0367288096754
+              ],
+              "vehicles": 39,
+              "distance": 3431.0367288096754
+            },
+            {
+              "label": "6:5",
+              "is_classical": false,
+              "acceptance": 103.93620319720512,
+              "features": {
+                "delta_distance": 26.713291708588123,
+                "delta_travel_time": 26.713291708588123,
+                "route_load_slack_after_insertion": 120.0,
+                "route_customer_count": 4.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -24.24620319720512
+              },
+              "feasible": false,
+              "objective_key": [
+                39.0,
+                3357.384462923153
+              ],
+              "vehicles": 39,
+              "distance": 3357.384462923153
+            },
+            {
+              "label": "36:1",
+              "is_classical": false,
+              "acceptance": 83.43691589841109,
+              "features": {
+                "delta_distance": 6.495379651725713,
+                "delta_travel_time": 6.495379651725713,
+                "route_load_slack_after_insertion": 190.0,
+                "route_customer_count": 1.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 34.7238522249316
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3316.8853330238308
+              ],
+              "vehicles": 39,
+              "distance": 3316.8853330238308
+            },
+            {
+              "label": "28:1",
+              "is_classical": false,
+              "acceptance": 98.39487535344563,
+              "features": {
+                "delta_distance": 19.807344535891623,
+                "delta_travel_time": 19.807344535891623,
+                "route_load_slack_after_insertion": 170.0,
+                "route_customer_count": 1.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -18.704875353445622
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3358.412568783669
+              ],
+              "vehicles": 39,
+              "distance": 3358.412568783669
+            }
+          ]
+        },
+        {
+          "checkpoint": 1,
+          "node_id": "C85",
+          "n_feasible_insertions": 27,
+          "n_rollouts": 5,
+          "classical_label": "3:7",
+          "classical_objective_key": [
+            39.0,
+            3326.5518236914886
+          ],
+          "classical_feasible": true,
+          "improving_alternative_labels": [],
+          "has_improvement_opportunity": false,
+          "rollouts": [
+            {
+              "label": "3:7",
+              "is_classical": true,
+              "acceptance": 76.84416470350655,
+              "features": {
+                "delta_distance": 0.4432623176116861,
+                "delta_travel_time": 0.4432623176116861,
+                "route_load_slack_after_insertion": 30.0,
+                "route_customer_count": 9.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 2.8458352964934406
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3326.5518236914886
+              ],
+              "vehicles": 39,
+              "distance": 3326.5518236914886
+            },
+            {
+              "label": "9:3",
+              "is_classical": false,
+              "acceptance": 142.32714937007566,
+              "features": {
+                "delta_distance": 51.71803321301631,
+                "delta_travel_time": 51.71803321301631,
+                "route_load_slack_after_insertion": 150.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 8.1071814333811
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3377.8265945868934
+              ],
+              "vehicles": 39,
+              "distance": 3377.8265945868934
+            },
+            {
+              "label": "16:3",
+              "is_classical": false,
+              "acceptance": 125.11866713995559,
+              "features": {
+                "delta_distance": 44.4945472044842,
+                "delta_travel_time": 44.4945472044842,
+                "route_load_slack_after_insertion": 130.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 0.7135734963824625
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3370.6031085783607
+              ],
+              "vehicles": 39,
+              "distance": 3370.6031085783607
+            },
+            {
+              "label": "17:3",
+              "is_classical": false,
+              "acceptance": 103.80205387848414,
+              "features": {
+                "delta_distance": 20.10421092645067,
+                "delta_travel_time": 20.10421092645067,
+                "route_load_slack_after_insertion": 160.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 26.936133638920314
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3346.2127723003277
+              ],
+              "vehicles": 39,
+              "distance": 3346.2127723003277
+            },
+            {
+              "label": "23:3",
+              "is_classical": false,
+              "acceptance": 110.37434643667912,
+              "features": {
+                "delta_distance": 20.10421092645067,
+                "delta_travel_time": 20.10421092645067,
+                "route_load_slack_after_insertion": 150.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 22.069519924400574
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3346.212772300327
+              ],
+              "vehicles": 39,
+              "distance": 3346.212772300327
+            }
+          ]
+        },
+        {
+          "checkpoint": 2,
+          "node_id": "C57",
+          "n_feasible_insertions": 30,
+          "n_rollouts": 5,
+          "classical_label": "4:2",
+          "classical_objective_key": [
+            39.0,
+            3331.975250162089
+          ],
+          "classical_feasible": true,
+          "improving_alternative_labels": [
+            "23:3",
+            "24:3"
+          ],
+          "has_improvement_opportunity": true,
+          "rollouts": [
+            {
+              "label": "4:2",
+              "is_classical": true,
+              "acceptance": 72.0570962859162,
+              "features": {
+                "delta_distance": 1.9429037140837906,
+                "delta_travel_time": 1.9429037140837906,
+                "route_load_slack_after_insertion": 150.0,
+                "route_customer_count": 1.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 7.632903714083788
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3331.975250162089
+              ],
+              "vehicles": 39,
+              "distance": 3331.975250162089
+            },
+            {
+              "label": "23:3",
+              "is_classical": false,
+              "acceptance": 158.3547937937786,
+              "features": {
+                "delta_distance": 68.08465828355017,
+                "delta_travel_time": 68.08465828355017,
+                "route_load_slack_after_insertion": 140.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -21.044313718179183
+              },
+              "feasible": true,
+              "objective_key": [
+                38.0,
+                3368.962549424013
+              ],
+              "vehicles": 38,
+              "distance": 3368.962549424013
+            },
+            {
+              "label": "2:7",
+              "is_classical": false,
+              "acceptance": 139.41777169945806,
+              "features": {
+                "delta_distance": 61.908630425745756,
+                "delta_travel_time": 61.908630425745756,
+                "route_load_slack_after_insertion": 50.0,
+                "route_customer_count": 6.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -59.72777169945807
+              },
+              "feasible": false,
+              "objective_key": [
+                38.0,
+                3375.090066262022
+              ],
+              "vehicles": 38,
+              "distance": 3375.090066262022
+            },
+            {
+              "label": "24:3",
+              "is_classical": false,
+              "acceptance": 128.480370533592,
+              "features": {
+                "delta_distance": 41.971836446267794,
+                "delta_travel_time": 41.971836446267794,
+                "route_load_slack_after_insertion": 130.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 12.28643908721859
+              },
+              "feasible": true,
+              "objective_key": [
+                38.0,
+                3341.956379200334
+              ],
+              "vehicles": 38,
+              "distance": 3341.956379200334
+            },
+            {
+              "label": "35:3",
+              "is_classical": false,
+              "acceptance": 144.78718584995121,
+              "features": {
+                "delta_distance": 68.16730065813482,
+                "delta_travel_time": 68.16730065813482,
+                "route_load_slack_after_insertion": 130.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -65.09718584995122
+              },
+              "feasible": false,
+              "objective_key": [
+                39.0,
+                3417.0633488766193
+              ],
+              "vehicles": 39,
+              "distance": 3417.0633488766193
+            }
+          ]
+        },
+        {
+          "checkpoint": 3,
+          "node_id": "C2",
+          "n_feasible_insertions": 26,
+          "n_rollouts": 5,
+          "classical_label": "11:2",
+          "classical_objective_key": [
+            39.0,
+            3292.2159915631305
+          ],
+          "classical_feasible": true,
+          "improving_alternative_labels": [],
+          "has_improvement_opportunity": false,
+          "rollouts": [
+            {
+              "label": "11:2",
+              "is_classical": true,
+              "acceptance": 65.8669778291044,
+              "features": {
+                "delta_distance": 0.5708285264982997,
+                "delta_travel_time": 0.5708285264982997,
+                "route_load_slack_after_insertion": 130.0,
+                "route_customer_count": 3.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 13.8230221708956
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3292.2159915631305
+              ],
+              "vehicles": 39,
+              "distance": 3292.2159915631305
+            },
+            {
+              "label": "14:2",
+              "is_classical": false,
+              "acceptance": 203.70309133978552,
+              "features": {
+                "delta_distance": 91.40799983143152,
+                "delta_travel_time": 91.40799983143152,
+                "route_load_slack_after_insertion": 160.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3436.1901910462557
+              ],
+              "vehicles": 39,
+              "distance": 3436.1901910462557
+            },
+            {
+              "label": "1:6",
+              "is_classical": false,
+              "acceptance": 114.2701215786089,
+              "features": {
+                "delta_distance": 34.7234403548661,
+                "delta_travel_time": 34.7234403548661,
+                "route_load_slack_after_insertion": 50.0,
+                "route_customer_count": 5.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -34.58012157860891
+              },
+              "feasible": false,
+              "objective_key": [
+                39.0,
+                3351.8811208495426
+              ],
+              "vehicles": 39,
+              "distance": 3351.8811208495426
+            },
+            {
+              "label": "13:4",
+              "is_classical": false,
+              "acceptance": 90.95950511818978,
+              "features": {
+                "delta_distance": 10.299740776144112,
+                "delta_travel_time": 10.299740776144112,
+                "route_load_slack_after_insertion": 140.0,
+                "route_customer_count": 3.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 33.51211495708767
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3338.5331390918864
+              ],
+              "vehicles": 39,
+              "distance": 3338.5331390918864
+            },
+            {
+              "label": "15:2",
+              "is_classical": false,
+              "acceptance": 168.67716095636465,
+              "features": {
+                "delta_distance": 78.63163970340884,
+                "delta_travel_time": 78.63163970340884,
+                "route_load_slack_after_insertion": 140.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3445.1343657612015
+              ],
+              "vehicles": 39,
+              "distance": 3445.1343657612015
+            }
+          ]
+        }
+      ],
+      "n_checkpoints": 4,
+      "n_with_opportunity": 2
+    },
+    {
+      "family": "schneider",
+      "instance_id": "c101_21",
+      "seed": 22,
+      "status": "ok",
+      "runtime_s": 4.271,
+      "checkpoints": [
+        {
+          "checkpoint": 0,
+          "node_id": "C30",
+          "n_feasible_insertions": 28,
+          "n_rollouts": 5,
+          "classical_label": "38:1",
+          "classical_objective_key": [
+            39.0,
+            3336.8795280034897
+          ],
+          "classical_feasible": true,
+          "improving_alternative_labels": [],
+          "has_improvement_opportunity": false,
+          "rollouts": [
+            {
+              "label": "38:1",
+              "is_classical": true,
+              "acceptance": 64.1570474320831,
+              "features": {
+                "delta_distance": 23.94652591356649,
+                "delta_travel_time": 23.94652591356649,
+                "route_load_slack_after_insertion": 160.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 15.532952567916901
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3336.8795280034897
+              ],
+              "vehicles": 39,
+              "distance": 3336.8795280034897
+            },
+            {
+              "label": "3:4",
+              "is_classical": false,
+              "acceptance": 168.84416470350655,
+              "features": {
+                "delta_distance": 92.0,
+                "delta_travel_time": 92.0,
+                "route_load_slack_after_insertion": 20.0,
+                "route_customer_count": 10.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -89.15416470350655
+              },
+              "feasible": false,
+              "objective_key": [
+                39.0,
+                3423.5633746935746
+              ],
+              "vehicles": 39,
+              "distance": 3423.5633746935746
+            },
+            {
+              "label": "20:1",
+              "is_classical": false,
+              "acceptance": 117.78041861474776,
+              "features": {
+                "delta_distance": 40.83888236806238,
+                "delta_travel_time": 40.83888236806238,
+                "route_load_slack_after_insertion": 190.0,
+                "route_customer_count": 1.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 0.3803495085949393
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3346.6094839587013
+              ],
+              "vehicles": 39,
+              "distance": 3346.6094839587013
+            },
+            {
+              "label": "22:1",
+              "is_classical": false,
+              "acceptance": 96.44946994320033,
+              "features": {
+                "delta_distance": 7.059377316518955,
+                "delta_travel_time": 7.059377316518955,
+                "route_load_slack_after_insertion": 130.0,
+                "route_customer_count": 4.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 19.145393171891172
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3338.5121572217813
+              ],
+              "vehicles": 39,
+              "distance": 3338.5121572217813
+            },
+            {
+              "label": "0:5",
+              "is_classical": false,
+              "acceptance": 83.74989140007801,
+              "features": {
+                "delta_distance": 5.202385903084487,
+                "delta_travel_time": 5.202385903084487,
+                "route_load_slack_after_insertion": 130.0,
+                "route_customer_count": 5.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -4.0598914000780155
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3338.34363481699
+              ],
+              "vehicles": 39,
+              "distance": 3338.34363481699
+            }
+          ]
+        },
+        {
+          "checkpoint": 1,
+          "node_id": "C93",
+          "n_feasible_insertions": 21,
+          "n_rollouts": 5,
+          "classical_label": "27:1",
+          "classical_objective_key": [
+            39.0,
+            3292.207220680655
+          ],
+          "classical_feasible": true,
+          "improving_alternative_labels": [],
+          "has_improvement_opportunity": false,
+          "rollouts": [
+            {
+              "label": "27:1",
+              "is_classical": true,
+              "acceptance": 87.32318555953276,
+              "features": {
+                "delta_distance": 22.023874690274717,
+                "delta_travel_time": 22.023874690274717,
+                "route_load_slack_after_insertion": 160.0,
+                "route_customer_count": 1.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 25.01646987509626
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3292.207220680655
+              ],
+              "vehicles": 39,
+              "distance": 3292.207220680655
+            },
+            {
+              "label": "8:5",
+              "is_classical": false,
+              "acceptance": 195.47535444810902,
+              "features": {
+                "delta_distance": 118.40473964832884,
+                "delta_travel_time": 118.40473964832884,
+                "route_load_slack_after_insertion": 100.0,
+                "route_customer_count": 5.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -115.78535444810902
+              },
+              "feasible": false,
+              "objective_key": [
+                39.0,
+                3413.4444743385443
+              ],
+              "vehicles": 39,
+              "distance": 3413.4444743385443
+            },
+            {
+              "label": "13:2",
+              "is_classical": false,
+              "acceptance": 134.6309537316785,
+              "features": {
+                "delta_distance": 55.48883294268673,
+                "delta_travel_time": 55.48883294268673,
+                "route_load_slack_after_insertion": 140.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -54.940953731678476
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3374.007125137278
+              ],
+              "vehicles": 39,
+              "distance": 3374.007125137278
+            },
+            {
+              "label": "27:2",
+              "is_classical": false,
+              "acceptance": 87.32318555953276,
+              "features": {
+                "delta_distance": 22.023874690274717,
+                "delta_travel_time": 22.023874690274717,
+                "route_load_slack_after_insertion": 160.0,
+                "route_customer_count": 1.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 25.016469875096263
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3292.207220680655
+              ],
+              "vehicles": 39,
+              "distance": 3292.207220680655
+            },
+            {
+              "label": "34:1",
+              "is_classical": false,
+              "acceptance": 150.83656714510025,
+              "features": {
+                "delta_distance": 47.758814115760565,
+                "delta_travel_time": 47.758814115760565,
+                "route_load_slack_after_insertion": 140.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3360.112615385447
+              ],
+              "vehicles": 39,
+              "distance": 3360.112615385447
+            }
+          ]
+        },
+        {
+          "checkpoint": 2,
+          "node_id": "C10",
+          "n_feasible_insertions": 23,
+          "n_rollouts": 5,
+          "classical_label": "38:2",
+          "classical_objective_key": [
+            39.0,
+            3327.5488662295074
+          ],
+          "classical_feasible": true,
+          "improving_alternative_labels": [],
+          "has_improvement_opportunity": false,
+          "rollouts": [
+            {
+              "label": "38:2",
+              "is_classical": true,
+              "acceptance": 64.3273736421014,
+              "features": {
+                "delta_distance": 0.17032621001831316,
+                "delta_travel_time": 0.17032621001831316,
+                "route_load_slack_after_insertion": 150.0,
+                "route_customer_count": 3.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 15.362626357898591
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3327.5488662295074
+              ],
+              "vehicles": 39,
+              "distance": 3327.5488662295074
+            },
+            {
+              "label": "19:3",
+              "is_classical": false,
+              "acceptance": 148.12131055867346,
+              "features": {
+                "delta_distance": 30.032019772003643,
+                "delta_travel_time": 30.032019772003643,
+                "route_load_slack_after_insertion": 160.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 0.07147733667288136
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3357.410559791493
+              ],
+              "vehicles": 39,
+              "distance": 3357.410559791493
+            },
+            {
+              "label": "0:6",
+              "is_classical": false,
+              "acceptance": 101.59415595221665,
+              "features": {
+                "delta_distance": 23.046650455223123,
+                "delta_travel_time": 23.046650455223123,
+                "route_load_slack_after_insertion": 130.0,
+                "route_customer_count": 5.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -21.904155952216655
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3353.7404605230604
+              ],
+              "vehicles": 39,
+              "distance": 3353.7404605230604
+            },
+            {
+              "label": "16:3",
+              "is_classical": false,
+              "acceptance": 81.34438416516403,
+              "features": {
+                "delta_distance": 0.7202642296926527,
+                "delta_travel_time": 0.7202642296926527,
+                "route_load_slack_after_insertion": 150.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 33.54775936366195
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3328.0988042491817
+              ],
+              "vehicles": 39,
+              "distance": 3328.0988042491817
+            },
+            {
+              "label": "18:3",
+              "is_classical": false,
+              "acceptance": 98.06624089496341,
+              "features": {
+                "delta_distance": 12.141949020856899,
+                "delta_travel_time": 12.141949020856899,
+                "route_load_slack_after_insertion": 170.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 17.175107947332734
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3339.5204890403465
+              ],
+              "vehicles": 39,
+              "distance": 3339.5204890403465
+            }
+          ]
+        },
+        {
+          "checkpoint": 3,
+          "node_id": "C65",
+          "n_feasible_insertions": 33,
+          "n_rollouts": 5,
+          "classical_label": "18:1",
+          "classical_objective_key": [
+            39.0,
+            3361.864280259283
+          ],
+          "classical_feasible": true,
+          "improving_alternative_labels": [
+            "25:1",
+            "17:1",
+            "19:1",
+            "14:1"
+          ],
+          "has_improvement_opportunity": true,
+          "rollouts": [
+            {
+              "label": "18:1",
+              "is_classical": true,
+              "acceptance": 71.20135966537674,
+              "features": {
+                "delta_distance": 24.382560022498247,
+                "delta_travel_time": 24.382560022498247,
+                "route_load_slack_after_insertion": 190.0,
+                "route_customer_count": 1.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 31.8980401560625
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3361.864280259283
+              ],
+              "vehicles": 39,
+              "distance": 3361.864280259283
+            },
+            {
+              "label": "25:1",
+              "is_classical": false,
+              "acceptance": 119.7554292261907,
+              "features": {
+                "delta_distance": 3.0626864122946955,
+                "delta_travel_time": 3.0626864122946955,
+                "route_load_slack_after_insertion": 170.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3352.5289646671345
+              ],
+              "vehicles": 39,
+              "distance": 3352.5289646671345
+            },
+            {
+              "label": "17:1",
+              "is_classical": false,
+              "acceptance": 101.20625345524203,
+              "features": {
+                "delta_distance": 17.50841050320856,
+                "delta_travel_time": 17.50841050320856,
+                "route_load_slack_after_insertion": 180.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 11.133401979386983
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3357.892262052658
+              ],
+              "vehicles": 39,
+              "distance": 3357.892262052658
+            },
+            {
+              "label": "19:1",
+              "is_classical": false,
+              "acceptance": 78.47995761567927,
+              "features": {
+                "delta_distance": 1.5384213689939017,
+                "delta_travel_time": 1.5384213689939017,
+                "route_load_slack_after_insertion": 190.0,
+                "route_customer_count": 1.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 39.68081050766341
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3314.2980179320566
+              ],
+              "vehicles": 39,
+              "distance": 3314.2980179320566
+            },
+            {
+              "label": "14:1",
+              "is_classical": false,
+              "acceptance": 114.50984356519712,
+              "features": {
+                "delta_distance": 2.214752056843132,
+                "delta_travel_time": 2.214752056843132,
+                "route_load_slack_after_insertion": 180.0,
+                "route_customer_count": 2.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 3.6509245581455545
+              },
+              "feasible": true,
+              "objective_key": [
+                39.0,
+                3342.5986036062923
+              ],
+              "vehicles": 39,
+              "distance": 3342.5986036062923
+            }
+          ]
+        }
+      ],
+      "n_checkpoints": 4,
+      "n_with_opportunity": 1
+    },
+    {
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "status": "ok",
+      "runtime_s": 1.172,
+      "checkpoints": [
+        {
+          "checkpoint": 0,
+          "node_id": "C3",
+          "n_feasible_insertions": 4,
+          "n_rollouts": 4,
+          "classical_label": "6:9",
+          "classical_objective_key": [
+            3253.8250353769604
+          ],
+          "classical_feasible": true,
+          "improving_alternative_labels": [],
+          "has_improvement_opportunity": false,
+          "rollouts": [
+            {
+              "label": "6:9",
+              "is_classical": true,
+              "acceptance": 145.2781608442368,
+              "features": {
+                "delta_distance": 1.0695048315002973,
+                "delta_travel_time": 1.0695048315002973,
+                "route_load_slack_after_insertion": 20.0,
+                "route_customer_count": 9.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.6417028989001784,
+                "battery_margin": 0.0
+              },
+              "feasible": true,
+              "objective_key": [
+                3253.8250353769604
+              ],
+              "vehicles": 13,
+              "distance": 2434.744889470978
+            },
+            {
+              "label": "7:8",
+              "is_classical": false,
+              "acceptance": 251.78025670658718,
+              "features": {
+                "delta_distance": 59.65514465762385,
+                "delta_travel_time": 59.65514465762385,
+                "route_load_slack_after_insertion": 10.0,
+                "route_customer_count": 8.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 35.79308679457431,
+                "battery_margin": 0.0
+              },
+              "feasible": true,
+              "objective_key": [
+                3257.371216248922
+              ],
+              "vehicles": 13,
+              "distance": 2447.349372086254
+            },
+            {
+              "label": "3:8",
+              "is_classical": false,
+              "acceptance": 209.56086272093057,
+              "features": {
+                "delta_distance": 30.379697203611983,
+                "delta_travel_time": 30.379697203611983,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 7.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 14.58225465773375,
+                "battery_margin": 0.0
+              },
+              "feasible": true,
+              "objective_key": [
+                3267.859504853598
+              ],
+              "vehicles": 13,
+              "distance": 2464.25074375518
+            },
+            {
+              "label": "1:7",
+              "is_classical": false,
+              "acceptance": 159.95229069588078,
+              "features": {
+                "delta_distance": 34.3547550701637,
+                "delta_travel_time": 34.3547550701637,
+                "route_load_slack_after_insertion": 10.0,
+                "route_customer_count": 6.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 16.490282433678573,
+                "battery_margin": 0.0
+              },
+              "feasible": true,
+              "objective_key": [
+                3270.634209164396
+              ],
+              "vehicles": 13,
+              "distance": 2470.0313777360097
+            }
+          ]
+        },
+        {
+          "checkpoint": 2,
+          "node_id": "C11",
+          "n_feasible_insertions": 4,
+          "n_rollouts": 4,
+          "classical_label": "1:7",
+          "classical_objective_key": [
+            3294.001856083046
+          ],
+          "classical_feasible": true,
+          "improving_alternative_labels": [
+            "0:9"
+          ],
+          "has_improvement_opportunity": true,
+          "rollouts": [
+            {
+              "label": "1:7",
+              "is_classical": true,
+              "acceptance": 161.85164829546835,
+              "features": {
+                "delta_distance": 34.0009949878225,
+                "delta_travel_time": 34.0009949878225,
+                "route_load_slack_after_insertion": 30.0,
+                "route_customer_count": 6.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 16.3204775941548,
+                "battery_margin": 0.0
+              },
+              "feasible": true,
+              "objective_key": [
+                3294.001856083046
+              ],
+              "vehicles": 13,
+              "distance": 2524.255987500094
+            },
+            {
+              "label": "7:8",
+              "is_classical": false,
+              "acceptance": 230.65519360648756,
+              "features": {
+                "delta_distance": 38.53008155752424,
+                "delta_travel_time": 38.53008155752424,
+                "route_load_slack_after_insertion": 10.0,
+                "route_customer_count": 8.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 23.118048934514544,
+                "battery_margin": 0.0
+              },
+              "feasible": true,
+              "objective_key": [
+                3297.5655924192674
+              ],
+              "vehicles": 13,
+              "distance": 2541.6730215493494
+            },
+            {
+              "label": "0:9",
+              "is_classical": false,
+              "acceptance": 213.8618505977967,
+              "features": {
+                "delta_distance": 1.627188724235733,
+                "delta_travel_time": 1.627188724235733,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 10.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.7810505876331518,
+                "battery_margin": 0.0
+              },
+              "feasible": true,
+              "objective_key": [
+                3275.228594072386
+              ],
+              "vehicles": 13,
+              "distance": 2504.7701287160608
+            },
+            {
+              "label": "12:4",
+              "is_classical": false,
+              "acceptance": 211.70457568981794,
+              "features": {
+                "delta_distance": 8.846867428871448,
+                "delta_travel_time": 8.846867428871448,
+                "route_load_slack_after_insertion": 50.0,
+                "route_customer_count": 4.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 4.246496365858295,
+                "battery_margin": 0.0
+              },
+              "feasible": true,
+              "objective_key": [
+                3300.697074025977
+              ],
+              "vehicles": 13,
+              "distance": 2546.660384220849
+            }
+          ]
+        },
+        {
+          "checkpoint": 3,
+          "node_id": "C30",
+          "n_feasible_insertions": 2,
+          "n_rollouts": 2,
+          "classical_label": "7:4",
+          "classical_objective_key": [
+            3250.141892048829
+          ],
+          "classical_feasible": true,
+          "improving_alternative_labels": [
+            "12:1"
+          ],
+          "has_improvement_opportunity": true,
+          "rollouts": [
+            {
+              "label": "7:4",
+              "is_classical": true,
+              "acceptance": 192.12511204896333,
+              "features": {
+                "delta_distance": 1.6496523904570317,
+                "delta_travel_time": 1.6496523904570317,
+                "route_load_slack_after_insertion": 20.0,
+                "route_customer_count": 7.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.989791434274219,
+                "battery_margin": 0.0
+              },
+              "feasible": true,
+              "objective_key": [
+                3250.141892048829
+              ],
+              "vehicles": 13,
+              "distance": 2419.423328733197
+            },
+            {
+              "label": "12:1",
+              "is_classical": false,
+              "acceptance": 211.23775037952976,
+              "features": {
+                "delta_distance": 8.223373315190884,
+                "delta_travel_time": 8.223373315190884,
+                "route_load_slack_after_insertion": 20.0,
+                "route_customer_count": 5.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 3.947219191291624,
+                "battery_margin": 0.0
+              },
+              "feasible": true,
+              "objective_key": [
+                3247.553699077987
+              ],
+              "vehicles": 13,
+              "distance": 2415.182040950071
+            }
+          ]
+        }
+      ],
+      "n_checkpoints": 3,
+      "n_with_opportunity": 2
+    },
+    {
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 11,
+      "status": "ok",
+      "runtime_s": 0.316,
+      "checkpoints": [],
+      "n_checkpoints": 0,
+      "n_with_opportunity": 0
+    },
+    {
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 22,
+      "status": "ok",
+      "runtime_s": 1.061,
+      "checkpoints": [
+        {
+          "checkpoint": 0,
+          "node_id": "C30",
+          "n_feasible_insertions": 2,
+          "n_rollouts": 2,
+          "classical_label": "7:4",
+          "classical_objective_key": [
+            3222.7742640291203
+          ],
+          "classical_feasible": true,
+          "improving_alternative_labels": [],
+          "has_improvement_opportunity": false,
+          "rollouts": [
+            {
+              "label": "7:4",
+              "is_classical": true,
+              "acceptance": 192.12511204896333,
+              "features": {
+                "delta_distance": 1.6496523904570317,
+                "delta_travel_time": 1.6496523904570317,
+                "route_load_slack_after_insertion": 20.0,
+                "route_customer_count": 7.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.989791434274219,
+                "battery_margin": 0.0
+              },
+              "feasible": true,
+              "objective_key": [
+                3222.7742640291203
+              ],
+              "vehicles": 13,
+              "distance": 2387.2525397211866
+            },
+            {
+              "label": "4:4",
+              "is_classical": false,
+              "acceptance": 329.12332649561773,
+              "features": {
+                "delta_distance": 87.22657946391043,
+                "delta_travel_time": 87.22657946391043,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 5.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 33.146100196285964,
+                "battery_margin": 0.0
+              },
+              "feasible": true,
+              "objective_key": [
+                3461.9993856715446
+              ],
+              "vehicles": 14,
+              "distance": 2615.1158164799367
+            }
+          ]
+        },
+        {
+          "checkpoint": 1,
+          "node_id": "C93",
+          "n_feasible_insertions": 2,
+          "n_rollouts": 2,
+          "classical_label": "10:2",
+          "classical_objective_key": [
+            3221.886427887266
+          ],
+          "classical_feasible": true,
+          "improving_alternative_labels": [],
+          "has_improvement_opportunity": false,
+          "rollouts": [
+            {
+              "label": "10:2",
+              "is_classical": true,
+              "acceptance": 154.81158431550256,
+              "features": {
+                "delta_distance": 0.0,
+                "delta_travel_time": 0.0,
+                "route_load_slack_after_insertion": 10.0,
+                "route_customer_count": 6.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 0.0
+              },
+              "feasible": true,
+              "objective_key": [
+                3221.886427887266
+              ],
+              "vehicles": 13,
+              "distance": 2385.4028810923246
+            },
+            {
+              "label": "0:6",
+              "is_classical": false,
+              "acceptance": 284.09768669148644,
+              "features": {
+                "delta_distance": 139.91519115188805,
+                "delta_travel_time": 139.91519115188805,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 8.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 67.15929175290626,
+                "battery_margin": 0.0
+              },
+              "feasible": true,
+              "objective_key": [
+                3479.503186719893
+              ],
+              "vehicles": 14,
+              "distance": 2604.321465421581
+            }
+          ]
+        },
+        {
+          "checkpoint": 2,
+          "node_id": "C10",
+          "n_feasible_insertions": 2,
+          "n_rollouts": 2,
+          "classical_label": "0:8",
+          "classical_objective_key": [
+            3232.5543582481287
+          ],
+          "classical_feasible": true,
+          "improving_alternative_labels": [],
+          "has_improvement_opportunity": false,
+          "rollouts": [
+            {
+              "label": "0:8",
+              "is_classical": true,
+              "acceptance": 154.98153093307366,
+              "features": {
+                "delta_distance": 0.9250710934102102,
+                "delta_travel_time": 0.9250710934102102,
+                "route_load_slack_after_insertion": 20.0,
+                "route_customer_count": 8.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.4440341248369009,
+                "battery_margin": 0.0
+              },
+              "feasible": true,
+              "objective_key": [
+                3232.5543582481287
+              ],
+              "vehicles": 13,
+              "distance": 2387.609099308612
+            },
+            {
+              "label": "2:7",
+              "is_classical": false,
+              "acceptance": 278.63593598737356,
+              "features": {
+                "delta_distance": 77.98720301672051,
+                "delta_travel_time": 77.98720301672051,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 7.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 29.635137146353795,
+                "battery_margin": 0.0
+              },
+              "feasible": true,
+              "objective_key": [
+                3263.597082188445
+              ],
+              "vehicles": 13,
+              "distance": 2467.254863298309
+            }
+          ]
+        },
+        {
+          "checkpoint": 3,
+          "node_id": "C65",
+          "n_feasible_insertions": 3,
+          "n_rollouts": 3,
+          "classical_label": "10:1",
+          "classical_objective_key": [
+            3252.3508717246264
+          ],
+          "classical_feasible": true,
+          "improving_alternative_labels": [
+            "4:2",
+            "11:1"
+          ],
+          "has_improvement_opportunity": true,
+          "rollouts": [
+            {
+              "label": "10:1",
+              "is_classical": true,
+              "acceptance": 179.2400096396645,
+              "features": {
+                "delta_distance": 24.42842532416195,
+                "delta_travel_time": 24.42842532416195,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 7.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 11.725644155597735,
+                "battery_margin": 0.0
+              },
+              "feasible": true,
+              "objective_key": [
+                3252.3508717246264
+              ],
+              "vehicles": 13,
+              "distance": 2449.600417837275
+            },
+            {
+              "label": "4:2",
+              "is_classical": false,
+              "acceptance": 242.62200666537527,
+              "features": {
+                "delta_distance": 3.5422376912518345,
+                "delta_travel_time": 3.5422376912518345,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 5.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 1.3460503226756972,
+                "battery_margin": 0.0
+              },
+              "feasible": true,
+              "objective_key": [
+                3241.971277891704
+              ],
+              "vehicles": 13,
+              "distance": 2428.714230204365
+            },
+            {
+              "label": "11:1",
+              "is_classical": false,
+              "acceptance": 242.37715394323186,
+              "features": {
+                "delta_distance": 11.67291977389904,
+                "delta_travel_time": 11.67291977389904,
+                "route_load_slack_after_insertion": 30.0,
+                "route_customer_count": 7.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 5.603001491471539,
+                "battery_margin": 0.0
+              },
+              "feasible": true,
+              "objective_key": [
+                3246.4007418040437
+              ],
+              "vehicles": 13,
+              "distance": 2437.2043138360614
+            }
+          ]
+        }
+      ],
+      "n_checkpoints": 4,
+      "n_with_opportunity": 1
+    },
+    {
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 7,
+      "status": "ok",
+      "runtime_s": 1.089,
+      "checkpoints": [
+        {
+          "checkpoint": 0,
+          "node_id": "1",
+          "n_feasible_insertions": 12,
+          "n_rollouts": 5,
+          "classical_label": "1:3",
+          "classical_objective_key": [
+            17.175443210576915
+          ],
+          "classical_feasible": false,
+          "improving_alternative_labels": [],
+          "has_improvement_opportunity": false,
+          "rollouts": [
+            {
+              "label": "1:3",
+              "is_classical": true,
+              "acceptance": 242.21523835173264,
+              "features": {
+                "delta_distance": 14.563579048540149,
+                "delta_travel_time": 0.36408947621350407,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 4.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -14276.904793966576
+              },
+              "feasible": false,
+              "objective_key": [
+                17.175443210576915
+              ],
+              "vehicles": 2,
+              "distance": 456.15839820642395
+            },
+            {
+              "label": "0:2",
+              "is_classical": false,
+              "acceptance": 442.14174140917027,
+              "features": {
+                "delta_distance": 204.7600865733354,
+                "delta_travel_time": 5.119002164333384,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 6.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": false,
+              "objective_key": [
+                28.923779066242126
+              ],
+              "vehicles": 2,
+              "distance": 839.5193837816659
+            },
+            {
+              "label": "0:3",
+              "is_classical": false,
+              "acceptance": 356.77724901799905,
+              "features": {
+                "delta_distance": 119.39559418216419,
+                "delta_travel_time": 2.984889854554105,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 6.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": false,
+              "objective_key": [
+                28.923779066242126
+              ],
+              "vehicles": 2,
+              "distance": 839.5193837816659
+            },
+            {
+              "label": "0:6",
+              "is_classical": false,
+              "acceptance": 344.41392320654995,
+              "features": {
+                "delta_distance": 107.03226837071513,
+                "delta_travel_time": 2.6758067092678783,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 6.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -6115.482269449274
+              },
+              "feasible": false,
+              "objective_key": [
+                28.244725958656236
+              ],
+              "vehicles": 2,
+              "distance": 830.969583752056
+            },
+            {
+              "label": "0:7",
+              "is_classical": false,
+              "acceptance": 354.9946666003917,
+              "features": {
+                "delta_distance": 117.61301176455684,
+                "delta_travel_time": 2.9403252941139213,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 6.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -7438.075193679488
+              },
+              "feasible": false,
+              "objective_key": [
+                29.43179314365917
+              ],
+              "vehicles": 2,
+              "distance": 877.4656814175826
+            }
+          ]
+        },
+        {
+          "checkpoint": 1,
+          "node_id": "10",
+          "n_feasible_insertions": 12,
+          "n_rollouts": 5,
+          "classical_label": "1:1",
+          "classical_objective_key": [
+            17.175443210576915
+          ],
+          "classical_feasible": false,
+          "improving_alternative_labels": [],
+          "has_improvement_opportunity": false,
+          "rollouts": [
+            {
+              "label": "1:1",
+              "is_classical": true,
+              "acceptance": 254.21438608789913,
+              "features": {
+                "delta_distance": 0.31173604480369477,
+                "delta_travel_time": 0.007793401120092414,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 5.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -15776.79826098739
+              },
+              "feasible": false,
+              "objective_key": [
+                17.175443210576915
+              ],
+              "vehicles": 2,
+              "distance": 456.15839820642395
+            },
+            {
+              "label": "0:4",
+              "is_classical": false,
+              "acceptance": 434.7328768778717,
+              "features": {
+                "delta_distance": 200.3500174494169,
+                "delta_travel_time": 5.008750436235424,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 5.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": false,
+              "objective_key": [
+                27.471949298919604
+              ],
+              "vehicles": 2,
+              "distance": 800.2167548991171
+            },
+            {
+              "label": "1:4",
+              "is_classical": false,
+              "acceptance": 364.84752544379023,
+              "features": {
+                "delta_distance": 110.94487540069483,
+                "delta_travel_time": 2.773621885017371,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 5.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -29605.94068047379
+              },
+              "feasible": false,
+              "objective_key": [
+                24.093765299434796
+              ],
+              "vehicles": 2,
+              "distance": 683.004487519455
+            },
+            {
+              "label": "0:2",
+              "is_classical": false,
+              "acceptance": 352.55261967892085,
+              "features": {
+                "delta_distance": 118.16976025046603,
+                "delta_travel_time": 2.95424400626165,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 5.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": false,
+              "objective_key": [
+                27.4719492989196
+              ],
+              "vehicles": 2,
+              "distance": 800.2167548991171
+            },
+            {
+              "label": "1:2",
+              "is_classical": false,
+              "acceptance": 261.87779207193563,
+              "features": {
+                "delta_distance": 7.975142028840228,
+                "delta_travel_time": 0.19937855072100574,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 5.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -16734.724008991958
+              },
+              "feasible": false,
+              "objective_key": [
+                17.175443210576915
+              ],
+              "vehicles": 2,
+              "distance": 456.15839820642395
+            }
+          ]
+        },
+        {
+          "checkpoint": 2,
+          "node_id": "2",
+          "n_feasible_insertions": 12,
+          "n_rollouts": 5,
+          "classical_label": "0:1",
+          "classical_objective_key": [
+            22.158344614944447
+          ],
+          "classical_feasible": false,
+          "improving_alternative_labels": [
+            "1:2",
+            "0:2",
+            "1:6"
+          ],
+          "has_improvement_opportunity": true,
+          "rollouts": [
+            {
+              "label": "0:1",
+              "is_classical": true,
+              "acceptance": 191.26014141747441,
+              "features": {
+                "delta_distance": 7.052020861542566,
+                "delta_travel_time": 0.17630052153856401,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 4.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 828.931045925583
+              },
+              "feasible": false,
+              "objective_key": [
+                22.158344614944447
+              ],
+              "vehicles": 2,
+              "distance": 618.3955379714844
+            },
+            {
+              "label": "1:2",
+              "is_classical": false,
+              "acceptance": 452.93255967098753,
+              "features": {
+                "delta_distance": 198.71817358308843,
+                "delta_travel_time": 4.9679543395772106,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 6.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -40616.56995887345
+              },
+              "feasible": false,
+              "objective_key": [
+                21.648166250182534
+              ],
+              "vehicles": 2,
+              "distance": 597.968815824394
+            },
+            {
+              "label": "1:1",
+              "is_classical": false,
+              "acceptance": 321.054985025688,
+              "features": {
+                "delta_distance": 66.84059893778884,
+                "delta_travel_time": 1.6710149734447208,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 6.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -24131.873128210995
+              },
+              "feasible": false,
+              "objective_key": [
+                26.968075010543913
+              ],
+              "vehicles": 2,
+              "distance": 796.1741555750032
+            },
+            {
+              "label": "0:2",
+              "is_classical": false,
+              "acceptance": 200.3192911349161,
+              "features": {
+                "delta_distance": 16.11117057898423,
+                "delta_travel_time": 0.40277926447460555,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 4.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": false,
+              "objective_key": [
+                18.251464070818137
+              ],
+              "vehicles": 2,
+              "distance": 499.3460921835358
+            },
+            {
+              "label": "1:6",
+              "is_classical": false,
+              "acceptance": 312.71924575003675,
+              "features": {
+                "delta_distance": 58.50485966213759,
+                "delta_travel_time": 1.4626214915534397,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 6.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -23089.90571875459
+              },
+              "feasible": false,
+              "objective_key": [
+                21.648166250182534
+              ],
+              "vehicles": 2,
+              "distance": 597.968815824394
+            }
+          ]
+        },
+        {
+          "checkpoint": 3,
+          "node_id": "4",
+          "n_feasible_insertions": 13,
+          "n_rollouts": 5,
+          "classical_label": "0:3",
+          "classical_objective_key": [
+            17.175443210576915
+          ],
+          "classical_feasible": false,
+          "improving_alternative_labels": [
+            "0:6"
+          ],
+          "has_improvement_opportunity": true,
+          "rollouts": [
+            {
+              "label": "0:3",
+              "is_classical": true,
+              "acceptance": 208.22589450800555,
+              "features": {
+                "delta_distance": 17.484131186747575,
+                "delta_travel_time": 0.4371032796686891,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 5.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": false,
+              "objective_key": [
+                17.175443210576915
+              ],
+              "vehicles": 2,
+              "distance": 456.15839820642395
+            },
+            {
+              "label": "1:2",
+              "is_classical": false,
+              "acceptance": 492.76026062365963,
+              "features": {
+                "delta_distance": 238.54587453576053,
+                "delta_travel_time": 5.963646863394013,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 6.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -45595.032577957456
+              },
+              "feasible": false,
+              "objective_key": [
+                27.42215460011031
+              ],
+              "vehicles": 2,
+              "distance": 798.0178934023779
+            },
+            {
+              "label": "1:6",
+              "is_classical": false,
+              "acceptance": 320.98051990452376,
+              "features": {
+                "delta_distance": 66.76613381662463,
+                "delta_travel_time": 1.6691533454156158,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 6.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -24122.56498806547
+              },
+              "feasible": false,
+              "objective_key": [
+                23.032352202749095
+              ],
+              "vehicles": 2,
+              "distance": 664.4241022041454
+            },
+            {
+              "label": "0:6",
+              "is_classical": false,
+              "acceptance": 219.71036173504308,
+              "features": {
+                "delta_distance": 28.968598413785102,
+                "delta_travel_time": 0.724214960344628,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 5.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 828.931045925583
+              },
+              "feasible": false,
+              "objective_key": [
+                16.2250542401567
+              ],
+              "vehicles": 2,
+              "distance": 429.2111001100903
+            },
+            {
+              "label": "1:3",
+              "is_classical": false,
+              "acceptance": 464.47885014899157,
+              "features": {
+                "delta_distance": 210.2644640610925,
+                "delta_travel_time": 5.256611601527313,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 6.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -42059.85626862395
+              },
+              "feasible": false,
+              "objective_key": [
+                28.59969121983999
+              ],
+              "vehicles": 2,
+              "distance": 874.1766231927738
+            }
+          ]
+        }
+      ],
+      "n_checkpoints": 4,
+      "n_with_opportunity": 2
+    },
+    {
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 11,
+      "status": "ok",
+      "runtime_s": 1.077,
+      "checkpoints": [
+        {
+          "checkpoint": 0,
+          "node_id": "9",
+          "n_feasible_insertions": 12,
+          "n_rollouts": 5,
+          "classical_label": "1:4",
+          "classical_objective_key": [
+            23.42192494043379
+          ],
+          "classical_feasible": false,
+          "improving_alternative_labels": [],
+          "has_improvement_opportunity": false,
+          "rollouts": [
+            {
+              "label": "1:4",
+              "is_classical": true,
+              "acceptance": 289.021668152675,
+              "features": {
+                "delta_distance": 8.70157053430949,
+                "delta_travel_time": 0.21753926335773732,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 4.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -20127.70851908437
+              },
+              "feasible": false,
+              "objective_key": [
+                23.42192494043379
+              ],
+              "vehicles": 2,
+              "distance": 664.6987731291254
+            },
+            {
+              "label": "0:3",
+              "is_classical": false,
+              "acceptance": 520.1211799785639,
+              "features": {
+                "delta_distance": 172.64186723254812,
+                "delta_travel_time": 4.316046680813703,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 6.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": false,
+              "objective_key": [
+                31.712940346137437
+              ],
+              "vehicles": 2,
+              "distance": 965.792770122047
+            },
+            {
+              "label": "0:7",
+              "is_classical": false,
+              "acceptance": 399.3223854886288,
+              "features": {
+                "delta_distance": 51.843072742612996,
+                "delta_travel_time": 1.2960768185653249,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 6.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -12688.448922321917
+              },
+              "feasible": false,
+              "objective_key": [
+                28.44546720479385
+              ],
+              "vehicles": 2,
+              "distance": 849.2012350932063
+            },
+            {
+              "label": "0:1",
+              "is_classical": false,
+              "acceptance": 405.0099601860752,
+              "features": {
+                "delta_distance": 57.53064744005941,
+                "delta_travel_time": 1.438266186001485,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 6.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": false,
+              "objective_key": [
+                26.873209949664314
+              ],
+              "vehicles": 2,
+              "distance": 791.2333878630195
+            },
+            {
+              "label": "1:3",
+              "is_classical": false,
+              "acceptance": 294.1065763025717,
+              "features": {
+                "delta_distance": 13.786478684206187,
+                "delta_travel_time": 0.34466196710515473,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 4.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -20763.32203782146
+              },
+              "feasible": false,
+              "objective_key": [
+                23.42192494043379
+              ],
+              "vehicles": 2,
+              "distance": 664.6987731291254
+            }
+          ]
+        },
+        {
+          "checkpoint": 1,
+          "node_id": "9",
+          "n_feasible_insertions": 15,
+          "n_rollouts": 5,
+          "classical_label": "0:6",
+          "classical_objective_key": [
+            27.80828506172456
+          ],
+          "classical_feasible": false,
+          "improving_alternative_labels": [
+            "1:4"
+          ],
+          "has_improvement_opportunity": true,
+          "rollouts": [
+            {
+              "label": "0:6",
+              "is_classical": true,
+              "acceptance": 429.5533267350877,
+              "features": {
+                "delta_distance": 11.55759789509223,
+                "delta_travel_time": 0.288939947377306,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 7.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -5906.0426108230695
+              },
+              "feasible": false,
+              "objective_key": [
+                27.80828506172456
+              ],
+              "vehicles": 2,
+              "distance": 819.6863889373356
+            },
+            {
+              "label": "0:3",
+              "is_classical": false,
+              "acceptance": 590.6375960725436,
+              "features": {
+                "delta_distance": 172.64186723254812,
+                "delta_travel_time": 4.316046680813703,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 7.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": false,
+              "objective_key": [
+                30.734934523852452
+              ],
+              "vehicles": 2,
+              "distance": 929.1981211294795
+            },
+            {
+              "label": "0:7",
+              "is_classical": false,
+              "acceptance": 485.6014168261889,
+              "features": {
+                "delta_distance": 67.6056879861934,
+                "delta_travel_time": 1.690142199654835,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 7.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -12912.053872210716
+              },
+              "feasible": false,
+              "objective_key": [
+                27.80828506172456
+              ],
+              "vehicles": 2,
+              "distance": 819.6863889373356
+            },
+            {
+              "label": "0:1",
+              "is_classical": false,
+              "acceptance": 475.5263762800549,
+              "features": {
+                "delta_distance": 57.53064744005941,
+                "delta_travel_time": 1.438266186001485,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 7.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": false,
+              "objective_key": [
+                28.255608122316616
+              ],
+              "vehicles": 2,
+              "distance": 843.6501588368014
+            },
+            {
+              "label": "1:4",
+              "is_classical": false,
+              "acceptance": 490.912728723222,
+              "features": {
+                "delta_distance": 60.250814387867194,
+                "delta_travel_time": 1.5062703596966798,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 6.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -18574.147695753414
+              },
+              "feasible": false,
+              "objective_key": [
+                27.739168694789598
+              ],
+              "vehicles": 2,
+              "distance": 810.1461312018941
+            }
+          ]
+        },
+        {
+          "checkpoint": 2,
+          "node_id": "8",
+          "n_feasible_insertions": 15,
+          "n_rollouts": 5,
+          "classical_label": "1:1",
+          "classical_objective_key": [
+            27.306578248696542
+          ],
+          "classical_feasible": false,
+          "improving_alternative_labels": [],
+          "has_improvement_opportunity": false,
+          "rollouts": [
+            {
+              "label": "1:1",
+              "is_classical": true,
+              "acceptance": 405.5547671693808,
+              "features": {
+                "delta_distance": 8.558098157107054,
+                "delta_travel_time": 0.21395245392767626,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 5.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -6834.640231884876
+              },
+              "feasible": false,
+              "objective_key": [
+                27.306578248696542
+              ],
+              "vehicles": 2,
+              "distance": 807.3083034354572
+            },
+            {
+              "label": "0:3",
+              "is_classical": false,
+              "acceptance": 543.099277092307,
+              "features": {
+                "delta_distance": 113.54595035721931,
+                "delta_travel_time": 2.8386487589304825,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 8.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": false,
+              "objective_key": [
+                31.110894617462968
+              ],
+              "vehicles": 2,
+              "distance": 942.7791977171057
+            },
+            {
+              "label": "0:7",
+              "is_classical": false,
+              "acceptance": 473.7146573315015,
+              "features": {
+                "delta_distance": 44.16133059641377,
+                "delta_travel_time": 1.1040332649103441,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 8.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -11426.20893537479
+              },
+              "feasible": false,
+              "objective_key": [
+                27.306578248696542
+              ],
+              "vehicles": 2,
+              "distance": 807.3083034354572
+            },
+            {
+              "label": "0:4",
+              "is_classical": false,
+              "acceptance": 477.30372966084497,
+              "features": {
+                "delta_distance": 47.75040292575726,
+                "delta_travel_time": 1.193760073143932,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 8.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": false,
+              "objective_key": [
+                27.306578248696542
+              ],
+              "vehicles": 2,
+              "distance": 807.3083034354572
+            },
+            {
+              "label": "0:6",
+              "is_classical": false,
+              "acceptance": 442.14216088227823,
+              "features": {
+                "delta_distance": 12.58883414719051,
+                "delta_travel_time": 0.31472085367976255,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 8.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -7479.646879221884
+              },
+              "feasible": false,
+              "objective_key": [
+                27.306578248696542
+              ],
+              "vehicles": 2,
+              "distance": 807.3083034354572
+            }
+          ]
+        },
+        {
+          "checkpoint": 3,
+          "node_id": "1",
+          "n_feasible_insertions": 15,
+          "n_rollouts": 5,
+          "classical_label": "0:1",
+          "classical_objective_key": [
+            23.565394835154663
+          ],
+          "classical_feasible": false,
+          "improving_alternative_labels": [],
+          "has_improvement_opportunity": false,
+          "rollouts": [
+            {
+              "label": "0:1",
+              "is_classical": true,
+              "acceptance": 368.5771683765495,
+              "features": {
+                "delta_distance": 12.625159564444587,
+                "delta_travel_time": 0.3156289891111146,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 7.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -5906.0426108230695
+              },
+              "feasible": false,
+              "objective_key": [
+                23.565394835154663
+              ],
+              "vehicles": 2,
+              "distance": 672.3234852172794
+            },
+            {
+              "label": "0:7",
+              "is_classical": false,
+              "acceptance": 560.7120953854403,
+              "features": {
+                "delta_distance": 204.7600865733354,
+                "delta_travel_time": 5.119002164333384,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 7.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -31501.053432489993
+              },
+              "feasible": false,
+              "objective_key": [
+                31.47718235166598
+              ],
+              "vehicles": 2,
+              "distance": 955.6459073585925
+            },
+            {
+              "label": "1:5",
+              "is_classical": false,
+              "acceptance": 449.207428429364,
+              "features": {
+                "delta_distance": 38.60364138933045,
+                "delta_travel_time": 0.9650910347332613,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 6.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -11660.095405551181
+              },
+              "feasible": false,
+              "objective_key": [
+                23.636736371452784
+              ],
+              "vehicles": 2,
+              "distance": 672.4121340845268
+            },
+            {
+              "label": "1:1",
+              "is_classical": false,
+              "acceptance": 528.2167988045903,
+              "features": {
+                "delta_distance": 117.61301176455684,
+                "delta_travel_time": 2.9403252941139213,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 6.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": false,
+              "objective_key": [
+                32.788791635922536
+              ],
+              "vehicles": 2,
+              "distance": 978.4839658864578
+            },
+            {
+              "label": "1:6",
+              "is_classical": false,
+              "acceptance": 544.8358037884823,
+              "features": {
+                "delta_distance": 134.23201674844876,
+                "delta_travel_time": 3.355800418711219,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 6.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -23613.64232544097
+              },
+              "feasible": false,
+              "objective_key": [
+                29.657101388128275
+              ],
+              "vehicles": 2,
+              "distance": 879.8461087633502
+            }
+          ]
+        }
+      ],
+      "n_checkpoints": 4,
+      "n_with_opportunity": 1
+    },
+    {
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 22,
+      "status": "ok",
+      "runtime_s": 0.962,
+      "checkpoints": [
+        {
+          "checkpoint": 0,
+          "node_id": "4",
+          "n_feasible_insertions": 16,
+          "n_rollouts": 5,
+          "classical_label": "0:3",
+          "classical_objective_key": [
+            27.29000621339226
+          ],
+          "classical_feasible": false,
+          "improving_alternative_labels": [
+            "1:5",
+            "0:2"
+          ],
+          "has_improvement_opportunity": true,
+          "rollouts": [
+            {
+              "label": "0:3",
+              "is_classical": true,
+              "acceptance": 361.60466592675004,
+              "features": {
+                "delta_distance": 27.372644008937044,
+                "delta_travel_time": 0.6843161002234259,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 7.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": false,
+              "objective_key": [
+                27.29000621339226
+              ],
+              "vehicles": 2,
+              "distance": 801.6466411141432
+            },
+            {
+              "label": "1:4",
+              "is_classical": false,
+              "acceptance": 600.2420659067502,
+              "features": {
+                "delta_distance": 214.79197377928256,
+                "delta_travel_time": 5.369799344482064,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 7.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": false,
+              "objective_key": [
+                31.610076566138897
+              ],
+              "vehicles": 2,
+              "distance": 944.1145319568079
+            },
+            {
+              "label": "1:7",
+              "is_classical": false,
+              "acceptance": 476.2206188759443,
+              "features": {
+                "delta_distance": 90.77052674847661,
+                "delta_travel_time": 2.269263168711915,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 7.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -16737.633964843702
+              },
+              "feasible": false,
+              "objective_key": [
+                30.610271983073037
+              ],
+              "vehicles": 2,
+              "distance": 907.2434932287515
+            },
+            {
+              "label": "1:5",
+              "is_classical": false,
+              "acceptance": 500.1893513223605,
+              "features": {
+                "delta_distance": 114.73925919489281,
+                "delta_travel_time": 2.868481479872321,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 7.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -19733.72552064573
+              },
+              "feasible": false,
+              "objective_key": [
+                26.347083858691327
+              ],
+              "vehicles": 2,
+              "distance": 754.5808289288536
+            },
+            {
+              "label": "0:2",
+              "is_classical": false,
+              "acceptance": 422.7182700348184,
+              "features": {
+                "delta_distance": 88.48624811700536,
+                "delta_travel_time": 2.212156202925134,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 7.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": false,
+              "objective_key": [
+                26.686044862665096
+              ],
+              "vehicles": 2,
+              "distance": 769.8622361174265
+            }
+          ]
+        },
+        {
+          "checkpoint": 1,
+          "node_id": "4",
+          "n_feasible_insertions": 17,
+          "n_rollouts": 5,
+          "classical_label": "0:4",
+          "classical_objective_key": [
+            27.183082833460873
+          ],
+          "classical_feasible": false,
+          "improving_alternative_labels": [
+            "0:1"
+          ],
+          "has_improvement_opportunity": true,
+          "rollouts": [
+            {
+              "label": "0:4",
+              "is_classical": true,
+              "acceptance": 439.15272172437346,
+              "features": {
+                "delta_distance": 16.496652949864,
+                "delta_travel_time": 0.4124163237466001,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 8.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -46.55739361315136
+              },
+              "feasible": false,
+              "objective_key": [
+                27.183082833460873
+              ],
+              "vehicles": 2,
+              "distance": 798.153934713368
+            },
+            {
+              "label": "1:4",
+              "is_classical": false,
+              "acceptance": 600.2420659067502,
+              "features": {
+                "delta_distance": 214.79197377928256,
+                "delta_travel_time": 5.369799344482064,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 7.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": false,
+              "objective_key": [
+                31.824725052238023
+              ],
+              "vehicles": 2,
+              "distance": 944.9843893180798
+            },
+            {
+              "label": "1:5",
+              "is_classical": false,
+              "acceptance": 500.1893513223605,
+              "features": {
+                "delta_distance": 114.73925919489281,
+                "delta_travel_time": 2.868481479872321,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 7.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -19733.72552064573
+              },
+              "feasible": false,
+              "objective_key": [
+                29.89059447988913
+              ],
+              "vehicles": 2,
+              "distance": 883.2388956692292
+            },
+            {
+              "label": "0:3",
+              "is_classical": false,
+              "acceptance": 450.0287127834465,
+              "features": {
+                "delta_distance": 27.372644008937044,
+                "delta_travel_time": 0.6843161002234259,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 8.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": false,
+              "objective_key": [
+                27.183082833460873
+              ],
+              "vehicles": 2,
+              "distance": 798.153934713368
+            },
+            {
+              "label": "0:1",
+              "is_classical": false,
+              "acceptance": 533.2384735090659,
+              "features": {
+                "delta_distance": 110.5824047345564,
+                "delta_travel_time": 2.76456011836391,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 8.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": false,
+              "objective_key": [
+                26.25424813248361
+              ],
+              "vehicles": 2,
+              "distance": 765.4589063525448
+            }
+          ]
+        },
+        {
+          "checkpoint": 2,
+          "node_id": "2",
+          "n_feasible_insertions": 17,
+          "n_rollouts": 5,
+          "classical_label": "1:8",
+          "classical_objective_key": [
+            24.455114625365223
+          ],
+          "classical_feasible": false,
+          "improving_alternative_labels": [],
+          "has_improvement_opportunity": false,
+          "rollouts": [
+            {
+              "label": "1:8",
+              "is_classical": true,
+              "acceptance": 386.6777603227642,
+              "features": {
+                "delta_distance": 60.0210486364752,
+                "delta_travel_time": 1.5005262159118802,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 7.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -5391.3181212841255
+              },
+              "feasible": false,
+              "objective_key": [
+                24.455114625365223
+              ],
+              "vehicles": 2,
+              "distance": 694.3236335976217
+            },
+            {
+              "label": "0:6",
+              "is_classical": false,
+              "acceptance": 600.5786292842167,
+              "features": {
+                "delta_distance": 168.30688280637844,
+                "delta_travel_time": 4.207672070159461,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 8.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": false,
+              "objective_key": [
+                24.455114625365223
+              ],
+              "vehicles": 2,
+              "distance": 694.3236335976217
+            },
+            {
+              "label": "0:5",
+              "is_classical": false,
+              "acceptance": 514.7000307736645,
+              "features": {
+                "delta_distance": 82.42828429582626,
+                "delta_travel_time": 2.0607071073956567,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 8.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": false,
+              "objective_key": [
+                24.455114625365223
+              ],
+              "vehicles": 2,
+              "distance": 694.3236335976217
+            },
+            {
+              "label": "1:1",
+              "is_classical": false,
+              "acceptance": 393.8615843609607,
+              "features": {
+                "delta_distance": 67.20487267467173,
+                "delta_travel_time": 1.6801218168667935,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 7.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": false,
+              "objective_key": [
+                25.98307954759119
+              ],
+              "vehicles": 2,
+              "distance": 743.3601241780167
+            },
+            {
+              "label": "1:3",
+              "is_classical": false,
+              "acceptance": 515.2305532653486,
+              "features": {
+                "delta_distance": 188.5738415790596,
+                "delta_travel_time": 4.7143460394764904,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 7.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": false,
+              "objective_key": [
+                26.69514385321689
+              ],
+              "vehicles": 2,
+              "distance": 773.3637123780054
+            }
+          ]
+        },
+        {
+          "checkpoint": 3,
+          "node_id": "9",
+          "n_feasible_insertions": 17,
+          "n_rollouts": 5,
+          "classical_label": "0:2",
+          "classical_objective_key": [
+            24.49579447371618
+          ],
+          "classical_feasible": false,
+          "improving_alternative_labels": [],
+          "has_improvement_opportunity": false,
+          "rollouts": [
+            {
+              "label": "0:2",
+              "is_classical": true,
+              "acceptance": 342.4302863842849,
+              "features": {
+                "delta_distance": 1.2885742693513862,
+                "delta_travel_time": 0.03221435673378448,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 6.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 1549.3618699494828
+              },
+              "feasible": false,
+              "objective_key": [
+                24.49579447371618
+              ],
+              "vehicles": 2,
+              "distance": 696.4327832073138
+            },
+            {
+              "label": "1:5",
+              "is_classical": false,
+              "acceptance": 610.5810989483468,
+              "features": {
+                "delta_distance": 220.5150697798225,
+                "delta_travel_time": 5.512876744495562,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 9.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": false,
+              "objective_key": [
+                27.016053558998696
+              ],
+              "vehicles": 2,
+              "distance": 784.7612037471534
+            },
+            {
+              "label": "1:8",
+              "is_classical": false,
+              "acceptance": 436.3385446237311,
+              "features": {
+                "delta_distance": 46.27251545520692,
+                "delta_travel_time": 1.1568128863801728,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 9.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -11598.916158904989
+              },
+              "feasible": false,
+              "objective_key": [
+                24.686218981593367
+              ],
+              "vehicles": 2,
+              "distance": 702.6220342437016
+            },
+            {
+              "label": "0:3",
+              "is_classical": false,
+              "acceptance": 400.1127635160036,
+              "features": {
+                "delta_distance": 58.97105140107013,
+                "delta_travel_time": 1.474276285026753,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 6.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": 1710.4336536184055
+              },
+              "feasible": false,
+              "objective_key": [
+                25.12956444785805
+              ],
+              "vehicles": 2,
+              "distance": 721.8031697296024
+            },
+            {
+              "label": "0:6",
+              "is_classical": false,
+              "acceptance": 411.2070112011783,
+              "features": {
+                "delta_distance": 70.06529908624479,
+                "delta_travel_time": 1.7516324771561202,
+                "route_load_slack_after_insertion": 0.0,
+                "route_customer_count": 6.0,
+                "new_vehicle_fixed_cost": 0.0,
+                "incremental_energy_cost": 0.0,
+                "battery_margin": -1.0
+              },
+              "feasible": false,
+              "objective_key": [
+                25.12956444785805
+              ],
+              "vehicles": 2,
+              "distance": 721.8031697296024
+            }
+          ]
+        }
+      ],
+      "n_checkpoints": 4,
+      "n_with_opportunity": 2
+    }
+  ],
+  "summary": {
+    "runs": 12,
+    "checkpoints": 39,
+    "checkpoints_with_opportunity": 14,
+    "opportunity_fraction": 0.359,
+    "evidence_examples": 14,
+    "wall_s": 22.01
+  },
+  "training_evidence": [
+    {
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "node_id": "C30",
+      "classical_label": "0:1",
+      "classical_features": {
+        "delta_distance": 16.460642176492,
+        "delta_travel_time": 16.460642176492,
+        "route_load_slack_after_insertion": 170.0,
+        "route_customer_count": 3.0,
+        "new_vehicle_fixed_cost": 0.0,
+        "incremental_energy_cost": 0.0,
+        "battery_margin": 15.650310171751826
+      },
+      "classical_acceptance": 113.73134279487812,
+      "classical_objective_key": [
+        3.0,
+        292.0994081647517
+      ],
+      "better_label": "1:2",
+      "better_features": {
+        "delta_distance": 36.61151765779721,
+        "delta_travel_time": 36.61151765779721,
+        "route_load_slack_after_insertion": 150.0,
+        "route_customer_count": 3.0,
+        "new_vehicle_fixed_cost": 0.0,
+        "incremental_energy_cost": 0.0,
+        "battery_margin": -1.0
+      },
+      "better_acceptance": 139.15711110414725,
+      "better_objective_key": [
+        2.0,
+        257.7474518641999
+      ]
+    },
+    {
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 11,
+      "node_id": "C30",
+      "classical_label": "0:4",
+      "classical_features": {
+        "delta_distance": 16.460642176492,
+        "delta_travel_time": 16.460642176492,
+        "route_load_slack_after_insertion": 170.0,
+        "route_customer_count": 3.0,
+        "new_vehicle_fixed_cost": 0.0,
+        "incremental_energy_cost": 0.0,
+        "battery_margin": 26.118347033370053
+      },
+      "classical_acceptance": 98.96818881736434,
+      "classical_objective_key": [
+        2.0,
+        264.4407329887187
+      ],
+      "better_label": "1:4",
+      "better_features": {
+        "delta_distance": 36.61151765779721,
+        "delta_travel_time": 36.61151765779721,
+        "route_load_slack_after_insertion": 150.0,
+        "route_customer_count": 7.0,
+        "new_vehicle_fixed_cost": 0.0,
+        "incremental_energy_cost": 0.0,
+        "battery_margin": 9.748965311868677
+      },
+      "better_acceptance": 151.48613397633397,
+      "better_objective_key": [
+        2.0,
+        257.7474518641999
+      ]
+    },
+    {
+      "family": "schneider",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "node_id": "C79",
+      "classical_label": "20:1",
+      "classical_features": {
+        "delta_distance": 25.76054947111175,
+        "delta_travel_time": 25.76054947111175,
+        "route_load_slack_after_insertion": 190.0,
+        "route_customer_count": 1.0,
+        "new_vehicle_fixed_cost": 0.0,
+        "incremental_energy_cost": 0.0,
+        "battery_margin": 15.458682405545556
+      },
+      "classical_acceptance": 102.70208571779713,
+      "classical_objective_key": [
+        38.0,
+        3307.0400686228977
+      ],
+      "better_label": "28:1",
+      "better_features": {
+        "delta_distance": 4.7077905067810875,
+        "delta_travel_time": 4.7077905067810875,
+        "route_load_slack_after_insertion": 180.0,
+        "route_customer_count": 2.0,
+        "new_vehicle_fixed_cost": 0.0,
+        "incremental_energy_cost": 0.0,
+        "battery_margin": 6.501856352566456
+      },
+      "better_acceptance": 111.65891177077623,
+      "better_objective_key": [
+        38.0,
+        3285.987309658567
+      ]
+    },
+    {
+      "family": "schneider",
+      "instance_id": "c101_21",
+      "seed": 11,
+      "node_id": "C69",
+      "classical_label": "5:6",
+      "classical_features": {
+        "delta_distance": 6.433981132056603,
+        "delta_travel_time": 6.433981132056603,
+        "route_load_slack_after_insertion": 60.0,
+        "route_customer_count": 8.0,
+        "new_vehicle_fixed_cost": 0.0,
+        "incremental_energy_cost": 0.0,
+        "battery_margin": 8.470151517076388
+      },
+      "classical_acceptance": 71.21984848292361,
+      "classical_objective_key": [
+        39.0,
+        3337.1051523466217
+      ],
+      "better_label": "36:1",
+      "better_features": {
+        "delta_distance": 6.495379651725713,
+        "delta_travel_time": 6.495379651725713,
+        "route_load_slack_after_insertion": 190.0,
+        "route_customer_count": 1.0,
+        "new_vehicle_fixed_cost": 0.0,
+        "incremental_energy_cost": 0.0,
+        "battery_margin": 34.7238522249316
+      },
+      "better_acceptance": 83.43691589841109,
+      "better_objective_key": [
+        39.0,
+        3316.8853330238308
+      ]
+    },
+    {
+      "family": "schneider",
+      "instance_id": "c101_21",
+      "seed": 11,
+      "node_id": "C57",
+      "classical_label": "4:2",
+      "classical_features": {
+        "delta_distance": 1.9429037140837906,
+        "delta_travel_time": 1.9429037140837906,
+        "route_load_slack_after_insertion": 150.0,
+        "route_customer_count": 1.0,
+        "new_vehicle_fixed_cost": 0.0,
+        "incremental_energy_cost": 0.0,
+        "battery_margin": 7.632903714083788
+      },
+      "classical_acceptance": 72.0570962859162,
+      "classical_objective_key": [
+        39.0,
+        3331.975250162089
+      ],
+      "better_label": "24:3",
+      "better_features": {
+        "delta_distance": 41.971836446267794,
+        "delta_travel_time": 41.971836446267794,
+        "route_load_slack_after_insertion": 130.0,
+        "route_customer_count": 2.0,
+        "new_vehicle_fixed_cost": 0.0,
+        "incremental_energy_cost": 0.0,
+        "battery_margin": 12.28643908721859
+      },
+      "better_acceptance": 128.480370533592,
+      "better_objective_key": [
+        38.0,
+        3341.956379200334
+      ]
+    },
+    {
+      "family": "schneider",
+      "instance_id": "c101_21",
+      "seed": 22,
+      "node_id": "C65",
+      "classical_label": "18:1",
+      "classical_features": {
+        "delta_distance": 24.382560022498247,
+        "delta_travel_time": 24.382560022498247,
+        "route_load_slack_after_insertion": 190.0,
+        "route_customer_count": 1.0,
+        "new_vehicle_fixed_cost": 0.0,
+        "incremental_energy_cost": 0.0,
+        "battery_margin": 31.8980401560625
+      },
+      "classical_acceptance": 71.20135966537674,
+      "classical_objective_key": [
+        39.0,
+        3361.864280259283
+      ],
+      "better_label": "19:1",
+      "better_features": {
+        "delta_distance": 1.5384213689939017,
+        "delta_travel_time": 1.5384213689939017,
+        "route_load_slack_after_insertion": 190.0,
+        "route_customer_count": 1.0,
+        "new_vehicle_fixed_cost": 0.0,
+        "incremental_energy_cost": 0.0,
+        "battery_margin": 39.68081050766341
+      },
+      "better_acceptance": 78.47995761567927,
+      "better_objective_key": [
+        39.0,
+        3314.2980179320566
+      ]
+    },
+    {
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "node_id": "C11",
+      "classical_label": "1:7",
+      "classical_features": {
+        "delta_distance": 34.0009949878225,
+        "delta_travel_time": 34.0009949878225,
+        "route_load_slack_after_insertion": 30.0,
+        "route_customer_count": 6.0,
+        "new_vehicle_fixed_cost": 0.0,
+        "incremental_energy_cost": 16.3204775941548,
+        "battery_margin": 0.0
+      },
+      "classical_acceptance": 161.85164829546835,
+      "classical_objective_key": [
+        3294.001856083046
+      ],
+      "better_label": "0:9",
+      "better_features": {
+        "delta_distance": 1.627188724235733,
+        "delta_travel_time": 1.627188724235733,
+        "route_load_slack_after_insertion": 0.0,
+        "route_customer_count": 10.0,
+        "new_vehicle_fixed_cost": 0.0,
+        "incremental_energy_cost": 0.7810505876331518,
+        "battery_margin": 0.0
+      },
+      "better_acceptance": 213.8618505977967,
+      "better_objective_key": [
+        3275.228594072386
+      ]
+    },
+    {
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "node_id": "C30",
+      "classical_label": "7:4",
+      "classical_features": {
+        "delta_distance": 1.6496523904570317,
+        "delta_travel_time": 1.6496523904570317,
+        "route_load_slack_after_insertion": 20.0,
+        "route_customer_count": 7.0,
+        "new_vehicle_fixed_cost": 0.0,
+        "incremental_energy_cost": 0.989791434274219,
+        "battery_margin": 0.0
+      },
+      "classical_acceptance": 192.12511204896333,
+      "classical_objective_key": [
+        3250.141892048829
+      ],
+      "better_label": "12:1",
+      "better_features": {
+        "delta_distance": 8.223373315190884,
+        "delta_travel_time": 8.223373315190884,
+        "route_load_slack_after_insertion": 20.0,
+        "route_customer_count": 5.0,
+        "new_vehicle_fixed_cost": 0.0,
+        "incremental_energy_cost": 3.947219191291624,
+        "battery_margin": 0.0
+      },
+      "better_acceptance": 211.23775037952976,
+      "better_objective_key": [
+        3247.553699077987
+      ]
+    },
+    {
+      "family": "hiermann",
+      "instance_id": "c101_21",
+      "seed": 22,
+      "node_id": "C65",
+      "classical_label": "10:1",
+      "classical_features": {
+        "delta_distance": 24.42842532416195,
+        "delta_travel_time": 24.42842532416195,
+        "route_load_slack_after_insertion": 0.0,
+        "route_customer_count": 7.0,
+        "new_vehicle_fixed_cost": 0.0,
+        "incremental_energy_cost": 11.725644155597735,
+        "battery_margin": 0.0
+      },
+      "classical_acceptance": 179.2400096396645,
+      "classical_objective_key": [
+        3252.3508717246264
+      ],
+      "better_label": "4:2",
+      "better_features": {
+        "delta_distance": 3.5422376912518345,
+        "delta_travel_time": 3.5422376912518345,
+        "route_load_slack_after_insertion": 0.0,
+        "route_customer_count": 5.0,
+        "new_vehicle_fixed_cost": 0.0,
+        "incremental_energy_cost": 1.3460503226756972,
+        "battery_margin": 0.0
+      },
+      "better_acceptance": 242.62200666537527,
+      "better_objective_key": [
+        3241.971277891704
+      ]
+    },
+    {
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 7,
+      "node_id": "2",
+      "classical_label": "0:1",
+      "classical_features": {
+        "delta_distance": 7.052020861542566,
+        "delta_travel_time": 0.17630052153856401,
+        "route_load_slack_after_insertion": 0.0,
+        "route_customer_count": 4.0,
+        "new_vehicle_fixed_cost": 0.0,
+        "incremental_energy_cost": 0.0,
+        "battery_margin": 828.931045925583
+      },
+      "classical_acceptance": 191.26014141747441,
+      "classical_objective_key": [
+        22.158344614944447
+      ],
+      "better_label": "0:2",
+      "better_features": {
+        "delta_distance": 16.11117057898423,
+        "delta_travel_time": 0.40277926447460555,
+        "route_load_slack_after_insertion": 0.0,
+        "route_customer_count": 4.0,
+        "new_vehicle_fixed_cost": 0.0,
+        "incremental_energy_cost": 0.0,
+        "battery_margin": -1.0
+      },
+      "better_acceptance": 200.3192911349161,
+      "better_objective_key": [
+        18.251464070818137
+      ]
+    },
+    {
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 7,
+      "node_id": "4",
+      "classical_label": "0:3",
+      "classical_features": {
+        "delta_distance": 17.484131186747575,
+        "delta_travel_time": 0.4371032796686891,
+        "route_load_slack_after_insertion": 0.0,
+        "route_customer_count": 5.0,
+        "new_vehicle_fixed_cost": 0.0,
+        "incremental_energy_cost": 0.0,
+        "battery_margin": -1.0
+      },
+      "classical_acceptance": 208.22589450800555,
+      "classical_objective_key": [
+        17.175443210576915
+      ],
+      "better_label": "0:6",
+      "better_features": {
+        "delta_distance": 28.968598413785102,
+        "delta_travel_time": 0.724214960344628,
+        "route_load_slack_after_insertion": 0.0,
+        "route_customer_count": 5.0,
+        "new_vehicle_fixed_cost": 0.0,
+        "incremental_energy_cost": 0.0,
+        "battery_margin": 828.931045925583
+      },
+      "better_acceptance": 219.71036173504308,
+      "better_objective_key": [
+        16.2250542401567
+      ]
+    },
+    {
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 11,
+      "node_id": "9",
+      "classical_label": "0:6",
+      "classical_features": {
+        "delta_distance": 11.55759789509223,
+        "delta_travel_time": 0.288939947377306,
+        "route_load_slack_after_insertion": 0.0,
+        "route_customer_count": 7.0,
+        "new_vehicle_fixed_cost": 0.0,
+        "incremental_energy_cost": 0.0,
+        "battery_margin": -5906.0426108230695
+      },
+      "classical_acceptance": 429.5533267350877,
+      "classical_objective_key": [
+        27.80828506172456
+      ],
+      "better_label": "1:4",
+      "better_features": {
+        "delta_distance": 60.250814387867194,
+        "delta_travel_time": 1.5062703596966798,
+        "route_load_slack_after_insertion": 0.0,
+        "route_customer_count": 6.0,
+        "new_vehicle_fixed_cost": 0.0,
+        "incremental_energy_cost": 0.0,
+        "battery_margin": -18574.147695753414
+      },
+      "better_acceptance": 490.912728723222,
+      "better_objective_key": [
+        27.739168694789598
+      ]
+    },
+    {
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 22,
+      "node_id": "4",
+      "classical_label": "0:3",
+      "classical_features": {
+        "delta_distance": 27.372644008937044,
+        "delta_travel_time": 0.6843161002234259,
+        "route_load_slack_after_insertion": 0.0,
+        "route_customer_count": 7.0,
+        "new_vehicle_fixed_cost": 0.0,
+        "incremental_energy_cost": 0.0,
+        "battery_margin": -1.0
+      },
+      "classical_acceptance": 361.60466592675004,
+      "classical_objective_key": [
+        27.29000621339226
+      ],
+      "better_label": "1:5",
+      "better_features": {
+        "delta_distance": 114.73925919489281,
+        "delta_travel_time": 2.868481479872321,
+        "route_load_slack_after_insertion": 0.0,
+        "route_customer_count": 7.0,
+        "new_vehicle_fixed_cost": 0.0,
+        "incremental_energy_cost": 0.0,
+        "battery_margin": -19733.72552064573
+      },
+      "better_acceptance": 500.1893513223605,
+      "better_objective_key": [
+        26.347083858691327
+      ]
+    },
+    {
+      "family": "montoya",
+      "instance_id": "tc0c10s2cf1",
+      "seed": 22,
+      "node_id": "4",
+      "classical_label": "0:4",
+      "classical_features": {
+        "delta_distance": 16.496652949864,
+        "delta_travel_time": 0.4124163237466001,
+        "route_load_slack_after_insertion": 0.0,
+        "route_customer_count": 8.0,
+        "new_vehicle_fixed_cost": 0.0,
+        "incremental_energy_cost": 0.0,
+        "battery_margin": -46.55739361315136
+      },
+      "classical_acceptance": 439.15272172437346,
+      "classical_objective_key": [
+        27.183082833460873
+      ],
+      "better_label": "0:1",
+      "better_features": {
+        "delta_distance": 110.5824047345564,
+        "delta_travel_time": 2.76456011836391,
+        "route_load_slack_after_insertion": 0.0,
+        "route_customer_count": 8.0,
+        "new_vehicle_fixed_cost": 0.0,
+        "incremental_energy_cost": 0.0,
+        "battery_margin": -1.0
+      },
+      "better_acceptance": 533.2384735090659,
+      "better_objective_key": [
+        26.25424813248361
+      ]
+    }
+  ],
+  "decision": "continue_to_live_discovery"
+}

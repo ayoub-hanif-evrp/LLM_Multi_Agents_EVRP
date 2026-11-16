@@ -152,6 +152,8 @@ def test_specialist_and_critic_prompts_carry_evidence() -> None:
     assert "Use shorter detours when utilization is high." in specialist
     assert "delta_distance" in specialist
     assert "route_utilization" in specialist
+    assert "applicability_rule to '1'" in specialist
+    assert "scoring_should_change" in critic
     assert "cx-1" in critic
     assert operator.operator_id in critic
 

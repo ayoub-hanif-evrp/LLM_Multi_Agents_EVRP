@@ -43,7 +43,8 @@ KNOWN_OPERATOR_FEATURES = frozenset(
     }
 )
 
-SCORING_FEATURES = frozenset(
+# Features available to repair_greedy insertion scoring (v4 insertion contract).
+REPAIR_INSERTION_FEATURES = frozenset(
     {
         "delta_distance",
         "delta_travel_time",
@@ -52,6 +53,12 @@ SCORING_FEATURES = frozenset(
         "new_vehicle_fixed_cost",
         "incremental_energy_cost",
         "battery_margin",
+    }
+)
+
+SCORING_FEATURES = frozenset(
+    {
+        *REPAIR_INSERTION_FEATURES,
         "detour",
         "battery_arrival",
         "station_rate",
@@ -353,7 +360,7 @@ def run_live_cycle(
             "operator": None,
             "decision": {},
             "counterexamples": [],
-            "critic_revision_scope": "applicability_rule_only",
+            "critic_revision_scope": "applicability_and_scoring",
         }
     result["backend"] = "ollama"
     result["model_id"] = model_id
@@ -365,7 +372,8 @@ def run_live_cycle(
     result["prompt_tokens"] = budget.prompt_tokens
     result["completion_tokens"] = budget.completion_tokens
     result["cache_hits"] = budget.cache_hits
-    result["critic_revision_scope"] = "applicability_rule_only"
+    result["critic_revision_scope"] = "applicability_and_scoring"
+    result["critic_revised_parts"] = list(result.get("critic_revised_parts") or [])
     return result
 
 
@@ -431,44 +439,82 @@ def run_cycle(
         partition=partition,
     )
     records = list(repaired.metadata.get("counterexamples") or [])
+    decision = repaired.metadata.get("search_decision") or {}
     critique: Critique | None = None
     revised = False
-    if records:
+    revised_parts: list[str] = []
+    # Critic may run on mined counterexamples OR when the operator is inert on the
+    # development repair (abstention or apply-but-identical classical choice).
+    inert_abstention = (not decision.get("changed")) and str(decision.get("reason", "")).startswith(
+        "applicability"
+    )
+    inert_apply = (
+        (not decision.get("changed"))
+        and str(decision.get("action", "")) == "apply"
+        and not records
+    )
+    if records or inert_abstention or inert_apply:
         critique = Critique.model_validate(
-            _parse_json_object(budget.charge(backend, "critic", _critic_prompt(hypothesis, operator, records)))
+            _parse_json_object(
+                budget.charge(
+                    backend,
+                    "critic",
+                    _critic_prompt(
+                        hypothesis,
+                        operator,
+                        records,
+                        search_decision=decision,
+                        inert_abstention=inert_abstention or inert_apply,
+                    ),
+                )
+            )
         )
+        updates: dict[str, Any] = {}
         if (
             not critique.evidence_too_weak
             and critique.applicability_should_change
             and critique.revised_applicability_rule
         ):
             try:
-                revised_rule = validate_expression(
+                updates["applicability_rule"] = validate_expression(
                     critique.revised_applicability_rule,
                     APPLICABILITY_FEATURES | SCORING_FEATURES,
                 )
             except PolicyError as exc:
                 raise ValueError(f"critic revised an invalid applicability rule: {exc}") from exc
-            operator = operator.model_copy(
-                update={
-                    "applicability_rule": revised_rule,
-                    "version": f"{operator.version}.1",
-                }
-            )
-            digest = operator_fingerprint(operator)
+            revised_parts.append("applicability_rule")
+        if (
+            not critique.evidence_too_weak
+            and critique.scoring_should_change
+            and critique.revised_candidate_scoring_policy
+        ):
+            try:
+                updates["candidate_scoring_policy"] = validate_expression(
+                    critique.revised_candidate_scoring_policy,
+                    SCORING_FEATURES | APPLICABILITY_FEATURES,
+                )
+            except PolicyError as exc:
+                raise ValueError(f"critic revised an invalid scoring policy: {exc}") from exc
+            revised_parts.append("candidate_scoring_policy")
+        if updates:
+            updates["version"] = f"{operator.version}.1"
+            candidate = operator.model_copy(update=updates)
+            digest = operator_fingerprint(candidate)
             if digest in seen:
-                raise ValueError("duplicate operator after critic revision")
-            seen.add(digest)
-            operator = operator.model_copy(update={"source_hash": digest})
-            repaired = repair_greedy(
-                spec,
-                solution,
-                removed,
-                random.Random(seed),
-                operator,
-                partition=partition,
-            )
-            revised = True
+                # Critic proposed a semantically identical operator; keep the first repair.
+                revised_parts.clear()
+            else:
+                seen.add(digest)
+                operator = candidate.model_copy(update={"source_hash": digest})
+                repaired = repair_greedy(
+                    spec,
+                    solution,
+                    removed,
+                    random.Random(seed),
+                    operator,
+                    partition=partition,
+                )
+                revised = True
     return {
         "hypothesis": hypothesis.model_dump(),
         "operator": operator.model_dump(),
@@ -481,6 +527,7 @@ def run_cycle(
         "counterexamples": records,
         "revised_counterexamples": list(repaired.metadata.get("counterexamples") or []),
         "critic_revised": revised,
+        "critic_revised_parts": revised_parts,
         "backend": getattr(backend, "provider", "unknown"),
     }
 
@@ -496,7 +543,7 @@ def _architect_prompt() -> str:
 
 
 def _specialist_prompt(hypothesis: Hypothesis) -> str:
-    scoring = ", ".join(sorted(SCORING_FEATURES))
+    scoring = ", ".join(sorted(REPAIR_INSERTION_FEATURES))
     applicability = ", ".join(sorted(APPLICABILITY_FEATURES))
     return (
         "Return one flat JSON object only (no wrapper key) with fields operator_id, version, "
@@ -505,23 +552,46 @@ def _specialist_prompt(hypothesis: Hypothesis) -> str:
         "candidate_scoring_policy, applicability_rule, fallback_operator=classical_default. "
         "required_capabilities may only use CapabilityFlags names. Prefer "
         "required_capabilities=['time_windows']. "
-        f"candidate_scoring_policy must be a restricted arithmetic expression over: {scoring}. "
-        "Lower scores are preferred. "
+        f"candidate_scoring_policy must be a short arithmetic expression over ONLY: {scoring}. "
+        "Lower scores are preferred. Prefer one or two terms such as 'delta_distance' or "
+        "'delta_distance + incremental_energy_cost'. Do not sum every feature. "
         f"applicability_rule must be a numeric expression over: {applicability}. "
-        "Use comparisons such as 'route_utilization - 0.9'. Never use the bare tokens true/false; "
-        "use 1 or 0 instead. hard_preconditions, if any, must also be numeric expressions. "
+        "For a scoring experiment that should always run on the development repair, set "
+        "applicability_rule to '1'. A rule like 'route_utilization - 0.9' applies ONLY when "
+        "route_utilization > 0.9 and will abstain on sparse/low-utilization routes. "
+        "Never use the bare tokens true/false; use 1 or 0 instead. "
+        "hard_preconditions, if any, must also be numeric expressions. "
         "Implement this architect hypothesis exactly when proposing the operator:\n"
         f"{json.dumps(hypothesis.model_dump(), indent=2)}"
     )
 
 
-def _critic_prompt(hypothesis: Hypothesis, operator: OperatorSpec, records: list[dict[str, Any]]) -> str:
+def _critic_prompt(
+    hypothesis: Hypothesis,
+    operator: OperatorSpec,
+    records: list[dict[str, Any]],
+    *,
+    search_decision: dict[str, Any] | None = None,
+    inert_abstention: bool = False,
+) -> str:
+    scoring = ", ".join(sorted(REPAIR_INSERTION_FEATURES))
+    applicability = ", ".join(sorted(APPLICABILITY_FEATURES))
     return (
         "Return JSON only with what_failed, operator_should_change, applicability_should_change, "
-        "evidence_too_weak, revised_applicability_rule. Revise the applicability rule only when "
-        "the measured counterexamples justify it. revised_applicability_rule must be a numeric "
-        f"expression over: {', '.join(sorted(APPLICABILITY_FEATURES))}. "
+        "scoring_should_change, evidence_too_weak, revised_applicability_rule, "
+        "revised_candidate_scoring_policy. "
+        "You may revise applicability and/or scoring at most once when the evidence justifies it. "
+        f"revised_applicability_rule must be a numeric expression over: {applicability}. "
+        f"revised_candidate_scoring_policy must be a short expression over: {scoring}. "
+        "If the operator abstained because applicability was non-positive on the development "
+        "repair, prefer revising applicability_rule to '1' so the scoring policy can be tested, "
+        "unless the hypothesis explicitly requires a narrow context. "
+        "If the operator applied but selected the same move as classical, revise "
+        "candidate_scoring_policy to a short alternative (for example '-1 * delta_distance' or "
+        "'delta_travel_time') that can change ranking. "
         "You may revise at most once. Evidence:\n"
+        f"inert_abstention={json.dumps(inert_abstention)}\n"
+        f"search_decision={json.dumps(search_decision or {})}\n"
         f"hypothesis={json.dumps(hypothesis.model_dump())}\n"
         f"operator={json.dumps(operator.model_dump())}\n"
         f"counterexamples={json.dumps(records)}"

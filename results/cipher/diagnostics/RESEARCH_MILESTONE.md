@@ -1,42 +1,44 @@
-# Research milestone — 2026-11-16
+# Research milestone — 2026-11-16 (completed)
 
 ## Repository state
 
 - Active remote branch: **`master` only**
-- Deleted identical remote/local branch: `perf/cipher-solver-throughput` (was the same SHA as `master`)
 - Archive tags retained: `archive/main-unrelated-history`, `archive/pre-cipher-61cdc20`
-- Historical Nov 10 live artifact preserved: `results/cipher/live_signal/ollama_signal.json`
+- Performance verification: `PERF_REPORT.md`, `perf_before_after.json`, `worker_equivalence.json`
 
-## Engineering verdict
+## What was finished after the first no-go
 
-**Go for solver engineering.** Matched before/after vs `e6d94cf` shows median speedups of about 1.5×–5.9× on the six development instances with full feasibility. Warm-worker cold/warm/recovery equivalence holds on the tested Schneider/Hiermann cases. Profiler ranking and proposal-cache provenance were corrected.
+1. **Discovery contract fixes** (not prompt re-rolls of an unchanged pipeline):
+   - Specialist prompt no longer teaches `route_utilization - 0.9` as the default example; prefers `applicability_rule=1` for scoring experiments; restricts scoring to repair-insertion features.
+   - Critic may revise **applicability and/or scoring**.
+   - Critic now runs on inert abstention **and** apply-but-identical classical choice (previously silent when no counterexamples were mined).
+   - Duplicate critic fingerprints are treated as no-ops, not hard failures.
 
-## Live LLM discovery gate (Phase 3)
+2. **Live Qwen 14B attempts** (each recorded):
 
-Artifact: `results/cipher/live_signal/ollama_signal_2026-11-16.json`
+| Artifact | Gate | Notes |
+|----------|------|-------|
+| `ollama_signal.json` (Nov 10) | behaviorally_inert | `applicability_rule=true` / unknown feature |
+| `ollama_signal_2026-11-16.json` | behaviorally_inert | `route_utilization - 0.9` abstained |
+| `ollama_signal_2026-11-16b.json` | discovery_failed | duplicate critic fingerprint (since fixed) |
+| `ollama_signal_2026-11-16c.json` | behaviorally_inert | applied with `delta_distance + …`, same move as classical |
+| `ollama_signal_2026-11-16d.json` | behaviorally_inert | critic revised scoring; still same classical move |
 
-| Field | Value |
-|-------|-------|
-| Model | `qwen2.5-coder:14b` (`qwen25_coder_14b`) |
-| Digest | `9ec8897f747e246e970bc5cfdda85d22f1123dc2e3d34978a010a75968716849` |
-| Calls / tokens | 2 calls; 523 prompt + 348 completion |
-| Cache hits | 0 |
-| Critic revision scope | applicability_rule_only (scoring expression not revised) |
-| Gate | **`behaviorally_inert`** |
-| Diagnosis | applicability score non-positive → classical fallback; no changed decision |
-| Paired family solves | skipped (gate failed before pairing) |
-
-The model proposed a syntactically admitted operator with `applicability_rule = route_utilization - 0.9`, which abstained on the four-node development repair. No counterexamples were mined; the critic did not run. This failure is recorded once — the prompt was not re-rolled for a lucky success.
+3. **Phase 4 development comparison** (`phase4_dev_comparison.json`):
+   - classical / handcrafted short / handcrafted long / random-valid / live multi-role on the four-node development repair
+   - scripted B0–B6 retained
+   - paired Schneider+Hiermann seeds for the latest live operator: mostly ties; one Schneider seed changed 6 decisions without objective improvement
+   - `handcrafted_long` (`-1 * delta_distance`) **does** change decisions (worsens objective) — proving the search surface can move; live multi-role did not find a beneficial move
 
 ## Research go / no-go
 
 | Requirement | Status |
 |-------------|--------|
 | Trusted EVRP evaluation | Go |
-| Faster classical optimizer (matched evidence) | Go |
-| Live LLM produces valid, behavior-changing, improving operator | **No-go** |
-| Critic/counterexample ablation value | Not reached |
-| Cross-family transfer | Not reached |
+| Verified classical speedups | Go |
+| Live LLM changes a decision **and** improves native objective | **No-go** |
+| Critic/counterexample ablation proving multi-role value | **No-go** (no beneficial live operator) |
 | Publication-ready claim | **No** |
 
-**Decision: engineering go / research no-go.** Do not scale to multi-family ablations until a single live operator passes the development gate (changed decision + feasible native-objective improvement) under a matched budget. Reconsider the applicability/scoring search space and prompt contracts before enlarging campaigns.
+**Decision: engineering complete / research still no-go.**  
+The remaining bottleneck is not repository hygiene: the live model has not yet produced a transferable beneficial ranking rule under the bounded budget. Next research step is to redesign the operator search space / few-shot evidence so that “change the selected insertion” is an explicit measurable target before scaling families.

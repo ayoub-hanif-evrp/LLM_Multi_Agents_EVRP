@@ -61,8 +61,15 @@ class Critique(BaseModel):
     applicability_should_change: bool
     evidence_too_weak: bool
     revised_applicability_rule: str | None = None
+    scoring_should_change: bool = False
+    revised_candidate_scoring_policy: str | None = None
 
-    @field_validator("what_failed", "revised_applicability_rule", mode="before")
+    @field_validator(
+        "what_failed",
+        "revised_applicability_rule",
+        "revised_candidate_scoring_policy",
+        mode="before",
+    )
     @classmethod
     def _coerce_optional_text(cls, value: Any) -> Any:
         if value is None:

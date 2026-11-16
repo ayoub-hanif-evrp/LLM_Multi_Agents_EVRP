@@ -224,6 +224,44 @@ def test_stump_learns_when_the_operator_helps_and_refuses_confirmation() -> None
         fit_stump([ApplicabilityExample({"route_utilization": 0.95}, True, "confirmation")])
 
 
+def test_discovery_cycle_revises_after_inert_applicability_abstention() -> None:
+    """Abstention without counterexamples must still allow one critic revision."""
+    spec, solution = _four()
+    proposal = _operator(applicability_rule="route_utilization - 0.9").model_dump()
+    backend = FakeBackend(
+        {
+            "architect": json.dumps(
+                {
+                    "hypothesis": "Prefer shorter insertion deltas on the development repair.",
+                    "target_bottleneck": "insertion ranking",
+                    "affected_capabilities": ["time_windows"],
+                    "proposed_operator_id": "short_detour",
+                    "expected_useful_conditions": "any feasible route",
+                    "expected_failure_conditions": "infeasible battery debt",
+                    "measurable_prediction": "distance falls on this repair",
+                }
+            ),
+            "routing_specialist": json.dumps(proposal),
+            "critic": json.dumps(
+                {
+                    "what_failed": "applicability abstained on the sparse development route",
+                    "operator_should_change": False,
+                    "applicability_should_change": True,
+                    "scoring_should_change": False,
+                    "evidence_too_weak": False,
+                    "revised_applicability_rule": "1",
+                }
+            ),
+        }
+    )
+    result = run_cycle(backend, spec, solution, [("C",)], partition="development", budget=CallBudget(4))
+    assert result["llm_calls"] == 3
+    assert result["critic_revised"] is True
+    assert "applicability_rule" in result["critic_revised_parts"]
+    assert result["operator"]["applicability_rule"] == "1"
+    assert result["decision"]["changed"] is True
+
+
 def test_discovery_cycle_revises_the_rule_after_a_counterexample() -> None:
     spec, solution = _four()
     proposal = _operator().model_dump()

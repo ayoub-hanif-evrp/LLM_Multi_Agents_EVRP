@@ -4,7 +4,7 @@ from __future__ import annotations
 import math
 import random
 import time
-from typing import Any
+from typing import Any, Literal
 
 from evrptw_autolab.backbone.construct import insert_customer_fast
 from evrptw_autolab.backbone.decision_features import (
@@ -13,6 +13,37 @@ from evrptw_autolab.backbone.decision_features import (
     marginal_removal_distance,
     time_window_width,
 )
+
+RepairScoringMode = Literal[
+    "total_route_distance",
+    "marginal_delta_distance",
+    "marginal_fleet_aware",
+]
+
+DEFAULT_REPAIR_SCORING_MODE: RepairScoringMode = "total_route_distance"
+
+
+def classical_repair_rank_score(
+    mode: str,
+    *,
+    total_route_distance: float,
+    delta_distance: float,
+    route_customer_count: float = 0.0,
+) -> float:
+    """Rank key for classical repair. Lower is better.
+
+    ``total_route_distance`` preserves the historical B0 criterion (post-insertion
+    route length). ``marginal_delta_distance`` ranks by added distance. 
+    ``marginal_fleet_aware`` keeps marginal distance primary and lightly prefers
+    packing into busier routes (consolidation bias for lexicographic fleet objectives).
+    """
+    if mode == "total_route_distance":
+        return float(total_route_distance)
+    if mode == "marginal_delta_distance":
+        return float(delta_distance)
+    if mode == "marginal_fleet_aware":
+        return float(delta_distance) - 0.01 * float(route_customer_count)
+    raise ValueError(f"unknown repair_scoring_mode: {mode!r}")
 from evrptw_autolab.backbone.energy_repair import repair_energy
 from evrptw_autolab.backbone.local_search import relocate_improve, two_opt_improve
 from evrptw_autolab.backbone.util import (
@@ -505,12 +536,14 @@ def repair_greedy(
     optimize_partial_charges: bool = True,
     deadline: float | None = None,
     partition: str = "development",
+    repair_scoring_mode: str = DEFAULT_REPAIR_SCORING_MODE,
 ) -> SolutionV2:
     current = clone_solution(solution)
     vehicle_id = default_vehicle_id(spec)
     if not current.routes:
         current.routes = [empty_route(spec, vehicle_id)]
         current.vehicle_assignments = [vehicle_id]
+    current.metadata["repair_scoring_mode"] = str(repair_scoring_mode)
 
     order = list(removed)
     rng.shuffle(order)
@@ -581,12 +614,20 @@ def repair_greedy(
                     bump("candidates_considered")
                     trial_route = list(route)
                     trial_route.insert(pos, make_customer_stop(node_id, spec))
+                    # Local screen only: allow_battery_debt means screened-ok is not trusted feasibility.
                     ok, distance = screen_repair_route(spec, trial_route, vehicle, allow_battery_debt=True)
                     if not ok:
                         bump("candidates_rejected_screen")
                         continue
-                    if distance < best_score:
-                        best_score = distance
+                    features = insertion_features_v4(spec, route, pos, node_id, vehicle)
+                    score = classical_repair_rank_score(
+                        repair_scoring_mode,
+                        total_route_distance=float(distance),
+                        delta_distance=float(features["delta_distance"]),
+                        route_customer_count=float(features["route_customer_count"]),
+                    )
+                    if score < best_score:
+                        best_score = score
                         best = replace_route(current, r_idx, trial_route)
             if best is None:
                 route = empty_route(spec, vehicle_id)
@@ -628,8 +669,15 @@ def repair_greedy(
                         if not ok:
                             bump("candidates_rejected_screen")
                             continue
-                        if distance < best_score:
-                            best_score = distance
+                        features = edited_route_features(spec, route, trial_route, vehicle)
+                        score = classical_repair_rank_score(
+                            repair_scoring_mode,
+                            total_route_distance=float(distance),
+                            delta_distance=float(features["delta_distance"]),
+                            route_customer_count=float(features["route_customer_count"]),
+                        )
+                        if score < best_score:
+                            best_score = score
                             best = replace_route(current, r_idx, trial_route)
             if best is None:
                 route = empty_route(spec, vehicle_id)
@@ -696,6 +744,7 @@ def alns_improve(
     adaptive_destroy: bool = True,
     heavy_local: bool = True,
     partition: str = "development",
+    repair_scoring_mode: str = DEFAULT_REPAIR_SCORING_MODE,
 ) -> SolutionV2:
     """ALNS with random/worst destroy + greedy repair + SA acceptance."""
     from evrptw_autolab.discovery.schemas import OperatorSpec
@@ -743,6 +792,7 @@ def alns_improve(
             optimize_partial_charges=optimize_partial_charges,
             deadline=end_by,
             partition=partition,
+            repair_scoring_mode=repair_scoring_mode,
         )
         delta_changed = int(candidate.metadata.get("changed_decisions") or 0) - prior_changed
         if delta_changed > 0:

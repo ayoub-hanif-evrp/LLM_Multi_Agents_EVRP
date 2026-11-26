@@ -1,0 +1,2045 @@
+{
+  "created_at": "2026-11-26T11:29:12.765853+00:00",
+  "protocol": "cipher_baseline_ablation_b0b4_v1",
+  "seeds": [
+    7,
+    11,
+    22
+  ],
+  "arms": {
+    "B0": {
+      "repair_scoring_mode": "total_route_distance",
+      "note": "Legacy classical: minimize post-insertion total route distance"
+    },
+    "B1": {
+      "repair_scoring_mode": "marginal_delta_distance",
+      "note": "Corrected classical: minimize marginal delta_distance"
+    },
+    "B2": {
+      "repair_scoring_mode": "marginal_fleet_aware",
+      "note": "B1 + light consolidation bias (prefer busier routes)"
+    },
+    "B3": {
+      "repair_scoring_mode": "total_route_distance",
+      "note": "Handcrafted delta_distance OperatorSpec on B0 backbone"
+    },
+    "B4": {
+      "repair_scoring_mode": "total_route_distance",
+      "note": "LLM battery_margin negative control on B0 backbone"
+    }
+  },
+  "rows": [
+    {
+      "arm": "B0",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "vehicles": 2,
+      "total_distance": 257.7474518641999,
+      "b0_objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B0",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 11,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "vehicles": 2,
+      "total_distance": 257.7474518641999,
+      "b0_objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B0",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 22,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "vehicles": 2,
+      "total_distance": 257.7474518641999,
+      "b0_objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B0",
+      "family": "schneider",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        33.0,
+        2929.8805885658785
+      ],
+      "vehicles": 33,
+      "total_distance": 2929.8805885658785,
+      "b0_objective_key": [
+        33.0,
+        2929.8805885658785
+      ],
+      "b0_vehicles": 33,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B0",
+      "family": "schneider",
+      "instance_id": "c101_21",
+      "seed": 11,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        33.0,
+        2759.3861950604482
+      ],
+      "vehicles": 33,
+      "total_distance": 2759.3861950604482,
+      "b0_objective_key": [
+        33.0,
+        2759.3861950604482
+      ],
+      "b0_vehicles": 33,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B0",
+      "family": "schneider",
+      "instance_id": "c101_21",
+      "seed": 22,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        34.0,
+        3004.481154755148
+      ],
+      "vehicles": 34,
+      "total_distance": 3004.481154755148,
+      "b0_objective_key": [
+        34.0,
+        3004.481154755148
+      ],
+      "b0_vehicles": 34,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B0",
+      "family": "schneider",
+      "instance_id": "c103C5",
+      "seed": 7,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "vehicles": 1,
+      "total_distance": 176.0544331488157,
+      "b0_objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "b0_vehicles": 1,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B0",
+      "family": "schneider",
+      "instance_id": "c103C5",
+      "seed": 11,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "vehicles": 1,
+      "total_distance": 176.0544331488157,
+      "b0_objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "b0_vehicles": 1,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B0",
+      "family": "schneider",
+      "instance_id": "c103C5",
+      "seed": 22,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "vehicles": 1,
+      "total_distance": 176.0544331488157,
+      "b0_objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "b0_vehicles": 1,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B0",
+      "family": "schneider",
+      "instance_id": "r104C5",
+      "seed": 7,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        136.68974680638544
+      ],
+      "vehicles": 2,
+      "total_distance": 136.68974680638544,
+      "b0_objective_key": [
+        2.0,
+        136.68974680638544
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B0",
+      "family": "schneider",
+      "instance_id": "r104C5",
+      "seed": 11,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "vehicles": 2,
+      "total_distance": 161.25367030278682,
+      "b0_objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B0",
+      "family": "schneider",
+      "instance_id": "r104C5",
+      "seed": 22,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "vehicles": 2,
+      "total_distance": 161.25367030278682,
+      "b0_objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B0",
+      "family": "schneider",
+      "instance_id": "rc105C5",
+      "seed": 7,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        241.29639187672765
+      ],
+      "vehicles": 2,
+      "total_distance": 241.29639187672765,
+      "b0_objective_key": [
+        2.0,
+        241.29639187672765
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B0",
+      "family": "schneider",
+      "instance_id": "rc105C5",
+      "seed": 11,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        241.29639187672765
+      ],
+      "vehicles": 2,
+      "total_distance": 241.29639187672765,
+      "b0_objective_key": [
+        2.0,
+        241.29639187672765
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B0",
+      "family": "schneider",
+      "instance_id": "rc105C5",
+      "seed": 22,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        241.29639187672765
+      ],
+      "vehicles": 2,
+      "total_distance": 241.29639187672765,
+      "b0_objective_key": [
+        2.0,
+        241.29639187672765
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B1",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "repair_scoring_mode": "marginal_delta_distance",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "vehicles": 2,
+      "total_distance": 257.7474518641999,
+      "b0_objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B1",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 11,
+      "repair_scoring_mode": "marginal_delta_distance",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "vehicles": 2,
+      "total_distance": 257.7474518641999,
+      "b0_objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B1",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 22,
+      "repair_scoring_mode": "marginal_delta_distance",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "vehicles": 2,
+      "total_distance": 257.7474518641999,
+      "b0_objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B1",
+      "family": "schneider",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "repair_scoring_mode": "marginal_delta_distance",
+      "policy": null,
+      "outcome_vs_b0": "improved",
+      "feasible": true,
+      "objective_key": [
+        33.0,
+        2856.9746742048765
+      ],
+      "vehicles": 33,
+      "total_distance": 2856.9746742048765,
+      "b0_objective_key": [
+        33.0,
+        2929.8805885658785
+      ],
+      "b0_vehicles": 33,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B1",
+      "family": "schneider",
+      "instance_id": "c101_21",
+      "seed": 11,
+      "repair_scoring_mode": "marginal_delta_distance",
+      "policy": null,
+      "outcome_vs_b0": "improved",
+      "feasible": true,
+      "objective_key": [
+        32.0,
+        2807.839833979903
+      ],
+      "vehicles": 32,
+      "total_distance": 2807.839833979903,
+      "b0_objective_key": [
+        33.0,
+        2759.3861950604482
+      ],
+      "b0_vehicles": 33,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B1",
+      "family": "schneider",
+      "instance_id": "c101_21",
+      "seed": 22,
+      "repair_scoring_mode": "marginal_delta_distance",
+      "policy": null,
+      "outcome_vs_b0": "improved",
+      "feasible": true,
+      "objective_key": [
+        32.0,
+        2583.775522655965
+      ],
+      "vehicles": 32,
+      "total_distance": 2583.775522655965,
+      "b0_objective_key": [
+        34.0,
+        3004.481154755148
+      ],
+      "b0_vehicles": 34,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B1",
+      "family": "schneider",
+      "instance_id": "c103C5",
+      "seed": 7,
+      "repair_scoring_mode": "marginal_delta_distance",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "vehicles": 1,
+      "total_distance": 176.0544331488157,
+      "b0_objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "b0_vehicles": 1,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B1",
+      "family": "schneider",
+      "instance_id": "c103C5",
+      "seed": 11,
+      "repair_scoring_mode": "marginal_delta_distance",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "vehicles": 1,
+      "total_distance": 176.0544331488157,
+      "b0_objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "b0_vehicles": 1,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B1",
+      "family": "schneider",
+      "instance_id": "c103C5",
+      "seed": 22,
+      "repair_scoring_mode": "marginal_delta_distance",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "vehicles": 1,
+      "total_distance": 176.0544331488157,
+      "b0_objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "b0_vehicles": 1,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B1",
+      "family": "schneider",
+      "instance_id": "r104C5",
+      "seed": 7,
+      "repair_scoring_mode": "marginal_delta_distance",
+      "policy": null,
+      "outcome_vs_b0": "objective_regression",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "vehicles": 2,
+      "total_distance": 161.25367030278682,
+      "b0_objective_key": [
+        2.0,
+        136.68974680638544
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B1",
+      "family": "schneider",
+      "instance_id": "r104C5",
+      "seed": 11,
+      "repair_scoring_mode": "marginal_delta_distance",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "vehicles": 2,
+      "total_distance": 161.25367030278682,
+      "b0_objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B1",
+      "family": "schneider",
+      "instance_id": "r104C5",
+      "seed": 22,
+      "repair_scoring_mode": "marginal_delta_distance",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "vehicles": 2,
+      "total_distance": 161.25367030278682,
+      "b0_objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B1",
+      "family": "schneider",
+      "instance_id": "rc105C5",
+      "seed": 7,
+      "repair_scoring_mode": "marginal_delta_distance",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        241.29639187672765
+      ],
+      "vehicles": 2,
+      "total_distance": 241.29639187672765,
+      "b0_objective_key": [
+        2.0,
+        241.29639187672765
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B1",
+      "family": "schneider",
+      "instance_id": "rc105C5",
+      "seed": 11,
+      "repair_scoring_mode": "marginal_delta_distance",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        241.29639187672765
+      ],
+      "vehicles": 2,
+      "total_distance": 241.29639187672765,
+      "b0_objective_key": [
+        2.0,
+        241.29639187672765
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B1",
+      "family": "schneider",
+      "instance_id": "rc105C5",
+      "seed": 22,
+      "repair_scoring_mode": "marginal_delta_distance",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        241.29639187672765
+      ],
+      "vehicles": 2,
+      "total_distance": 241.29639187672765,
+      "b0_objective_key": [
+        2.0,
+        241.29639187672765
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B2",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "repair_scoring_mode": "marginal_fleet_aware",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "vehicles": 2,
+      "total_distance": 257.7474518641999,
+      "b0_objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B2",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 11,
+      "repair_scoring_mode": "marginal_fleet_aware",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "vehicles": 2,
+      "total_distance": 257.7474518641999,
+      "b0_objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B2",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 22,
+      "repair_scoring_mode": "marginal_fleet_aware",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "vehicles": 2,
+      "total_distance": 257.7474518641999,
+      "b0_objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B2",
+      "family": "schneider",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "repair_scoring_mode": "marginal_fleet_aware",
+      "policy": null,
+      "outcome_vs_b0": "improved",
+      "feasible": true,
+      "objective_key": [
+        33.0,
+        2856.9746742048765
+      ],
+      "vehicles": 33,
+      "total_distance": 2856.9746742048765,
+      "b0_objective_key": [
+        33.0,
+        2929.8805885658785
+      ],
+      "b0_vehicles": 33,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B2",
+      "family": "schneider",
+      "instance_id": "c101_21",
+      "seed": 11,
+      "repair_scoring_mode": "marginal_fleet_aware",
+      "policy": null,
+      "outcome_vs_b0": "improved",
+      "feasible": true,
+      "objective_key": [
+        32.0,
+        2807.839833979903
+      ],
+      "vehicles": 32,
+      "total_distance": 2807.839833979903,
+      "b0_objective_key": [
+        33.0,
+        2759.3861950604482
+      ],
+      "b0_vehicles": 33,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B2",
+      "family": "schneider",
+      "instance_id": "c101_21",
+      "seed": 22,
+      "repair_scoring_mode": "marginal_fleet_aware",
+      "policy": null,
+      "outcome_vs_b0": "improved",
+      "feasible": true,
+      "objective_key": [
+        32.0,
+        2583.775522655965
+      ],
+      "vehicles": 32,
+      "total_distance": 2583.775522655965,
+      "b0_objective_key": [
+        34.0,
+        3004.481154755148
+      ],
+      "b0_vehicles": 34,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B2",
+      "family": "schneider",
+      "instance_id": "c103C5",
+      "seed": 7,
+      "repair_scoring_mode": "marginal_fleet_aware",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "vehicles": 1,
+      "total_distance": 176.0544331488157,
+      "b0_objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "b0_vehicles": 1,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B2",
+      "family": "schneider",
+      "instance_id": "c103C5",
+      "seed": 11,
+      "repair_scoring_mode": "marginal_fleet_aware",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "vehicles": 1,
+      "total_distance": 176.0544331488157,
+      "b0_objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "b0_vehicles": 1,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B2",
+      "family": "schneider",
+      "instance_id": "c103C5",
+      "seed": 22,
+      "repair_scoring_mode": "marginal_fleet_aware",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "vehicles": 1,
+      "total_distance": 176.0544331488157,
+      "b0_objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "b0_vehicles": 1,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B2",
+      "family": "schneider",
+      "instance_id": "r104C5",
+      "seed": 7,
+      "repair_scoring_mode": "marginal_fleet_aware",
+      "policy": null,
+      "outcome_vs_b0": "objective_regression",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "vehicles": 2,
+      "total_distance": 161.25367030278682,
+      "b0_objective_key": [
+        2.0,
+        136.68974680638544
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B2",
+      "family": "schneider",
+      "instance_id": "r104C5",
+      "seed": 11,
+      "repair_scoring_mode": "marginal_fleet_aware",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "vehicles": 2,
+      "total_distance": 161.25367030278682,
+      "b0_objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B2",
+      "family": "schneider",
+      "instance_id": "r104C5",
+      "seed": 22,
+      "repair_scoring_mode": "marginal_fleet_aware",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "vehicles": 2,
+      "total_distance": 161.25367030278682,
+      "b0_objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B2",
+      "family": "schneider",
+      "instance_id": "rc105C5",
+      "seed": 7,
+      "repair_scoring_mode": "marginal_fleet_aware",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        241.29639187672765
+      ],
+      "vehicles": 2,
+      "total_distance": 241.29639187672765,
+      "b0_objective_key": [
+        2.0,
+        241.29639187672765
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B2",
+      "family": "schneider",
+      "instance_id": "rc105C5",
+      "seed": 11,
+      "repair_scoring_mode": "marginal_fleet_aware",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        241.29639187672765
+      ],
+      "vehicles": 2,
+      "total_distance": 241.29639187672765,
+      "b0_objective_key": [
+        2.0,
+        241.29639187672765
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B2",
+      "family": "schneider",
+      "instance_id": "rc105C5",
+      "seed": 22,
+      "repair_scoring_mode": "marginal_fleet_aware",
+      "policy": null,
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        241.29639187672765
+      ],
+      "vehicles": 2,
+      "total_distance": 241.29639187672765,
+      "b0_objective_key": [
+        2.0,
+        241.29639187672765
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B3",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": {
+        "operator_id": "handcrafted_delta",
+        "candidate_scoring_policy": "delta_distance"
+      },
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "vehicles": 2,
+      "total_distance": 257.7474518641999,
+      "b0_objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 6,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B3",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 11,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": {
+        "operator_id": "handcrafted_delta",
+        "candidate_scoring_policy": "delta_distance"
+      },
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "vehicles": 2,
+      "total_distance": 257.7474518641999,
+      "b0_objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B3",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 22,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": {
+        "operator_id": "handcrafted_delta",
+        "candidate_scoring_policy": "delta_distance"
+      },
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "vehicles": 2,
+      "total_distance": 257.7474518641999,
+      "b0_objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B3",
+      "family": "schneider",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": {
+        "operator_id": "handcrafted_delta",
+        "candidate_scoring_policy": "delta_distance"
+      },
+      "outcome_vs_b0": "improved",
+      "feasible": true,
+      "objective_key": [
+        33.0,
+        2856.9746742048765
+      ],
+      "vehicles": 33,
+      "total_distance": 2856.9746742048765,
+      "b0_objective_key": [
+        33.0,
+        2929.8805885658785
+      ],
+      "b0_vehicles": 33,
+      "changed_decisions": 51,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B3",
+      "family": "schneider",
+      "instance_id": "c101_21",
+      "seed": 11,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": {
+        "operator_id": "handcrafted_delta",
+        "candidate_scoring_policy": "delta_distance"
+      },
+      "outcome_vs_b0": "improved",
+      "feasible": true,
+      "objective_key": [
+        32.0,
+        2807.839833979903
+      ],
+      "vehicles": 32,
+      "total_distance": 2807.839833979903,
+      "b0_objective_key": [
+        33.0,
+        2759.3861950604482
+      ],
+      "b0_vehicles": 33,
+      "changed_decisions": 37,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B3",
+      "family": "schneider",
+      "instance_id": "c101_21",
+      "seed": 22,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": {
+        "operator_id": "handcrafted_delta",
+        "candidate_scoring_policy": "delta_distance"
+      },
+      "outcome_vs_b0": "improved",
+      "feasible": true,
+      "objective_key": [
+        32.0,
+        2583.775522655965
+      ],
+      "vehicles": 32,
+      "total_distance": 2583.775522655965,
+      "b0_objective_key": [
+        34.0,
+        3004.481154755148
+      ],
+      "b0_vehicles": 34,
+      "changed_decisions": 56,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B3",
+      "family": "schneider",
+      "instance_id": "c103C5",
+      "seed": 7,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": {
+        "operator_id": "handcrafted_delta",
+        "candidate_scoring_policy": "delta_distance"
+      },
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "vehicles": 1,
+      "total_distance": 176.0544331488157,
+      "b0_objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "b0_vehicles": 1,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B3",
+      "family": "schneider",
+      "instance_id": "c103C5",
+      "seed": 11,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": {
+        "operator_id": "handcrafted_delta",
+        "candidate_scoring_policy": "delta_distance"
+      },
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "vehicles": 1,
+      "total_distance": 176.0544331488157,
+      "b0_objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "b0_vehicles": 1,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B3",
+      "family": "schneider",
+      "instance_id": "c103C5",
+      "seed": 22,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": {
+        "operator_id": "handcrafted_delta",
+        "candidate_scoring_policy": "delta_distance"
+      },
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "vehicles": 1,
+      "total_distance": 176.0544331488157,
+      "b0_objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "b0_vehicles": 1,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B3",
+      "family": "schneider",
+      "instance_id": "r104C5",
+      "seed": 7,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": {
+        "operator_id": "handcrafted_delta",
+        "candidate_scoring_policy": "delta_distance"
+      },
+      "outcome_vs_b0": "objective_regression",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "vehicles": 2,
+      "total_distance": 161.25367030278682,
+      "b0_objective_key": [
+        2.0,
+        136.68974680638544
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 20,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B3",
+      "family": "schneider",
+      "instance_id": "r104C5",
+      "seed": 11,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": {
+        "operator_id": "handcrafted_delta",
+        "candidate_scoring_policy": "delta_distance"
+      },
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "vehicles": 2,
+      "total_distance": 161.25367030278682,
+      "b0_objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 19,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B3",
+      "family": "schneider",
+      "instance_id": "r104C5",
+      "seed": 22,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": {
+        "operator_id": "handcrafted_delta",
+        "candidate_scoring_policy": "delta_distance"
+      },
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "vehicles": 2,
+      "total_distance": 161.25367030278682,
+      "b0_objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 19,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B3",
+      "family": "schneider",
+      "instance_id": "rc105C5",
+      "seed": 7,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": {
+        "operator_id": "handcrafted_delta",
+        "candidate_scoring_policy": "delta_distance"
+      },
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        241.29639187672765
+      ],
+      "vehicles": 2,
+      "total_distance": 241.29639187672765,
+      "b0_objective_key": [
+        2.0,
+        241.29639187672765
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B3",
+      "family": "schneider",
+      "instance_id": "rc105C5",
+      "seed": 11,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": {
+        "operator_id": "handcrafted_delta",
+        "candidate_scoring_policy": "delta_distance"
+      },
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        241.29639187672765
+      ],
+      "vehicles": 2,
+      "total_distance": 241.29639187672765,
+      "b0_objective_key": [
+        2.0,
+        241.29639187672765
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B3",
+      "family": "schneider",
+      "instance_id": "rc105C5",
+      "seed": 22,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": {
+        "operator_id": "handcrafted_delta",
+        "candidate_scoring_policy": "delta_distance"
+      },
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        241.29639187672765
+      ],
+      "vehicles": 2,
+      "total_distance": 241.29639187672765,
+      "b0_objective_key": [
+        2.0,
+        241.29639187672765
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 0,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B4",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": {
+        "operator_id": "llm_battery_margin",
+        "candidate_scoring_policy": "battery_margin"
+      },
+      "outcome_vs_b0": "objective_regression",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "total_distance": 267.3289940850671,
+      "b0_objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 3,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B4",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 11,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": {
+        "operator_id": "llm_battery_margin",
+        "candidate_scoring_policy": "battery_margin"
+      },
+      "outcome_vs_b0": "objective_regression",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "total_distance": 267.3289940850671,
+      "b0_objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 4,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B4",
+      "family": "schneider",
+      "instance_id": "c101C5",
+      "seed": 22,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": {
+        "operator_id": "llm_battery_margin",
+        "candidate_scoring_policy": "battery_margin"
+      },
+      "outcome_vs_b0": "objective_regression",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        267.3289940850671
+      ],
+      "vehicles": 2,
+      "total_distance": 267.3289940850671,
+      "b0_objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 2,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B4",
+      "family": "schneider",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": {
+        "operator_id": "llm_battery_margin",
+        "candidate_scoring_policy": "battery_margin"
+      },
+      "outcome_vs_b0": "objective_regression",
+      "feasible": true,
+      "objective_key": [
+        34.0,
+        3031.791538895709
+      ],
+      "vehicles": 34,
+      "total_distance": 3031.791538895709,
+      "b0_objective_key": [
+        33.0,
+        2929.8805885658785
+      ],
+      "b0_vehicles": 33,
+      "changed_decisions": 72,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B4",
+      "family": "schneider",
+      "instance_id": "c101_21",
+      "seed": 11,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": {
+        "operator_id": "llm_battery_margin",
+        "candidate_scoring_policy": "battery_margin"
+      },
+      "outcome_vs_b0": "objective_regression",
+      "feasible": true,
+      "objective_key": [
+        34.0,
+        3031.791538895709
+      ],
+      "vehicles": 34,
+      "total_distance": 3031.791538895709,
+      "b0_objective_key": [
+        33.0,
+        2759.3861950604482
+      ],
+      "b0_vehicles": 33,
+      "changed_decisions": 72,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B4",
+      "family": "schneider",
+      "instance_id": "c101_21",
+      "seed": 22,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": {
+        "operator_id": "llm_battery_margin",
+        "candidate_scoring_policy": "battery_margin"
+      },
+      "outcome_vs_b0": "objective_regression",
+      "feasible": true,
+      "objective_key": [
+        34.0,
+        3031.791538895709
+      ],
+      "vehicles": 34,
+      "total_distance": 3031.791538895709,
+      "b0_objective_key": [
+        34.0,
+        3004.481154755148
+      ],
+      "b0_vehicles": 34,
+      "changed_decisions": 72,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B4",
+      "family": "schneider",
+      "instance_id": "c103C5",
+      "seed": 7,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": {
+        "operator_id": "llm_battery_margin",
+        "candidate_scoring_policy": "battery_margin"
+      },
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "vehicles": 1,
+      "total_distance": 176.0544331488157,
+      "b0_objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "b0_vehicles": 1,
+      "changed_decisions": 17,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B4",
+      "family": "schneider",
+      "instance_id": "c103C5",
+      "seed": 11,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": {
+        "operator_id": "llm_battery_margin",
+        "candidate_scoring_policy": "battery_margin"
+      },
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "vehicles": 1,
+      "total_distance": 176.0544331488157,
+      "b0_objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "b0_vehicles": 1,
+      "changed_decisions": 17,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B4",
+      "family": "schneider",
+      "instance_id": "c103C5",
+      "seed": 22,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": {
+        "operator_id": "llm_battery_margin",
+        "candidate_scoring_policy": "battery_margin"
+      },
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "vehicles": 1,
+      "total_distance": 176.0544331488157,
+      "b0_objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "b0_vehicles": 1,
+      "changed_decisions": 15,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B4",
+      "family": "schneider",
+      "instance_id": "r104C5",
+      "seed": 7,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": {
+        "operator_id": "llm_battery_margin",
+        "candidate_scoring_policy": "battery_margin"
+      },
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        136.68974680638544
+      ],
+      "vehicles": 2,
+      "total_distance": 136.68974680638544,
+      "b0_objective_key": [
+        2.0,
+        136.68974680638544
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 17,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B4",
+      "family": "schneider",
+      "instance_id": "r104C5",
+      "seed": 11,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": {
+        "operator_id": "llm_battery_margin",
+        "candidate_scoring_policy": "battery_margin"
+      },
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "vehicles": 2,
+      "total_distance": 161.25367030278682,
+      "b0_objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 11,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B4",
+      "family": "schneider",
+      "instance_id": "r104C5",
+      "seed": 22,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": {
+        "operator_id": "llm_battery_margin",
+        "candidate_scoring_policy": "battery_margin"
+      },
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "vehicles": 2,
+      "total_distance": 161.25367030278682,
+      "b0_objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 17,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B4",
+      "family": "schneider",
+      "instance_id": "rc105C5",
+      "seed": 7,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": {
+        "operator_id": "llm_battery_margin",
+        "candidate_scoring_policy": "battery_margin"
+      },
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        241.29639187672765
+      ],
+      "vehicles": 2,
+      "total_distance": 241.29639187672765,
+      "b0_objective_key": [
+        2.0,
+        241.29639187672765
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 8,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B4",
+      "family": "schneider",
+      "instance_id": "rc105C5",
+      "seed": 11,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": {
+        "operator_id": "llm_battery_margin",
+        "candidate_scoring_policy": "battery_margin"
+      },
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        241.29639187672765
+      ],
+      "vehicles": 2,
+      "total_distance": 241.29639187672765,
+      "b0_objective_key": [
+        2.0,
+        241.29639187672765
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 6,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    },
+    {
+      "arm": "B4",
+      "family": "schneider",
+      "instance_id": "rc105C5",
+      "seed": 22,
+      "repair_scoring_mode": "total_route_distance",
+      "policy": {
+        "operator_id": "llm_battery_margin",
+        "candidate_scoring_policy": "battery_margin"
+      },
+      "outcome_vs_b0": "tie",
+      "feasible": true,
+      "objective_key": [
+        2.0,
+        241.29639187672765
+      ],
+      "vehicles": 2,
+      "total_distance": 241.29639187672765,
+      "b0_objective_key": [
+        2.0,
+        241.29639187672765
+      ],
+      "b0_vehicles": 2,
+      "changed_decisions": 4,
+      "note": "screened allow_battery_debt is local only; outcomes use trusted evaluate()"
+    }
+  ],
+  "summary_by_arm": {
+    "B0": {
+      "improved": 0,
+      "tie": 15,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "B1": {
+      "improved": 3,
+      "tie": 11,
+      "objective_regression": 1,
+      "feasibility_regression": 0
+    },
+    "B2": {
+      "improved": 3,
+      "tie": 11,
+      "objective_regression": 1,
+      "feasibility_regression": 0
+    },
+    "B3": {
+      "improved": 3,
+      "tie": 11,
+      "objective_regression": 1,
+      "feasibility_regression": 0
+    },
+    "B4": {
+      "improved": 0,
+      "tie": 9,
+      "objective_regression": 6,
+      "feasibility_regression": 0
+    }
+  },
+  "summary_by_instance": {
+    "B0/c101C5": {
+      "improved": 0,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "B0/c101_21": {
+      "improved": 0,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "B0/c103C5": {
+      "improved": 0,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "B0/r104C5": {
+      "improved": 0,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "B0/rc105C5": {
+      "improved": 0,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "B1/c101C5": {
+      "improved": 0,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "B1/c101_21": {
+      "improved": 3,
+      "tie": 0,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "B1/c103C5": {
+      "improved": 0,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "B1/r104C5": {
+      "improved": 0,
+      "tie": 2,
+      "objective_regression": 1,
+      "feasibility_regression": 0
+    },
+    "B1/rc105C5": {
+      "improved": 0,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "B2/c101C5": {
+      "improved": 0,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "B2/c101_21": {
+      "improved": 3,
+      "tie": 0,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "B2/c103C5": {
+      "improved": 0,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "B2/r104C5": {
+      "improved": 0,
+      "tie": 2,
+      "objective_regression": 1,
+      "feasibility_regression": 0
+    },
+    "B2/rc105C5": {
+      "improved": 0,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "B3/c101C5": {
+      "improved": 0,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "B3/c101_21": {
+      "improved": 3,
+      "tie": 0,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "B3/c103C5": {
+      "improved": 0,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "B3/r104C5": {
+      "improved": 0,
+      "tie": 2,
+      "objective_regression": 1,
+      "feasibility_regression": 0
+    },
+    "B3/rc105C5": {
+      "improved": 0,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "B4/c101C5": {
+      "improved": 0,
+      "tie": 0,
+      "objective_regression": 3,
+      "feasibility_regression": 0
+    },
+    "B4/c101_21": {
+      "improved": 0,
+      "tie": 0,
+      "objective_regression": 3,
+      "feasibility_regression": 0
+    },
+    "B4/c103C5": {
+      "improved": 0,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "B4/r104C5": {
+      "improved": 0,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    },
+    "B4/rc105C5": {
+      "improved": 0,
+      "tie": 3,
+      "objective_regression": 0,
+      "feasibility_regression": 0
+    }
+  },
+  "arm_gates_vs_b0": {
+    "B0": "baseline",
+    "B1": "mixed",
+    "B2": "mixed",
+    "B3": "mixed",
+    "B4": "objective_regression"
+  },
+  "decision": {
+    "b1_matches_b3_on_c101_21": true,
+    "b2_beats_b1_on_wins": false,
+    "next_step": "Adopt B1 as classical baseline: handcrafted B3 gain on c101_21 is largely explained by correcting total-route vs marginal scoring."
+  },
+  "reinterpretation_note": "Prior E1 headroom and E3 handcrafted wins used B0 total-route classical ranking. If B1\u2248B3, those gains partly measure baseline criterion mismatch, not discovery skill."
+}

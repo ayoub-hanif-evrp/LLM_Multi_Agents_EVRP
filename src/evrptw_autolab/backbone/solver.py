@@ -243,6 +243,9 @@ class ClassicalSolver:
     partial_charges_in_search: bool = False
     merge_routes: bool = True
     adaptive_destroy: bool = True
+    # Classical repair ranking: total_route_distance (legacy B0), marginal_delta_distance (B1),
+    # or marginal_fleet_aware (B2 light consolidation bias). Default preserves historical behavior.
+    repair_scoring_mode: str = "total_route_distance"
 
     def solve(self, spec: ProblemSpecV2) -> SolutionV2:
         if not self.hard_timeout:
@@ -338,6 +341,7 @@ class ClassicalSolver:
                 adaptive_destroy=self.adaptive_destroy,
                 heavy_local=not spec.capabilities.heterogeneous_fleet,
                 partition=self.experiment_partition,
+                repair_scoring_mode=self.repair_scoring_mode,
             )
             self._publish(tracker, spec, solution)
         if time.monotonic() < deadline and spec.capabilities.heterogeneous_fleet:
@@ -529,6 +533,7 @@ def _solver_process_main(spec: ProblemSpecV2, config: dict[str, Any], incumbent_
         partial_charges_in_search=bool(config.get("partial_charges_in_search", False)),
         merge_routes=bool(config.get("merge_routes", True)),
         adaptive_destroy=bool(config.get("adaptive_destroy", True)),
+        repair_scoring_mode=str(config.get("repair_scoring_mode", "total_route_distance")),
     )
     sink = _FileSink(incumbent_path)
     box: dict[str, Any] = {"sink": sink}
@@ -732,6 +737,7 @@ def _solve_in_process(solver: ClassicalSolver, spec: ProblemSpecV2) -> SolutionV
         "partial_charges_in_search": bool(solver.partial_charges_in_search),
         "merge_routes": bool(solver.merge_routes),
         "adaptive_destroy": bool(solver.adaptive_destroy),
+        "repair_scoring_mode": str(solver.repair_scoring_mode),
     }
     fd, incumbent_path = tempfile.mkstemp(prefix="voltforge-incumbent-", suffix=".pkl")
     os.close(fd)
@@ -862,6 +868,7 @@ def solve_classical(
     partial_charges_in_search: bool = False,
     merge_routes: bool = True,
     adaptive_destroy: bool = True,
+    repair_scoring_mode: str = "total_route_distance",
 ) -> SolutionV2:
     return ClassicalSolver(
         seed=seed,
@@ -875,6 +882,7 @@ def solve_classical(
         partial_charges_in_search=partial_charges_in_search,
         merge_routes=merge_routes,
         adaptive_destroy=adaptive_destroy,
+        repair_scoring_mode=repair_scoring_mode,
     ).solve(spec)
 
 

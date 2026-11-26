@@ -219,11 +219,16 @@ def _evaluate_operator(name: str, operator: OperatorSpec | None) -> dict[str, An
             )
     outcomes = [r["outcome"] for r in paired]
     changed = sum(int(r["changed_decisions"]) for r in paired)
-    if "feasibility_regression" in outcomes:
+    losses = outcomes.count("objective_regression") + outcomes.count("feasibility_regression")
+    wins = outcomes.count("improved")
+    if "feasibility_regression" in outcomes and wins == 0:
         gate = "feasibility_regression"
-    elif "improved" in outcomes:
+    elif wins > 0 and losses == 0:
+        # Never declare beneficial when any paired seed regresses the native objective.
         gate = "beneficial"
-    elif "objective_regression" in outcomes and "improved" not in outcomes:
+    elif wins > 0 and losses > 0:
+        gate = "mixed"
+    elif "objective_regression" in outcomes and wins == 0:
         gate = "objective_regression"
     elif changed == 0 and all(o == "tie" for o in outcomes):
         gate = "behaviorally_inert"

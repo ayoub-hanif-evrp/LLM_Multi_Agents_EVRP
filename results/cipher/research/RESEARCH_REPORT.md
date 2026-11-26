@@ -5,13 +5,14 @@ Priority: measured scientific signal, not infrastructure.
 
 ## Executive conclusion
 
-**Search-space go / LLM discovery no-go (under this budget).**
+**Search-space go / LLM discovery no-go (under this budget).**  
+**New (B0–B4): the prior handcrafted “win” is largely a classical scoring fix.**
 
-1. Real development trajectories contain measured improvement opportunities (35.9% of audited checkpoints).
-2. Simple non-LLM policies already exploit part of that headroom on Schneider development seeds.
-3. Evidence-guided Qwen2.5-Coder 14B proposals (single-LLM and multi-role) were valid and behavior-changing, but **regressed** native objectives.
+1. Real development trajectories contain measured improvement opportunities (35.9% of audited checkpoints) — but classical “acceptance” was **post-insertion total route distance**, not marginal `delta_distance`.
+2. B0–B4 ablation shows **B1 (marginal classical) matches B3 (handcrafted `delta_distance`)** on Schneider `c101_21` (3/3 improved vs B0). The OperatorSpec gain is not a sophisticated new strategy.
+3. Evidence-guided Qwen2.5-Coder 14B proposals (single-LLM and multi-role) were valid and behavior-changing, but **regressed** native objectives (B4 confirms).
 4. Multi-role did not beat an equally budgeted single-LLM baseline (both converged to the same harmful `battery_margin` rule).
-5. No LLM-discovered policy is frozen for confirmation transfer. The handcrafted `delta_distance` oracle reproduces Schneider `c101_21` development wins under always-on use, but selective gating and cross-family transfer remain ties.
+5. No LLM-discovered policy is frozen for confirmation transfer. Adopt **B1 as the corrected classical baseline** before further discovery spend.
 
 ---
 
@@ -27,7 +28,8 @@ Artifact: `headroom_audit.json`
 | Opportunity fraction | **35.9%** |
 | Decision | `continue_to_live_discovery` |
 
-Selection procedure was predeclared: classical = minimum immediate acceptance; alternatives = farthest / median / best `battery_margin` / random; equal continuation seed and budget.
+Selection procedure was predeclared: classical = minimum immediate acceptance (**total route distance after insertion**, same as B0); alternatives = farthest / median / best `battery_margin` / random; equal continuation seed and budget.  
+**Reinterpretation (after B0–B4):** part of the 14/39 “improvable” checkpoints may be opportunities created by that total-route vs marginal criterion mismatch.
 
 Example (Schneider `c101C5`, seed 7): classical immediate acceptance 113.7 → final (3 vehicles, 292.1); an alternative acceptance 159.3 → final (2 vehicles, 260.9). Immediate greed is not identical to downstream quality.
 
@@ -99,22 +101,52 @@ Interpretation: always-on reproduces the Schneider `c101_21` development signal 
 
 ---
 
+## Baseline ablation B0–B4 (classical scoring confound)
+
+Artifact: `baseline_ablation_b0b4.json`  
+Panel: Schneider `c101C5`, `c101_21`, `c103C5`, `r104C5`, `rc105C5` × seeds `{7,11,22}`.  
+Paired vs B0 (legacy total-route classical). Gates require **no regressions** to call beneficial.
+
+| Arm | Meaning | Wins | Ties | Losses | Gate vs B0 |
+|-----|---------|-----:|-----:|-------:|------------|
+| B0 | Classical: min post-insertion **total** route distance | 0 | 15 | 0 | baseline |
+| B1 | Classical: min **marginal** `delta_distance` | 3 | 11 | 1 | mixed |
+| B2 | B1 + light fleet/consolidation bias | 3 | 11 | 1 | mixed |
+| B3 | Handcrafted `delta_distance` OperatorSpec on B0 backbone | 3 | 11 | 1 | mixed |
+| B4 | LLM `battery_margin` negative control on B0 | 0 | 9 | 6 | objective_regression |
+
+### Table D — by instance (wins / ties / losses vs B0)
+
+| Arm | `c101C5` | `c101_21` | `c103C5` | `r104C5` | `rc105C5` |
+|-----|----------|-----------|----------|----------|-----------|
+| B1 | 0/3/0 | **3/0/0** | 0/3/0 | 0/2/1 | 0/3/0 |
+| B2 | 0/3/0 | **3/0/0** | 0/3/0 | 0/2/1 | 0/3/0 |
+| B3 | 0/3/0 | **3/0/0** | 0/3/0 | 0/2/1 | 0/3/0 |
+| B4 | 0/0/3 | 0/0/3 | 0/3/0 | 0/3/0 | 0/3/0 |
+
+**Decision (predeclared):** B1 matches B3 on `c101_21` → handcrafted gain is largely explained by correcting the classical insertion criterion. B2 does not beat B1 on this panel. **Adopt B1 as the research classical baseline.** Do not spend the next budget on larger LLMs or more agent roles until residual headroom is re-measured against B1.
+
+Local screening still allows temporary battery debt; all paired outcomes above use the trusted native evaluator only.
+
+---
+
 ## Paper-ready takeaways (honest)
 
 **What we can claim**
-- The CIPHER evaluation/search stack exposes nontrivial repair-decision headroom on real EVRP development instances.
-- The restricted `OperatorSpec` scoring language can encode policies that beat classical trajectories on Schneider development seeds.
+- The CIPHER evaluation/search stack exposes nontrivial repair-decision headroom on real EVRP development instances — partly attributable to a total-route vs marginal scoring inconsistency in classical repair.
+- Correcting classical repair to marginal `delta_distance` (B1) reproduces the prior handcrafted OperatorSpec wins on Schneider `c101_21`.
 - Immediate insertion cost and downstream native objective can disagree.
 
 **What we cannot claim**
+- That the handcrafted `delta_distance` operator discovered a sophisticated new optimization strategy beyond fixing B0.
 - That the current multi-agent LLM workflow discovers beneficial EVRP policies.
 - That multi-agent collaboration beats a budget-matched single LLM.
 - That selective transfer of an LLM policy helps across families.
-- That the handcrafted oracle transfers outside Schneider `c101_21` (always-on wins stay instance-local; selective mode ties).
 
 **Decision rules fired**
-- Headroom found → continued to live discovery.
-- Useful alternatives exist but LLM failed to discover them → report representation/feedback gap (`battery_margin` overfit), not repository failure.
+- Headroom found → continued to live discovery (under B0 classical).
+- B1 ≈ B3 on `c101_21` → adopt B1 baseline; reinterpret prior E3/E4 oracle wins.
+- Useful alternatives exist but LLM failed → representation/feedback gap (`battery_margin` overfit).
 - Multi-role ≤ single-LLM → no collaboration claim.
 
 ## Research go / no-go
@@ -122,7 +154,8 @@ Interpretation: always-on reproduces the Schneider `c101_21` development signal 
 | Gate | Status |
 |------|--------|
 | Foundation (evaluator, classical, five families, agents) | **Go** |
+| Classical scoring correctness (B0→B1) | **Fix adopted as next baseline** |
 | Scientific signal (LLM improves feasible trajectories) | **No-go** |
 | Scientific validation (reproducible multi-agent + transfer) | **No-go** |
 
-Next research step (not done here): change the feedback representation so models are scored on **continuation outcomes / vehicle-first objectives**, not feature heuristics that ignore fleet count—before more prompt volume.
+Next research step: re-audit residual headroom **against B1**, then either (a) build a counterfactual rollout dataset + non-LLM ranker if headroom remains, or (b) retarget discovery to route elimination / destroy selection / charging if insertion headroom collapses.

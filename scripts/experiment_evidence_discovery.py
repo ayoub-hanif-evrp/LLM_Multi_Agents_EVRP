@@ -219,29 +219,26 @@ def _evaluate_operator(name: str, operator: OperatorSpec | None) -> dict[str, An
             )
     outcomes = [r["outcome"] for r in paired]
     changed = sum(int(r["changed_decisions"]) for r in paired)
-    losses = outcomes.count("objective_regression") + outcomes.count("feasibility_regression")
-    wins = outcomes.count("improved")
-    if "feasibility_regression" in outcomes and wins == 0:
-        gate = "feasibility_regression"
-    elif wins > 0 and losses == 0:
-        # Never declare beneficial when any paired seed regresses the native objective.
-        gate = "beneficial"
-    elif wins > 0 and losses > 0:
-        gate = "mixed"
-    elif "objective_regression" in outcomes and wins == 0:
-        gate = "objective_regression"
-    elif changed == 0 and all(o == "tie" for o in outcomes):
-        gate = "behaviorally_inert"
-    else:
-        gate = "no_improvement"
+    from evrptw_autolab.research.gates import paired_gate
+
+    origin = "handcrafted"
+    lower = name.lower()
+    if "llm" in lower or "multi" in lower or lower.startswith("single"):
+        origin = "llm"
+    elif "random" in lower:
+        origin = "random"
+    elif lower.startswith("classical"):
+        origin = "classical"
+    gate_info = paired_gate(outcomes, changed_decisions_total=changed, policy_origin=origin)
     return {
         "name": name,
         "operator": None if operator is None else operator.model_dump(),
-        "gate": gate,
-        "wins": outcomes.count("improved"),
-        "ties": outcomes.count("tie"),
-        "losses": outcomes.count("objective_regression") + outcomes.count("feasibility_regression"),
+        "gate": gate_info["quality_gate"],
+        "wins": gate_info["wins"],
+        "ties": gate_info["ties"],
+        "losses": gate_info["losses"],
         "changed_decisions_total": changed,
+        "signals": gate_info,
         "paired": paired,
     }
 

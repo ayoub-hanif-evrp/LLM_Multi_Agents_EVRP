@@ -1,0 +1,161 @@
+{
+  "created_at": "2026-11-26T11:58:01.944667+00:00",
+  "protocol": "cipher_headroom_vs_b1_v1",
+  "git": {
+    "commit": "a6758880905b206fe62db4b4cdb657d077ffbf1f",
+    "dirty": true
+  },
+  "baseline": "marginal_delta_distance",
+  "audited_checkpoints": 5,
+  "improvable_checkpoints": 1,
+  "opportunity_fraction": 0.2,
+  "note": "Replaces B0-based 35.9% headroom for insertion ranking against marginal classical. Pilot scale; not a full 500\u20132000 checkpoint campaign.",
+  "checkpoints": [
+    {
+      "instance_id": "c101C5",
+      "seed": 7,
+      "node_id": "C30",
+      "n_candidates": 3,
+      "classical_label": "1:2",
+      "improvable": false,
+      "details": [
+        {
+          "label": "0:3",
+          "improved": false,
+          "classical_objective": [
+            2.0,
+            257.7474518641999
+          ],
+          "alt_objective": [
+            2.0,
+            257.7474518641999
+          ]
+        },
+        {
+          "label": "0:4",
+          "improved": false,
+          "classical_objective": [
+            2.0,
+            257.7474518641999
+          ],
+          "alt_objective": [
+            2.0,
+            257.7474518641999
+          ]
+        }
+      ]
+    },
+    {
+      "instance_id": "c103C5",
+      "seed": 11,
+      "node_id": "C20",
+      "n_candidates": 5,
+      "classical_label": "0:5",
+      "improvable": false,
+      "details": [
+        {
+          "label": "0:7",
+          "improved": false,
+          "classical_objective": [
+            1.0,
+            176.0544331488157
+          ],
+          "alt_objective": [
+            1.0,
+            176.0544331488157
+          ]
+        },
+        {
+          "label": "0:8",
+          "improved": false,
+          "classical_objective": [
+            1.0,
+            176.0544331488157
+          ],
+          "alt_objective": [
+            1.0,
+            176.0544331488157
+          ]
+        }
+      ]
+    },
+    {
+      "instance_id": "r104C5",
+      "seed": 22,
+      "node_id": "C5",
+      "n_candidates": 2,
+      "classical_label": "0:3",
+      "improvable": false,
+      "details": [
+        {
+          "label": "0:5",
+          "improved": false,
+          "classical_objective": [
+            1.0,
+            132.8118489897693
+          ],
+          "alt_objective": [
+            1.0,
+            132.8118489897693
+          ]
+        }
+      ]
+    },
+    {
+      "instance_id": "r105C5",
+      "seed": 7,
+      "node_id": "C95",
+      "n_candidates": 2,
+      "classical_label": "0:3",
+      "improvable": true,
+      "details": [
+        {
+          "label": "1:1",
+          "improved": true,
+          "classical_objective": [
+            2.0,
+            182.91917911096044
+          ],
+          "alt_objective": [
+            2.0,
+            156.08206946417084
+          ]
+        }
+      ]
+    },
+    {
+      "instance_id": "c101_21",
+      "seed": 11,
+      "node_id": "C84",
+      "n_candidates": 26,
+      "classical_label": "3:6",
+      "improvable": false,
+      "details": [
+        {
+          "label": "8:5",
+          "improved": false,
+          "classical_objective": [
+            37.0,
+            3065.419543061093
+          ],
+          "alt_objective": [
+            37.0,
+            3074.6026939102935
+          ]
+        },
+        {
+          "label": "38:1",
+          "improved": false,
+          "classical_objective": [
+            37.0,
+            3065.419543061093
+          ],
+          "alt_objective": [
+            38.0,
+            3132.912060891702
+          ]
+        }
+      ]
+    }
+  ]
+}

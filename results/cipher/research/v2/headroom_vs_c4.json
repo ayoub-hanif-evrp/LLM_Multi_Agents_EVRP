@@ -1,0 +1,257 @@
+{
+  "created_at": "2026-11-26T12:36:59.789412+00:00",
+  "protocol": "cipher_headroom_vs_c4_v1",
+  "git": {
+    "commit": "a6758880905b206fe62db4b4cdb657d077ffbf1f",
+    "dirty": true
+  },
+  "baseline_config": {
+    "repair_scoring_mode": "marginal_delta_distance",
+    "repair_algorithm": "regret2",
+    "destroy_size_cap": 3,
+    "use_related_destroy": false
+  },
+  "audited_checkpoints": 8,
+  "improvable_checkpoints": 0,
+  "opportunity_fraction": 0.0,
+  "decision_category": "insertion_position_selection",
+  "note": "Continuation uses C4/C5 classical ALNS settings (regret2 + related destroy). Pilot scale; route-elimination headroom not covered here.",
+  "checkpoints": [
+    {
+      "instance_id": "c101C5",
+      "seed": 7,
+      "node_id": "C30",
+      "n_candidates": 3,
+      "classical_label": "1:2",
+      "improvable": false,
+      "details": [
+        {
+          "label": "0:4",
+          "improved": false,
+          "classical_objective": [
+            2.0,
+            257.7474518641999
+          ],
+          "alt_objective": [
+            2.0,
+            257.7474518641999
+          ]
+        },
+        {
+          "label": "0:3",
+          "improved": false,
+          "classical_objective": [
+            2.0,
+            257.7474518641999
+          ],
+          "alt_objective": [
+            2.0,
+            267.3289940850671
+          ]
+        }
+      ]
+    },
+    {
+      "instance_id": "c101C5",
+      "seed": 11,
+      "node_id": "C30",
+      "n_candidates": 3,
+      "classical_label": "1:2",
+      "improvable": false,
+      "details": [
+        {
+          "label": "0:4",
+          "improved": false,
+          "classical_objective": [
+            2.0,
+            257.7474518641999
+          ],
+          "alt_objective": [
+            2.0,
+            257.7474518641999
+          ]
+        },
+        {
+          "label": "0:3",
+          "improved": false,
+          "classical_objective": [
+            2.0,
+            257.7474518641999
+          ],
+          "alt_objective": [
+            2.0,
+            257.7474518641999
+          ]
+        }
+      ]
+    },
+    {
+      "instance_id": "c103C5",
+      "seed": 11,
+      "node_id": "C20",
+      "n_candidates": 5,
+      "classical_label": "0:5",
+      "improvable": false,
+      "details": [
+        {
+          "label": "0:8",
+          "improved": false,
+          "classical_objective": [
+            1.0,
+            176.0544331488157
+          ],
+          "alt_objective": [
+            1.0,
+            176.0544331488157
+          ]
+        },
+        {
+          "label": "0:7",
+          "improved": false,
+          "classical_objective": [
+            1.0,
+            176.0544331488157
+          ],
+          "alt_objective": [
+            1.0,
+            176.0544331488157
+          ]
+        }
+      ]
+    },
+    {
+      "instance_id": "r104C5",
+      "seed": 22,
+      "node_id": "C5",
+      "n_candidates": 2,
+      "classical_label": "0:3",
+      "improvable": false,
+      "details": [
+        {
+          "label": "0:5",
+          "improved": false,
+          "classical_objective": [
+            1.0,
+            132.8118489897693
+          ],
+          "alt_objective": [
+            1.0,
+            132.8118489897693
+          ]
+        }
+      ]
+    },
+    {
+      "instance_id": "r105C5",
+      "seed": 7,
+      "node_id": "C95",
+      "n_candidates": 2,
+      "classical_label": "0:3",
+      "improvable": false,
+      "details": [
+        {
+          "label": "1:1",
+          "improved": false,
+          "classical_objective": [
+            2.0,
+            182.91917911096044
+          ],
+          "alt_objective": [
+            2.0,
+            182.91917911096044
+          ]
+        }
+      ]
+    },
+    {
+      "instance_id": "r105C5",
+      "seed": 11,
+      "node_id": "C95",
+      "n_candidates": 2,
+      "classical_label": "0:3",
+      "improvable": false,
+      "details": [
+        {
+          "label": "1:1",
+          "improved": false,
+          "classical_objective": [
+            2.0,
+            156.08206946417084
+          ],
+          "alt_objective": [
+            2.0,
+            156.08206946417084
+          ]
+        }
+      ]
+    },
+    {
+      "instance_id": "c101_21",
+      "seed": 7,
+      "node_id": "C84",
+      "n_candidates": 26,
+      "classical_label": "3:6",
+      "improvable": false,
+      "details": [
+        {
+          "label": "38:1",
+          "improved": false,
+          "classical_objective": [
+            38.0,
+            3100.9731887064913
+          ],
+          "alt_objective": [
+            38.0,
+            3157.1941820090906
+          ]
+        },
+        {
+          "label": "8:5",
+          "improved": false,
+          "classical_objective": [
+            38.0,
+            3100.9731887064913
+          ],
+          "alt_objective": [
+            38.0,
+            3206.386190928169
+          ]
+        }
+      ]
+    },
+    {
+      "instance_id": "c101_21",
+      "seed": 11,
+      "node_id": "C84",
+      "n_candidates": 26,
+      "classical_label": "3:6",
+      "improvable": false,
+      "details": [
+        {
+          "label": "38:1",
+          "improved": false,
+          "classical_objective": [
+            36.0,
+            2933.0687383188756
+          ],
+          "alt_objective": [
+            36.0,
+            2988.91589685353
+          ]
+        },
+        {
+          "label": "8:5",
+          "improved": false,
+          "classical_objective": [
+            36.0,
+            2933.0687383188756
+          ],
+          "alt_objective": [
+            36.0,
+            3019.6855838581437
+          ]
+        }
+      ]
+    }
+  ]
+}

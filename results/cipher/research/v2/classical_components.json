@@ -1,0 +1,1841 @@
+{
+  "created_at": "2026-11-26T11:57:36.609865+00:00",
+  "protocol": "cipher_classical_components_v1",
+  "git": {
+    "commit": "a6758880905b206fe62db4b4cdb657d077ffbf1f",
+    "dirty": true
+  },
+  "arms": {
+    "C0": {
+      "repair_scoring_mode": "total_route_distance",
+      "repair_algorithm": "greedy",
+      "destroy_size_cap": 3,
+      "route_elimination": false,
+      "note": "Legacy B0"
+    },
+    "C1": {
+      "repair_scoring_mode": "marginal_delta_distance",
+      "repair_algorithm": "greedy",
+      "destroy_size_cap": 3,
+      "route_elimination": false,
+      "note": "Corrected B1"
+    },
+    "C2": {
+      "repair_scoring_mode": "marginal_delta_distance",
+      "repair_algorithm": "regret2",
+      "destroy_size_cap": 3,
+      "route_elimination": false,
+      "note": "C1 + regret-2"
+    },
+    "C3": {
+      "repair_scoring_mode": "marginal_delta_distance",
+      "repair_algorithm": "regret2",
+      "destroy_size_cap": 8,
+      "route_elimination": false,
+      "note": "C2 + larger destroy"
+    },
+    "C4": {
+      "repair_scoring_mode": "marginal_delta_distance",
+      "repair_algorithm": "regret2",
+      "destroy_size_cap": 8,
+      "route_elimination": true,
+      "note": "C3 + route elimination"
+    }
+  },
+  "seeds": [
+    7,
+    11,
+    22
+  ],
+  "cases": [
+    {
+      "instance_id": "c101C5",
+      "time_limit_s": 8.0,
+      "iters": 30
+    },
+    {
+      "instance_id": "c103C5",
+      "time_limit_s": 8.0,
+      "iters": 30
+    },
+    {
+      "instance_id": "r104C5",
+      "time_limit_s": 8.0,
+      "iters": 30
+    },
+    {
+      "instance_id": "r105C5",
+      "time_limit_s": 8.0,
+      "iters": 30
+    },
+    {
+      "instance_id": "c101_21",
+      "time_limit_s": 45.0,
+      "iters": 100
+    }
+  ],
+  "rows": [
+    {
+      "arm": "C0",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 257.7474518641999,
+      "objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "wall_s": 0.394,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "total_route_distance",
+        "repair_algorithm": "greedy",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "Legacy B0"
+      }
+    },
+    {
+      "arm": "C0",
+      "instance_id": "c101C5",
+      "seed": 11,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 257.7474518641999,
+      "objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "wall_s": 0.095,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "total_route_distance",
+        "repair_algorithm": "greedy",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "Legacy B0"
+      }
+    },
+    {
+      "arm": "C0",
+      "instance_id": "c101C5",
+      "seed": 22,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 257.7474518641999,
+      "objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "wall_s": 0.066,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "total_route_distance",
+        "repair_algorithm": "greedy",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "Legacy B0"
+      }
+    },
+    {
+      "arm": "C0",
+      "instance_id": "c103C5",
+      "seed": 7,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 1,
+      "total_distance": 176.0544331488157,
+      "objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "wall_s": 0.123,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "total_route_distance",
+        "repair_algorithm": "greedy",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "Legacy B0"
+      }
+    },
+    {
+      "arm": "C0",
+      "instance_id": "c103C5",
+      "seed": 11,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 1,
+      "total_distance": 176.0544331488157,
+      "objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "wall_s": 0.126,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "total_route_distance",
+        "repair_algorithm": "greedy",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "Legacy B0"
+      }
+    },
+    {
+      "arm": "C0",
+      "instance_id": "c103C5",
+      "seed": 22,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 1,
+      "total_distance": 176.0544331488157,
+      "objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "wall_s": 0.112,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "total_route_distance",
+        "repair_algorithm": "greedy",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "Legacy B0"
+      }
+    },
+    {
+      "arm": "C0",
+      "instance_id": "r104C5",
+      "seed": 7,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 136.68974680638544,
+      "objective_key": [
+        2.0,
+        136.68974680638544
+      ],
+      "wall_s": 0.084,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "total_route_distance",
+        "repair_algorithm": "greedy",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "Legacy B0"
+      }
+    },
+    {
+      "arm": "C0",
+      "instance_id": "r104C5",
+      "seed": 11,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 136.68974680638544,
+      "objective_key": [
+        2.0,
+        136.68974680638544
+      ],
+      "wall_s": 0.074,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "total_route_distance",
+        "repair_algorithm": "greedy",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "Legacy B0"
+      }
+    },
+    {
+      "arm": "C0",
+      "instance_id": "r104C5",
+      "seed": 22,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 161.25367030278682,
+      "objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "wall_s": 0.075,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "total_route_distance",
+        "repair_algorithm": "greedy",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "Legacy B0"
+      }
+    },
+    {
+      "arm": "C0",
+      "instance_id": "r105C5",
+      "seed": 7,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 156.08206946417084,
+      "objective_key": [
+        2.0,
+        156.08206946417084
+      ],
+      "wall_s": 0.059,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "total_route_distance",
+        "repair_algorithm": "greedy",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "Legacy B0"
+      }
+    },
+    {
+      "arm": "C0",
+      "instance_id": "r105C5",
+      "seed": 11,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 156.08206946417084,
+      "objective_key": [
+        2.0,
+        156.08206946417084
+      ],
+      "wall_s": 0.058,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "total_route_distance",
+        "repair_algorithm": "greedy",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "Legacy B0"
+      }
+    },
+    {
+      "arm": "C0",
+      "instance_id": "r105C5",
+      "seed": 22,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 156.08206946417084,
+      "objective_key": [
+        2.0,
+        156.08206946417084
+      ],
+      "wall_s": 0.088,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "total_route_distance",
+        "repair_algorithm": "greedy",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "Legacy B0"
+      }
+    },
+    {
+      "arm": "C0",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 34,
+      "total_distance": 2989.9312119697524,
+      "objective_key": [
+        34.0,
+        2989.9312119697524
+      ],
+      "wall_s": 3.982,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "total_route_distance",
+        "repair_algorithm": "greedy",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "Legacy B0"
+      }
+    },
+    {
+      "arm": "C0",
+      "instance_id": "c101_21",
+      "seed": 11,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 34,
+      "total_distance": 2871.476045499674,
+      "objective_key": [
+        34.0,
+        2871.476045499674
+      ],
+      "wall_s": 4.192,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "total_route_distance",
+        "repair_algorithm": "greedy",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "Legacy B0"
+      }
+    },
+    {
+      "arm": "C0",
+      "instance_id": "c101_21",
+      "seed": 22,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 35,
+      "total_distance": 2994.590525326075,
+      "objective_key": [
+        35.0,
+        2994.590525326075
+      ],
+      "wall_s": 4.002,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "total_route_distance",
+        "repair_algorithm": "greedy",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "Legacy B0"
+      }
+    },
+    {
+      "arm": "C1",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 257.7474518641999,
+      "objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "wall_s": 0.133,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "greedy",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "Corrected B1"
+      }
+    },
+    {
+      "arm": "C1",
+      "instance_id": "c101C5",
+      "seed": 11,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 257.7474518641999,
+      "objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "wall_s": 0.112,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "greedy",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "Corrected B1"
+      }
+    },
+    {
+      "arm": "C1",
+      "instance_id": "c101C5",
+      "seed": 22,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 257.7474518641999,
+      "objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "wall_s": 0.07,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "greedy",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "Corrected B1"
+      }
+    },
+    {
+      "arm": "C1",
+      "instance_id": "c103C5",
+      "seed": 7,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 1,
+      "total_distance": 176.0544331488157,
+      "objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "wall_s": 0.118,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "greedy",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "Corrected B1"
+      }
+    },
+    {
+      "arm": "C1",
+      "instance_id": "c103C5",
+      "seed": 11,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 1,
+      "total_distance": 176.0544331488157,
+      "objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "wall_s": 0.113,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "greedy",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "Corrected B1"
+      }
+    },
+    {
+      "arm": "C1",
+      "instance_id": "c103C5",
+      "seed": 22,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 1,
+      "total_distance": 176.0544331488157,
+      "objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "wall_s": 0.105,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "greedy",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "Corrected B1"
+      }
+    },
+    {
+      "arm": "C1",
+      "instance_id": "r104C5",
+      "seed": 7,
+      "outcome_vs_c0": "objective_regression",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 161.25367030278682,
+      "objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "wall_s": 0.065,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "greedy",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "Corrected B1"
+      }
+    },
+    {
+      "arm": "C1",
+      "instance_id": "r104C5",
+      "seed": 11,
+      "outcome_vs_c0": "objective_regression",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 161.25367030278682,
+      "objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "wall_s": 0.064,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "greedy",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "Corrected B1"
+      }
+    },
+    {
+      "arm": "C1",
+      "instance_id": "r104C5",
+      "seed": 22,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 161.25367030278682,
+      "objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "wall_s": 0.065,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "greedy",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "Corrected B1"
+      }
+    },
+    {
+      "arm": "C1",
+      "instance_id": "r105C5",
+      "seed": 7,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 156.08206946417084,
+      "objective_key": [
+        2.0,
+        156.08206946417084
+      ],
+      "wall_s": 0.048,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "greedy",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "Corrected B1"
+      }
+    },
+    {
+      "arm": "C1",
+      "instance_id": "r105C5",
+      "seed": 11,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 156.08206946417084,
+      "objective_key": [
+        2.0,
+        156.08206946417084
+      ],
+      "wall_s": 0.049,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "greedy",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "Corrected B1"
+      }
+    },
+    {
+      "arm": "C1",
+      "instance_id": "r105C5",
+      "seed": 22,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 156.08206946417084,
+      "objective_key": [
+        2.0,
+        156.08206946417084
+      ],
+      "wall_s": 0.051,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "greedy",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "Corrected B1"
+      }
+    },
+    {
+      "arm": "C1",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "outcome_vs_c0": "improved",
+      "feasible": true,
+      "vehicles": 30,
+      "total_distance": 2275.5841988708944,
+      "objective_key": [
+        30.0,
+        2275.5841988708944
+      ],
+      "wall_s": 8.563,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "greedy",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "Corrected B1"
+      }
+    },
+    {
+      "arm": "C1",
+      "instance_id": "c101_21",
+      "seed": 11,
+      "outcome_vs_c0": "improved",
+      "feasible": true,
+      "vehicles": 27,
+      "total_distance": 2133.0878958360954,
+      "objective_key": [
+        27.0,
+        2133.0878958360954
+      ],
+      "wall_s": 14.27,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "greedy",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "Corrected B1"
+      }
+    },
+    {
+      "arm": "C1",
+      "instance_id": "c101_21",
+      "seed": 22,
+      "outcome_vs_c0": "improved",
+      "feasible": true,
+      "vehicles": 27,
+      "total_distance": 2206.818911751658,
+      "objective_key": [
+        27.0,
+        2206.818911751658
+      ],
+      "wall_s": 7.964,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "greedy",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "Corrected B1"
+      }
+    },
+    {
+      "arm": "C2",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 257.7474518641999,
+      "objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "wall_s": 0.139,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "C1 + regret-2"
+      }
+    },
+    {
+      "arm": "C2",
+      "instance_id": "c101C5",
+      "seed": 11,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 257.7474518641999,
+      "objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "wall_s": 0.106,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "C1 + regret-2"
+      }
+    },
+    {
+      "arm": "C2",
+      "instance_id": "c101C5",
+      "seed": 22,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 257.7474518641999,
+      "objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "wall_s": 0.069,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "C1 + regret-2"
+      }
+    },
+    {
+      "arm": "C2",
+      "instance_id": "c103C5",
+      "seed": 7,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 1,
+      "total_distance": 176.0544331488157,
+      "objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "wall_s": 0.115,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "C1 + regret-2"
+      }
+    },
+    {
+      "arm": "C2",
+      "instance_id": "c103C5",
+      "seed": 11,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 1,
+      "total_distance": 176.0544331488157,
+      "objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "wall_s": 0.127,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "C1 + regret-2"
+      }
+    },
+    {
+      "arm": "C2",
+      "instance_id": "c103C5",
+      "seed": 22,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 1,
+      "total_distance": 176.0544331488157,
+      "objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "wall_s": 0.116,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "C1 + regret-2"
+      }
+    },
+    {
+      "arm": "C2",
+      "instance_id": "r104C5",
+      "seed": 7,
+      "outcome_vs_c0": "objective_regression",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 161.25367030278682,
+      "objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "wall_s": 0.065,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "C1 + regret-2"
+      }
+    },
+    {
+      "arm": "C2",
+      "instance_id": "r104C5",
+      "seed": 11,
+      "outcome_vs_c0": "objective_regression",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 161.25367030278682,
+      "objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "wall_s": 0.064,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "C1 + regret-2"
+      }
+    },
+    {
+      "arm": "C2",
+      "instance_id": "r104C5",
+      "seed": 22,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 161.25367030278682,
+      "objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "wall_s": 0.066,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "C1 + regret-2"
+      }
+    },
+    {
+      "arm": "C2",
+      "instance_id": "r105C5",
+      "seed": 7,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 156.08206946417084,
+      "objective_key": [
+        2.0,
+        156.08206946417084
+      ],
+      "wall_s": 0.049,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "C1 + regret-2"
+      }
+    },
+    {
+      "arm": "C2",
+      "instance_id": "r105C5",
+      "seed": 11,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 156.08206946417084,
+      "objective_key": [
+        2.0,
+        156.08206946417084
+      ],
+      "wall_s": 0.05,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "C1 + regret-2"
+      }
+    },
+    {
+      "arm": "C2",
+      "instance_id": "r105C5",
+      "seed": 22,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 156.08206946417084,
+      "objective_key": [
+        2.0,
+        156.08206946417084
+      ],
+      "wall_s": 0.051,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "C1 + regret-2"
+      }
+    },
+    {
+      "arm": "C2",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "outcome_vs_c0": "improved",
+      "feasible": true,
+      "vehicles": 30,
+      "total_distance": 2275.5841988708944,
+      "objective_key": [
+        30.0,
+        2275.5841988708944
+      ],
+      "wall_s": 10.926,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "C1 + regret-2"
+      }
+    },
+    {
+      "arm": "C2",
+      "instance_id": "c101_21",
+      "seed": 11,
+      "outcome_vs_c0": "improved",
+      "feasible": true,
+      "vehicles": 27,
+      "total_distance": 2036.732276581607,
+      "objective_key": [
+        27.0,
+        2036.732276581607
+      ],
+      "wall_s": 15.179,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "C1 + regret-2"
+      }
+    },
+    {
+      "arm": "C2",
+      "instance_id": "c101_21",
+      "seed": 22,
+      "outcome_vs_c0": "improved",
+      "feasible": true,
+      "vehicles": 27,
+      "total_distance": 2206.818911751658,
+      "objective_key": [
+        27.0,
+        2206.818911751658
+      ],
+      "wall_s": 8.842,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 3,
+        "route_elimination": false,
+        "note": "C1 + regret-2"
+      }
+    },
+    {
+      "arm": "C3",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 257.7474518641999,
+      "objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "wall_s": 0.134,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 8,
+        "route_elimination": false,
+        "note": "C2 + larger destroy"
+      }
+    },
+    {
+      "arm": "C3",
+      "instance_id": "c101C5",
+      "seed": 11,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 257.7474518641999,
+      "objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "wall_s": 0.095,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 8,
+        "route_elimination": false,
+        "note": "C2 + larger destroy"
+      }
+    },
+    {
+      "arm": "C3",
+      "instance_id": "c101C5",
+      "seed": 22,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 257.7474518641999,
+      "objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "wall_s": 0.065,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 8,
+        "route_elimination": false,
+        "note": "C2 + larger destroy"
+      }
+    },
+    {
+      "arm": "C3",
+      "instance_id": "c103C5",
+      "seed": 7,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 1,
+      "total_distance": 176.0544331488157,
+      "objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "wall_s": 0.114,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 8,
+        "route_elimination": false,
+        "note": "C2 + larger destroy"
+      }
+    },
+    {
+      "arm": "C3",
+      "instance_id": "c103C5",
+      "seed": 11,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 1,
+      "total_distance": 176.0544331488157,
+      "objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "wall_s": 0.113,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 8,
+        "route_elimination": false,
+        "note": "C2 + larger destroy"
+      }
+    },
+    {
+      "arm": "C3",
+      "instance_id": "c103C5",
+      "seed": 22,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 1,
+      "total_distance": 176.0544331488157,
+      "objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "wall_s": 0.105,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 8,
+        "route_elimination": false,
+        "note": "C2 + larger destroy"
+      }
+    },
+    {
+      "arm": "C3",
+      "instance_id": "r104C5",
+      "seed": 7,
+      "outcome_vs_c0": "objective_regression",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 161.25367030278682,
+      "objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "wall_s": 0.065,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 8,
+        "route_elimination": false,
+        "note": "C2 + larger destroy"
+      }
+    },
+    {
+      "arm": "C3",
+      "instance_id": "r104C5",
+      "seed": 11,
+      "outcome_vs_c0": "objective_regression",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 161.25367030278682,
+      "objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "wall_s": 0.064,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 8,
+        "route_elimination": false,
+        "note": "C2 + larger destroy"
+      }
+    },
+    {
+      "arm": "C3",
+      "instance_id": "r104C5",
+      "seed": 22,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 161.25367030278682,
+      "objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "wall_s": 0.065,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 8,
+        "route_elimination": false,
+        "note": "C2 + larger destroy"
+      }
+    },
+    {
+      "arm": "C3",
+      "instance_id": "r105C5",
+      "seed": 7,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 156.08206946417084,
+      "objective_key": [
+        2.0,
+        156.08206946417084
+      ],
+      "wall_s": 0.048,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 8,
+        "route_elimination": false,
+        "note": "C2 + larger destroy"
+      }
+    },
+    {
+      "arm": "C3",
+      "instance_id": "r105C5",
+      "seed": 11,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 156.08206946417084,
+      "objective_key": [
+        2.0,
+        156.08206946417084
+      ],
+      "wall_s": 0.049,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 8,
+        "route_elimination": false,
+        "note": "C2 + larger destroy"
+      }
+    },
+    {
+      "arm": "C3",
+      "instance_id": "r105C5",
+      "seed": 22,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 156.08206946417084,
+      "objective_key": [
+        2.0,
+        156.08206946417084
+      ],
+      "wall_s": 0.051,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 8,
+        "route_elimination": false,
+        "note": "C2 + larger destroy"
+      }
+    },
+    {
+      "arm": "C3",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "outcome_vs_c0": "improved",
+      "feasible": true,
+      "vehicles": 25,
+      "total_distance": 1974.4851073922182,
+      "objective_key": [
+        25.0,
+        1974.4851073922182
+      ],
+      "wall_s": 35.597,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 8,
+        "route_elimination": false,
+        "note": "C2 + larger destroy"
+      }
+    },
+    {
+      "arm": "C3",
+      "instance_id": "c101_21",
+      "seed": 11,
+      "outcome_vs_c0": "improved",
+      "feasible": true,
+      "vehicles": 30,
+      "total_distance": 2210.5592328878574,
+      "objective_key": [
+        30.0,
+        2210.5592328878574
+      ],
+      "wall_s": 43.008,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 8,
+        "route_elimination": false,
+        "note": "C2 + larger destroy"
+      }
+    },
+    {
+      "arm": "C3",
+      "instance_id": "c101_21",
+      "seed": 22,
+      "outcome_vs_c0": "improved",
+      "feasible": true,
+      "vehicles": 30,
+      "total_distance": 2170.477704091791,
+      "objective_key": [
+        30.0,
+        2170.477704091791
+      ],
+      "wall_s": 43.007,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 8,
+        "route_elimination": false,
+        "note": "C2 + larger destroy"
+      }
+    },
+    {
+      "arm": "C4",
+      "instance_id": "c101C5",
+      "seed": 7,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 257.7474518641999,
+      "objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "wall_s": 0.184,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 8,
+        "route_elimination": true,
+        "note": "C3 + route elimination"
+      }
+    },
+    {
+      "arm": "C4",
+      "instance_id": "c101C5",
+      "seed": 11,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 257.7474518641999,
+      "objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "wall_s": 0.127,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 8,
+        "route_elimination": true,
+        "note": "C3 + route elimination"
+      }
+    },
+    {
+      "arm": "C4",
+      "instance_id": "c101C5",
+      "seed": 22,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 257.7474518641999,
+      "objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "wall_s": 0.097,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 8,
+        "route_elimination": true,
+        "note": "C3 + route elimination"
+      }
+    },
+    {
+      "arm": "C4",
+      "instance_id": "c103C5",
+      "seed": 7,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 1,
+      "total_distance": 176.0544331488157,
+      "objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "wall_s": 0.116,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 8,
+        "route_elimination": true,
+        "note": "C3 + route elimination"
+      }
+    },
+    {
+      "arm": "C4",
+      "instance_id": "c103C5",
+      "seed": 11,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 1,
+      "total_distance": 176.0544331488157,
+      "objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "wall_s": 0.115,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 8,
+        "route_elimination": true,
+        "note": "C3 + route elimination"
+      }
+    },
+    {
+      "arm": "C4",
+      "instance_id": "c103C5",
+      "seed": 22,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 1,
+      "total_distance": 176.0544331488157,
+      "objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "wall_s": 0.107,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 8,
+        "route_elimination": true,
+        "note": "C3 + route elimination"
+      }
+    },
+    {
+      "arm": "C4",
+      "instance_id": "r104C5",
+      "seed": 7,
+      "outcome_vs_c0": "objective_regression",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 161.25367030278682,
+      "objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "wall_s": 0.081,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 8,
+        "route_elimination": true,
+        "note": "C3 + route elimination"
+      }
+    },
+    {
+      "arm": "C4",
+      "instance_id": "r104C5",
+      "seed": 11,
+      "outcome_vs_c0": "objective_regression",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 161.25367030278682,
+      "objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "wall_s": 0.094,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 8,
+        "route_elimination": true,
+        "note": "C3 + route elimination"
+      }
+    },
+    {
+      "arm": "C4",
+      "instance_id": "r104C5",
+      "seed": 22,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 161.25367030278682,
+      "objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "wall_s": 0.082,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 8,
+        "route_elimination": true,
+        "note": "C3 + route elimination"
+      }
+    },
+    {
+      "arm": "C4",
+      "instance_id": "r105C5",
+      "seed": 7,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 156.08206946417084,
+      "objective_key": [
+        2.0,
+        156.08206946417084
+      ],
+      "wall_s": 0.071,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 8,
+        "route_elimination": true,
+        "note": "C3 + route elimination"
+      }
+    },
+    {
+      "arm": "C4",
+      "instance_id": "r105C5",
+      "seed": 11,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 156.08206946417084,
+      "objective_key": [
+        2.0,
+        156.08206946417084
+      ],
+      "wall_s": 0.069,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 8,
+        "route_elimination": true,
+        "note": "C3 + route elimination"
+      }
+    },
+    {
+      "arm": "C4",
+      "instance_id": "r105C5",
+      "seed": 22,
+      "outcome_vs_c0": "tie",
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 156.08206946417084,
+      "objective_key": [
+        2.0,
+        156.08206946417084
+      ],
+      "wall_s": 0.071,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 8,
+        "route_elimination": true,
+        "note": "C3 + route elimination"
+      }
+    },
+    {
+      "arm": "C4",
+      "instance_id": "c101_21",
+      "seed": 7,
+      "outcome_vs_c0": "improved",
+      "feasible": true,
+      "vehicles": 15,
+      "total_distance": 1073.481579718135,
+      "objective_key": [
+        15.0,
+        1073.481579718135
+      ],
+      "wall_s": 42.963,
+      "route_elimination_successes": 8,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 8,
+        "route_elimination": true,
+        "note": "C3 + route elimination"
+      }
+    },
+    {
+      "arm": "C4",
+      "instance_id": "c101_21",
+      "seed": 11,
+      "outcome_vs_c0": "improved",
+      "feasible": true,
+      "vehicles": 30,
+      "total_distance": 2210.5592328878574,
+      "objective_key": [
+        30.0,
+        2210.5592328878574
+      ],
+      "wall_s": 43.008,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 8,
+        "route_elimination": true,
+        "note": "C3 + route elimination"
+      }
+    },
+    {
+      "arm": "C4",
+      "instance_id": "c101_21",
+      "seed": 22,
+      "outcome_vs_c0": "improved",
+      "feasible": true,
+      "vehicles": 30,
+      "total_distance": 2170.477704091791,
+      "objective_key": [
+        30.0,
+        2170.477704091791
+      ],
+      "wall_s": 43.007,
+      "route_elimination_successes": 0,
+      "config": {
+        "repair_scoring_mode": "marginal_delta_distance",
+        "repair_algorithm": "regret2",
+        "destroy_size_cap": 8,
+        "route_elimination": true,
+        "note": "C3 + route elimination"
+      }
+    }
+  ],
+  "summary_by_arm": {
+    "C0": {
+      "feasibility_regressions": 0,
+      "wins": 0,
+      "ties": 15,
+      "losses": 0,
+      "objective_regressions": 0,
+      "missing_or_failed": 0,
+      "both_infeasible": 0,
+      "changed_decisions_total": 0,
+      "quality_gate": "behaviorally_inert",
+      "operator_activation": "inactive",
+      "search_space_signal": "no_go",
+      "llm_discovery_signal": "not_applicable",
+      "multi_agent_signal": "not_evaluated",
+      "transfer_signal": "not_evaluated",
+      "policy_origin": "classical",
+      "mean_vehicles": 8.266666666666667,
+      "mean_wall_s": 0.9019999999999999
+    },
+    "C1": {
+      "feasibility_regressions": 0,
+      "wins": 3,
+      "ties": 10,
+      "losses": 2,
+      "objective_regressions": 2,
+      "missing_or_failed": 0,
+      "both_infeasible": 0,
+      "changed_decisions_total": 0,
+      "quality_gate": "mixed",
+      "operator_activation": "inactive",
+      "search_space_signal": "go",
+      "llm_discovery_signal": "not_applicable",
+      "multi_agent_signal": "not_evaluated",
+      "transfer_signal": "not_evaluated",
+      "policy_origin": "classical",
+      "mean_vehicles": 7.0,
+      "mean_wall_s": 2.119333333333333
+    },
+    "C2": {
+      "feasibility_regressions": 0,
+      "wins": 3,
+      "ties": 10,
+      "losses": 2,
+      "objective_regressions": 2,
+      "missing_or_failed": 0,
+      "both_infeasible": 0,
+      "changed_decisions_total": 0,
+      "quality_gate": "mixed",
+      "operator_activation": "inactive",
+      "search_space_signal": "go",
+      "llm_discovery_signal": "not_applicable",
+      "multi_agent_signal": "not_evaluated",
+      "transfer_signal": "not_evaluated",
+      "policy_origin": "classical",
+      "mean_vehicles": 7.0,
+      "mean_wall_s": 2.3975999999999997
+    },
+    "C3": {
+      "feasibility_regressions": 0,
+      "wins": 3,
+      "ties": 10,
+      "losses": 2,
+      "objective_regressions": 2,
+      "missing_or_failed": 0,
+      "both_infeasible": 0,
+      "changed_decisions_total": 0,
+      "quality_gate": "mixed",
+      "operator_activation": "inactive",
+      "search_space_signal": "go",
+      "llm_discovery_signal": "not_applicable",
+      "multi_agent_signal": "not_evaluated",
+      "transfer_signal": "not_evaluated",
+      "policy_origin": "classical",
+      "mean_vehicles": 7.066666666666666,
+      "mean_wall_s": 8.172
+    },
+    "C4": {
+      "feasibility_regressions": 0,
+      "wins": 3,
+      "ties": 10,
+      "losses": 2,
+      "objective_regressions": 2,
+      "missing_or_failed": 0,
+      "both_infeasible": 0,
+      "changed_decisions_total": 0,
+      "quality_gate": "mixed",
+      "operator_activation": "inactive",
+      "search_space_signal": "go",
+      "llm_discovery_signal": "not_applicable",
+      "multi_agent_signal": "not_evaluated",
+      "transfer_signal": "not_evaluated",
+      "policy_origin": "classical",
+      "mean_vehicles": 6.4,
+      "mean_wall_s": 8.679466666666666
+    }
+  },
+  "frozen_classical_baseline": {
+    "arm": "C4",
+    "config": {
+      "repair_scoring_mode": "marginal_delta_distance",
+      "repair_algorithm": "regret2",
+      "destroy_size_cap": 8,
+      "route_elimination": true,
+      "note": "C3 + route elimination"
+    },
+    "selection_rule": "lowest mean vehicles then distance on large (c101_21) then full panel",
+    "mean_key": [
+      25.0,
+      1818.1728388992613
+    ]
+  }
+}

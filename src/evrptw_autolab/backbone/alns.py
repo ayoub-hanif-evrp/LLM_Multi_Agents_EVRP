@@ -9,41 +9,11 @@ from typing import Any, Literal
 from evrptw_autolab.backbone.construct import insert_customer_fast
 from evrptw_autolab.backbone.decision_features import (
     edited_route_features,
+    insertion_delta_distance,
     insertion_features_v4,
     marginal_removal_distance,
     time_window_width,
 )
-
-RepairScoringMode = Literal[
-    "total_route_distance",
-    "marginal_delta_distance",
-    "marginal_fleet_aware",
-]
-
-DEFAULT_REPAIR_SCORING_MODE: RepairScoringMode = "total_route_distance"
-
-
-def classical_repair_rank_score(
-    mode: str,
-    *,
-    total_route_distance: float,
-    delta_distance: float,
-    route_customer_count: float = 0.0,
-) -> float:
-    """Rank key for classical repair. Lower is better.
-
-    ``total_route_distance`` preserves the historical B0 criterion (post-insertion
-    route length). ``marginal_delta_distance`` ranks by added distance. 
-    ``marginal_fleet_aware`` keeps marginal distance primary and lightly prefers
-    packing into busier routes (consolidation bias for lexicographic fleet objectives).
-    """
-    if mode == "total_route_distance":
-        return float(total_route_distance)
-    if mode == "marginal_delta_distance":
-        return float(delta_distance)
-    if mode == "marginal_fleet_aware":
-        return float(delta_distance) - 0.01 * float(route_customer_count)
-    raise ValueError(f"unknown repair_scoring_mode: {mode!r}")
 from evrptw_autolab.backbone.energy_repair import repair_energy
 from evrptw_autolab.backbone.local_search import relocate_improve, two_opt_improve
 from evrptw_autolab.backbone.util import (
@@ -63,6 +33,40 @@ from evrptw_autolab.backbone.util import (
 from evrptw_autolab.problem.v2.features import FEATURE_SCHEMA_V4
 from evrptw_autolab.problem.v2.transport import travel_distance
 from evrptw_autolab.problem.v2.types import ProblemSpecV2, SolutionV2
+
+RepairScoringMode = Literal[
+    "total_route_distance",
+    "marginal_delta_distance",
+    "marginal_fleet_aware",
+]
+
+# Historical default preserves B0 reproducibility. New Schneider research should pass B1
+# (RESEARCH_CLASSICAL_REPAIR_SCORING) explicitly.
+DEFAULT_REPAIR_SCORING_MODE: RepairScoringMode = "total_route_distance"
+RESEARCH_CLASSICAL_REPAIR_SCORING: RepairScoringMode = "marginal_delta_distance"
+
+
+def classical_repair_rank_score(
+    mode: str,
+    *,
+    total_route_distance: float,
+    delta_distance: float,
+    route_customer_count: float = 0.0,
+) -> float:
+    """Rank key for classical repair. Lower is better.
+
+    ``total_route_distance`` preserves the historical B0 criterion (post-insertion
+    route length). ``marginal_delta_distance`` ranks by added distance.
+    ``marginal_fleet_aware`` keeps marginal distance primary and lightly prefers
+    packing into busier routes (consolidation bias for lexicographic fleet objectives).
+    """
+    if mode == "total_route_distance":
+        return float(total_route_distance)
+    if mode == "marginal_delta_distance":
+        return float(delta_distance)
+    if mode == "marginal_fleet_aware":
+        return float(delta_distance) - 0.01 * float(route_customer_count)
+    raise ValueError(f"unknown repair_scoring_mode: {mode!r}")
 
 
 def _request_units(spec: ProblemSpecV2) -> list[tuple[str, ...]]:
@@ -117,6 +121,82 @@ def _route_travel_distance(spec: ProblemSpecV2, route: list) -> float:
     for left, right in zip(route, route[1:], strict=False):
         total += travel_distance(spec, nodes[left.node_id], nodes[right.node_id])
     return total
+
+
+def destroy_related(
+    spec: ProblemSpecV2,
+    solution: SolutionV2,
+    rng: random.Random,
+    k: int,
+) -> tuple[SolutionV2, list[tuple[str, ...]]]:
+    """Shaw-style related removal using normalized distance, time windows, and route co-membership.
+
+    Relatedness is scale-free: each term is divided by the max pairwise value over present units
+    (or 1). Higher relatedness to the seed unit is removed first after the seed.
+    """
+    units = _request_units(spec)
+    present: list[tuple[str, ...]] = []
+    present_ids = {s.node_id for route in solution.routes for s in route}
+    for unit in units:
+        if all(n in present_ids for n in unit):
+            present.append(unit)
+    if not present:
+        return clone_solution(solution), []
+    k = max(1, min(k, len(present)))
+
+    def _anchor(unit: tuple[str, ...]) -> str:
+        return unit[0]
+
+    def _route_index(node_id: str) -> int:
+        for idx, route in enumerate(solution.routes):
+            if any(stop.node_id == node_id for stop in route):
+                return idx
+        return -1
+
+    # Precompute pairwise raw distances / time diffs for normalization.
+    anchors = [_anchor(u) for u in present]
+    dist_raw: list[list[float]] = []
+    time_raw: list[list[float]] = []
+    for a in anchors:
+        row_d: list[float] = []
+        row_t: list[float] = []
+        na = spec.node_map[a]
+        for b in anchors:
+            nb = spec.node_map[b]
+            row_d.append(float(travel_distance(spec, na, nb)))
+            due_a = float(na.due_time) if na.due_time != float("inf") else 0.0
+            due_b = float(nb.due_time) if nb.due_time != float("inf") else 0.0
+            row_t.append(abs(due_a - due_b))
+        dist_raw.append(row_d)
+        time_raw.append(row_t)
+    max_d = max((v for row in dist_raw for v in row), default=1.0) or 1.0
+    max_t = max((v for row in time_raw for v in row), default=1.0) or 1.0
+
+    seed_idx = rng.randrange(len(present))
+    removed_idx = [seed_idx]
+    while len(removed_idx) < k:
+        related_scores: list[tuple[float, int]] = []
+        for j, _unit in enumerate(present):
+            if j in removed_idx:
+                continue
+            # Average relatedness to already selected removals.
+            rel = 0.0
+            for i in removed_idx:
+                same_route = 1.0 if _route_index(anchors[i]) == _route_index(anchors[j]) else 0.0
+                # Lower distance/time => higher relatedness.
+                rel += (
+                    (1.0 - dist_raw[i][j] / max_d)
+                    + (1.0 - time_raw[i][j] / max_t)
+                    + same_route
+                )
+            rel /= max(len(removed_idx), 1)
+            related_scores.append((rel + 1e-9 * rng.random(), j))
+        related_scores.sort(reverse=True)
+        removed_idx.append(related_scores[0][1])
+
+    removed = [present[i] for i in removed_idx]
+    nodes = {n for unit in removed for n in unit}
+    return _remove_nodes(solution, nodes), removed
 
 
 def destroy_worst(
@@ -384,6 +464,8 @@ def _repair_one_selective(
     vehicle_id: str,
     deadline: float | None,
     partition: str,
+    *,
+    repair_scoring_mode: str = DEFAULT_REPAIR_SCORING_MODE,
 ) -> SolutionV2:
     """Rank screened insertions with the selective controller. Full evaluate only the chosen trial."""
     from evrptw_autolab.backbone.perf_counters import bump
@@ -408,19 +490,28 @@ def _repair_one_selective(
             bump("candidates_considered")
             trial_route = list(route)
             trial_route.insert(pos, make_customer_stop(node_id, spec))
+            # Local screen only — screened feasible≠trusted evaluate() feasible.
             ok, distance = screen_repair_route(spec, trial_route, vehicle, allow_battery_debt=True)
             if not ok:
                 bump("candidates_rejected_screen")
                 continue
             trial = replace_route(current, r_idx, trial_route)
+            features = insertion_features_v4(spec, route, pos, node_id, vehicle)
+            acceptance = classical_repair_rank_score(
+                repair_scoring_mode,
+                total_route_distance=float(distance),
+                delta_distance=float(features["delta_distance"]),
+                route_customer_count=float(features["route_customer_count"]),
+            )
             rows.append(
                 ScreenedRepair(
                     label=f"{r_idx}:{pos}",
-                    features=insertion_features_v4(spec, route, pos, node_id, vehicle),
+                    features=features,
                     solution=trial,
                     objective=(float(distance),),
-                    feasible=True,
-                    acceptance=float(distance),
+                    feasible=True,  # local screen only
+                    acceptance=float(acceptance),
+                    screen_kind="local_battery_debt_allowed",
                 )
             )
     if not rows:
@@ -589,7 +680,14 @@ def repair_greedy(
                     )
                 else:
                     current = _repair_one_selective(
-                        spec, current, node_id, policy, vehicle_id, deadline, partition
+                        spec,
+                        current,
+                        node_id,
+                        policy,
+                        vehicle_id,
+                        deadline,
+                        partition,
+                        repair_scoring_mode=repair_scoring_mode,
                     )
                 continue
             if _v4_insertion(classical_policy):
@@ -619,13 +717,18 @@ def repair_greedy(
                     if not ok:
                         bump("candidates_rejected_screen")
                         continue
-                    features = insertion_features_v4(spec, route, pos, node_id, vehicle)
-                    score = classical_repair_rank_score(
-                        repair_scoring_mode,
-                        total_route_distance=float(distance),
-                        delta_distance=float(features["delta_distance"]),
-                        route_customer_count=float(features["route_customer_count"]),
-                    )
+                    if repair_scoring_mode == "total_route_distance":
+                        score = float(distance)
+                    elif repair_scoring_mode == "marginal_delta_distance":
+                        score = insertion_delta_distance(spec, route, pos, node_id)
+                    else:
+                        customers = sum(1 for stop in route if stop.event != "depot")
+                        score = classical_repair_rank_score(
+                            repair_scoring_mode,
+                            total_route_distance=float(distance),
+                            delta_distance=insertion_delta_distance(spec, route, pos, node_id),
+                            route_customer_count=float(customers),
+                        )
                     if score < best_score:
                         best_score = score
                         best = replace_route(current, r_idx, trial_route)
@@ -745,8 +848,11 @@ def alns_improve(
     heavy_local: bool = True,
     partition: str = "development",
     repair_scoring_mode: str = DEFAULT_REPAIR_SCORING_MODE,
+    repair_algorithm: str = "greedy",
+    destroy_size_cap: int = 3,
+    use_related_destroy: bool = False,
 ) -> SolutionV2:
-    """ALNS with random/worst destroy + greedy repair + SA acceptance."""
+    """ALNS with random/worst/(optional related) destroy + greedy/regret repair + SA acceptance."""
     from evrptw_autolab.discovery.schemas import OperatorSpec
     from evrptw_autolab.transfer.counterexamples import refuse_non_development
 
@@ -764,36 +870,54 @@ def alns_improve(
     best_report = current_report
 
     weights = {"random": 1.0, "worst": 1.0}
+    if use_related_destroy:
+        weights["related"] = 1.0
     destroy_trace: list[dict[str, str]] = []
     temperature = 1.0
     cooling = 0.95
     it = -1
     changed_total = int(current.metadata.get("changed_decisions") or 0)
+    cap = max(1, int(destroy_size_cap))
 
     for it in range(iterations):
         if time.monotonic() > end_by:
             break
         n_units = len(_request_units(spec))
-        k = max(1, min(3, n_units // 3 or 1))
+        k = max(1, min(cap, n_units // 3 or 1))
         destroy_name = _select_destroy(spec, current, policy, rng, weights, destroy_trace)
         if destroy_name == "worst":
             destroyed, removed = destroy_worst(spec, current, rng, k, policy=energy_policy)
+        elif destroy_name == "related":
+            destroyed, removed = destroy_related(spec, current, rng, k)
         else:
             destroyed, removed = destroy_random(spec, current, rng, k)
         if not removed:
             continue
         prior_changed = int(destroyed.metadata.get("changed_decisions") or 0)
-        candidate = repair_greedy(
-            spec,
-            destroyed,
-            removed,
-            rng,
-            policy=policy,
-            optimize_partial_charges=optimize_partial_charges,
-            deadline=end_by,
-            partition=partition,
-            repair_scoring_mode=repair_scoring_mode,
-        )
+        if repair_algorithm == "regret2" and policy is None:
+            from evrptw_autolab.backbone.regret_repair import repair_regret2
+
+            candidate = repair_regret2(
+                spec,
+                destroyed,
+                removed,
+                rng,
+                optimize_partial_charges=optimize_partial_charges,
+                deadline=end_by,
+                repair_scoring_mode=repair_scoring_mode,
+            )
+        else:
+            candidate = repair_greedy(
+                spec,
+                destroyed,
+                removed,
+                rng,
+                policy=policy,
+                optimize_partial_charges=optimize_partial_charges,
+                deadline=end_by,
+                partition=partition,
+                repair_scoring_mode=repair_scoring_mode,
+            )
         delta_changed = int(candidate.metadata.get("changed_decisions") or 0) - prior_changed
         if delta_changed > 0:
             changed_total += delta_changed

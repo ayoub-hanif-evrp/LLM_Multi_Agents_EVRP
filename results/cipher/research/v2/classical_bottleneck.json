@@ -1,0 +1,2513 @@
+{
+  "created_at": "2026-11-26T11:51:56.740095+00:00",
+  "protocol": "cipher_classical_bottleneck_v1",
+  "git": {
+    "commit": "a6758880905b206fe62db4b4cdb657d077ffbf1f",
+    "dirty": true,
+    "branch": "master"
+  },
+  "repair_scoring_mode": "marginal_delta_distance",
+  "panel": [
+    {
+      "instance_id": "c101C5",
+      "time_limit_s": 10.0,
+      "iters": 40
+    },
+    {
+      "instance_id": "c103C5",
+      "time_limit_s": 10.0,
+      "iters": 40
+    },
+    {
+      "instance_id": "r104C5",
+      "time_limit_s": 10.0,
+      "iters": 40
+    },
+    {
+      "instance_id": "r105C5",
+      "time_limit_s": 10.0,
+      "iters": 40
+    },
+    {
+      "instance_id": "c101_21",
+      "time_limit_s": 30.0,
+      "iters": 80
+    },
+    {
+      "instance_id": "r101_21",
+      "time_limit_s": 30.0,
+      "iters": 80
+    }
+  ],
+  "seeds": [
+    7,
+    11,
+    22
+  ],
+  "rows": [
+    {
+      "instance_id": "c101C5",
+      "seed": 7,
+      "time_limit_s": 10.0,
+      "alns_iterations": 40,
+      "wall_s": 0.457,
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 257.7474518641999,
+      "objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "n_customers": 5,
+      "stage_trace": [
+        {
+          "stage": "after_construct",
+          "elapsed_s": 0.2599,
+          "feasible": false,
+          "vehicles": 2,
+          "objective_key": [
+            2.0,
+            239.99757547440953
+          ],
+          "total_distance": 239.99757547440953,
+          "n_routes": 2,
+          "route_customer_counts": [
+            3,
+            2
+          ]
+        },
+        {
+          "stage": "after_charge_repair",
+          "elapsed_s": 0.2628,
+          "feasible": true,
+          "vehicles": 2,
+          "objective_key": [
+            2.0,
+            267.3289940850671
+          ],
+          "total_distance": 267.3289940850671,
+          "n_routes": 2,
+          "route_customer_counts": [
+            5,
+            3
+          ]
+        },
+        {
+          "stage": "after_alns",
+          "elapsed_s": 0.4443,
+          "feasible": true,
+          "vehicles": 2,
+          "objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "total_distance": 257.7474518641999,
+          "n_routes": 2,
+          "route_customer_counts": [
+            4,
+            13
+          ]
+        },
+        {
+          "stage": "after_merge",
+          "elapsed_s": 0.4508,
+          "feasible": true,
+          "vehicles": 2,
+          "objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "total_distance": 257.7474518641999,
+          "n_routes": 2,
+          "route_customer_counts": [
+            4,
+            13
+          ]
+        }
+      ],
+      "bks": {
+        "vehicles": 2,
+        "distance": 257.75,
+        "source": "Schneider technical report / CPLEX"
+      },
+      "vehicle_gap_vs_bks": 0
+    },
+    {
+      "instance_id": "c101C5",
+      "seed": 11,
+      "time_limit_s": 10.0,
+      "alns_iterations": 40,
+      "wall_s": 0.123,
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 257.7474518641999,
+      "objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "n_customers": 5,
+      "stage_trace": [
+        {
+          "stage": "after_construct",
+          "elapsed_s": 0.0023,
+          "feasible": false,
+          "vehicles": 2,
+          "objective_key": [
+            2.0,
+            239.99757547440953
+          ],
+          "total_distance": 239.99757547440953,
+          "n_routes": 2,
+          "route_customer_counts": [
+            3,
+            2
+          ]
+        },
+        {
+          "stage": "after_charge_repair",
+          "elapsed_s": 0.0051,
+          "feasible": true,
+          "vehicles": 2,
+          "objective_key": [
+            2.0,
+            267.3289940850671
+          ],
+          "total_distance": 267.3289940850671,
+          "n_routes": 2,
+          "route_customer_counts": [
+            5,
+            3
+          ]
+        },
+        {
+          "stage": "after_alns",
+          "elapsed_s": 0.1158,
+          "feasible": true,
+          "vehicles": 2,
+          "objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "total_distance": 257.7474518641999,
+          "n_routes": 2,
+          "route_customer_counts": [
+            4,
+            8
+          ]
+        },
+        {
+          "stage": "after_merge",
+          "elapsed_s": 0.1221,
+          "feasible": true,
+          "vehicles": 2,
+          "objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "total_distance": 257.7474518641999,
+          "n_routes": 2,
+          "route_customer_counts": [
+            4,
+            8
+          ]
+        }
+      ],
+      "bks": {
+        "vehicles": 2,
+        "distance": 257.75,
+        "source": "Schneider technical report / CPLEX"
+      },
+      "vehicle_gap_vs_bks": 0
+    },
+    {
+      "instance_id": "c101C5",
+      "seed": 22,
+      "time_limit_s": 10.0,
+      "alns_iterations": 40,
+      "wall_s": 0.086,
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 257.7474518641999,
+      "objective_key": [
+        2.0,
+        257.7474518641999
+      ],
+      "n_customers": 5,
+      "stage_trace": [
+        {
+          "stage": "after_construct",
+          "elapsed_s": 0.0023,
+          "feasible": false,
+          "vehicles": 2,
+          "objective_key": [
+            2.0,
+            239.99757547440953
+          ],
+          "total_distance": 239.99757547440953,
+          "n_routes": 2,
+          "route_customer_counts": [
+            3,
+            2
+          ]
+        },
+        {
+          "stage": "after_charge_repair",
+          "elapsed_s": 0.0049,
+          "feasible": true,
+          "vehicles": 2,
+          "objective_key": [
+            2.0,
+            267.3289940850671
+          ],
+          "total_distance": 267.3289940850671,
+          "n_routes": 2,
+          "route_customer_counts": [
+            5,
+            3
+          ]
+        },
+        {
+          "stage": "after_alns",
+          "elapsed_s": 0.0795,
+          "feasible": true,
+          "vehicles": 2,
+          "objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "total_distance": 257.7474518641999,
+          "n_routes": 2,
+          "route_customer_counts": [
+            4,
+            5
+          ]
+        },
+        {
+          "stage": "after_merge",
+          "elapsed_s": 0.0857,
+          "feasible": true,
+          "vehicles": 2,
+          "objective_key": [
+            2.0,
+            257.7474518641999
+          ],
+          "total_distance": 257.7474518641999,
+          "n_routes": 2,
+          "route_customer_counts": [
+            4,
+            5
+          ]
+        }
+      ],
+      "bks": {
+        "vehicles": 2,
+        "distance": 257.75,
+        "source": "Schneider technical report / CPLEX"
+      },
+      "vehicle_gap_vs_bks": 0
+    },
+    {
+      "instance_id": "c103C5",
+      "seed": 7,
+      "time_limit_s": 10.0,
+      "alns_iterations": 40,
+      "wall_s": 0.176,
+      "feasible": true,
+      "vehicles": 1,
+      "total_distance": 176.0544331488157,
+      "objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "n_customers": 5,
+      "stage_trace": [
+        {
+          "stage": "after_construct",
+          "elapsed_s": 0.0017,
+          "feasible": false,
+          "vehicles": 1,
+          "objective_key": [
+            1.0,
+            164.82231220883477
+          ],
+          "total_distance": 164.82231220883477,
+          "n_routes": 1,
+          "route_customer_counts": [
+            5
+          ]
+        },
+        {
+          "stage": "after_charge_repair",
+          "elapsed_s": 0.0052,
+          "feasible": true,
+          "vehicles": 1,
+          "objective_key": [
+            1.0,
+            176.0544331488157
+          ],
+          "total_distance": 176.0544331488157,
+          "n_routes": 1,
+          "route_customer_counts": [
+            8
+          ]
+        },
+        {
+          "stage": "after_alns",
+          "elapsed_s": 0.1755,
+          "feasible": true,
+          "vehicles": 1,
+          "objective_key": [
+            1.0,
+            176.0544331488157
+          ],
+          "total_distance": 176.0544331488157,
+          "n_routes": 1,
+          "route_customer_counts": [
+            8
+          ]
+        },
+        {
+          "stage": "after_merge",
+          "elapsed_s": 0.176,
+          "feasible": true,
+          "vehicles": 1,
+          "objective_key": [
+            1.0,
+            176.0544331488157
+          ],
+          "total_distance": 176.0544331488157,
+          "n_routes": 1,
+          "route_customer_counts": [
+            8
+          ]
+        }
+      ],
+      "bks": {
+        "vehicles": 1,
+        "distance": 176.05,
+        "source": "Schneider technical report / CPLEX"
+      },
+      "vehicle_gap_vs_bks": 0
+    },
+    {
+      "instance_id": "c103C5",
+      "seed": 11,
+      "time_limit_s": 10.0,
+      "alns_iterations": 40,
+      "wall_s": 0.167,
+      "feasible": true,
+      "vehicles": 1,
+      "total_distance": 176.0544331488157,
+      "objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "n_customers": 5,
+      "stage_trace": [
+        {
+          "stage": "after_construct",
+          "elapsed_s": 0.0016,
+          "feasible": false,
+          "vehicles": 1,
+          "objective_key": [
+            1.0,
+            164.82231220883477
+          ],
+          "total_distance": 164.82231220883477,
+          "n_routes": 1,
+          "route_customer_counts": [
+            5
+          ]
+        },
+        {
+          "stage": "after_charge_repair",
+          "elapsed_s": 0.0045,
+          "feasible": true,
+          "vehicles": 1,
+          "objective_key": [
+            1.0,
+            176.0544331488157
+          ],
+          "total_distance": 176.0544331488157,
+          "n_routes": 1,
+          "route_customer_counts": [
+            8
+          ]
+        },
+        {
+          "stage": "after_alns",
+          "elapsed_s": 0.1665,
+          "feasible": true,
+          "vehicles": 1,
+          "objective_key": [
+            1.0,
+            176.0544331488157
+          ],
+          "total_distance": 176.0544331488157,
+          "n_routes": 1,
+          "route_customer_counts": [
+            8
+          ]
+        },
+        {
+          "stage": "after_merge",
+          "elapsed_s": 0.167,
+          "feasible": true,
+          "vehicles": 1,
+          "objective_key": [
+            1.0,
+            176.0544331488157
+          ],
+          "total_distance": 176.0544331488157,
+          "n_routes": 1,
+          "route_customer_counts": [
+            8
+          ]
+        }
+      ],
+      "bks": {
+        "vehicles": 1,
+        "distance": 176.05,
+        "source": "Schneider technical report / CPLEX"
+      },
+      "vehicle_gap_vs_bks": 0
+    },
+    {
+      "instance_id": "c103C5",
+      "seed": 22,
+      "time_limit_s": 10.0,
+      "alns_iterations": 40,
+      "wall_s": 0.146,
+      "feasible": true,
+      "vehicles": 1,
+      "total_distance": 176.0544331488157,
+      "objective_key": [
+        1.0,
+        176.0544331488157
+      ],
+      "n_customers": 5,
+      "stage_trace": [
+        {
+          "stage": "after_construct",
+          "elapsed_s": 0.0016,
+          "feasible": false,
+          "vehicles": 1,
+          "objective_key": [
+            1.0,
+            164.82231220883477
+          ],
+          "total_distance": 164.82231220883477,
+          "n_routes": 1,
+          "route_customer_counts": [
+            5
+          ]
+        },
+        {
+          "stage": "after_charge_repair",
+          "elapsed_s": 0.0046,
+          "feasible": true,
+          "vehicles": 1,
+          "objective_key": [
+            1.0,
+            176.0544331488157
+          ],
+          "total_distance": 176.0544331488157,
+          "n_routes": 1,
+          "route_customer_counts": [
+            8
+          ]
+        },
+        {
+          "stage": "after_alns",
+          "elapsed_s": 0.1456,
+          "feasible": true,
+          "vehicles": 1,
+          "objective_key": [
+            1.0,
+            176.0544331488157
+          ],
+          "total_distance": 176.0544331488157,
+          "n_routes": 1,
+          "route_customer_counts": [
+            8
+          ]
+        },
+        {
+          "stage": "after_merge",
+          "elapsed_s": 0.1461,
+          "feasible": true,
+          "vehicles": 1,
+          "objective_key": [
+            1.0,
+            176.0544331488157
+          ],
+          "total_distance": 176.0544331488157,
+          "n_routes": 1,
+          "route_customer_counts": [
+            8
+          ]
+        }
+      ],
+      "bks": {
+        "vehicles": 1,
+        "distance": 176.05,
+        "source": "Schneider technical report / CPLEX"
+      },
+      "vehicle_gap_vs_bks": 0
+    },
+    {
+      "instance_id": "r104C5",
+      "seed": 7,
+      "time_limit_s": 10.0,
+      "alns_iterations": 40,
+      "wall_s": 0.08,
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 161.25367030278682,
+      "objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "n_customers": 5,
+      "stage_trace": [
+        {
+          "stage": "after_construct",
+          "elapsed_s": 0.0017,
+          "feasible": false,
+          "vehicles": 1,
+          "objective_key": [
+            1.0,
+            132.8118489897693
+          ],
+          "total_distance": 132.8118489897693,
+          "n_routes": 1,
+          "route_customer_counts": [
+            5
+          ]
+        },
+        {
+          "stage": "after_charge_repair",
+          "elapsed_s": 0.0106,
+          "feasible": true,
+          "vehicles": 2,
+          "objective_key": [
+            2.0,
+            161.25367030278682
+          ],
+          "total_distance": 161.25367030278682,
+          "n_routes": 2,
+          "route_customer_counts": [
+            6,
+            1
+          ]
+        },
+        {
+          "stage": "after_alns",
+          "elapsed_s": 0.0759,
+          "feasible": true,
+          "vehicles": 2,
+          "objective_key": [
+            2.0,
+            161.25367030278682
+          ],
+          "total_distance": 161.25367030278682,
+          "n_routes": 2,
+          "route_customer_counts": [
+            6,
+            1
+          ]
+        },
+        {
+          "stage": "after_merge",
+          "elapsed_s": 0.08,
+          "feasible": true,
+          "vehicles": 2,
+          "objective_key": [
+            2.0,
+            161.25367030278682
+          ],
+          "total_distance": 161.25367030278682,
+          "n_routes": 2,
+          "route_customer_counts": [
+            6,
+            1
+          ]
+        }
+      ],
+      "bks": null,
+      "vehicle_gap_vs_bks": null
+    },
+    {
+      "instance_id": "r104C5",
+      "seed": 11,
+      "time_limit_s": 10.0,
+      "alns_iterations": 40,
+      "wall_s": 0.082,
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 161.25367030278682,
+      "objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "n_customers": 5,
+      "stage_trace": [
+        {
+          "stage": "after_construct",
+          "elapsed_s": 0.0017,
+          "feasible": false,
+          "vehicles": 1,
+          "objective_key": [
+            1.0,
+            132.8118489897693
+          ],
+          "total_distance": 132.8118489897693,
+          "n_routes": 1,
+          "route_customer_counts": [
+            5
+          ]
+        },
+        {
+          "stage": "after_charge_repair",
+          "elapsed_s": 0.0106,
+          "feasible": true,
+          "vehicles": 2,
+          "objective_key": [
+            2.0,
+            161.25367030278682
+          ],
+          "total_distance": 161.25367030278682,
+          "n_routes": 2,
+          "route_customer_counts": [
+            6,
+            1
+          ]
+        },
+        {
+          "stage": "after_alns",
+          "elapsed_s": 0.0774,
+          "feasible": true,
+          "vehicles": 2,
+          "objective_key": [
+            2.0,
+            161.25367030278682
+          ],
+          "total_distance": 161.25367030278682,
+          "n_routes": 2,
+          "route_customer_counts": [
+            6,
+            1
+          ]
+        },
+        {
+          "stage": "after_merge",
+          "elapsed_s": 0.0817,
+          "feasible": true,
+          "vehicles": 2,
+          "objective_key": [
+            2.0,
+            161.25367030278682
+          ],
+          "total_distance": 161.25367030278682,
+          "n_routes": 2,
+          "route_customer_counts": [
+            6,
+            1
+          ]
+        }
+      ],
+      "bks": null,
+      "vehicle_gap_vs_bks": null
+    },
+    {
+      "instance_id": "r104C5",
+      "seed": 22,
+      "time_limit_s": 10.0,
+      "alns_iterations": 40,
+      "wall_s": 0.084,
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 161.25367030278682,
+      "objective_key": [
+        2.0,
+        161.25367030278682
+      ],
+      "n_customers": 5,
+      "stage_trace": [
+        {
+          "stage": "after_construct",
+          "elapsed_s": 0.0017,
+          "feasible": false,
+          "vehicles": 1,
+          "objective_key": [
+            1.0,
+            132.8118489897693
+          ],
+          "total_distance": 132.8118489897693,
+          "n_routes": 1,
+          "route_customer_counts": [
+            5
+          ]
+        },
+        {
+          "stage": "after_charge_repair",
+          "elapsed_s": 0.0106,
+          "feasible": true,
+          "vehicles": 2,
+          "objective_key": [
+            2.0,
+            161.25367030278682
+          ],
+          "total_distance": 161.25367030278682,
+          "n_routes": 2,
+          "route_customer_counts": [
+            6,
+            1
+          ]
+        },
+        {
+          "stage": "after_alns",
+          "elapsed_s": 0.0792,
+          "feasible": true,
+          "vehicles": 2,
+          "objective_key": [
+            2.0,
+            161.25367030278682
+          ],
+          "total_distance": 161.25367030278682,
+          "n_routes": 2,
+          "route_customer_counts": [
+            6,
+            1
+          ]
+        },
+        {
+          "stage": "after_merge",
+          "elapsed_s": 0.0835,
+          "feasible": true,
+          "vehicles": 2,
+          "objective_key": [
+            2.0,
+            161.25367030278682
+          ],
+          "total_distance": 161.25367030278682,
+          "n_routes": 2,
+          "route_customer_counts": [
+            6,
+            1
+          ]
+        }
+      ],
+      "bks": null,
+      "vehicle_gap_vs_bks": null
+    },
+    {
+      "instance_id": "r105C5",
+      "seed": 7,
+      "time_limit_s": 10.0,
+      "alns_iterations": 40,
+      "wall_s": 0.06,
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 156.08206946417084,
+      "objective_key": [
+        2.0,
+        156.08206946417084
+      ],
+      "n_customers": 5,
+      "stage_trace": [
+        {
+          "stage": "after_construct",
+          "elapsed_s": 0.0019,
+          "feasible": false,
+          "vehicles": 2,
+          "objective_key": [
+            2.0,
+            163.21430303820168
+          ],
+          "total_distance": 163.21430303820168,
+          "n_routes": 2,
+          "route_customer_counts": [
+            4,
+            1
+          ]
+        },
+        {
+          "stage": "after_charge_repair",
+          "elapsed_s": 0.0086,
+          "feasible": true,
+          "vehicles": 3,
+          "objective_key": [
+            3.0,
+            185.38029527372177
+          ],
+          "total_distance": 185.38029527372177,
+          "n_routes": 3,
+          "route_customer_counts": [
+            4,
+            1,
+            1
+          ]
+        },
+        {
+          "stage": "after_alns",
+          "elapsed_s": 0.0548,
+          "feasible": true,
+          "vehicles": 2,
+          "objective_key": [
+            2.0,
+            156.08206946417084
+          ],
+          "total_distance": 156.08206946417084,
+          "n_routes": 2,
+          "route_customer_counts": [
+            4,
+            2
+          ]
+        },
+        {
+          "stage": "after_merge",
+          "elapsed_s": 0.0601,
+          "feasible": true,
+          "vehicles": 2,
+          "objective_key": [
+            2.0,
+            156.08206946417084
+          ],
+          "total_distance": 156.08206946417084,
+          "n_routes": 2,
+          "route_customer_counts": [
+            4,
+            2
+          ]
+        }
+      ],
+      "bks": null,
+      "vehicle_gap_vs_bks": null
+    },
+    {
+      "instance_id": "r105C5",
+      "seed": 11,
+      "time_limit_s": 10.0,
+      "alns_iterations": 40,
+      "wall_s": 0.061,
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 156.08206946417084,
+      "objective_key": [
+        2.0,
+        156.08206946417084
+      ],
+      "n_customers": 5,
+      "stage_trace": [
+        {
+          "stage": "after_construct",
+          "elapsed_s": 0.0018,
+          "feasible": false,
+          "vehicles": 2,
+          "objective_key": [
+            2.0,
+            163.21430303820168
+          ],
+          "total_distance": 163.21430303820168,
+          "n_routes": 2,
+          "route_customer_counts": [
+            4,
+            1
+          ]
+        },
+        {
+          "stage": "after_charge_repair",
+          "elapsed_s": 0.0084,
+          "feasible": true,
+          "vehicles": 3,
+          "objective_key": [
+            3.0,
+            185.38029527372177
+          ],
+          "total_distance": 185.38029527372177,
+          "n_routes": 3,
+          "route_customer_counts": [
+            4,
+            1,
+            1
+          ]
+        },
+        {
+          "stage": "after_alns",
+          "elapsed_s": 0.0551,
+          "feasible": true,
+          "vehicles": 2,
+          "objective_key": [
+            2.0,
+            156.08206946417084
+          ],
+          "total_distance": 156.08206946417084,
+          "n_routes": 2,
+          "route_customer_counts": [
+            4,
+            2
+          ]
+        },
+        {
+          "stage": "after_merge",
+          "elapsed_s": 0.0609,
+          "feasible": true,
+          "vehicles": 2,
+          "objective_key": [
+            2.0,
+            156.08206946417084
+          ],
+          "total_distance": 156.08206946417084,
+          "n_routes": 2,
+          "route_customer_counts": [
+            4,
+            2
+          ]
+        }
+      ],
+      "bks": null,
+      "vehicle_gap_vs_bks": null
+    },
+    {
+      "instance_id": "r105C5",
+      "seed": 22,
+      "time_limit_s": 10.0,
+      "alns_iterations": 40,
+      "wall_s": 0.063,
+      "feasible": true,
+      "vehicles": 2,
+      "total_distance": 156.08206946417084,
+      "objective_key": [
+        2.0,
+        156.08206946417084
+      ],
+      "n_customers": 5,
+      "stage_trace": [
+        {
+          "stage": "after_construct",
+          "elapsed_s": 0.0018,
+          "feasible": false,
+          "vehicles": 2,
+          "objective_key": [
+            2.0,
+            163.21430303820168
+          ],
+          "total_distance": 163.21430303820168,
+          "n_routes": 2,
+          "route_customer_counts": [
+            4,
+            1
+          ]
+        },
+        {
+          "stage": "after_charge_repair",
+          "elapsed_s": 0.0083,
+          "feasible": true,
+          "vehicles": 3,
+          "objective_key": [
+            3.0,
+            185.38029527372177
+          ],
+          "total_distance": 185.38029527372177,
+          "n_routes": 3,
+          "route_customer_counts": [
+            4,
+            1,
+            1
+          ]
+        },
+        {
+          "stage": "after_alns",
+          "elapsed_s": 0.0572,
+          "feasible": true,
+          "vehicles": 2,
+          "objective_key": [
+            2.0,
+            156.08206946417084
+          ],
+          "total_distance": 156.08206946417084,
+          "n_routes": 2,
+          "route_customer_counts": [
+            4,
+            2
+          ]
+        },
+        {
+          "stage": "after_merge",
+          "elapsed_s": 0.0626,
+          "feasible": true,
+          "vehicles": 2,
+          "objective_key": [
+            2.0,
+            156.08206946417084
+          ],
+          "total_distance": 156.08206946417084,
+          "n_routes": 2,
+          "route_customer_counts": [
+            4,
+            2
+          ]
+        }
+      ],
+      "bks": null,
+      "vehicle_gap_vs_bks": null
+    },
+    {
+      "instance_id": "c101_21",
+      "seed": 7,
+      "time_limit_s": 30.0,
+      "alns_iterations": 80,
+      "wall_s": 5.627,
+      "feasible": true,
+      "vehicles": 31,
+      "total_distance": 2360.9813415393382,
+      "objective_key": [
+        31.0,
+        2360.9813415393382
+      ],
+      "n_customers": 100,
+      "stage_trace": [
+        {
+          "stage": "after_construct",
+          "elapsed_s": 0.3237,
+          "feasible": false,
+          "vehicles": 39,
+          "objective_key": [
+            39.0,
+            3338.119914031512
+          ],
+          "total_distance": 3338.119914031512,
+          "n_routes": 39,
+          "route_customer_counts": [
+            5,
+            5,
+            6,
+            10,
+            4,
+            9,
+            4,
+            8,
+            5,
+            1,
+            3,
+            5,
+            1,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            4,
+            2,
+            1,
+            2,
+            1,
+            1,
+            2
+          ]
+        },
+        {
+          "stage": "after_charge_repair",
+          "elapsed_s": 0.4403,
+          "feasible": true,
+          "vehicles": 39,
+          "objective_key": [
+            39.0,
+            3367.1394905662464
+          ],
+          "total_distance": 3367.1394905662464,
+          "n_routes": 39,
+          "route_customer_counts": [
+            5,
+            5,
+            6,
+            10,
+            4,
+            9,
+            4,
+            8,
+            5,
+            2,
+            3,
+            5,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            1,
+            2,
+            2,
+            2,
+            4,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2
+          ]
+        },
+        {
+          "stage": "after_alns",
+          "elapsed_s": 5.6096,
+          "feasible": true,
+          "vehicles": 34,
+          "objective_key": [
+            34.0,
+            2504.8721509398256
+          ],
+          "total_distance": 2504.8721509398256,
+          "n_routes": 34,
+          "route_customer_counts": [
+            10,
+            5,
+            5,
+            9,
+            2,
+            1,
+            1,
+            1,
+            2,
+            6,
+            6,
+            4,
+            7,
+            2,
+            5,
+            5,
+            3,
+            5,
+            4,
+            3,
+            8,
+            3,
+            1,
+            9,
+            6,
+            1,
+            1,
+            1,
+            1,
+            1,
+            2,
+            1,
+            2,
+            4
+          ]
+        },
+        {
+          "stage": "after_merge",
+          "elapsed_s": 5.6243,
+          "feasible": true,
+          "vehicles": 31,
+          "objective_key": [
+            31.0,
+            2360.9813415393382
+          ],
+          "total_distance": 2360.9813415393382,
+          "n_routes": 31,
+          "route_customer_counts": [
+            10,
+            5,
+            5,
+            9,
+            2,
+            2,
+            2,
+            6,
+            6,
+            4,
+            7,
+            2,
+            5,
+            5,
+            3,
+            5,
+            4,
+            3,
+            8,
+            3,
+            1,
+            9,
+            6,
+            1,
+            1,
+            1,
+            1,
+            2,
+            1,
+            2,
+            4
+          ]
+        }
+      ],
+      "bks": {
+        "vehicles": 11,
+        "distance": 1046.83,
+        "source": "E-VRPTW BKS table (Schneider 2014 lineage)"
+      },
+      "vehicle_gap_vs_bks": 20
+    },
+    {
+      "instance_id": "c101_21",
+      "seed": 11,
+      "time_limit_s": 30.0,
+      "alns_iterations": 80,
+      "wall_s": 9.368,
+      "feasible": true,
+      "vehicles": 30,
+      "total_distance": 2272.319780058143,
+      "objective_key": [
+        30.0,
+        2272.319780058143
+      ],
+      "n_customers": 100,
+      "stage_trace": [
+        {
+          "stage": "after_construct",
+          "elapsed_s": 0.3158,
+          "feasible": false,
+          "vehicles": 39,
+          "objective_key": [
+            39.0,
+            3338.119914031512
+          ],
+          "total_distance": 3338.119914031512,
+          "n_routes": 39,
+          "route_customer_counts": [
+            5,
+            5,
+            6,
+            10,
+            4,
+            9,
+            4,
+            8,
+            5,
+            1,
+            3,
+            5,
+            1,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            4,
+            2,
+            1,
+            2,
+            1,
+            1,
+            2
+          ]
+        },
+        {
+          "stage": "after_charge_repair",
+          "elapsed_s": 0.4296,
+          "feasible": true,
+          "vehicles": 39,
+          "objective_key": [
+            39.0,
+            3367.1394905662464
+          ],
+          "total_distance": 3367.1394905662464,
+          "n_routes": 39,
+          "route_customer_counts": [
+            5,
+            5,
+            6,
+            10,
+            4,
+            9,
+            4,
+            8,
+            5,
+            2,
+            3,
+            5,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            1,
+            2,
+            2,
+            2,
+            4,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2
+          ]
+        },
+        {
+          "stage": "after_alns",
+          "elapsed_s": 9.3486,
+          "feasible": true,
+          "vehicles": 33,
+          "objective_key": [
+            33.0,
+            2457.0793349095993
+          ],
+          "total_distance": 2457.0793349095993,
+          "n_routes": 33,
+          "route_customer_counts": [
+            3,
+            10,
+            3,
+            5,
+            8,
+            2,
+            3,
+            2,
+            3,
+            2,
+            7,
+            7,
+            3,
+            7,
+            6,
+            1,
+            2,
+            4,
+            8,
+            9,
+            3,
+            3,
+            3,
+            1,
+            1,
+            2,
+            2,
+            1,
+            2,
+            2,
+            2,
+            2,
+            4
+          ]
+        },
+        {
+          "stage": "after_merge",
+          "elapsed_s": 9.3653,
+          "feasible": true,
+          "vehicles": 30,
+          "objective_key": [
+            30.0,
+            2272.319780058143
+          ],
+          "total_distance": 2272.319780058143,
+          "n_routes": 30,
+          "route_customer_counts": [
+            3,
+            10,
+            3,
+            5,
+            8,
+            3,
+            2,
+            3,
+            2,
+            7,
+            7,
+            3,
+            7,
+            6,
+            2,
+            2,
+            4,
+            8,
+            9,
+            3,
+            3,
+            3,
+            1,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            4
+          ]
+        }
+      ],
+      "bks": {
+        "vehicles": 11,
+        "distance": 1046.83,
+        "source": "E-VRPTW BKS table (Schneider 2014 lineage)"
+      },
+      "vehicle_gap_vs_bks": 19
+    },
+    {
+      "instance_id": "c101_21",
+      "seed": 22,
+      "time_limit_s": 30.0,
+      "alns_iterations": 80,
+      "wall_s": 5.74,
+      "feasible": true,
+      "vehicles": 29,
+      "total_distance": 2254.9749243786605,
+      "objective_key": [
+        29.0,
+        2254.9749243786605
+      ],
+      "n_customers": 100,
+      "stage_trace": [
+        {
+          "stage": "after_construct",
+          "elapsed_s": 0.3186,
+          "feasible": false,
+          "vehicles": 39,
+          "objective_key": [
+            39.0,
+            3338.119914031512
+          ],
+          "total_distance": 3338.119914031512,
+          "n_routes": 39,
+          "route_customer_counts": [
+            5,
+            5,
+            6,
+            10,
+            4,
+            9,
+            4,
+            8,
+            5,
+            1,
+            3,
+            5,
+            1,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            4,
+            2,
+            1,
+            2,
+            1,
+            1,
+            2
+          ]
+        },
+        {
+          "stage": "after_charge_repair",
+          "elapsed_s": 0.434,
+          "feasible": true,
+          "vehicles": 39,
+          "objective_key": [
+            39.0,
+            3367.1394905662464
+          ],
+          "total_distance": 3367.1394905662464,
+          "n_routes": 39,
+          "route_customer_counts": [
+            5,
+            5,
+            6,
+            10,
+            4,
+            9,
+            4,
+            8,
+            5,
+            2,
+            3,
+            5,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            1,
+            2,
+            2,
+            2,
+            4,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2
+          ]
+        },
+        {
+          "stage": "after_alns",
+          "elapsed_s": 5.7097,
+          "feasible": true,
+          "vehicles": 32,
+          "objective_key": [
+            32.0,
+            2412.3528674349627
+          ],
+          "total_distance": 2412.3528674349627,
+          "n_routes": 32,
+          "route_customer_counts": [
+            10,
+            4,
+            1,
+            6,
+            6,
+            4,
+            2,
+            6,
+            1,
+            3,
+            9,
+            7,
+            1,
+            5,
+            5,
+            3,
+            3,
+            6,
+            6,
+            6,
+            2,
+            1,
+            5,
+            2,
+            4,
+            2,
+            1,
+            9,
+            2,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "stage": "after_merge",
+          "elapsed_s": 5.7374,
+          "feasible": true,
+          "vehicles": 29,
+          "objective_key": [
+            29.0,
+            2254.9749243786605
+          ],
+          "total_distance": 2254.9749243786605,
+          "n_routes": 29,
+          "route_customer_counts": [
+            10,
+            4,
+            6,
+            6,
+            4,
+            6,
+            2,
+            3,
+            9,
+            7,
+            2,
+            5,
+            5,
+            3,
+            3,
+            6,
+            6,
+            6,
+            1,
+            5,
+            2,
+            4,
+            2,
+            1,
+            9,
+            2,
+            1,
+            1,
+            1
+          ]
+        }
+      ],
+      "bks": {
+        "vehicles": 11,
+        "distance": 1046.83,
+        "source": "E-VRPTW BKS table (Schneider 2014 lineage)"
+      },
+      "vehicle_gap_vs_bks": 18
+    },
+    {
+      "instance_id": "r101_21",
+      "seed": 7,
+      "time_limit_s": 30.0,
+      "alns_iterations": 80,
+      "wall_s": 4.032,
+      "feasible": true,
+      "vehicles": 36,
+      "total_distance": 2527.900269878085,
+      "objective_key": [
+        36.0,
+        2527.900269878085
+      ],
+      "n_customers": 100,
+      "stage_trace": [
+        {
+          "stage": "after_construct",
+          "elapsed_s": 0.3022,
+          "feasible": false,
+          "vehicles": 54,
+          "objective_key": [
+            54.0,
+            3477.498325514784
+          ],
+          "total_distance": 3477.498325514784,
+          "n_routes": 54,
+          "route_customer_counts": [
+            2,
+            4,
+            3,
+            6,
+            3,
+            3,
+            4,
+            7,
+            3,
+            3,
+            1,
+            1,
+            3,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            2,
+            1,
+            2,
+            1,
+            1,
+            2,
+            1,
+            4,
+            1,
+            2,
+            1,
+            2,
+            4,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            3,
+            2,
+            1,
+            1,
+            2,
+            1,
+            1,
+            2,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "stage": "after_charge_repair",
+          "elapsed_s": 0.397,
+          "feasible": true,
+          "vehicles": 54,
+          "objective_key": [
+            54.0,
+            3506.191012707742
+          ],
+          "total_distance": 3506.191012707742,
+          "n_routes": 54,
+          "route_customer_counts": [
+            2,
+            4,
+            3,
+            6,
+            3,
+            3,
+            4,
+            7,
+            3,
+            3,
+            2,
+            2,
+            3,
+            2,
+            2,
+            2,
+            1,
+            2,
+            2,
+            2,
+            3,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            1,
+            2,
+            2,
+            4,
+            1,
+            2,
+            3,
+            2,
+            4,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            3,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "stage": "after_alns",
+          "elapsed_s": 4.0093,
+          "feasible": true,
+          "vehicles": 39,
+          "objective_key": [
+            39.0,
+            2583.185921839648
+          ],
+          "total_distance": 2583.185921839648,
+          "n_routes": 39,
+          "route_customer_counts": [
+            4,
+            6,
+            5,
+            3,
+            3,
+            5,
+            4,
+            5,
+            7,
+            4,
+            5,
+            3,
+            5,
+            2,
+            4,
+            2,
+            2,
+            5,
+            5,
+            2,
+            1,
+            2,
+            3,
+            3,
+            6,
+            2,
+            3,
+            1,
+            6,
+            4,
+            4,
+            1,
+            4,
+            3,
+            3,
+            1,
+            1,
+            3,
+            4
+          ]
+        },
+        {
+          "stage": "after_merge",
+          "elapsed_s": 4.0298,
+          "feasible": true,
+          "vehicles": 36,
+          "objective_key": [
+            36.0,
+            2527.900269878085
+          ],
+          "total_distance": 2527.900269878085,
+          "n_routes": 36,
+          "route_customer_counts": [
+            4,
+            6,
+            5,
+            3,
+            3,
+            5,
+            4,
+            5,
+            7,
+            4,
+            5,
+            3,
+            5,
+            4,
+            2,
+            2,
+            5,
+            5,
+            2,
+            2,
+            2,
+            3,
+            3,
+            6,
+            2,
+            3,
+            4,
+            6,
+            4,
+            4,
+            4,
+            3,
+            3,
+            1,
+            3,
+            4
+          ]
+        }
+      ],
+      "bks": {
+        "vehicles": 20,
+        "distance": 1699.44,
+        "source": "E-VRPTW BKS table (Schneider 2014 lineage)"
+      },
+      "vehicle_gap_vs_bks": 16
+    },
+    {
+      "instance_id": "r101_21",
+      "seed": 11,
+      "time_limit_s": 30.0,
+      "alns_iterations": 80,
+      "wall_s": 5.59,
+      "feasible": true,
+      "vehicles": 36,
+      "total_distance": 2459.256745583539,
+      "objective_key": [
+        36.0,
+        2459.256745583539
+      ],
+      "n_customers": 100,
+      "stage_trace": [
+        {
+          "stage": "after_construct",
+          "elapsed_s": 0.1727,
+          "feasible": false,
+          "vehicles": 54,
+          "objective_key": [
+            54.0,
+            3477.498325514784
+          ],
+          "total_distance": 3477.498325514784,
+          "n_routes": 54,
+          "route_customer_counts": [
+            2,
+            4,
+            3,
+            6,
+            3,
+            3,
+            4,
+            7,
+            3,
+            3,
+            1,
+            1,
+            3,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            2,
+            1,
+            2,
+            1,
+            1,
+            2,
+            1,
+            4,
+            1,
+            2,
+            1,
+            2,
+            4,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            3,
+            2,
+            1,
+            1,
+            2,
+            1,
+            1,
+            2,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "stage": "after_charge_repair",
+          "elapsed_s": 0.2673,
+          "feasible": true,
+          "vehicles": 54,
+          "objective_key": [
+            54.0,
+            3506.191012707742
+          ],
+          "total_distance": 3506.191012707742,
+          "n_routes": 54,
+          "route_customer_counts": [
+            2,
+            4,
+            3,
+            6,
+            3,
+            3,
+            4,
+            7,
+            3,
+            3,
+            2,
+            2,
+            3,
+            2,
+            2,
+            2,
+            1,
+            2,
+            2,
+            2,
+            3,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            1,
+            2,
+            2,
+            4,
+            1,
+            2,
+            3,
+            2,
+            4,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            3,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "stage": "after_alns",
+          "elapsed_s": 5.5696,
+          "feasible": true,
+          "vehicles": 39,
+          "objective_key": [
+            39.0,
+            2570.2754571181044
+          ],
+          "total_distance": 2570.2754571181044,
+          "n_routes": 39,
+          "route_customer_counts": [
+            6,
+            6,
+            5,
+            4,
+            1,
+            4,
+            3,
+            3,
+            4,
+            2,
+            1,
+            5,
+            5,
+            7,
+            3,
+            5,
+            3,
+            2,
+            2,
+            4,
+            1,
+            6,
+            7,
+            5,
+            2,
+            1,
+            5,
+            5,
+            6,
+            5,
+            1,
+            1,
+            4,
+            3,
+            5,
+            2,
+            3,
+            1,
+            1
+          ]
+        },
+        {
+          "stage": "after_merge",
+          "elapsed_s": 5.5864,
+          "feasible": true,
+          "vehicles": 36,
+          "objective_key": [
+            36.0,
+            2459.256745583539
+          ],
+          "total_distance": 2459.256745583539,
+          "n_routes": 36,
+          "route_customer_counts": [
+            6,
+            6,
+            5,
+            4,
+            4,
+            3,
+            3,
+            4,
+            2,
+            5,
+            5,
+            7,
+            3,
+            5,
+            3,
+            2,
+            2,
+            4,
+            1,
+            6,
+            7,
+            5,
+            2,
+            5,
+            5,
+            6,
+            5,
+            1,
+            1,
+            4,
+            3,
+            5,
+            2,
+            3,
+            1,
+            1
+          ]
+        }
+      ],
+      "bks": {
+        "vehicles": 20,
+        "distance": 1699.44,
+        "source": "E-VRPTW BKS table (Schneider 2014 lineage)"
+      },
+      "vehicle_gap_vs_bks": 16
+    },
+    {
+      "instance_id": "r101_21",
+      "seed": 22,
+      "time_limit_s": 30.0,
+      "alns_iterations": 80,
+      "wall_s": 3.258,
+      "feasible": true,
+      "vehicles": 38,
+      "total_distance": 2614.4826106373707,
+      "objective_key": [
+        38.0,
+        2614.4826106373707
+      ],
+      "n_customers": 100,
+      "stage_trace": [
+        {
+          "stage": "after_construct",
+          "elapsed_s": 0.304,
+          "feasible": false,
+          "vehicles": 54,
+          "objective_key": [
+            54.0,
+            3477.498325514784
+          ],
+          "total_distance": 3477.498325514784,
+          "n_routes": 54,
+          "route_customer_counts": [
+            2,
+            4,
+            3,
+            6,
+            3,
+            3,
+            4,
+            7,
+            3,
+            3,
+            1,
+            1,
+            3,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            2,
+            1,
+            2,
+            1,
+            1,
+            2,
+            1,
+            4,
+            1,
+            2,
+            1,
+            2,
+            4,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            3,
+            2,
+            1,
+            1,
+            2,
+            1,
+            1,
+            2,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "stage": "after_charge_repair",
+          "elapsed_s": 0.4792,
+          "feasible": true,
+          "vehicles": 54,
+          "objective_key": [
+            54.0,
+            3506.191012707742
+          ],
+          "total_distance": 3506.191012707742,
+          "n_routes": 54,
+          "route_customer_counts": [
+            2,
+            4,
+            3,
+            6,
+            3,
+            3,
+            4,
+            7,
+            3,
+            3,
+            2,
+            2,
+            3,
+            2,
+            2,
+            2,
+            1,
+            2,
+            2,
+            2,
+            3,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            1,
+            2,
+            2,
+            4,
+            1,
+            2,
+            3,
+            2,
+            4,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            3,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "stage": "after_alns",
+          "elapsed_s": 3.2443,
+          "feasible": true,
+          "vehicles": 41,
+          "objective_key": [
+            41.0,
+            2724.7403214835463
+          ],
+          "total_distance": 2724.7403214835463,
+          "n_routes": 41,
+          "route_customer_counts": [
+            4,
+            1,
+            6,
+            6,
+            2,
+            4,
+            5,
+            3,
+            4,
+            3,
+            2,
+            3,
+            6,
+            3,
+            4,
+            3,
+            2,
+            5,
+            3,
+            3,
+            4,
+            1,
+            3,
+            2,
+            4,
+            5,
+            5,
+            4,
+            3,
+            3,
+            3,
+            3,
+            2,
+            3,
+            1,
+            4,
+            1,
+            3,
+            4,
+            4,
+            3
+          ]
+        },
+        {
+          "stage": "after_merge",
+          "elapsed_s": 3.2561,
+          "feasible": true,
+          "vehicles": 38,
+          "objective_key": [
+            38.0,
+            2614.4826106373707
+          ],
+          "total_distance": 2614.4826106373707,
+          "n_routes": 38,
+          "route_customer_counts": [
+            4,
+            6,
+            6,
+            4,
+            5,
+            3,
+            4,
+            3,
+            2,
+            3,
+            6,
+            3,
+            4,
+            3,
+            2,
+            5,
+            3,
+            3,
+            4,
+            3,
+            2,
+            4,
+            5,
+            5,
+            4,
+            3,
+            3,
+            3,
+            3,
+            2,
+            3,
+            2,
+            4,
+            2,
+            3,
+            4,
+            4,
+            3
+          ]
+        }
+      ],
+      "bks": {
+        "vehicles": 20,
+        "distance": 1699.44,
+        "source": "E-VRPTW BKS table (Schneider 2014 lineage)"
+      },
+      "vehicle_gap_vs_bks": 18
+    }
+  ],
+  "diagnosis": {
+    "literature_gap": "On c101_21, community BKS ~ 11 vehicles / 1046 distance; current short-budget B1 solutions use ~32-34 vehicles. Gap is large and not explained by scoring alone.",
+    "mean_construct_vehicles_large": 46.5,
+    "mean_final_vehicles_large": 33.333333333333336,
+    "primary_bottleneck_hypothesis": "Construction opens far too many routes; ALNS with destroy_cap=3 and weak consolidation fails to compress fleet toward BKS. Route elimination and larger neighborhoods are the priority before LLM insertion discovery."
+  }
+}

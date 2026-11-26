@@ -10,24 +10,27 @@ import json
 from datetime import UTC, datetime
 from pathlib import Path
 
+from evrptw_autolab.backbone.alns import RESEARCH_CLASSICAL_REPAIR_SCORING
 from evrptw_autolab.backbone.solver import solve_classical
 from evrptw_autolab.backbone.util import evaluate, is_better
 from evrptw_autolab.discovery.controller import operator_fingerprint
 from evrptw_autolab.discovery.schemas import OperatorSpec
 from evrptw_autolab.problem.datasets.schneider_v2 import load_schneider_v2
+from evrptw_autolab.research.partitions import assert_allowed_for_development
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "results" / "cipher" / "research" / "baseline_ablation_b0b4.json"
 RAW = ROOT / "dataset" / "schneider" / "raw_instances"
 
 SEEDS = (7, 11, 22)
-# Expanded Schneider panel: prior sprint instances + one extra C/R/RC each.
+# Discovery-only Schneider panel (C1/R1). rc105C5 is confirmation — historically
+# exposed in a675888 B0-B4; do not reuse for new development claims.
 CASES = (
     ("c101C5", RAW / "c101C5.txt", 5.0, 20),
     ("c101_21", RAW / "c101_21.txt", 10.0, 24),
     ("c103C5", RAW / "c103C5.txt", 5.0, 20),
     ("r104C5", RAW / "r104C5.txt", 5.0, 20),
-    ("rc105C5", RAW / "rc105C5.txt", 5.0, 20),
+    ("r105C5", RAW / "r105C5.txt", 5.0, 20),
 )
 
 
@@ -73,6 +76,8 @@ def _gate(outcomes: list[str]) -> str:
 
 
 def main() -> None:
+    assert_allowed_for_development([case[0] for case in CASES])
+    _ = RESEARCH_CLASSICAL_REPAIR_SCORING  # documented research default (B1)
     arms: dict[str, dict] = {
         "B0": {
             "repair_scoring_mode": "total_route_distance",

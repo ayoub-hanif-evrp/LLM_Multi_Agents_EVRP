@@ -1,0 +1,22 @@
+{
+  "contract": "cipher_exposure_registry_v1",
+  "note": "Instances listed here were used in development experiments despite belonging to confirmation/heldout in the Schneider manifest. They must not be treated as untouched confirmation evidence.",
+  "exposures": [
+    {
+      "instance_id": "rc105C5",
+      "manifest_partition": "confirmation",
+      "family": "RC1",
+      "exposed_in": "baseline_ablation_b0b4.json",
+      "commit": "a675888",
+      "reason": "B0-B4 ablation incorrectly treated RC1 as development"
+    },
+    {
+      "instance_id": "RC2",
+      "manifest_partition": "heldout",
+      "family": "RC2",
+      "exposed_in": "docs/BENCHMARK_CONTRACT.md / fidelity HELDOUT_FAMILY",
+      "commit": "pre-cipher",
+      "reason": "RC2 is permanently heldout; document that it must never enter discovery"
+    }
+  ]
+}

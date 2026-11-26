@@ -201,6 +201,21 @@ def repair_feasibility(
     return current
 
 
+def _stage_snapshot(name: str, started: float, report: Any, solution: SolutionV2) -> dict[str, Any]:
+    return {
+        "stage": name,
+        "elapsed_s": round(time.monotonic() - started, 4),
+        "feasible": bool(report.feasible),
+        "vehicles": int(report.vehicles),
+        "objective_key": [float(v) for v in report.objective_key],
+        "total_distance": float(report.total_distance),
+        "n_routes": len(solution.routes),
+        "route_customer_counts": [
+            sum(1 for stop in route if stop.event != "depot") for route in solution.routes
+        ],
+    }
+
+
 def _maybe_merge(
     spec: ProblemSpecV2,
     solution: SolutionV2,
@@ -246,6 +261,11 @@ class ClassicalSolver:
     # Classical repair ranking: total_route_distance (legacy B0), marginal_delta_distance (B1),
     # or marginal_fleet_aware (B2 light consolidation bias). Default preserves historical behavior.
     repair_scoring_mode: str = "total_route_distance"
+    repair_algorithm: str = "greedy"  # greedy | regret2
+    destroy_size_cap: int = 3
+    route_elimination: bool = False
+    stage_trace: bool = False
+    use_related_destroy: bool = False
 
     def solve(self, spec: ProblemSpecV2) -> SolutionV2:
         if not self.hard_timeout:
@@ -312,6 +332,10 @@ class ClassicalSolver:
         early = tracker.get("report")
         if early is not None and early.feasible:
             first_feasible_s = time.monotonic() - started
+        if self.stage_trace:
+            solution.metadata["stage_trace"] = [
+                _stage_snapshot("after_construct", started, evaluate(spec, solution), solution)
+            ]
         solution = repair_feasibility(
             spec,
             solution,
@@ -320,6 +344,10 @@ class ClassicalSolver:
             optimize_partial_charges=self.optimize_partial_charges and self.partial_charges_in_search,
         )
         self._publish(tracker, spec, solution)
+        if self.stage_trace:
+            solution.metadata.setdefault("stage_trace", []).append(
+                _stage_snapshot("after_charge_repair", started, evaluate(spec, solution), solution)
+            )
         if first_feasible_s is None:
             repaired = tracker.get("report")
             if repaired is not None and repaired.feasible:
@@ -342,8 +370,15 @@ class ClassicalSolver:
                 heavy_local=not spec.capabilities.heterogeneous_fleet,
                 partition=self.experiment_partition,
                 repair_scoring_mode=self.repair_scoring_mode,
+                repair_algorithm=self.repair_algorithm,
+                destroy_size_cap=self.destroy_size_cap,
+                use_related_destroy=self.use_related_destroy,
             )
             self._publish(tracker, spec, solution)
+            if self.stage_trace:
+                solution.metadata.setdefault("stage_trace", []).append(
+                    _stage_snapshot("after_alns", started, evaluate(spec, solution), solution)
+                )
         if time.monotonic() < deadline and spec.capabilities.heterogeneous_fleet:
             # One improvement-only pass. A rejected move is discarded, so this cannot raise the native cost.
             solution = relocate_improve(spec, solution, max_passes=1, deadline=deadline)
@@ -353,6 +388,28 @@ class ClassicalSolver:
                 spec, solution, deadline=deadline, max_passes=3, enabled=self.merge_routes
             )
             self._publish(tracker, spec, solution)
+            if self.stage_trace:
+                solution.metadata.setdefault("stage_trace", []).append(
+                    _stage_snapshot("after_merge", started, evaluate(spec, solution), solution)
+                )
+        if self.route_elimination and time.monotonic() < deadline:
+            from evrptw_autolab.backbone.route_elimination import eliminate_routes_improve
+
+            solution = eliminate_routes_improve(
+                spec,
+                solution,
+                rng,
+                max_attempts=8,
+                deadline=deadline,
+                repair_scoring_mode=self.repair_scoring_mode,
+            )
+            self._publish(tracker, spec, solution)
+            if self.stage_trace:
+                solution.metadata.setdefault("stage_trace", []).append(
+                    _stage_snapshot(
+                        "after_route_elimination", started, evaluate(spec, solution), solution
+                    )
+                )
             # Always refresh charge annotations; keep only if not worse.
             polished = remove_redundant_stations(spec, solution)
             polished = complete_solution_charges(spec, polished)
@@ -534,6 +591,11 @@ def _solver_process_main(spec: ProblemSpecV2, config: dict[str, Any], incumbent_
         merge_routes=bool(config.get("merge_routes", True)),
         adaptive_destroy=bool(config.get("adaptive_destroy", True)),
         repair_scoring_mode=str(config.get("repair_scoring_mode", "total_route_distance")),
+        repair_algorithm=str(config.get("repair_algorithm", "greedy")),
+        destroy_size_cap=int(config.get("destroy_size_cap", 3)),
+        route_elimination=bool(config.get("route_elimination", False)),
+        stage_trace=bool(config.get("stage_trace", False)),
+        use_related_destroy=bool(config.get("use_related_destroy", False)),
     )
     sink = _FileSink(incumbent_path)
     box: dict[str, Any] = {"sink": sink}
@@ -738,6 +800,11 @@ def _solve_in_process(solver: ClassicalSolver, spec: ProblemSpecV2) -> SolutionV
         "merge_routes": bool(solver.merge_routes),
         "adaptive_destroy": bool(solver.adaptive_destroy),
         "repair_scoring_mode": str(solver.repair_scoring_mode),
+        "repair_algorithm": str(solver.repair_algorithm),
+        "destroy_size_cap": int(solver.destroy_size_cap),
+        "route_elimination": bool(solver.route_elimination),
+        "stage_trace": bool(solver.stage_trace),
+        "use_related_destroy": bool(solver.use_related_destroy),
     }
     fd, incumbent_path = tempfile.mkstemp(prefix="voltforge-incumbent-", suffix=".pkl")
     os.close(fd)
@@ -869,6 +936,11 @@ def solve_classical(
     merge_routes: bool = True,
     adaptive_destroy: bool = True,
     repair_scoring_mode: str = "total_route_distance",
+    repair_algorithm: str = "greedy",
+    destroy_size_cap: int = 3,
+    route_elimination: bool = False,
+    stage_trace: bool = False,
+    use_related_destroy: bool = False,
 ) -> SolutionV2:
     return ClassicalSolver(
         seed=seed,
@@ -883,6 +955,11 @@ def solve_classical(
         merge_routes=merge_routes,
         adaptive_destroy=adaptive_destroy,
         repair_scoring_mode=repair_scoring_mode,
+        repair_algorithm=repair_algorithm,
+        destroy_size_cap=destroy_size_cap,
+        route_elimination=route_elimination,
+        stage_trace=stage_trace,
+        use_related_destroy=use_related_destroy,
     ).solve(spec)
 
 

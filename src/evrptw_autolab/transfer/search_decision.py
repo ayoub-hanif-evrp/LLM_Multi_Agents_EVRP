@@ -24,6 +24,8 @@ class ScreenedRepair:
     objective: tuple[float, ...]
     feasible: bool
     acceptance: float
+    # local_battery_debt_allowed = route screen only; trusted = full evaluate().
+    screen_kind: str = "local_battery_debt_allowed"
 
 
 @dataclass(frozen=True)
@@ -68,6 +70,32 @@ def choose_screened_repair(
     previous = int(chosen.solution.metadata.get("changed_decisions") or 0)
     chosen.solution.metadata["changed_decisions"] = previous + (1 if changed else 0)
     chosen.solution.metadata["experiment_partition"] = partition
+    provenance = str(getattr(operator, "source_agent", "") or "unknown")
+    if provenance.startswith("llm") or "qwen" in provenance.lower():
+        origin = "llm"
+    elif provenance.startswith("handcrafted") or provenance == "test":
+        origin = "handcrafted"
+    elif "random" in provenance.lower():
+        origin = "random"
+    elif "learned" in provenance.lower() or "ranker" in provenance.lower():
+        origin = "learned"
+    else:
+        origin = provenance or "unknown"
+    stats = dict(chosen.solution.metadata.get("policy_attribution") or {})
+    stats["policy_supplied"] = int(stats.get("policy_supplied") or 0) + 1
+    if selection.action == "apply":
+        stats["policy_eligible"] = int(stats.get("policy_eligible") or 0) + 1
+        stats["policy_invoked"] = int(stats.get("policy_invoked") or 0) + 1
+        if changed:
+            stats["ranking_changed"] = int(stats.get("ranking_changed") or 0) + 1
+            stats["selected_move_changed"] = int(stats.get("selected_move_changed") or 0) + 1
+    elif selection.action == "abstain":
+        stats["policy_abstained"] = int(stats.get("policy_abstained") or 0) + 1
+        stats["classical_fallback"] = int(stats.get("classical_fallback") or 0) + 1
+    else:
+        stats["classical_fallback"] = int(stats.get("classical_fallback") or 0) + 1
+    stats["policy_origin"] = origin
+    chosen.solution.metadata["policy_attribution"] = stats
     chosen.solution.metadata["search_decision"] = {
         "action": selection.action,
         "reason": selection.reason,
@@ -77,6 +105,8 @@ def choose_screened_repair(
         "operator_id": operator.operator_id,
         "operator_version": operator.version,
         "source_hash": operator.source_hash,
+        "policy_origin": origin,
+        "screen_kind": chosen.screen_kind,
     }
     return RepairDecision(
         action=selection.action,

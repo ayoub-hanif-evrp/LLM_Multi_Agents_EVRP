@@ -26,19 +26,44 @@ def _length(spec: ProblemSpecV2, route: list[RouteStopV2]) -> float:
     return total
 
 
+def insertion_delta_distance(
+    spec: ProblemSpecV2,
+    route: list[RouteStopV2],
+    index: int,
+    node_id: str,
+) -> float:
+    """Marginal travel distance of inserting ``node_id`` at ``index``. No route simulation."""
+    nodes = spec.node_map
+    prev = nodes[route[index - 1].node_id]
+    nxt = nodes[route[index].node_id]
+    node = nodes[node_id]
+    return float(
+        travel_distance(spec, prev, node)
+        + travel_distance(spec, node, nxt)
+        - travel_distance(spec, prev, nxt)
+    )
+
+
 def insertion_features_v4(
     spec: ProblemSpecV2,
     route: list[RouteStopV2],
     index: int,
     node_id: str,
     vehicle: VehicleTypeV2,
+    *,
+    include_battery_margin: bool = True,
+    include_energy_cost: bool = True,
 ) -> dict[str, float]:
-    """Cheap position features. Lower insertion scores are better."""
+    """Position features. Lower insertion scores are better.
+
+    Battery margin triggers a route simulation; skip it when the active scoring
+    rule does not need it (classical B0/B1 ranking).
+    """
     nodes = spec.node_map
     prev = nodes[route[index - 1].node_id]
     nxt = nodes[route[index].node_id]
     node = nodes[node_id]
-    delta = travel_distance(spec, prev, node) + travel_distance(spec, node, nxt) - travel_distance(spec, prev, nxt)
+    delta = insertion_delta_distance(spec, route, index, node_id)
     added_time = (
         travel_time(spec, prev, node, vehicle)
         + travel_time(spec, node, nxt, vehicle)
@@ -48,17 +73,22 @@ def insertion_features_v4(
     load = sum(float(nodes[stop.node_id].demand) for stop in customers) + float(node.demand)
     capacity = float(vehicle.capacity) if vehicle.capacity is not None else 0.0
     has_customer = bool(customers)
-    trial = list(route)
-    trial.insert(index, RouteStopV2(node_id, vehicle.type_id, "visit"))
-    return {
+    features = {
         "delta_distance": float(delta),
         "delta_travel_time": float(added_time),
         "route_load_slack_after_insertion": capacity - load,
         "route_customer_count": float(len(customers)),
         "new_vehicle_fixed_cost": 0.0 if has_customer else float(vehicle.fixed_cost),
-        "incremental_energy_cost": _incremental_energy_cost(spec, prev, node, nxt, vehicle, float(delta)),
-        "battery_margin": battery_margin(spec, trial, vehicle),
     }
+    if include_energy_cost:
+        features["incremental_energy_cost"] = _incremental_energy_cost(
+            spec, prev, node, nxt, vehicle, float(delta)
+        )
+    if include_battery_margin:
+        trial = list(route)
+        trial.insert(index, RouteStopV2(node_id, vehicle.type_id, "visit"))
+        features["battery_margin"] = battery_margin(spec, trial, vehicle)
+    return features
 
 
 def _incremental_energy_cost(
